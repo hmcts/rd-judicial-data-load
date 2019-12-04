@@ -11,7 +11,8 @@ public class JudicialOfficeAuthorisationrRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-                from("azure-blob://rddemo/jrdtest/judicial_office_authorization.csv?credentials=#credsreg")
+             /*  from("azure-blob://rddemo/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg")
+                .id("jud-office-auth-route")
                 .to("file://blobdirectory3").end();
 
                 from("file://blobdirectory3?noop=true")
@@ -21,17 +22,16 @@ public class JudicialOfficeAuthorisationrRoute extends RouteBuilder {
                 .unmarshal().csv()
 
                // .unmarshal().bindy(BindyType.Csv, JrdCsvDataMapper.class)
-                .log("Processing CSV data -- 2 ${body}")
+               // .log("Processing CSV data -- 2 ${body}")
                 //  .to("bean:myCsvHandler?method=doHandleCsvData");
                 //.to("mock:daltons")
                 .split(body())
                 // .process(new GetRecordsProcess())
-                .log("Processing CSV data ---3 ---- ${body}")
+                .log("Processing CSV data jud-office-auth-route ---3 ---- ${body}")
                // .to //("log:test?level=DEBUG")
                 .to("sql:insert into judicial_office_authorization(sno,firstName,LastName,Circuit,Area) values(#, #, #, #, #)?dataSource=dataSource")
                 .to ("log:test?showAll=true")
-                .end();
-
+                .end();*/
 
     }
 

@@ -12,7 +12,8 @@ public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-                from("azure-blob://rddemo/jrdtest/judicial_office_appointment.csv?credentials=#credsreg")
+                /*from("azure-blob://rddemo/jrdtest/judicial_office_appointment.csv?credentials=#credsreg")
+                .id("judicial-office-appointment")
                 .to("file://blobdirectory2").end();
 
                 from("file://blobdirectory2?noop=true")
@@ -25,7 +26,7 @@ public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
                 .log("Processing CSV data ---3 ---- ${body}")
                 .to("sql:insert into judicial_office_appointment(sno,firstName,LastName,Circuit,Area) values(#, #, #, #, #)?dataSource=dataSource")
                 .to ("log:test?showAll=true")
-                .end();
+                .end();*/
 
 
     }
