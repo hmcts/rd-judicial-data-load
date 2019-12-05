@@ -2,6 +2,7 @@
 package uk.gov.hmcts.reform.judicialapi.camel;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.routepolicy.quartz.CronScheduledRoutePolicy;
 import org.springframework.stereotype.Component;
 
 
@@ -19,6 +20,11 @@ public class AzureBlobConnector extends RouteBuilder {
              // from("direct:route1").recipientList().;
 
              //  from("direct:route1").recipientList("");
+
+               /*   CronScheduledRoutePolicy startPolicy = new CronScheduledRoutePolicy();
+                startPolicy.setRouteStartTime("0 0/3 * * * ?");
+              from("file:C:/inputFolder?noop=true").routePolicy(startPolicy).noAutoStartup().process(new MyProcessor())
+                        .to("file:C:/outputFolder");*/
         }
 
 }
