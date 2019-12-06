@@ -40,8 +40,8 @@ def versions = [
         springfoxSwagger   : '2.9.2'
 ]
 
-mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
-def jarName = 'rd-judicial-api.jar'
+mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
+def jarName = 'rd-judicial-data-load.jar'
 
 group = 'uk.gov.hmcts.reform.juddata'
 version = '0.0.1'
@@ -166,11 +166,11 @@ jacocoTestReport {
 }
 
 pitest {
-    targetClasses = ['uk.gov.hmcts.reform.judicialapi.*']
+    targetClasses = ['uk.gov.hmcts.reform.juddata.*']
     excludedClasses = [
-            'uk.gov.hmcts.reform.judicialapi.configuration.*',
-            'uk.gov.hmcts.reform.judicialapi.controller.*',
-            'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
+            'uk.gov.hmcts.reform.juddata.configuration.*',
+            'uk.gov.hmcts.reform.juddata.controller.*',
+            'uk.gov.hmcts.reform.juddata.JudicialApplication'
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -188,13 +188,13 @@ project.tasks['pitest'].group = "Verification"
 sonarqube {
     properties {
         property "sonar.projectName", "RD :: Juducial Reference Data api"
-        property "sonar.projectKey", "RDJUDICIALAPI"
+        property "sonar.projectKey", "JUDDATA"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
         property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/integration.exec"
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
-        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/judicialapi/configuration/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java"
+        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java"
     }
 }
 

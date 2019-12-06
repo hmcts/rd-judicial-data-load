@@ -1,0 +1,23 @@
+java:
+  applicationPort: 8090
+  ingressHost: rd-judicial-data-load-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+  aadIdentityName: rd
+  environment:
+    POSTGRES_HOST: rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
+    POSTGRES_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
+    POSTGRES_USER: "{{ .Values.postgresql.postgresqlUsername}}"
+    POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    POSTGRES_PORT: 5432
+    LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
+    LOGBACK_REQUIRE_ERROR_CODE: 'false'
+  image: 'https://hmctspublic.azurecr.io/hmcts/rd-judicial-data-load:latest'
+  
+  keyVaults:
+    "rd":
+      resourceGroup: rd
+      secrets:
+        - juddata-POSTGRES-DATABASE
+        - juddata-POSTGRES-HOST
+        - juddata-POSTGRES-PASS
+        - juddata-POSTGRES-PORT
+        - juddata-POSTGRES-USER

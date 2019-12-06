@@ -4,13 +4,13 @@
 
 def type = "java"
 def product = "rd"
-def component = "judicial-api"
+def component = "judicial-data-load"
 
-def secrets = [
+/*def secrets = [
   's2s-${env}': [
-    secret('microservicekey-rd-judicial-api', 'S2S_SECRET')
+    secret('microservicekey-rd-judicial-data-load', 'S2S_SECRET')
   ]
-]
+]*/
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [$class     : 'AzureKeyVaultSecret',
@@ -29,15 +29,15 @@ def vaultOverrides = [
 withPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
-    loadVaultSecrets(secrets)
+    //loadVaultSecrets(secrets)
 
     enableDbMigration()
     enableDockerBuild()
     installCharts()
+    disableLegacyDeployment()
     enableAksStagingDeployment()
 
-    env.S2S_URL_FOR_TESTS = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-    env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
+    //env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
 
     after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'

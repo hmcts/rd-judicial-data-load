@@ -1,5 +1,0 @@
-apiVersion: v1
-appVersion: "0.1"
-description: Reference data service for professional users
-name: rd-judicial-api
-version: 0.0.2

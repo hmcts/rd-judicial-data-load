@@ -2,7 +2,7 @@ ARG APP_INSIGHTS_AGENT_VERSION=2.3.1
 FROM hmctspublic.azurecr.io/base/java:openjdk-8-distroless-1.0
 
 # Mandatory!
-ENV APP rd-judicial-api.jar
+ENV APP rd-judicial-data-load.jar
 ENV APPLICATION_TOTAL_MEMORY 512M
 ENV APPLICATION_SIZE_ON_DISK_IN_MB 48
 
@@ -16,5 +16,5 @@ WORKDIR /opt/app
 
 EXPOSE 8090
 
-CMD [ "rd-judicial-api.jar" ]
+CMD [ "rd-judicial-data-load.jar" ]
 
