@@ -1,48 +1,22 @@
-package uk.gov.hmcts.reform.juddata.camel;
+package uk.gov.hmcts.reform.juddata.camel.route;
 
-
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.file.GenericFile;
-import org.apache.camel.component.file.GenericFileConverter;
-import org.apache.camel.routepolicy.quartz.CronScheduledRoutePolicy;
 import org.springframework.stereotype.Component;
 
-@Component
-public class JudicialUserFileProcessorRoute extends RouteBuilder
+//@Component
+public class JudicialUserFileProcessorRoute //extends RouteBuilder
 {
 
 
     public static final String ROUTE_NAME = "MYROUTE";
 
 
-    @Override
+    //@Override
     public void configure() {
 
-        //  from("azure-blob://rddemo/jrdtest/judicial_userprofile.csv?credentials=#credsreg")
-        // from("timer:hello?repeatCount=1")
-        // from("azure-blob://rddemo/jrdtest/jrd1.csv?credentials=#credsreg&operation=deleteBlob")
-        // .to("azure-blob://rddemo/jrd-archive/judicial_userprofile.csv?credentials=#credsreg&operation=updateBlockBlob")
-             /*    from("file://blobdirectory?noop=true")
-                         .to("log:test?showAll=true")
-              //  .convertBodyTo(java.lang.class)
-                         .process(new Processor() {
-                             @Override
-                             public void process(Exchange exchange) throws Exception {
-                                 Object file = exchange.getIn().getMandatoryBody();
 
-                                 exchange.getOut().setBody(
-                                         GenericFileConverter.genericFileToInputStream(
-                                                 (GenericFile<?>) file, exchange));
-                             }
-                         })
-                .to("azure-blob://rddemo/jrdtest/blob1?credentials=#credsreg")
-                .to("log:test?showAll=true");*//*
 
-         */
-
-        from("timer:hello?repeatCount=1")
+       /* from("timer:hello?repeatCount=1")
                  .to("sql:TRUNCATE judicial_user,judicial_office_appointment,judicial_office_authorization?dataSource=dataSource")
                 .to("log:test?showAll=true").end();
 
@@ -97,7 +71,7 @@ public class JudicialUserFileProcessorRoute extends RouteBuilder
 
                 .to("sql:insert into judicial_office_authorization(sno,firstName,LastName,Circuit,Area) values(#, #, #, #, #)?dataSource=dataSource")
 
-                .to("log:test?showAll=true").end();
+                .to("log:test?showAll=true").end();*/
                 /*from("file:src/data?noop=true")
                 .doTry()
                 .to("direct:split")

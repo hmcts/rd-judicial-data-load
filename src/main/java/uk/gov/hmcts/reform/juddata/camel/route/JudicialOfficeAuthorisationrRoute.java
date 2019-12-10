@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.juddata.camel;
+package uk.gov.hmcts.reform.juddata.camel.route;
 
 
 import org.apache.camel.builder.RouteBuilder;
