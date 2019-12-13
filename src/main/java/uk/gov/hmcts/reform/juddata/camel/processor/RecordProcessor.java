@@ -19,7 +19,7 @@ public class RecordProcessor implements Processor {
         List<JudicialUserProfile> userRecords = (List<JudicialUserProfile>) exchange.getIn().getBody();
 
        // JudicialUser user = (JudicialUser)exchange.getIn().getBody();
-        log.info(" JudicialUser Records count before validation::" + userRecords.size());
+        log.info(" JudicialUserProfile Records count before validation::" + userRecords.size());
 
         for (JudicialUserProfile user : userRecords) {
 
@@ -36,14 +36,14 @@ public class RecordProcessor implements Processor {
 
         }
 
-        log.info(" JudicialUser Records count After Validation::" + users.size());
+        log.info(" JudicialUserProfile Records count After Validation::" + users.size());
     }
 
 
     private JudicialUserProfile fetch(JudicialUserProfile user) {
 
         JudicialUserProfile userAfterValidation = null;
-        if (null != user.getSno()) {
+        if (null != user.getElinksId()) {
 
             userAfterValidation = user;
 

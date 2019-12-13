@@ -11,12 +11,12 @@ import uk.gov.hmcts.reform.juddata.camel.processor.RecordProcessor;
 @Component
 public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
 
-    @Autowired
-    JudicialUserRowMapper rowMapper ;
+    /*@Autowired
+    JudicialUserRowMapper rowMapper ;*/
 
     public void configure() throws Exception {
 
-        from("timer:hello?repeatCount=1")
+        /*from("timer:hello?repeatCount=1")
                 .to("sql:TRUNCATE judicial_user?dataSource=dataSource")
                 .to("log:test?showAll=true").end();
 
@@ -35,7 +35,7 @@ public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
                         .to("sql:insert into judicial_user(sno,firstName,LastName,Circuit,Area) values(:#sno,:#firstName,:#lastName, :#circuit,:#area)?dataSource=dataSource")
                         .to("log:test?showAll=true")
                         .end();
-
+*/
     }
 
 }

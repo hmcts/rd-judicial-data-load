@@ -266,6 +266,7 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-azure-starter', version: '2.24.2'
     compile group: 'org.apache.camel', name: 'camel-bindy-starter', version: '2.24.2'
     compile group: 'org.apache.camel', name: 'camel-jdbc-starter', version: '2.24.2'
+    compile group: 'org.apache.camel', name: 'camel-restlet', version: '2.24.2'
 
     compile group: 'org.apache.camel', name: 'camel-core', version: '2.24.2'
 

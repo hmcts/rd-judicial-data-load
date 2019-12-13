@@ -1,86 +1,49 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.BindyType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserRowMapper;
+import uk.gov.hmcts.reform.juddata.camel.processor.RecordProcessor;
 
-//@Component
-public class JudicialUserFileProcessorRoute //extends RouteBuilder
+@Component
+public class JudicialUserFileProcessorRoute extends RouteBuilder
 {
 
+    @Autowired
+    JudicialUserRowMapper judUserRowMapper ;
 
     public static final String ROUTE_NAME = "MYROUTE";
 
 
-    //@Override
+    @Override
     public void configure() {
 
 
 
-       /* from("timer:hello?repeatCount=1")
-                 .to("sql:TRUNCATE judicial_user,judicial_office_appointment,judicial_office_authorization?dataSource=dataSource")
-                .to("log:test?showAll=true").end();
+        /*from("timer:hello?repeatCount=1")
+                .to("sql:TRUNCATE judicial_user_profile?dataSource=dataSource")
+                .to("log:test?showAll=true").end();*/
 
-
-        from("azure-blob://rddemo/jrdtest/judicial_userprofile.csv?credentials=#credsreg&operation=updateBlockBlob")
-                .id("judicial-user-route")
-            .to("file://blobdirectory?noop=true&fileExist=Override").end();
+        from("azure-blob://rddemo/jrdtest/Personal.csv?credentials=#credsreg&operation=updateBlockBlob")
+                .id("judicial-office")
+                .to("file://blobdirectory?noop=true&fileExist=Override").end();
+        // .to("log:foo").end();
 
         from("file://blobdirectory?noop=true&fileExist=Override")
-                .onCompletion()
-                .log("CSV data  processing finished").end()
-                .transacted()
-                .split(body().tokenize("\n", 1, true)).streaming()
-                .unmarshal().csv()
-                .split(body())
-                .log("Processing CSV data judicial-user-route---1 ---- ${body}")
-                .to("sql:insert into judicial_user (sno,firstName,LastName,Circuit,Area) values(#, #, #, #, #)?dataSource=dataSource")
-                .to("log:test?showAll=true").end();
+                // .onCompletion()
+                .unmarshal() .bindy(BindyType.Csv, JudicialUserProfile.class)
+                //  .split().body()
+                .process(new RecordProcessor())
+                .split().body()
+                .bean(judUserRowMapper , "getMap")
+                .to("sql:insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,active_flag,extracted_date) " +
+                        "values(:#elinks_id,:#personal_code,:#title, :#known_as,:#surname, :#full_name,:#post_nominals,:#contract_type,:#work_pattern, :#email_id,:#joining_date, :#last_working_date, :#active_flag, :#extracted_date)?dataSource=dataSource")
+                .to("log:test?showAll=true")
+                .end();
 
-        //==================================2===================
-
-        from("azure-blob://rddemo/jrdtest/judicial_office_appointment.csv?credentials=#credsreg&operation=updateBlockBlob")
-                .id("judicial-office-appointment")
-                .to("file://blobdirectory2?noop=true&fileExist=Override").end();
-
-
-        from("file://blobdirectory2?noop=true&fileExist=Override")
-                .onCompletion().log("CSV data  processing finished for route 2").end()
-                .transacted()
-                .split(body().tokenize("\n", 1, true)).streaming()
-                .unmarshal().csv()
-                .split(body())
-                .log("Processing CSV data ---2 ---- ${body}")
-                .to("sql:insert into judicial_office_appointment(sno,firstName,LastName,Circuit,Area) values(#, #, #, #, #)?dataSource=dataSource")
-
-                .to("log:test?showAll=true").end();
-
-        //==================================3===================
-
-        from("azure-blob://rddemo/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob")
-                .id("jud-office-auth-route")
-                .to("file://blobdirectory3?noop=true").end();
-
-
-        from("file://blobdirectory3?noop=true")
-                .onCompletion().log("CSV data  processing finished for route 3").end()
-                .transacted()
-                .split(body().tokenize("\n", 1, true)).streaming()
-                .unmarshal().csv()
-                .split(body())
-                .log("Processing CSV data ---3 ---- ${body}")
-
-                .to("sql:insert into judicial_office_authorization(sno,firstName,LastName,Circuit,Area) values(#, #, #, #, #)?dataSource=dataSource")
-
-                .to("log:test?showAll=true").end();*/
-                /*from("file:src/data?noop=true")
-                .doTry()
-                .to("direct:split")
-
-
-                .doCatch(Exception.class)
-                .to("file:target/messages?fileName=deadLetters.xml&fileExist=Append")
-                        .rollback()
-                .end();*/
 
 
     }
