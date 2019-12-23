@@ -39,13 +39,6 @@ data "azurerm_key_vault_secret" "s2s_url" {
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
-
-data "azurerm_key_vault_secret" "s2s_secret" {
-  name = "microservicekey-rd-judicial-api"
-  key_vault_id = "${data.azurerm_key_vault.s2s_key_vault.id}"
-}
-
-
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name      = "${var.component}-POSTGRES-USER"
   value     = "${module.db-judicial-ref-data.user_name}"
@@ -97,7 +90,7 @@ module "db-judicial-ref-data" {
   common_tags = "${var.common_tags}"
 }
 
-module "rd_judicial_api" {
+module "rd_judicial_data_load" {
   source = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product = "${var.product}-${var.component}"
   location = "${var.location}"

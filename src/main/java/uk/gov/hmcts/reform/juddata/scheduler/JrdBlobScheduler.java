@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.juddata.scheduler;
 
+import com.microsoft.azure.storage.StorageException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchProviderException;
 import lombok.AllArgsConstructor;
@@ -24,7 +26,7 @@ public class JrdBlobScheduler {
     public void runBlobScheduler() throws IOException, NoSuchProviderException {
         try {
             blobStoreOrchestrator.execute();
-        } catch (InvalidKeyException e) {
+        } catch (InvalidKeyException | URISyntaxException | StorageException e) {
             log.error("Invalid blob store credentials",  e);
         }
     }

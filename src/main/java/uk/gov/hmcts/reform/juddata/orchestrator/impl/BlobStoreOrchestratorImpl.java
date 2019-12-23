@@ -1,37 +1,58 @@
 package uk.gov.hmcts.reform.juddata.orchestrator.impl;
 
+import com.microsoft.azure.storage.StorageException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchProviderException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.juddata.orchestrator.BlobStoreOrchestrator;
 import uk.gov.hmcts.reform.juddata.service.FileDecryptionService;
-import uk.gov.hmcts.reform.juddata.service.PushFileService;
+import uk.gov.hmcts.reform.juddata.service.FileDeletionService;
+import uk.gov.hmcts.reform.juddata.service.FilePushService;
+import uk.gov.hmcts.reform.juddata.service.FileReadService;
 
 @Service
 @AllArgsConstructor
 public class BlobStoreOrchestratorImpl implements BlobStoreOrchestrator {
 
     @Autowired
+    FileReadService fileReadService;
+    @Autowired
     FileDecryptionService fileDecryptionService;
     @Autowired
-    PushFileService pushFileService;
+    FilePushService filePushService;
+    @Autowired
+    FileDeletionService fileDeletionService;
 
     @Override
-    public void execute() throws IOException, InvalidKeyException, NoSuchProviderException {
+    public void execute() throws IOException, InvalidKeyException, URISyntaxException, StorageException, NoSuchProviderException {
 
         /*
-         Decrypt file with GPG private key
+         Read file with from SFTP server
         */
-        File decryptedFile = fileDecryptionService.decrypt();
+        List<File> sftpFiles = fileReadService.read();
+
+        /*
+         Decrypt set of files with GPG private key
+        */
+        List<File> decryptedFiles = fileDecryptionService.decrypt(sftpFiles);
 
         /*
           Push file to desired blob store
           By this time the csv file has been decrypted
          */
-        pushFileService.push(decryptedFile);
+        filePushService.push(decryptedFiles);
+
+        /*
+          Delete temporary created files
+         */
+        fileDeletionService.delete(sftpFiles);
+
+
     }
 }
