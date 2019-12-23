@@ -40,10 +40,10 @@ data "azurerm_key_vault_secret" "s2s_url" {
 }
 
 
-data "azurerm_key_vault_secret" "s2s_secret" {
-  name = "microservicekey-rd-judicial-api"
-  key_vault_id = "${data.azurerm_key_vault.s2s_key_vault.id}"
-}
+//data "azurerm_key_vault_secret" "s2s_secret" {
+//  name = "microservicekey-rd-judicial-api"
+//  key_vault_id = "${data.azurerm_key_vault.s2s_key_vault.id}"
+//}
 
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
@@ -125,7 +125,7 @@ module "rd_judicial_data_load" {
     POSTGRES_CONNECTION_OPTIONS = "?"
 
     S2S_URL = "${data.azurerm_key_vault_secret.s2s_url.value}"
-    S2S_SECRET = "${data.azurerm_key_vault_secret.s2s_secret.value}"
+
 
     ROOT_LOGGING_LEVEL = "${var.root_logging_level}"
     LOG_LEVEL_SPRING_WEB = "${var.log_level_spring_web}"
