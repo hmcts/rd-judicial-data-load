@@ -46,13 +46,7 @@ scheduler:
   config: ${CRON_SCHEDULE:*/1000 * * * * *}
   config2: ${CRON_SCHEDULE:*/1000 * * * * *}
 
-### dependency configuration
-auth.provider.service.client.baseUrl: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
-idam:
-  s2s-auth:
-    totp_secret: ${S2S_SECRET:K6KA6PRLRFWQLSD6}
-    microservice: rd_professional_api
-    url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
+
 
 security:
   anonymousPaths:
