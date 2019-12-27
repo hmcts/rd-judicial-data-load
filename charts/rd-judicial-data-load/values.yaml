@@ -16,8 +16,7 @@ java:
     "rd":
       resourceGroup: rd
       secrets:
-        - juddata-POSTGRES-DATABASE
-        - juddata-POSTGRES-HOST
-        - juddata-POSTGRES-PASS
-        - juddata-POSTGRES-PORT
-        - juddata-POSTGRES-USER
+        - judicial-data-load-POSTGRES-PASS
+        - s2s-secret
+        - AppInsightsInstrumentationKey
+
