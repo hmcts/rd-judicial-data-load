@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.paulhammant:ngwebdriver:1.1.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.paulhammant/ngwebdriver/1.1.4/f90f30f1db695a41caa026d1af6d42be9c6bafdf/ngwebdriver-1.1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.paulhammant/ngwebdriver/1.1.4/c675224f351f33d5b956ffb3293d7f7e0d32bb3d/ngwebdriver-1.1.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

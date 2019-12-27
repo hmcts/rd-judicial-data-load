@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.pitest:pitest:1.4.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.pitest/pitest/1.4.2/b7ce6d466993c4263a48906d4159afba417c7ff3/pitest-1.4.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.pitest/pitest/1.4.2/cb865b64fcfcfb3602356bf6e446bd6d0132c554/pitest-1.4.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

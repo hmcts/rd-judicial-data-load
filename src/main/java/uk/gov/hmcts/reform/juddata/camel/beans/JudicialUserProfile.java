@@ -7,23 +7,22 @@ import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 
-
 @Setter
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX" , skipFirstLine = true)
 public class JudicialUserProfile {
 
     @DataField(pos = 1)
-    String elinksId;
+    String elinks_Id;
 
     @DataField(pos = 2)
-    String personalCode;
+    String personal_Code;
 
     @DataField(pos = 3)
     String title;
 
     @DataField(pos = 4)
-    String knownAs;
+    String known_As;
 
     @DataField(pos = 5)
     String surName;
@@ -32,25 +31,25 @@ public class JudicialUserProfile {
     String fullName;
 
     @DataField(pos = 7)
-    String postNominals;
+    String post_Nominals;
 
     @DataField(pos = 8)
-    String contractType;
+    String contract_Type_Id;
 
     @DataField(pos = 9)
-    String workPattern;
+    String work_Pattern;
 
     @DataField(pos = 10)
-    String emailId;
+    String email_Id;
 
     @DataField(pos = 11, pattern = "yyyy-MM-dd hh:mm:ss")
-    LocalDate joinDate;
+    LocalDate joining_Date;
 
     @DataField(pos = 12,  pattern = "yyyy-MM-dd hh:mm:ss")
-    LocalDate lastWorkingDate;
+    LocalDate lastWorking_Date;
 
     @DataField(pos = 13)
-    boolean activeFlag;
+    boolean active_Flag;
 
     @DataField(pos = 14)
     String extractedDate;

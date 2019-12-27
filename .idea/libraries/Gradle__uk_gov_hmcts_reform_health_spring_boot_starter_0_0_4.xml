@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: uk.gov.hmcts.reform:health-spring-boot-starter:0.0.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/uk.gov.hmcts.reform/health-spring-boot-starter/0.0.4/3a854056f7ef22de4f169144356301df3d945417/health-spring-boot-starter-0.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/uk.gov.hmcts.reform/health-spring-boot-starter/0.0.4/6e70d88eedbc01d5fe0bf0061f6de189fd0c763e/health-spring-boot-starter-0.0.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

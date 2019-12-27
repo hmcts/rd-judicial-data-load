@@ -19,29 +19,21 @@ public class JudicialUserRowMapper {
     public Map<String, Object> getMap(JudicialUserProfile userProfile) {
 
         Map<String, Object> judUserProfileRow = new HashMap<>();
-       /* judUserRow.put("sno", user.getSno());
-        judUserRow.put("firstName", user.getFirstName());
-        judUserRow.put("lastName", user.getLastName());
-        judUserRow.put("circuit", user.getCircuit());
-        judUserRow.put("area", user.getArea());*/
-
-        judUserProfileRow.put("elinks_id", userProfile.getElinksId());
-        judUserProfileRow.put("personal_code", userProfile.getPersonalCode());
+        judUserProfileRow.put("elinks_id", userProfile.getElinks_Id());
+        judUserProfileRow.put("personal_code", userProfile.getPersonal_Code());
         judUserProfileRow.put("title", userProfile.getTitle());
-        judUserProfileRow.put("known_as", userProfile.getKnownAs());
+        judUserProfileRow.put("known_as", userProfile.getKnown_As());
         judUserProfileRow.put("surname", userProfile.getSurName());
         judUserProfileRow.put("full_name", userProfile.getFullName());
-        judUserProfileRow.put("post_nominals", userProfile.getPostNominals());
-        judUserProfileRow.put("contract_type", userProfile.getContractType());
-        judUserProfileRow.put("work_pattern", userProfile.getWorkPattern());
-        judUserProfileRow.put("email_id", userProfile.getEmailId());
-        judUserProfileRow.put("joining_date", userProfile.getJoinDate());
-        judUserProfileRow.put("last_working_date", userProfile.getLastWorkingDate());
-        judUserProfileRow.put("active_flag", userProfile.isActiveFlag());
+        judUserProfileRow.put("post_nominals", userProfile.getPost_Nominals());
+        judUserProfileRow.put("contract_type", userProfile.getContract_Type_Id());
+        judUserProfileRow.put("work_pattern", userProfile.getWork_Pattern());
+        judUserProfileRow.put("email_id", userProfile.getEmail_Id());
+        judUserProfileRow.put("joining_date", userProfile.getJoining_Date());
+        judUserProfileRow.put("last_working_date", userProfile.getLastWorking_Date());
+        judUserProfileRow.put("active_flag", userProfile.isActive_Flag());
         judUserProfileRow.put("extracted_date", getDateTimeStamp(userProfile.getExtractedDate()));
 
-
-        log.info("extract Date:: " + userProfile.getJoinDate());
         log.info("timestamp Date:: " + judUserProfileRow.get("extracted_date"));
         return  judUserProfileRow;
     }

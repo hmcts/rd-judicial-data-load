@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.microsoft.azure:azure-storage-blob:10.0.1-Preview">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.microsoft.azure/azure-storage-blob/10.0.1-Preview/6fc83e69b5a5285acbc7a2c4abaa7000b695c582/azure-storage-blob-10.0.1-Preview.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.microsoft.azure/azure-storage-blob/10.0.1-Preview/fc6ca6142f09c4cf5c4417eb620cec431f97a3ab/azure-storage-blob-10.0.1-Preview-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

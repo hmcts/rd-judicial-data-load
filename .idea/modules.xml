@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.iml" filepath="$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.functionalTest.iml" filepath="$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.functionalTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.integrationTest.iml" filepath="$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.integrationTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.main.iml" filepath="$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.smokeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.smokeTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.test.iml" filepath="$PROJECT_DIR$/.idea/modules/rd-judicial-data-load.test.iml" />
+    </modules>
+  </component>
+</project>

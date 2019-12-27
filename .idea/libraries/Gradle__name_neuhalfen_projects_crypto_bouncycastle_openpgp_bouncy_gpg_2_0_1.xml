@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: name.neuhalfen.projects.crypto.bouncycastle.openpgp:bouncy-gpg:2.0.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/name.neuhalfen.projects.crypto.bouncycastle.openpgp/bouncy-gpg/2.0.1/d29a1d0c75e12412d86dbd8eb67818436f846a93/bouncy-gpg-2.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/name.neuhalfen.projects.crypto.bouncycastle.openpgp/bouncy-gpg/2.0.1/5e9415c7837703ce4d8bbd20a55071321dc74ce1/bouncy-gpg-2.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

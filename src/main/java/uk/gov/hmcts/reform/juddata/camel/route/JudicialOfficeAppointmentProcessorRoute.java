@@ -1,12 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.BindyType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
-import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserRowMapper;
-import uk.gov.hmcts.reform.juddata.camel.processor.RecordProcessor;
 
 @Component
 public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {

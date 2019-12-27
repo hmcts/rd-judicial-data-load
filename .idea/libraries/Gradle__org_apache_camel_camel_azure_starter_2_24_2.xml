@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.camel:camel-azure-starter:2.24.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.camel/camel-azure-starter/2.24.2/cba71a1ddb000c7338b96c2a5a59c46078402e13/camel-azure-starter-2.24.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.camel/camel-azure-starter/2.24.2/5805d97e696453b36447084911d6aa6f146157f3/camel-azure-starter-2.24.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

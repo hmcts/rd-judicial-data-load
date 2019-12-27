@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.camel:camel-sql:2.24.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.camel/camel-sql/2.24.2/578b40523093734dba3aa55e85c6ca4d670daad1/camel-sql-2.24.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.camel/camel-sql/2.24.2/2dfbb5161db83b76de23f5a6836f02ebef248a34/camel-sql-2.24.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.eclipse.jetty:jetty-xml:9.4.15.v20190215">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-xml/9.4.15.v20190215/9cb76241d67690bc1d5a5ede99e7eb35c3918d53/jetty-xml-9.4.15.v20190215.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-xml/9.4.15.v20190215/51dc04f5b205e48e825578d65838d19546ed60d5/jetty-xml-9.4.15.v20190215-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

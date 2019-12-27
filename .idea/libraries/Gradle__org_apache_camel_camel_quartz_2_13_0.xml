@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.camel:camel-quartz:2.13.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.camel/camel-quartz/2.13.0/213a49d99e5c8e3d3776878553e5dc0200a3d0fc/camel-quartz-2.13.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.camel/camel-quartz/2.13.0/8dd76aa98292a454c9188cfd6ea68be41631d4cc/camel-quartz-2.13.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
