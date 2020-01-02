@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8092}
+  port: ${PORT:8094}
 
 spring:
   application:
