@@ -28,8 +28,7 @@ services:
       - LOGBACK_REQUIRE_THREAD
       - LOGBACK_REQUIRE_ALERT_LEVEL=false
       - LOGBACK_REQUIRE_ERROR_CODE=false
-      - S2S_URL=http://service-auth-provider-api:8080
-      - S2S_SECRET=${S2S_SECRET}
+
     ports:
       - 8000:8000
       - ${SERVER_PORT:-8090}:${SERVER_PORT:-8090}
@@ -49,32 +48,6 @@ services:
     ports:
       - 5456:5432
 
-  service-auth-provider-api:
-    image: hmcts/service-auth-provider-app
-    container_name: service-auth-provider-api
-    healthcheck:
-      interval: 10s
-      timeout: 10s
-      retries: 10
-    ports:
-      - 8502:8080
-    environment:
-      JAVA_OPTS: -Xmx384m
-      SERVER_PORT: 8080
-      MICROSERVICEKEYS_RD_JUDICIAL_API: "${S2S_SECRET}"
-      TESTING_SUPPORT_ENABLED: "true"
-
-  service-token-provider:
-    image: hmcts/service-token-provider
-    container_name: jd-service-token-provider
-    environment:
-      - S2S_URL=http://service-auth-provider-api:8080
-      - S2S_MICROSERVICE=rd_judicial_api
-      - S2S_SECRET=${S2S_SECRET}
-    ports:
-      - 8089:${SERVER_PORT:-8090}
-    depends_on:
-      - service-auth-provider-api
 
 volumes:
   rd-judicial-db-volume:
