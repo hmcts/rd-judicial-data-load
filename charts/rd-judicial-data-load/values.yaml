@@ -4,7 +4,7 @@ java:
   aadIdentityName: rd
   environment:
     POSTGRES_HOST: rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
-    POSTGRES_USERNAME: dbrefdata@rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}
+    POSTGRES_USERNAME: dbjuddata@rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}
     POSTGRES_PORT: 5432
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
