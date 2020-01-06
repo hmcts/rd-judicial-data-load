@@ -14,5 +14,6 @@ java:
     "rd":
       resourceGroup: rd
       secrets:
+        - judicial-data-load-POSTGRES-PASS
         - AppInsightsInstrumentationKey
 
