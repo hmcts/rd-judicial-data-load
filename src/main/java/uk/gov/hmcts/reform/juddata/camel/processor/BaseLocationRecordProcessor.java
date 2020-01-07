@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocation;
+import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocationType;
 
 
 @Slf4j
@@ -16,14 +16,14 @@ public class BaseLocationRecordProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        List<BaseLocation> locations = new ArrayList<>();
-        List<BaseLocation> locationsRecords = (List<BaseLocation>) exchange.getIn().getBody();
+        List<BaseLocationType> locations = new ArrayList<>();
+        List<BaseLocationType> locationsRecords = (List<BaseLocationType>) exchange.getIn().getBody();
 
         log.info("Location Records count before validation::" + locationsRecords.size());
 
-        for (BaseLocation user : locationsRecords) {
+        for (BaseLocationType user : locationsRecords) {
 
-            BaseLocation validLocation = fetch(user);
+            BaseLocationType validLocation = fetch(user);
              if (null != validLocation) {
 
                  locations.add(validLocation);
@@ -40,9 +40,9 @@ public class BaseLocationRecordProcessor implements Processor {
     }
 
 
-    private BaseLocation fetch(BaseLocation location) {
+    private BaseLocationType fetch(BaseLocationType location) {
 
-        BaseLocation locationAfterValidation = null;
+        BaseLocationType locationAfterValidation = null;
         if (null != location.getBase_location_Id()) {
             locationAfterValidation = location;
         }

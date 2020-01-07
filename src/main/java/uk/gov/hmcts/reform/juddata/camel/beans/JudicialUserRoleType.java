@@ -8,12 +8,15 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 @Setter
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX" , skipFirstLine = true)
-public class JudicialUserRole {
+public class JudicialUserRoleType {
 
     @DataField(pos = 1)
-    String roleID;
+    String role_id;
 
     @DataField(pos = 2)
-    String roleDescription;
+    String role_desc_en;
+
+    @DataField(pos = 3)
+    String role_desc_cy;
 
 }

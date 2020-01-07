@@ -5,14 +5,14 @@ import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocation;
+import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocationType;
 
 
 @Slf4j
 @Component
-public class BaseLocationRowMapper {
+public class BaseLocationRowTypeMapper {
 
-    public Map<String, Object> getMap(BaseLocation location) {
+    public Map<String, Object> getMap(BaseLocationType location) {
 
         Map<String, Object> locationRow = new HashMap<>();
         locationRow.put("base_location_id", location.getBase_location_Id());

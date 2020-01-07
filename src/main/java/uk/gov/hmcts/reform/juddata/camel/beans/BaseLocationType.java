@@ -8,7 +8,7 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 @Setter
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX" , skipFirstLine = true)
-public class BaseLocation {
+public class BaseLocationType {
 
     @DataField(pos = 1)
     String base_location_Id;
