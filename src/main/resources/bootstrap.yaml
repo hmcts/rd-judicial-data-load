@@ -6,3 +6,15 @@ spring:
       aliases:
         judicial-data-load-POSTGRES-PASS: spring.datasource.password
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
+        ACCOUNT-NAME: azure.storage.account-name
+        ACCOUNT-KEY: azure.storage.account-key
+        CONTAINER-NAME: azure.storage.container-name
+        BLOB-URL-SUFFIX: azure.storage.blob-url-suffix
+        SFTP-USER-NAME: sftp.user-name
+        SFTP-USER-PASSWORD: sftp.user-password
+        SFTP-HOST: sftp.host
+        SFTP-FILE: sftp.file_names
+        GPG-PUBLIC-KEY: gpg.public-key
+        GPG-PRIVATE-KEY: gpg.private-key
+        GPG-PASSWORD: gpg.password
+
