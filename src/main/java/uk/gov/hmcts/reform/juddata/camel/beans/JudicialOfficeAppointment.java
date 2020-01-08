@@ -15,7 +15,7 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 public class JudicialOfficeAppointment {
 
     @DataField(pos = 1)
-    String elinks_Id;
+    String elinks_id;
 
     @DataField(pos = 2)
     String role_id;

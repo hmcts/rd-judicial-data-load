@@ -21,7 +21,7 @@ public class JudicialUserFileProcessorRoute extends RouteBuilder
     @Override
     public void configure() {
 
-       /* from("azure-blob://rddemo/jrdtest/Personal.csv?credentials=#credsreg&operation=updateBlockBlob")
+        /*from("azure-blob://rddemo/jrdtest/Personal.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("judicial-office")
                 .to("file://blobdirectory?noop=true&fileExist=Override").end();
 

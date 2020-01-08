@@ -42,7 +42,7 @@ public class JudicialOfficeAppointmentProcessor implements Processor {
     private JudicialOfficeAppointment fetch(JudicialOfficeAppointment officeAppointment) {
 
         JudicialOfficeAppointment offAppAfterValidation = null;
-        if (null != officeAppointment.getElinks_Id()) {
+        if (null != officeAppointment.getElinks_id()) {
 
             offAppAfterValidation = officeAppointment;
 

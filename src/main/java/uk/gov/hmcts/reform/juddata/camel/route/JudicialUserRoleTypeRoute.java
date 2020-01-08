@@ -1,9 +1,12 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.BindyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialRoleTypeRowMapper;
+import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserRoleTypeProcessor;
 
 @Component
 public class JudicialUserRoleTypeRoute extends RouteBuilder {
@@ -14,12 +17,12 @@ public class JudicialUserRoleTypeRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-      /* from("azure-blob://rddemo/jrdtest/Roles.csv?credentials=#credsreg&operation=updateBlockBlob")
+       /*from("azure-blob://rddemo/jrdtest/Roles.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
                 .to("file://blobdirectory2?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory2?noop=true&fileExist=Override")
-                .unmarshal() .bindy(BindyType.Csv, JudicialUserRole.class)
+                .unmarshal() .bindy(BindyType.Csv, JudicialUserRoleType.class)
                 .process(new JudicialUserRoleTypeProcessor())
                 .split().body()
                 .bean(judicialRoleTypeRowMapper , "getMap")

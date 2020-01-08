@@ -26,12 +26,11 @@ public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
                 .process(new JudicialOfficeAppointmentProcessor())
                 .split().body()
                 .bean(judicialOfficeAppointmentRowMapper , "getMap")
-                .to("sql:insert into judicial_office_appointment (judicial_office_appointment_Id,elinks_id,role_id,contract_type_Id,base_location_Id,region_Id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date) " +
-                        "values(:#judicial_office_appointment_Id, :#elinks_id,:#role_id, :#contract_type_Id,:#base_location_Id, :#region_Id, " +
+                .to("sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date) " +
+                        "values(:#judicial_office_appointment_id, :#elinks_id,:#role_id, :#contract_type_id,:#base_location_id, :#region_id, " +
                         ":#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag,:#extracted_date)?dataSource=dataSource")
                 .to("log:test?showAll=true")
                 .end();
-
     }
 
 }

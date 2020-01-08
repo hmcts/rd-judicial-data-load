@@ -19,7 +19,7 @@ public class JudicialUserRowMapper {
     public Map<String, Object> getMap(JudicialUserProfile userProfile) {
 
         Map<String, Object> judUserProfileRow = new HashMap<>();
-        judUserProfileRow.put("elinks_id", userProfile.getElinks_Id());
+        judUserProfileRow.put("elinks_id", userProfile.getElinks_id());
         judUserProfileRow.put("personal_code", userProfile.getPersonal_Code());
         judUserProfileRow.put("title", userProfile.getTitle());
         judUserProfileRow.put("known_as", userProfile.getKnown_As());
@@ -28,7 +28,7 @@ public class JudicialUserRowMapper {
         judUserProfileRow.put("post_nominals", userProfile.getPost_Nominals());
         judUserProfileRow.put("contract_type", userProfile.getContract_Type_Id());
         judUserProfileRow.put("work_pattern", userProfile.getWork_Pattern());
-        judUserProfileRow.put("email_id", userProfile.getEmail_Id());
+        judUserProfileRow.put("email_id", userProfile.getEmail_id());
         judUserProfileRow.put("joining_date", userProfile.getJoining_Date());
         judUserProfileRow.put("last_working_date", userProfile.getLastWorking_Date());
         judUserProfileRow.put("active_flag", userProfile.isActive_Flag());

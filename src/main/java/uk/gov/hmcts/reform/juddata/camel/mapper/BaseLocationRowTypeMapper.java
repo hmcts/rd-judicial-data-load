@@ -15,7 +15,7 @@ public class BaseLocationRowTypeMapper {
     public Map<String, Object> getMap(BaseLocationType location) {
 
         Map<String, Object> locationRow = new HashMap<>();
-        locationRow.put("base_location_id", location.getBase_location_Id());
+        locationRow.put("base_location_id", location.getBase_location_id());
         locationRow.put("court_name", location.getCourt_name());
         locationRow.put("court_type", location.getCourt_type());
         locationRow.put("circuit", location.getCircuit());

@@ -43,7 +43,7 @@ public class BaseLocationRecordProcessor implements Processor {
     private BaseLocationType fetch(BaseLocationType location) {
 
         BaseLocationType locationAfterValidation = null;
-        if (null != location.getBase_location_Id()) {
+        if (null != location.getBase_location_id()) {
             locationAfterValidation = location;
         }
         return locationAfterValidation;

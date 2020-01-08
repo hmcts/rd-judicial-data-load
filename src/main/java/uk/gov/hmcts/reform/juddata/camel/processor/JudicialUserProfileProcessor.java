@@ -43,7 +43,7 @@ public class JudicialUserProfileProcessor implements Processor {
     private JudicialUserProfile fetch(JudicialUserProfile user) {
 
         JudicialUserProfile userAfterValidation = null;
-        if (null != user.getElinks_Id()) {
+        if (null != user.getElinks_id()) {
 
             userAfterValidation = user;
 

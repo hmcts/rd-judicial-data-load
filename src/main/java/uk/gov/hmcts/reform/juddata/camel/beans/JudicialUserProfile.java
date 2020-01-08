@@ -13,7 +13,7 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 public class JudicialUserProfile {
 
     @DataField(pos = 1)
-    String elinks_Id;
+    String elinks_id;
 
     @DataField(pos = 2)
     String personal_Code;
@@ -40,7 +40,7 @@ public class JudicialUserProfile {
     String work_Pattern;
 
     @DataField(pos = 10)
-    String email_Id;
+    String email_id;
 
     @DataField(pos = 11, pattern = "yyyy-MM-dd hh:mm:ss")
     LocalDate joining_Date;
