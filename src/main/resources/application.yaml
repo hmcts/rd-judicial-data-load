@@ -1,6 +1,17 @@
 server:
   port: ${PORT:8094}
 
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: 'health'
+    web:
+      base-path: "/"
+  endpoint:
+    health:
+      show-details: "always"
+
 spring:
   application:
     name: Judicial reference data blob store sync API
@@ -40,6 +51,7 @@ spring:
       remove-abandoned-timeout: 60
       log-abandoned: true
       abandon-when-percentage-full: 0
+
 
 # Scheduler configuration
 scheduler:
