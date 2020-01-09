@@ -1,5 +1,16 @@
 server:
-  port: ${PORT:8092}
+  port: ${PORT:8094}
+
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: 'health'
+    web:
+      base-path: "/"
+  endpoint:
+    health:
+      show-details: "always"
 
 spring:
   application:
@@ -41,6 +52,7 @@ spring:
       log-abandoned: true
       abandon-when-percentage-full: 0
 
+
 # Scheduler configuration
 scheduler:
   config: ${CRON_SCHEDULE:*/1000 * * * * *}
@@ -80,7 +92,7 @@ sftp:
   user-password: ${SFTP_USER_PASSWORD:SFTP_USER_PASSWORD}
   host: ${SFTP_HOST:SFTP_HOST}
   timeout: 60000
-  file_names: ${SFTP_FILE:Courts.csv.gpg,Locations.csv.gpg,Personal.csv.gpg,Roles.csv.gpg}
+  file_names: ${SFTP_FILE:Courts.csv,Locations.csv,Personal.csv,Roles.csv}
 
 gpg.password: ${GPG_PASSWORD:GPG_PASSWORD}
 gpg.public-key: ${GPG_PUBLIC_KEY:GPG_PUBLIC_KEY}

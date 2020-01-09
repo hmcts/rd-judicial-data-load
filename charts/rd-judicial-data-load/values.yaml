@@ -1,12 +1,10 @@
 java:
-  applicationPort: 8990
+  applicationPort: 8094
   ingressHost: rd-judicial-data-load-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   aadIdentityName: rd
   environment:
     POSTGRES_HOST: rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
-    POSTGRES_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
-    POSTGRES_USER: "{{ .Values.postgresql.postgresqlUsername}}"
-    POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    POSTGRES_USERNAME: dbjuddata@rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}
     POSTGRES_PORT: 5432
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
@@ -17,6 +15,16 @@ java:
       resourceGroup: rd
       secrets:
         - judicial-data-load-POSTGRES-PASS
-        - s2s-secret
         - AppInsightsInstrumentationKey
+        - ACCOUNT-NAME
+        - ACCOUNT-KEY
+        - CONTAINER-NAME
+        - BLOB-URL-SUFFIX
+        - SFTP-USER-NAME
+        - SFTP-USER-PASSWORD
+        - SFTP-HOST
+        - SFTP-FILE
+        - GPG-PUBLIC-KEY
+        - GPG-PASSWORD
+        - GPG-PRIVATE-KEY
 

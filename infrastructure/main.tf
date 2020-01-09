@@ -20,6 +20,60 @@ data "azurerm_key_vault" "rd_key_vault" {
   resource_group_name = "${local.key_vault_name}"
 }
 
+data "azurerm_key_vault_secret" "ACCOUNT_NAME" {
+  name = "ACCOUNT-NAME"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "ACCOUNT_KEY" {
+  name = "ACCOUNT-KEY"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "CONTAINER_NAME" {
+  name = "CONTAINER-NAME"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "BLOB_URL_SUFFIX" {
+  name = "BLOB-URL-SUFFIX"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_USER_NAME" {
+  name = "SFTP-USER-NAME"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_USER_PASSWORD" {
+  name = "SFTP-USER-PASSWORD"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_HOST" {
+  name = "SFTP-HOST"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_FILE" {
+  name = "SFTP-FILE"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "GPG_PASSWORD" {
+  name = "GPG-PASSWORD"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "GPG_PUBLIC_KEY" {
+  name = "GPG-PUBLIC-KEY"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "GPG_PRIVATE_KEY" {
+  name = "GPG-PRIVATE-KEY"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name      = "${var.component}-POSTGRES-USER"
@@ -60,6 +114,8 @@ resource "azurerm_resource_group" "rg" {
     "lastUpdated" = "${timestamp()}"
   }
 }
+
+
 
 module "db-judicial-ref-data" {
   source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
