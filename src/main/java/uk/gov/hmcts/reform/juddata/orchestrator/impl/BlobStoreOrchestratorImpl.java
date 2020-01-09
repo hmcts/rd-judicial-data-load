@@ -44,7 +44,5 @@ public class BlobStoreOrchestratorImpl implements BlobStoreOrchestrator {
           Delete temporary created files
          */
         fileDeletionService.delete(sftpFiles);
-
-
     }
 }
