@@ -35,7 +35,7 @@ public class JudicialUserFileProcessorRoute extends RouteBuilder
                 .to("sql:insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,active_flag,extracted_date) " +
                         "values(:#elinks_id,:#personal_code,:#title, :#known_as,:#surname, :#full_name,:#post_nominals,:#contract_type,:#work_pattern, :#email_id,:#joining_date, :#last_working_date, :#active_flag, :#extracted_date)?dataSource=dataSource")
                 .to("log:test?showAll=true")
-                .end();*/
-
+                .end();
+*/
     }
 }

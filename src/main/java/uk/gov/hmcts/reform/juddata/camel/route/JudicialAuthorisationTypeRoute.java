@@ -17,7 +17,7 @@ public class JudicialAuthorisationTypeRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-       from("azure-blob://rddemo/jrdtest/authorisation_type.csv?credentials=#credsreg&operation=updateBlockBlob")
+     /*  from("azure-blob://rddemo/jrdtest/authorisation_type.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
                 .to("file://blobdirectory6?noop=true&fileExist=Override").end();
 
@@ -29,7 +29,7 @@ public class JudicialAuthorisationTypeRoute extends RouteBuilder {
                 .to("sql:insert into authorisation_type (authorisation_id,authorisation_desc_en,authorisation_desc_cy,jurisdiction_id,jurisdiction_desc_en,jurisdiction_desc_cy) " +
                         "values(:#authorisation_id,:#authorisation_desc_en,:#authorisation_desc_cy, :#jurisdiction_id,:#jurisdiction_desc_en,:#jurisdiction_desc_cy)?dataSource=dataSource")
                 .to("log:test?showAll=true")
-                .end();
+                .end();*/
 
     }
 
