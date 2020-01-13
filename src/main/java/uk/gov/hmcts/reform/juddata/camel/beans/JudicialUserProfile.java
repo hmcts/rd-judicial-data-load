@@ -34,7 +34,7 @@ public class JudicialUserProfile {
     String post_Nominals;
 
     @DataField(pos = 8)
-    String contract_Type_Id;
+    String contract_Type_id;
 
     @DataField(pos = 9)
     String work_Pattern;

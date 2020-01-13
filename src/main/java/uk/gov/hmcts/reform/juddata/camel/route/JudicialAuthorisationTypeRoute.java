@@ -17,11 +17,17 @@ public class JudicialAuthorisationTypeRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-     /*  from("azure-blob://rddemo/jrdtest/authorisation_type.csv?credentials=#credsreg&operation=updateBlockBlob")
+       /* from("timer:hello?repeatCount=1")
+                .to("sql:TRUNCATE base_location_type,judicial_office_appointment,contract_type,region_type,judicial_role_type?dataSource=dataSource")
+                .to("log:test?showAll=true").end();*/
+
+    /*    from("azure-blob://rddemo/jrdtest/authorisation_type.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
+               // .startupOrder(3)
                 .to("file://blobdirectory6?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory6?noop=true&fileExist=Override")
+              //  .startupOrder(4)
                 .unmarshal() .bindy(BindyType.Csv, JudicialAuthorisationType.class)
                 .process(new JudicialAuthorisationTypeProcessor())
                 .split().body()
@@ -30,7 +36,6 @@ public class JudicialAuthorisationTypeRoute extends RouteBuilder {
                         "values(:#authorisation_id,:#authorisation_desc_en,:#authorisation_desc_cy, :#jurisdiction_id,:#jurisdiction_desc_en,:#jurisdiction_desc_cy)?dataSource=dataSource")
                 .to("log:test?showAll=true")
                 .end();*/
-
     }
 
 }

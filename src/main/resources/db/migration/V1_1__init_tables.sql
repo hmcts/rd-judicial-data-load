@@ -10,7 +10,7 @@ CREATE TABLE judicial_user_profile(
 	full_name varchar(256) NOT NULL,
 	post_nominals varchar(64),
 	contract_type varchar(32) NOT NULL,
-	work_pattern varchar(32) NOT NULL,
+	work_pattern varchar(64) NOT NULL,
 	email_id varchar(256) NOT NULL,
 	joining_date date,
 	last_working_date date,

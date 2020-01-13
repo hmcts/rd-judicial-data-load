@@ -19,9 +19,11 @@ public class JudicialUserRoleTypeRoute extends RouteBuilder {
 
        /*from("azure-blob://rddemo/jrdtest/Roles.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
+               //.startupOrder(9)
                 .to("file://blobdirectory2?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory2?noop=true&fileExist=Override")
+                //.startupOrder(10)
                 .unmarshal() .bindy(BindyType.Csv, JudicialUserRoleType.class)
                 .process(new JudicialUserRoleTypeProcessor())
                 .split().body()

@@ -17,11 +17,13 @@ public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-      /*  from("azure-blob://rddemo/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob")
+       from("azure-blob://rddemo/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("office-appointment")
                 .to("file://blobdirectory3?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory3?noop=true&fileExist=Override")
+                .startupOrder(2)
+                .delay(1000)
                 .unmarshal() .bindy(BindyType.Csv, JudicialOfficeAppointment.class)
                 .process(new JudicialOfficeAppointmentProcessor())
                 .split().body()
@@ -30,7 +32,7 @@ public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
                         "values(:#judicial_office_appointment_id, :#elinks_id,:#role_id, :#contract_type_id,:#base_location_id, :#region_id, " +
                         ":#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag,:#extracted_date)?dataSource=dataSource")
                 .to("log:test?showAll=true")
-                .end();*/
+                .end();
     }
 
 }

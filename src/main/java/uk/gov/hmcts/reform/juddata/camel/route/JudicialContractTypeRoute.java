@@ -18,11 +18,13 @@ public class JudicialContractTypeRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-     /*  from("azure-blob://rddemo/jrdtest/Contracts.csv?credentials=#credsreg&operation=updateBlockBlob")
+      /* from("azure-blob://rddemo/jrdtest/Contracts.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
+               //.startupOrder(5)
                 .to("file://blobdirectory4?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory4?noop=true&fileExist=Override")
+               // .startupOrder(6)
                 .unmarshal() .bindy(BindyType.Csv, JudicialContractType.class)
                 .process(new JudicialContractTypeProcessor())
                 .split().body()

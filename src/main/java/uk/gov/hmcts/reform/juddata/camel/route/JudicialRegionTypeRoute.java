@@ -18,11 +18,13 @@ public class JudicialRegionTypeRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-      /* from("azure-blob://rddemo/jrdtest/region_type.csv?credentials=#credsreg&operation=updateBlockBlob")
+       /*from("azure-blob://rddemo/jrdtest/region_type.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
+               //.startupOrder(7)
                 .to("file://blobdirectory5?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory5?noop=true&fileExist=Override")
+               // .startupOrder(8)
                 .unmarshal() .bindy(BindyType.Csv, JudicialRegionType.class)
                 .process(new JudicialRegionTypeProcessor())
                 .split().body()
@@ -30,7 +32,6 @@ public class JudicialRegionTypeRoute extends RouteBuilder {
                 .to("sql:insert into region_type (region_id,region_desc_en,region_desc_cy) values(:#region_id,:#region_desc_en,:#region_desc_cy)?dataSource=dataSource")
                 .to("log:test?showAll=true")
                 .end();*/
-
     }
 
 }

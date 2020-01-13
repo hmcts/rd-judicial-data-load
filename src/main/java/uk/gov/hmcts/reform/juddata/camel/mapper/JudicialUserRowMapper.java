@@ -26,7 +26,7 @@ public class JudicialUserRowMapper {
         judUserProfileRow.put("surname", userProfile.getSurName());
         judUserProfileRow.put("full_name", userProfile.getFullName());
         judUserProfileRow.put("post_nominals", userProfile.getPost_Nominals());
-        judUserProfileRow.put("contract_type", userProfile.getContract_Type_Id());
+        judUserProfileRow.put("contract_type", userProfile.getContract_Type_id());
         judUserProfileRow.put("work_pattern", userProfile.getWork_Pattern());
         judUserProfileRow.put("email_id", userProfile.getEmail_id());
         judUserProfileRow.put("joining_date", userProfile.getJoining_Date());

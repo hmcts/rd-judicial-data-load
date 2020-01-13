@@ -19,9 +19,11 @@ public class BaseLocationTypeRoute extends RouteBuilder {
 
        /* from("azure-blob://rddemo/jrdtest/BaseLocations.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("location-route")
+               // .startupOrder(1)
                 .to("file://blobdirectory1?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory1?noop=true&fileExist=Override")
+                //.startupOrder(2)
                 .unmarshal() .bindy(BindyType.Csv, BaseLocationType.class)
                 .process(new BaseLocationRecordProcessor())
                 .split().body()
@@ -29,7 +31,6 @@ public class BaseLocationTypeRoute extends RouteBuilder {
                 .to("sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)?dataSource=dataSource")
                 .to("log:test?showAll=true")
                 .end();*/
-
     }
 
 }
