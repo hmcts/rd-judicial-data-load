@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,7 @@ public class PushFileToBlobServiceImpl implements FilePushService {
         for (File file : files) {
             CloudBlockBlob cloudBlockBlob = cloudBlobContainer.getBlockBlobReference(file.getName());
             cloudBlockBlob.upload(new FileInputStream(file), file.length());
+            log.info("File uploaded successfully : " + file.getName() + " timestamp: " + LocalDateTime.now());
         }
     }
 
