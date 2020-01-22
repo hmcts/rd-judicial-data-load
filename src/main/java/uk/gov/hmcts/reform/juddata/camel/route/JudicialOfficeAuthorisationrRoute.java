@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.route;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.BindyType;
+import org.apache.camel.routepolicy.quartz2.CronScheduledRoutePolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAuthorisation;
@@ -82,14 +83,17 @@ public class JudicialOfficeAuthorisationrRoute extends RouteBuilder {
                 .to("file:target/messages?fileName=deadLetters.xml&fileExist=Append")
                         .rollback()
                 .end();*/
+       // CronScheduledRoutePolicy policy = new CronScheduledRoutePolicy();
+       // policy.setRouteStartTime("* */5 * * * ?");
 
-       from("azure-blob://rddemo/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob")
-                .id("role-route")
+       /* from("azure-blob://rddemo/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob")
+                .id("judicial_office_authorisation-route")
                 .to("file://blobdirectory7?noop=true&fileExist=Override").end();
 
         from("file://blobdirectory7?noop=true&fileExist=Override")
-                .startupOrder(3)
-                .delay(1500)
+               // .startupOrder(3)
+                .routePolicy(policy)
+                //.delay(1500)
                 .unmarshal() .bindy(BindyType.Csv, JudicialOfficeAuthorisation.class)
                 .process(new JudicialOfficeAuthorisationProcessor())
                 .split().body()
@@ -97,7 +101,7 @@ public class JudicialOfficeAuthorisationrRoute extends RouteBuilder {
                 .to("sql:insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,authorisation_id,jurisdiction_id,authorisation_date,extracted_date,created_date,last_loaded_date) " +
                         "values(:#judicial_office_auth_id,:#elinks_id,:#authorisation_id, :#jurisdiction_id,:#authorisation_date,:#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource")
                 .to("log:test?showAll=true")
-                .end();
+                .end();*/
     }
 
 }

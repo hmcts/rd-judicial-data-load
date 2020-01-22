@@ -22,10 +22,10 @@ public class JrdBlobScheduler {
 
     @Scheduled(cron = "${scheduler.config}")
     public void runBlobScheduler() throws IOException, NoSuchProviderException {
-        try {
+        /*try {
             blobStoreOrchestrator.execute();
         } catch (InvalidKeyException e) {
             log.error("Invalid blob store credentials",  e);
-        }
+        }*/
     }
 }

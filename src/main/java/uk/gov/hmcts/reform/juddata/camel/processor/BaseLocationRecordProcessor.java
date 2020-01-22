@@ -12,6 +12,8 @@ import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocationType;
 @Slf4j
 public class BaseLocationRecordProcessor implements Processor {
 
+
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) throws Exception {

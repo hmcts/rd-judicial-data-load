@@ -21,7 +21,7 @@ public class JudicialAuthorisationTypeRoute extends RouteBuilder {
                 .to("sql:TRUNCATE base_location_type,judicial_office_appointment,contract_type,region_type,judicial_role_type?dataSource=dataSource")
                 .to("log:test?showAll=true").end();*/
 
-    /*    from("azure-blob://rddemo/jrdtest/authorisation_type.csv?credentials=#credsreg&operation=updateBlockBlob")
+       /* from("azure-blob://rddemo/jrdtest/authorisation_type.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
                // .startupOrder(3)
                 .to("file://blobdirectory6?noop=true&fileExist=Override").end();

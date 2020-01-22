@@ -31,8 +31,8 @@ public class JudicialContractTypeRoute extends RouteBuilder {
                 .bean(judicialContractTypeRowMapper , "getMap")
                 .to("sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)?dataSource=dataSource")
                 .to("log:test?showAll=true")
-                .end();*/
-
+                .end();
+*/
     }
 
 }

@@ -17,7 +17,7 @@ public class JudicialUserRoleTypeRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-       /*from("azure-blob://rddemo/jrdtest/Roles.csv?credentials=#credsreg&operation=updateBlockBlob")
+      /* from("azure-blob://rddemo/jrdtest/Roles.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("role-route")
                //.startupOrder(9)
                 .to("file://blobdirectory2?noop=true&fileExist=Override").end();

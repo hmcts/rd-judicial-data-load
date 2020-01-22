@@ -260,9 +260,11 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-csv-starter', version: '2.24.2'
     compile group: 'org.apache.camel', name: 'camel-csv', version: '2.24.2'
     compile group: 'org.apache.camel', name: 'camel-sql', version: '2.24.2'
-    compile group: 'org.apache.camel', name: 'camel-quartz', version: '2.13.0'
+    //compile group: 'org.apache.camel', name: 'camel-quartz', version: '2.13.0'
+    compile group: 'org.apache.camel', name: 'camel-quartz2', version: '2.13.0'
 
-   // compile group: 'org.apache.camel', name: 'camel-azure', version: '2.20.0'
+
+    // compile group: 'org.apache.camel', name: 'camel-azure', version: '2.20.0'
     compile group: 'org.apache.camel', name: 'camel-azure-starter', version: '2.24.2'
     compile group: 'org.apache.camel', name: 'camel-bindy-starter', version: '2.24.2'
     compile group: 'org.apache.camel', name: 'camel-jdbc-starter', version: '2.24.2'
