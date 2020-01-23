@@ -37,8 +37,16 @@ public class BlobStoreOrchestratorImpl implements BlobStoreOrchestrator {
         */
         List<File> sftpFiles = fileReadService.read();
 
+        /*
+         Decrypt set of files with GPG private key
+        */
+        List<File> decryptedFiles = fileDecryptionService.decrypt(sftpFiles);
 
-        filePushService.push(sftpFiles);
+        /*
+          Push file to desired blob store
+          By this time the csv file has been decrypted
+         */
+        filePushService.push(decryptedFiles);
 
         /*
           Delete temporary created files
