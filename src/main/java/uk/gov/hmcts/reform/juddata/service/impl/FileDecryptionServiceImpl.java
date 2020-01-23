@@ -45,12 +45,6 @@ public class FileDecryptionServiceImpl implements FileDecryptionService {
     @Override
     public List<File> decrypt(List<File> files) throws IOException, NoSuchProviderException {
 
-        //TODO remove these loggers, added for testing
-        log.info("passphrase: " +  gpgConfig.getPassword());
-        log.info("private key: " +  gpgConfig.getPrivateKey());
-        log.info("public key: " +  gpgConfig.getPassword());
-        //////
-
         List<File> decryptedFiles = new ArrayList<File>();
         File publicKeyFile = createTempFile(new ByteArrayInputStream(gpgConfig.getPublicKey().getBytes(StandardCharsets.UTF_8)), "publicKey", ".gpg");
         File privateKeyFile = createTempFile(new ByteArrayInputStream(gpgConfig.getPrivateKey().getBytes(StandardCharsets.UTF_8)), "privateKey", ".gpg");
