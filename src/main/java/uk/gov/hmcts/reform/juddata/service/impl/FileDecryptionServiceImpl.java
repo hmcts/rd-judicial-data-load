@@ -45,6 +45,12 @@ public class FileDecryptionServiceImpl implements FileDecryptionService {
     @Override
     public List<File> decrypt(List<File> files) throws IOException, NoSuchProviderException {
 
+        //TODO remove these loggers, added for testing
+        log.info("passphrase: " +  gpgConfig.getPassword());
+        log.info("private key: " +  gpgConfig.getPrivateKey());
+        log.info("public key: " +  gpgConfig.getPassword());
+        //////
+
         List<File> decryptedFiles = new ArrayList<File>();
         File publicKeyFile = createTempFile(new ByteArrayInputStream(gpgConfig.getPublicKey().getBytes(StandardCharsets.UTF_8)), "publicKey", ".gpg");
         File privateKeyFile = createTempFile(new ByteArrayInputStream(gpgConfig.getPrivateKey().getBytes(StandardCharsets.UTF_8)), "privateKey", ".gpg");
@@ -52,13 +58,14 @@ public class FileDecryptionServiceImpl implements FileDecryptionService {
         Security.addProvider(new BouncyCastleProvider());
 
         for (File file : files) {
+            log.info("decrypting file : " + file.getName());
             final FileInputStream cipherTextStream = new FileInputStream(file);
             InputStream plaintextStream = BouncyGPG
                     .decryptAndVerifyStream()
                     .withConfig(keyringConfig)
                     .andIgnoreSignatures()
                     .fromEncryptedInputStream(cipherTextStream);
-
+            log.info("decrypting file success : " + file.getName());
             decryptedFiles.add(createTempFile(plaintextStream, file.getName().replace(".csv.gpg", ""), ".csv"));
         }
         fileDeletionService.delete(Arrays.asList(new File[]{publicKeyFile, publicKeyFile}));
