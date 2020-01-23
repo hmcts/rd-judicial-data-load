@@ -52,17 +52,17 @@ public class FileDecryptionServiceImpl implements FileDecryptionService {
         Security.addProvider(new BouncyCastleProvider());
 
         for (File file : files) {
-            log.info("decrypting file : " + file.getName());
             final FileInputStream cipherTextStream = new FileInputStream(file);
             InputStream plaintextStream = BouncyGPG
                     .decryptAndVerifyStream()
                     .withConfig(keyringConfig)
                     .andIgnoreSignatures()
                     .fromEncryptedInputStream(cipherTextStream);
-            log.info("decrypting file success : " + file.getName());
+
             decryptedFiles.add(createTempFile(plaintextStream, file.getName().replace(".csv.gpg", ""), ".csv"));
         }
         fileDeletionService.delete(Arrays.asList(new File[]{publicKeyFile, publicKeyFile}));
+        log.info("decryption successful!!");
         return decryptedFiles;
     }
 
