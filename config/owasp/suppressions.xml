@@ -1762,4 +1762,32 @@
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-common@.*$</packageUrl>
         <cve>CVE-2019-16869</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-webmvc-5.1.6.RELEASE.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-webmvc@.*$</packageUrl>
+        <cpe>cpe:/a:pivotal_software:spring_framework</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-webmvc-5.1.6.RELEASE.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-webmvc@.*$</packageUrl>
+        <cve>CVE-2020-5398</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-test-5.1.6.RELEASE.jar
+   ]]></notes>
+        <sha1>3f419c32390d4adabe431d726996479d799cec0e</sha1>
+        <cpe>cpe:/a:pivotal_software:spring_framework</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-test-5.1.6.RELEASE.jar
+   ]]></notes>
+        <sha1>3f419c32390d4adabe431d726996479d799cec0e</sha1>
+        <cve>CVE-2020-5398</cve>
+    </suppress>
 </suppressions>
