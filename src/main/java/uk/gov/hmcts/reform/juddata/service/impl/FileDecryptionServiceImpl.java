@@ -62,6 +62,7 @@ public class FileDecryptionServiceImpl implements FileDecryptionService {
             decryptedFiles.add(createTempFile(plaintextStream, file.getName().replace(".csv.gpg", ""), ".csv"));
         }
         fileDeletionService.delete(Arrays.asList(new File[]{publicKeyFile, publicKeyFile}));
+        log.info("decryption successful!!");
         return decryptedFiles;
     }
 
