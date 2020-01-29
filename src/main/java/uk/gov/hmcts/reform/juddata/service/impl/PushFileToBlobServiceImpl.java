@@ -39,8 +39,7 @@ public class PushFileToBlobServiceImpl implements FilePushService {
      * @throws StorageException StorageException
      */
     public CloudBlobContainer initializeBlobContainer() throws URISyntaxException, StorageException {
-        URI blobUri = URI.create("http://rdaat.privatelink.blob.core.windows.net");
-        CloudStorageAccount cloudStorageAccount = new CloudStorageAccount(credsreg, blobUri, blobUri, blobUri);
+        CloudStorageAccount cloudStorageAccount = new CloudStorageAccount(credsreg, false, azureBlobConfig.getBlobUrlSuffix(), azureBlobConfig.getAccountName());
         CloudBlobClient cloudBlobClient = cloudStorageAccount.createCloudBlobClient();
         return cloudBlobClient.getContainerReference(azureBlobConfig.getContainerName());
     }
