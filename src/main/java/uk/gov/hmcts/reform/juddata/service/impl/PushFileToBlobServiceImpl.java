@@ -9,6 +9,7 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +39,8 @@ public class PushFileToBlobServiceImpl implements FilePushService {
      * @throws StorageException StorageException
      */
     public CloudBlobContainer initializeBlobContainer() throws URISyntaxException, StorageException {
-        CloudStorageAccount cloudStorageAccount = new CloudStorageAccount(credsreg, false, azureBlobConfig.getBlobUrlSuffix(), azureBlobConfig.getAccountName());
+        URI blobUri = URI.create("http://rdaat.privatelink.blob.core.windows.net");
+        CloudStorageAccount cloudStorageAccount = new CloudStorageAccount(credsreg, blobUri, blobUri, blobUri);
         CloudBlobClient cloudBlobClient = cloudStorageAccount.createCloudBlobClient();
         return cloudBlobClient.getContainerReference(azureBlobConfig.getContainerName());
     }
