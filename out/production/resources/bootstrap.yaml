@@ -1,8 +1,0 @@
-spring:
-  cloud:
-    propertiesvolume:
-      prefixed: false
-      paths: /mnt/secrets/rd
-      aliases:
-        juddata-POSTGRES-PASS: spring.datasource.password
-        AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
