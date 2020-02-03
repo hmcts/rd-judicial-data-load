@@ -14,12 +14,12 @@ public class JudicialAuthorisationTypeRowMapper {
     public Map<String, Object> getMap(JudicialAuthorisationType authorizationType) {
 
         Map<String, Object> authorizationRow = new HashMap<>();
-        authorizationRow.put("authorisation_id", authorizationType.getAuthorisation_id());
-        authorizationRow.put("authorisation_desc_en", authorizationType.getAuthorisation_desc_en());
-        authorizationRow.put("authorisation_desc_cy", authorizationType.getAuthorisation_desc_cy());
-        authorizationRow.put("jurisdiction_id", authorizationType.getJurisdiction_id());
-        authorizationRow.put("jurisdiction_desc_en", authorizationType.getJurisdiction_desc_en());
-        authorizationRow.put("jurisdiction_desc_cy", authorizationType.getJurisdiction_desc_cy());
+        authorizationRow.put("authorisation_id", authorizationType.getAuthorisationId());
+        authorizationRow.put("authorisation_desc_en", authorizationType.getAuthorisationDescEn());
+        authorizationRow.put("authorisation_desc_cy", authorizationType.getAuthorisationDescCy());
+        authorizationRow.put("jurisdiction_id", authorizationType.getJurisdictionId());
+        authorizationRow.put("jurisdiction_desc_en", authorizationType.getJurisdictionDescEn());
+        authorizationRow.put("jurisdiction_desc_cy", authorizationType.getJurisdictionDescCy());
         return  authorizationRow;
     }
 

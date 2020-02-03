@@ -1,13 +1,9 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.BindyType;
-import org.apache.camel.routepolicy.quartz2.CronScheduledRoutePolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 
 @Component
 public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
@@ -18,8 +14,8 @@ public class JudicialOfficeAppointmentProcessorRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-       // CronScheduledRoutePolicy policy = new CronScheduledRoutePolicy();
-       // policy.setRouteStartTime("* */7 * * * ?");
+        // CronScheduledRoutePolicy policy = new CronScheduledRoutePolicy();
+        // policy.setRouteStartTime("* */7 * * * ?");
 
         /*from("azure-blob://rddemo/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("office-appointment")

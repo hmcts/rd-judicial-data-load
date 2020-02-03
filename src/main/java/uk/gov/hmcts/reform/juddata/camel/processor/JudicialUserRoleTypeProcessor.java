@@ -23,13 +23,13 @@ public class JudicialUserRoleTypeProcessor implements Processor {
         for (JudicialUserRoleType user : judicialUserRoleTypes) {
 
             JudicialUserRoleType validUserRole = fetch(user);
-             if (null != validUserRole) {
+            if (null != validUserRole) {
 
-                 userRoles.add(validUserRole);
-             } else {
+                userRoles.add(validUserRole);
+            } else {
 
-                 log.info("Invalid JudicialUserRole record ");
-             }
+                log.info("Invalid JudicialUserRole record ");
+            }
 
             exchange.getIn().setBody(userRoles);
 
@@ -42,7 +42,7 @@ public class JudicialUserRoleTypeProcessor implements Processor {
     private JudicialUserRoleType fetch(JudicialUserRoleType userRole) {
 
         JudicialUserRoleType roleAfterValidation = null;
-        if (null != userRole.getRole_id()) {
+        if (null != userRole.getRoleId()) {
             roleAfterValidation = userRole;
         }
         return roleAfterValidation;

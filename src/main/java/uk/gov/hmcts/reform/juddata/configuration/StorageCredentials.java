@@ -12,8 +12,7 @@ public class StorageCredentials {
     AzureBlobConfig azureBlobConfig;
 
     @Bean(name = "credsreg")
-    public com.microsoft.azure.storage.StorageCredentials credentials()
-    {
+    public com.microsoft.azure.storage.StorageCredentials credentials() {
 
         return new StorageCredentialsAccountAndKey(azureBlobConfig.getAccountName(), azureBlobConfig.getAccountKey());
 

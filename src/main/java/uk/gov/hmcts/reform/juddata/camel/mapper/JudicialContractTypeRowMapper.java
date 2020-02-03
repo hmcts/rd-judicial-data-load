@@ -14,9 +14,9 @@ public class JudicialContractTypeRowMapper {
     public Map<String, Object> getMap(JudicialContractType contractType) {
 
         Map<String, Object> roleRow = new HashMap<>();
-        roleRow.put("contract_type_id", contractType.getContract_type_id());
-        roleRow.put("contract_type_desc_en", contractType.getContract_type_desc_en());
-        roleRow.put("contract_type_desc_cy", contractType.getContract_type_desc_cy());
+        roleRow.put("contract_type_id", contractType.getContractTypeId());
+        roleRow.put("contract_type_desc_en", contractType.getContractTypeDescEn());
+        roleRow.put("contract_type_desc_cy", contractType.getContractTypeDescCy());
         return  roleRow;
     }
 

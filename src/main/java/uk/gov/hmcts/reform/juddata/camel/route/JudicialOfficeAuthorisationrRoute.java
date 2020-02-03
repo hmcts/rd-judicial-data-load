@@ -1,20 +1,16 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
-
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.BindyType;
-import org.apache.camel.routepolicy.quartz2.CronScheduledRoutePolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAuthorisationRowMapper;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAuthorisationProcessor;
 
 @Component
 public class JudicialOfficeAuthorisationrRoute extends RouteBuilder {
 
     @Autowired
     JudicialOfficeAuthorisationRowMapper judicialOfficeAuthorisationRowMapper;
+
     @Override
     public void configure() throws Exception {
 

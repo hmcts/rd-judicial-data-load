@@ -1,31 +1,19 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.BindyType;
-import org.apache.camel.routepolicy.quartz2.CronScheduledRoutePolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocationType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialAuthorisationType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialRegionType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
 import uk.gov.hmcts.reform.juddata.camel.mapper.BaseLocationRowTypeMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialAuthorisationTypeRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialContractTypeRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialRegionTypeRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialRoleTypeRowMapper;
-import uk.gov.hmcts.reform.juddata.camel.processor.BaseLocationRecordProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialAuthorisationTypeProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialContractTypeProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialRegionTypeProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserRoleTypeProcessor;
-
-import java.util.List;
-import java.util.Map;
 
 @Component
 @Slf4j
@@ -49,25 +37,25 @@ public class BaseLocationTypeRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         // Java
-        CronScheduledRoutePolicy policy = new CronScheduledRoutePolicy();
-        policy.setRouteStartTime("0 0/2 * * * ?");
+        //        CronScheduledRoutePolicy policy = new CronScheduledRoutePolicy();
+        //        policy.setRouteStartTime("0 0/2 * * * ?");
 
         //from("scheduler=quartz2&scheduler.cron=00+*/5+*+1/1+*+?+*")
         //        .routeId("testRoute")
         //        .log("File name : ${header.CamelFileName}")
         //        .to("azure-blob://rddemo/jrdtest/BaseLocations.csv?credentials=#credsreg&operation=updateBlockBlob");
 
-      //  from("quartz2&scheduler.cron=00+*/5+*+1/1+*+?+*")
+        //  from("quartz2&scheduler.cron=00+*/5+*+1/1+*+?+*")
         //                .routeId("testRoute")
 
         //        .to("azure-blob://rddemo/jrdtest/BaseLocations.csv?credentials=#credsreg&operation=updateBlockBlob");
 
-        from("azure-blob://rddemo/jrdtest/BaseLocations.csv?credentials=#credsreg&operation=updateBlockBlob")
-                .id("location-route")
-               // .routePolicy(policy)
-                .to("log:test1?showAll=true")
-                .to("file://blobdirectory1?noop=true&fileExist=Override").stop();
-                //.to("file:blobdirectory1/noop=true");
+        //        from("azure-blob://rddemo/jrdtest/BaseLocations.csv?credentials=#credsreg&operation=updateBlockBlob")
+        //                .id("location-route")
+        //               // .routePolicy(policy)
+        //                .to("log:test1?showAll=true")
+        //                .to("file://blobdirectory1?noop=true&fileExist=Override").stop();
+        //                //.to("file:blobdirectory1/noop=true");
 
         /*from("file://blobdirectory1?noop=true&fileExist=Override")
                 .unmarshal()
@@ -76,15 +64,15 @@ public class BaseLocationTypeRoute extends RouteBuilder {
                // .to("log:my.package?multiline=true")
                 .to("file://blobdirectory1?scheduler=quartz2").end();*/
 
-        from("file://blobdirectory1?scheduler=quartz2&scheduler.cron=00+*/2+*+1/1+*+?+*")
-                .unmarshal()
-                .bindy(BindyType.Csv, BaseLocationType.class)
-                .process(new BaseLocationRecordProcessor())
-                .split().body()
-                .bean(baseLocationRowTypeMapper , "getMap")
-                .to("sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)?dataSource=dataSource")
-                .to("log:test?showAll=true")
-                .end();
+        //        from("file://blobdirectory1?scheduler=quartz2&scheduler.cron=00+*/2+*+1/1+*+?+*")
+        //                .unmarshal()
+        //                .bindy(BindyType.Csv, BaseLocationType.class)
+        //                .process(new BaseLocationRecordProcessor())
+        //                .split().body()
+        //                .bean(baseLocationRowTypeMapper , "getMap")
+        //                .to("sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)?dataSource=dataSource")
+        //                .to("log:test?showAll=true")
+        //                .end();
 
        /* from("azure-blob://rddemo/jrdtest/authorisation_type.csv?credentials=#credsreg&operation=updateBlockBlob")
                 .id("authorization-route")
@@ -153,10 +141,10 @@ public class BaseLocationTypeRoute extends RouteBuilder {
             @SuppressWarnings("unchecked")
             @Override
             public void process(Exchange exchange) throws Exception {
-               List<List<String>> data = (List<List<String>>) exchange.getIn().getBody();
-               Map<String, Object> headers = exchange.getIn().getHeaders();
+                List<List<String>> data = (List<List<String>>) exchange.getIn().getBody();
+                Map<String, Object> headers = exchange.getIn().getHeaders();
                 // iterate over each line
-                for(String line : data.get(0)) {
+                for (String line : data.get(0)) {
                     log.info("Total columns: " + data.get(0).size());
                     log.info("Column::Name::" + line); // first column
                 }

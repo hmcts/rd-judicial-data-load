@@ -7,13 +7,14 @@ import com.microsoft.azure.storage.blob.ServiceURL;
 import com.microsoft.azure.storage.blob.SharedKeyCredentials;
 import com.microsoft.azure.storage.blob.StorageURL;
 import com.microsoft.azure.storage.blob.TransferManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.FileChannel;
 import java.security.InvalidKeyException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class PushFileToBlobServiceImpl implements PushFileService {
 
     public void uploadFile(BlockBlobURL blob, File sourceFile) throws IOException {
         log.info("Start uploading file ... " + sourceFile.getName());
-      // final AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(sourceFile.toPath());
+        // final AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(sourceFile.toPath());
 
         TransferManager.uploadFileToBlockBlob(FileChannel.open(sourceFile.toPath()), blob, 8 * 1024 * 1024, null)
                 .ignoreElement()

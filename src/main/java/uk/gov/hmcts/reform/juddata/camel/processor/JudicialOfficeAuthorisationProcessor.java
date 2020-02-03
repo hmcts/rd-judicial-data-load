@@ -23,13 +23,13 @@ public class JudicialOfficeAuthorisationProcessor implements Processor {
         for (JudicialOfficeAuthorisation officeAppointment : judicialOfficeAppointment) {
 
             JudicialOfficeAuthorisation validUser = fetch(officeAppointment);
-             if (null != validUser) {
+            if (null != validUser) {
 
-                 users.add(validUser);
-             } else {
+                users.add(validUser);
+            } else {
 
-                 log.info(" Invalid JudicialOfficeAppointment record ");
-             }
+                log.info(" Invalid JudicialOfficeAppointment record ");
+            }
 
             exchange.getIn().setBody(users);
 
@@ -43,7 +43,7 @@ public class JudicialOfficeAuthorisationProcessor implements Processor {
 
         JudicialOfficeAuthorisation officeAuthoAfterValidation = null;
 
-        if (null != officeAuthorization.getElinks_id()) {
+        if (null != officeAuthorization.getElinksId()) {
 
             officeAuthoAfterValidation = officeAuthorization;
 

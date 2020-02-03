@@ -23,13 +23,13 @@ public class JudicialOfficeAppointmentProcessor implements Processor {
         for (JudicialOfficeAppointment officeAppointment : judicialOfficeAppointment) {
 
             JudicialOfficeAppointment validUser = fetch(officeAppointment);
-             if (null != validUser) {
+            if (null != validUser) {
 
-                 users.add(validUser);
-             } else {
+                users.add(validUser);
+            } else {
 
-                 log.info(" Invalid JudicialOfficeAppointment record ");
-             }
+                log.info(" Invalid JudicialOfficeAppointment record ");
+            }
 
             exchange.getIn().setBody(users);
 
@@ -42,7 +42,7 @@ public class JudicialOfficeAppointmentProcessor implements Processor {
     private JudicialOfficeAppointment fetch(JudicialOfficeAppointment officeAppointment) {
 
         JudicialOfficeAppointment offAppAfterValidation = null;
-        if (null != officeAppointment.getElinks_id()) {
+        if (null != officeAppointment.getElinksId()) {
 
             offAppAfterValidation = officeAppointment;
 

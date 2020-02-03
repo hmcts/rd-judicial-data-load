@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.juddata.scheduler;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.NoSuchProviderException;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

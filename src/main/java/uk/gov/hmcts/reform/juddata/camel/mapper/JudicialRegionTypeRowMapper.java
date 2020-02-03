@@ -14,9 +14,9 @@ public class JudicialRegionTypeRowMapper {
     public Map<String, Object> getMap(JudicialRegionType regionType) {
 
         Map<String, Object> roleRow = new HashMap<>();
-        roleRow.put("region_id", regionType.getRegion_id());
-        roleRow.put("region_desc_en", regionType.getRegion_desc_en());
-        roleRow.put("region_desc_cy", regionType.getRegion_desc_cy());
+        roleRow.put("region_id", regionType.getRegionId());
+        roleRow.put("region_desc_en", regionType.getRegionDescEn());
+        roleRow.put("region_desc_cy", regionType.getRegionDescCy());
         return  roleRow;
     }
 

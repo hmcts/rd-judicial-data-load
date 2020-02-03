@@ -193,7 +193,7 @@ sonarqube {
         property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/integration.exec"
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
-        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
+        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/**," +  //@To do need to cover sonar coverage for camel routes
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java"
     }
 }

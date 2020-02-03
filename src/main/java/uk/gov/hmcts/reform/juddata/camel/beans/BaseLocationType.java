@@ -7,17 +7,17 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX" , skipFirstLine = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
 public class BaseLocationType {
 
-    @DataField(pos = 1)
-    String base_location_id;
+    @DataField(pos = 1, columnName = "base_location_id")
+    String baseLocationId;
 
-    @DataField(pos = 2)
-    String court_name;
+    @DataField(pos = 2, columnName = "court_name")
+    String courtName;
 
-    @DataField(pos = 3)
-    String court_type;
+    @DataField(pos = 3, columnName = "court_type")
+    String courtType;
 
     @DataField(pos = 4)
     String circuit;

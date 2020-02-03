@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocationType;
 public class BaseLocationRecordProcessor implements Processor {
 
 
-
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -24,18 +23,16 @@ public class BaseLocationRecordProcessor implements Processor {
         log.info("Location Records count before validation::" + locationsRecords.size());
 
         for (BaseLocationType user : locationsRecords) {
-
             BaseLocationType validLocation = fetch(user);
-             if (null != validLocation) {
+            if (null != validLocation) {
 
-                 locations.add(validLocation);
-             } else {
+                locations.add(validLocation);
+            } else {
 
-                 log.info("Invalid Location record ");
-             }
+                log.info("Invalid Location record ");
+            }
 
             exchange.getIn().setBody(locations);
-
         }
 
         log.info("Location Records count After Validation::" + locations.size());
@@ -43,9 +40,8 @@ public class BaseLocationRecordProcessor implements Processor {
 
 
     private BaseLocationType fetch(BaseLocationType location) {
-
         BaseLocationType locationAfterValidation = null;
-        if (null != location.getBase_location_id()) {
+        if (null != location.getBaseLocationId()) {
             locationAfterValidation = location;
         }
         return locationAfterValidation;

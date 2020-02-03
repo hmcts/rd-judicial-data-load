@@ -14,9 +14,9 @@ public class JudicialRoleTypeRowMapper {
     public Map<String, Object> getMap(JudicialUserRoleType role) {
 
         Map<String, Object> roleRow = new HashMap<>();
-        roleRow.put("role_id", role.getRole_id());
-        roleRow.put("role_desc_en", role.getRole_desc_en());
-        roleRow.put("role_desc_cy", role.getRole_desc_cy());
+        roleRow.put("role_id", role.getRoleId());
+        roleRow.put("role_desc_en", role.getRoleDescEn());
+        roleRow.put("role_desc_cy", role.getRoleDescCy());
         return  roleRow;
     }
 

@@ -7,25 +7,25 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX" , skipFirstLine = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
 public class JudicialAuthorisationType {
 
-    @DataField(pos = 1)
-    String authorisation_id;
+    @DataField(pos = 1, columnName = "authorisation_id")
+    String authorisationId;
 
-    @DataField(pos = 2)
-    String authorisation_desc_en;
+    @DataField(pos = 2, columnName = "authorisation_desc_en")
+    String authorisationDescEn;
 
-    @DataField(pos = 3)
-    String authorisation_desc_cy;
+    @DataField(pos = 3, columnName = "authorisation_desc_cy")
+    String authorisationDescCy;
 
-    @DataField(pos = 4)
-    String jurisdiction_id;
+    @DataField(pos = 4, columnName = "jurisdiction_id")
+    String jurisdictionId;
 
-    @DataField(pos = 5)
-    String jurisdiction_desc_en;
+    @DataField(pos = 5, columnName = "jurisdiction_desc_en")
+    String jurisdictionDescEn;
 
-    @DataField(pos = 6)
-    String jurisdiction_desc_cy;
+    @DataField(pos = 6, columnName = "jurisdiction_desc_cy")
+    String jurisdictionDescCy;
 
 }

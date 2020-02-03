@@ -13,7 +13,7 @@ public class JudicialAuthorisationTypeProcessor implements Processor {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
 
         List<JudicialAuthorisationType> authorizationTypes = new ArrayList<>();
         List<JudicialAuthorisationType> judicialAuthorizationTypes = (List<JudicialAuthorisationType>) exchange.getIn().getBody();
@@ -23,13 +23,13 @@ public class JudicialAuthorisationTypeProcessor implements Processor {
         for (JudicialAuthorisationType authorizationType : judicialAuthorizationTypes) {
 
             JudicialAuthorisationType validAuthorizationType = fetch(authorizationType);
-             if (null != validAuthorizationType) {
+            if (null != validAuthorizationType) {
 
-                 authorizationTypes.add(validAuthorizationType);
-             } else {
+                authorizationTypes.add(validAuthorizationType);
+            } else {
 
-                 log.info("Invalid JudicialContractTypes record ");
-             }
+                log.info("Invalid JudicialContractTypes record ");
+            }
 
             exchange.getIn().setBody(authorizationTypes);
 
@@ -42,7 +42,7 @@ public class JudicialAuthorisationTypeProcessor implements Processor {
     private JudicialAuthorisationType fetch(JudicialAuthorisationType authorizationType) {
 
         JudicialAuthorisationType authorizationTypeAfterValidation = null;
-        if (null != authorizationType.getAuthorisation_id()) {
+        if (null != authorizationType.getAuthorisationId()) {
             authorizationTypeAfterValidation = authorizationType;
         }
         return authorizationTypeAfterValidation;

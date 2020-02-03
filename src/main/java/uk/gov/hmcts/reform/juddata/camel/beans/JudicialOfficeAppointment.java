@@ -11,35 +11,35 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX" , skipFirstLine = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
 public class JudicialOfficeAppointment {
 
-    @DataField(pos = 1)
-    String elinks_id;
+    @DataField(pos = 1, columnName = "elinks_id")
+    String elinksId;
 
-    @DataField(pos = 2)
-    String role_id;
+    @DataField(pos = 2, columnName = "role_id")
+    String roleId;
 
-    @DataField(pos = 3)
-    String contract_type;
+    @DataField(pos = 3, columnName = "contract_type")
+    String contractType;
 
-    @DataField(pos = 4)
-    String base_location_id;
+    @DataField(pos = 4, columnName = "base_location_id")
+    String baseLocationId;
 
-    @DataField(pos = 5)
-    String region_id;
+    @DataField(pos = 5, columnName = "region_id")
+    String regionId;
 
-    @DataField(pos = 6)
-    Boolean is_Principal_Appointment;
+    @DataField(pos = 6, columnName = "is_Principal_Appointment")
+    Boolean isPrincipalAppointment;
 
-    @DataField(pos = 7, pattern = "dd/MM/yyyy hh:mm")
-    LocalDate start_Date;
+    @DataField(pos = 7, pattern = "dd/MM/yyyy hh:mm", columnName = "start_Date")
+    LocalDate startDate;
 
-    @DataField(pos = 8,  pattern = "dd/MM/yyyy hh:mm")
-    LocalDate end_Date;
+    @DataField(pos = 8,  pattern = "dd/MM/yyyy hh:mm", columnName = "end_Date")
+    LocalDate endDate;
 
-    @DataField(pos = 9)
-    boolean active_Flag;
+    @DataField(pos = 9, columnName = "active_Flag")
+    boolean activeFlag;
 
     @DataField(pos = 10)
     String extractedDate;

@@ -23,13 +23,13 @@ public class JudicialRegionTypeProcessor implements Processor {
         for (JudicialRegionType regionType : judicialRegionTypes) {
 
             JudicialRegionType validRegionType = fetch(regionType);
-             if (null != validRegionType) {
+            if (null != validRegionType) {
 
-                 regionTypes.add(validRegionType);
-             } else {
+                regionTypes.add(validRegionType);
+            } else {
 
-                 log.info("Invalid JudicialRegionType record ");
-             }
+                log.info("Invalid JudicialRegionType record ");
+            }
 
             exchange.getIn().setBody(regionTypes);
 
@@ -42,7 +42,7 @@ public class JudicialRegionTypeProcessor implements Processor {
     private JudicialRegionType fetch(JudicialRegionType regionType) {
 
         JudicialRegionType regionTypeAfterValidation = null;
-        if (null != regionType.getRegion_id()) {
+        if (null != regionType.getRegionId()) {
             regionTypeAfterValidation = regionType;
         }
         return regionTypeAfterValidation;

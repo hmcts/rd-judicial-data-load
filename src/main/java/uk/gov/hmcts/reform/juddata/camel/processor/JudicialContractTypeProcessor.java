@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
-
 
 @Slf4j
 public class JudicialContractTypeProcessor implements Processor {
@@ -25,13 +23,13 @@ public class JudicialContractTypeProcessor implements Processor {
         for (JudicialContractType contractType : judicialContractTypes) {
 
             JudicialContractType validUserRole = fetch(contractType);
-             if (null != validUserRole) {
+            if (null != validUserRole) {
 
-                 contractTypes.add(validUserRole);
-             } else {
+                contractTypes.add(validUserRole);
+            } else {
 
-                 log.info("Invalid JudicialContractTypes record ");
-             }
+                log.info("Invalid JudicialContractTypes record ");
+            }
 
             exchange.getIn().setBody(contractTypes);
 
@@ -44,7 +42,7 @@ public class JudicialContractTypeProcessor implements Processor {
     private JudicialContractType fetch(JudicialContractType contractType) {
 
         JudicialContractType contractTypeAfterValidation = null;
-        if (null != contractType.getContract_type_id()) {
+        if (null != contractType.getContractTypeId()) {
             contractTypeAfterValidation = contractType;
         }
         return contractTypeAfterValidation;

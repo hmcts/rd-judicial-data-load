@@ -19,19 +19,19 @@ public class JudicialUserRowMapper {
     public Map<String, Object> getMap(JudicialUserProfile userProfile) {
 
         Map<String, Object> judUserProfileRow = new HashMap<>();
-        judUserProfileRow.put("elinks_id", userProfile.getElinks_id());
-        judUserProfileRow.put("personal_code", userProfile.getPersonal_Code());
+        judUserProfileRow.put("elinks_id", userProfile.getElinksId());
+        judUserProfileRow.put("personal_code", userProfile.getPersonalCode());
         judUserProfileRow.put("title", userProfile.getTitle());
-        judUserProfileRow.put("known_as", userProfile.getKnown_As());
+        judUserProfileRow.put("known_as", userProfile.getKnownAs());
         judUserProfileRow.put("surname", userProfile.getSurName());
         judUserProfileRow.put("full_name", userProfile.getFullName());
-        judUserProfileRow.put("post_nominals", userProfile.getPost_Nominals());
-        judUserProfileRow.put("contract_type", userProfile.getContract_Type_id());
-        judUserProfileRow.put("work_pattern", userProfile.getWork_Pattern());
-        judUserProfileRow.put("email_id", userProfile.getEmail_id());
-        judUserProfileRow.put("joining_date", userProfile.getJoining_Date());
-        judUserProfileRow.put("last_working_date", userProfile.getLastWorking_Date());
-        judUserProfileRow.put("active_flag", userProfile.isActive_Flag());
+        judUserProfileRow.put("post_nominals", userProfile.getPostNominals());
+        judUserProfileRow.put("contract_type", userProfile.getContractTypeId());
+        judUserProfileRow.put("work_pattern", userProfile.getWorkPattern());
+        judUserProfileRow.put("email_id", userProfile.getEmailId());
+        judUserProfileRow.put("joining_date", userProfile.getJoiningDate());
+        judUserProfileRow.put("last_working_date", userProfile.getLastWorkingDate());
+        judUserProfileRow.put("active_flag", userProfile.isActiveFlag());
         judUserProfileRow.put("extracted_date", getDateTimeStamp(userProfile.getExtractedDate()));
 
         log.info("timestamp Date:: " + judUserProfileRow.get("extracted_date"));

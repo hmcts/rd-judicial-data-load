@@ -20,11 +20,11 @@ public class JudicialOfficeAuthorisationRowMapper {
         Map<String, Object> judOfficeAppointmentRow = new HashMap<>();
 
         judOfficeAppointmentRow.put("judicial_office_auth_id", generateId());
-        judOfficeAppointmentRow.put("elinks_id", judicialOfficeAuthorisation.getElinks_id());
-        judOfficeAppointmentRow.put("authorisation_id", judicialOfficeAuthorisation.getAuthorisation_id());
-        judOfficeAppointmentRow.put("jurisdiction_id", judicialOfficeAuthorisation.getJurisdiction_id());
-        judOfficeAppointmentRow.put("authorisation_date", judicialOfficeAuthorisation.getAuthorisation_date());
-        judOfficeAppointmentRow.put("extracted_date", getDateTimeStamp(judicialOfficeAuthorisation.getExtracted_date()));
+        judOfficeAppointmentRow.put("elinks_id", judicialOfficeAuthorisation.getElinksId());
+        judOfficeAppointmentRow.put("authorisation_id", judicialOfficeAuthorisation.getAuthorisationId());
+        judOfficeAppointmentRow.put("jurisdiction_id", judicialOfficeAuthorisation.getJurisdictionId());
+        judOfficeAppointmentRow.put("authorisation_date", judicialOfficeAuthorisation.getAuthorisationDate());
+        judOfficeAppointmentRow.put("extracted_date", getDateTimeStamp(judicialOfficeAuthorisation.getExtractedDate()));
         judOfficeAppointmentRow.put("created_date", getCurrentTimeStamp());
         judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
         return  judOfficeAppointmentRow;
@@ -40,7 +40,7 @@ public class JudicialOfficeAuthorisationRowMapper {
     }
 
     private int generateId() {
-        seqNumber = seqNumber +1;
+        seqNumber = seqNumber + 1;
         return seqNumber;
     }
 
