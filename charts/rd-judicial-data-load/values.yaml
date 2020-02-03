@@ -3,18 +3,20 @@ java:
   ingressHost: rd-judicial-data-load-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   aadIdentityName: rd
   environment:
-    POSTGRES_HOST: rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
-    POSTGRES_USERNAME: dbjuddata@rd-judicial-data-load-postgres-db-{{ .Values.global.environment }}
+    POSTGRES_HOST: rd-judicial-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
+    POSTGRES_USERNAME: dbjuddata@rd-judicial-api-postgres-db-{{ .Values.global.environment }}
     POSTGRES_PORT: 5432
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
+  postgresql:
+    enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
   
   keyVaults:
     "rd":
       resourceGroup: rd
       secrets:
-        - judicial-data-load-POSTGRES-PASS
+        - judicial-data-api-POSTGRES-PASS
         - AppInsightsInstrumentationKey
         - ACCOUNT-NAME
         - ACCOUNT-KEY
