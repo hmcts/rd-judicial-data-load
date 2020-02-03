@@ -14,7 +14,7 @@ public class JudicialUserProfileFileReadProcessor implements Processor {
     public void process(Exchange exchange) {
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();
-        exchange.getOut().setBody(consumer.receiveBody("azure-blob://rdaat/jrdtest/judicial_userprofile.csv?"
+        exchange.getOut().setBody(consumer.receiveBody("azure-blob://rddemo/jrdtest/judicial_userprofile.csv?"
                + "credentials=#credsreg&operation=updateBlockBlob"));
         log.info(" JudicialUserProfileProcessorWithTimer ::");
     }
