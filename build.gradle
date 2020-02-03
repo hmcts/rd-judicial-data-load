@@ -276,15 +276,7 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-restlet', version: '2.24.2'
 
     compile group: 'org.apache.camel', name: 'camel-core', version: '2.24.2'
-    group: 'org.apache.camel', name: 'spi-annotations', version: '3.0.0'
-
-
-    //  compile group: 'org.apache.jclouds.provider', name: 'azureblob', version: '2.2.0'
-  //  compile group: 'com.microsoft.azure', name: 'azure-storage', version: '8.4.0'
-
-
-
-
+    compile group: 'org.apache.camel', name: 'spi-annotations', version: '3.0.0'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
