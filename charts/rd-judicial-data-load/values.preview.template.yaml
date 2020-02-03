@@ -1,4 +1,29 @@
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
-
+  aadIdentityName:
+  environment:
+    POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
+    POSTGRES_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
+    POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
+    POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+  postgresql:
+    postgresqlUsername: dbjuddata
+    postgresqlPassword: dbjuddata
+    postgresqlDatabase: dbjuddata
+    #Whether to deploy the Postgres Chart or not
+    enabled: true
+  keyVaults:
+    rd:
+      secrets:
+          - ACCOUNT-NAME
+          - ACCOUNT-KEY
+          - CONTAINER-NAME
+          - BLOB-URL-SUFFIX
+          - SFTP-USER-NAME
+          - SFTP-USER-PASSWORD
+          - SFTP-HOST
+          - SFTP-FILE
+          - GPG-PUBLIC-KEY
+          - GPG-PASSWORD
+          - GPG-PRIVATE-KEY

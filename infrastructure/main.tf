@@ -13,10 +13,6 @@ locals {
   non_preview_vault_name = "${var.raw_product}-${var.env}"
   key_vault_name = "${var.env == "preview" || var.env == "spreview" ? local.preview_vault_name : local.non_preview_vault_name}"
 
-  s2s_url = "http://rpe-service-auth-provider-${local.local_env}.service.core-compute-${local.local_env}.internal"
-  s2s_vault_name = "s2s-${local.local_env}"
-  s2s_vault_uri = "https://s2s-${local.local_env}.vault.azure.net/"
-
 }
 
 data "azurerm_key_vault" "rd_key_vault" {
@@ -24,27 +20,60 @@ data "azurerm_key_vault" "rd_key_vault" {
   resource_group_name = "${local.key_vault_name}"
 }
 
-data "azurerm_key_vault" "s2s_key_vault" {
-  name = "s2s-${local.local_env}"
-  resource_group_name = "rpe-service-auth-provider-${local.local_env}"
-}
-
-data "azurerm_key_vault_secret" "s2s_microservice" {
-  name = "s2s-microservice"
+data "azurerm_key_vault_secret" "ACCOUNT_NAME" {
+  name = "ACCOUNT-NAME"
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
-data "azurerm_key_vault_secret" "s2s_url" {
-  name = "s2s-url"
+data "azurerm_key_vault_secret" "ACCOUNT_KEY" {
+  name = "ACCOUNT-KEY"
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
-
-data "azurerm_key_vault_secret" "s2s_secret" {
-  name = "microservicekey-rd-judicial-api"
-  key_vault_id = "${data.azurerm_key_vault.s2s_key_vault.id}"
+data "azurerm_key_vault_secret" "CONTAINER_NAME" {
+  name = "CONTAINER-NAME"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
+data "azurerm_key_vault_secret" "BLOB_URL_SUFFIX" {
+  name = "BLOB-URL-SUFFIX"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_USER_NAME" {
+  name = "SFTP-USER-NAME"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_USER_PASSWORD" {
+  name = "SFTP-USER-PASSWORD"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_HOST" {
+  name = "SFTP-HOST"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "SFTP_FILE" {
+  name = "SFTP-FILE"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "GPG_PASSWORD" {
+  name = "GPG-PASSWORD"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "GPG_PUBLIC_KEY" {
+  name = "GPG-PUBLIC-KEY"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
+data "azurerm_key_vault_secret" "GPG_PRIVATE_KEY" {
+  name = "GPG-PRIVATE-KEY"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name      = "${var.component}-POSTGRES-USER"
@@ -86,6 +115,8 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+
+
 module "db-judicial-ref-data" {
   source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
   product = "${var.product}-${var.component}-postgres-db"
@@ -97,7 +128,7 @@ module "db-judicial-ref-data" {
   common_tags = "${var.common_tags}"
 }
 
-module "rd_judicial_api" {
+module "rd_judicial_data_load" {
   source = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product = "${var.product}-${var.component}"
   location = "${var.location}"
@@ -124,8 +155,6 @@ module "rd_judicial_api" {
     POSTGRES_PASSWORD = "${module.db-judicial-ref-data.postgresql_password}"
     POSTGRES_CONNECTION_OPTIONS = "?"
 
-    S2S_URL = "${data.azurerm_key_vault_secret.s2s_url.value}"
-    S2S_SECRET = "${data.azurerm_key_vault_secret.s2s_secret.value}"
 
     ROOT_LOGGING_LEVEL = "${var.root_logging_level}"
     LOG_LEVEL_SPRING_WEB = "${var.log_level_spring_web}"

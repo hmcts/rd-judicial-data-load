@@ -1,8 +1,10 @@
 package uk.gov.hmcts.reform.juddata.scheduler;
 
+import com.microsoft.azure.storage.StorageException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchProviderException;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +24,10 @@ public class JrdBlobScheduler {
 
     @Scheduled(cron = "${scheduler.config}")
     public void runBlobScheduler() throws IOException, NoSuchProviderException {
-        /*try {
+        try {
             blobStoreOrchestrator.execute();
-        } catch (InvalidKeyException e) {
+        } catch (InvalidKeyException | URISyntaxException | StorageException e) {
             log.error("Invalid blob store credentials",  e);
-        }*/
+        }
     }
 }
