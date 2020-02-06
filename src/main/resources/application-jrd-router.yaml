@@ -1,0 +1,15 @@
+router:
+  scheduler-expression: timer://JudicialUserFileProcessorTimer?period=180s
+  id: judicial-office
+  user-profile-insert:
+    insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
+    active_flag,extracted_date,created_date,last_loaded_date)
+    values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
+    :#contract_type,:#work_pattern, :#email_id,:#joining_date,:#last_working_date,:#active_flag,
+    :#extracted_date, now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
+    known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
+    contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = :#joining_date,
+    last_working_date = :#last_working_date, active_flag = :#active_flag,
+    extracted_date = :#extracted_date, last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
+  user-profile-aggregation-strategy-completion-size: 100
+  user-profile-aggregation-strategy-timeout: 2000

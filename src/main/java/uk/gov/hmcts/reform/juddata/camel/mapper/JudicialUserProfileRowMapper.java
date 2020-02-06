@@ -13,11 +13,9 @@ import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
 
 @Slf4j
 @Component
-public class JudicialUserRowMapper {
-
+public class JudicialUserProfileRowMapper {
 
     public Map<String, Object> getMap(JudicialUserProfile userProfile) {
-
         Map<String, Object> judUserProfileRow = new HashMap<>();
         judUserProfileRow.put("elinks_id", userProfile.getElinksId());
         judUserProfileRow.put("personal_code", userProfile.getPersonalCode());
@@ -39,7 +37,6 @@ public class JudicialUserRowMapper {
     }
 
     private Date getDateTime(String date) {
-
         SimpleDateFormat newPattern = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date datetime = null;
         try {
@@ -51,9 +48,6 @@ public class JudicialUserRowMapper {
     }
 
     private Timestamp getDateTimeStamp(String date) {
-
         return Timestamp.valueOf(date);
     }
-
-
 }

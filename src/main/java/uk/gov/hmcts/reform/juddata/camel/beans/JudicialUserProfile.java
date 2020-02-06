@@ -53,5 +53,4 @@ public class JudicialUserProfile {
 
     @DataField(pos = 14)
     String extractedDate;
-
 }

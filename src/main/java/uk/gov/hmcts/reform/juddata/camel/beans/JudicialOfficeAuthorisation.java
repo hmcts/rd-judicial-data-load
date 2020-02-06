@@ -24,6 +24,6 @@ public class JudicialOfficeAuthorisation {
     @DataField(pos = 4, pattern = "yyyy-MM-dd hh:mm:ss", columnName = "authorisation_date")
     LocalDate authorisationDate;
 
-    @DataField(pos = 5, columnName = "extracted_date")
+    @DataField(pos = 5,  pattern = "yyyy-MM-dd hh:mm:ss", columnName = "extracted_date")
     String extractedDate;
 }

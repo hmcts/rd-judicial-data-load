@@ -32,10 +32,10 @@ public class JudicialOfficeAppointment {
     @DataField(pos = 6, columnName = "is_Principal_Appointment")
     Boolean isPrincipalAppointment;
 
-    @DataField(pos = 7, pattern = "dd/MM/yyyy hh:mm", columnName = "start_Date")
+    @DataField(pos = 7, pattern = "yyyy-MM-dd hh:mm:ss", columnName = "start_Date")
     LocalDate startDate;
 
-    @DataField(pos = 8,  pattern = "dd/MM/yyyy hh:mm", columnName = "end_Date")
+    @DataField(pos = 8,  pattern = "yyyy-MM-dd hh:mm:ss", columnName = "end_Date")
     LocalDate endDate;
 
     @DataField(pos = 9, columnName = "active_Flag")
@@ -43,5 +43,4 @@ public class JudicialOfficeAppointment {
 
     @DataField(pos = 10)
     String extractedDate;
-
 }

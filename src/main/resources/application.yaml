@@ -52,6 +52,9 @@ spring:
       log-abandoned: true
       abandon-when-percentage-full: 0
 
+  profiles:
+    include:
+      - jrd-router
 
 # Scheduler configuration
 scheduler:
