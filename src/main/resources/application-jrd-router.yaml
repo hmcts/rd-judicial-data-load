@@ -13,3 +13,5 @@ router:
     extracted_date = :#extracted_date, last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
   user-profile-aggregation-strategy-completion-size: 100
   user-profile-aggregation-strategy-timeout: 2000
+  user-profile-blob-path:
+    azure-blob://rddemo/jrdtest/judicial_userprofile.csv?credentials=#credsreg&operation=updateBlockBlob

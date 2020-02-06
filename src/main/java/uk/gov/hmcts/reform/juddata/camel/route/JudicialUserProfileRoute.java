@@ -48,17 +48,23 @@ public class JudicialUserProfileRoute extends RouteBuilder {
     @Value("${router.user-profile-aggregation-strategy-timeout: 2000}")
     private int completionTimeout;
 
+    @Autowired
+    JudicialUserProfileFileReadProcessor judicialUserProfileFileReadProcessor;
+
+    @Autowired
+    JudicialUserProfileProcessor judicialUserProfileProcessor;
+
     @Override
     public void configure() {
         //User Profile Route Insertion based on aggregate timeout(router:user-profile-aggregation-strategy-timeout)
         //or aggregate batch size (user-profile-aggregation-strategy-completion-size)
         from(pathToFileFolder)
                 .id(routerId)
-                .process(new JudicialUserProfileFileReadProcessor()).unmarshal().bindy(BindyType.Csv, JudicialUserProfile.class)
+                .process(judicialUserProfileFileReadProcessor).unmarshal().bindy(BindyType.Csv, JudicialUserProfile.class)
                 .split().body()
                 .aggregate(constant(true), new ListAggregationStrategy()).completionSize(completionSize)
                 .completionTimeout(completionTimeout)
-                .process(new JudicialUserProfileProcessor())
+                .process(judicialUserProfileProcessor)
                 .split().body()
                 .streaming()
                 .bean(judUserRowMapper, "getMap")
