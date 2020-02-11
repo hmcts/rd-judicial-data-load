@@ -33,8 +33,6 @@ public class JudicialOfficeAppointmentRowMapper {
     }
 
     private Timestamp getDateTimeStamp(String date) {
-
-        System.out.println(":::date:: " + date);
         return Timestamp.valueOf(date);
     }
 
