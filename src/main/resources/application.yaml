@@ -56,6 +56,7 @@ spring:
     include:
       - jrd-router
 
+
 # Scheduler configuration
 scheduler:
   config: ${CRON_SCHEDULE:*/1000 * * * * *}
