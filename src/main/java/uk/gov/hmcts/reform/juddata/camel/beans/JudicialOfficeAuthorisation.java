@@ -6,10 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
+import org.springframework.stereotype.Component;
 
 @Setter
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
+@Component
 public class JudicialOfficeAuthorisation {
 
     @DataField(pos = 1, columnName = "elinks_id")

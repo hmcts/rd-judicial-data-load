@@ -1,9 +1,9 @@
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
 parent-route:
-  judicial-user-profile-orchestartion:
-    id: judicial-user-profile-orchestartion
-    timer: timer://judicial-user-profile-orchestartion?repeatCount=1
+  judicial-user-profile-orchestration:
+    id: judicial-user-profile-orchestration
+    timer: timer://judicial-user-profile-orchestration?repeatCount=1&delay=5000
     sql:
       insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date)
@@ -19,19 +19,21 @@ parent-route:
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
+    child-route: judicial_office_authorisation
 
 child-route:
   judicial_office_authorisation:
-    timer: timer://judicial_office_authorisation?repeatCount=1
+    timer: timer://judicial_office_authorisation?repeatCount=1&delay=5000
+    truncate-sql:
+      truncate judicial_office_authorisation?dataSource=dataSource
     sql:
-      - truncate judicial_office_authorisation?dataSource=dataSource
-      - insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,authorisation_id,jurisdiction_id,authorisation_date,extracted_date,created_date,last_loaded_date
-        values(:#judicial_office_auth_id,:#elinks_id,:#authorisation_id, :#jurisdiction_id,:#authorisation_date,:#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
+      insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,authorisation_id,jurisdiction_id,authorisation_date,extracted_date,created_date,last_loaded_date)
+      values(:#judicial_office_auth_id,:#elinks_id,:#authorisation_id, :#jurisdiction_id,:#authorisation_date,:#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
     blob-path:
-      azure-blob://rddemo/jrdtest/judicial_officeauthorization.csv?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialOfficeAutorization
-    mapper-class: JudicialOfficeAutorizationRowMapper
-    csv-binder-object: JudicialOfficeAutorizationProfile
+      azure-blob://rddemo/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialOfficeAuthorisationProcessor
+    mapper-class: JudicialOfficeAuthorisationRowMapper
+    csv-binder-object: JudicialOfficeAuthorisation
 
 
 

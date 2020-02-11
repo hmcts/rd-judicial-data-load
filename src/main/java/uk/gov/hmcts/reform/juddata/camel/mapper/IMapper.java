@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-        import java.util.Map;
+import java.util.Map;
 
 public interface IMapper {
 

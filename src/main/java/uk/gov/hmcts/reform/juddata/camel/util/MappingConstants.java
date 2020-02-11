@@ -1,19 +1,26 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
-public class MappingConstants {
+public interface MappingConstants {
 
-    public static final String PARENT_ROUTE_NAME = "parent-route";
+    String PARENT_ROUTE_NAME = "parent-route";
 
-    public static final String TIMER = "timer";
+    String CHILD_ROUTE_NAME = "child-route";
 
-    public static final String SQL = "sql";
+    String TIMER = "timer";
 
-    public static final String BLOBPATH = "blob-path";
+    String SQL = "sql";
 
-    public static final String  PROCESSOR = "processor-class";
+    String TRUNCATE_SQL = "truncate-sql";
 
-    public static final String  CSVBINDER = "csv-binder-object";
+    String BLOBPATH = "blob-path";
 
-    public static final String  MAPPER = "mapper-class";
+    String  PROCESSOR = "processor-class";
 
+    String  CSVBINDER = "csv-binder-object";
+
+    String  MAPPER = "mapper-class";
+
+    String  MAPPING_METHOD = "getMap";
+
+    String JUDICIAL_USER_PROFILE_ORCHESTRATION = "judicial-user-profile-orchestration";
 }
