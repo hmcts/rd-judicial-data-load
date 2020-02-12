@@ -36,7 +36,6 @@ public class JudicialOfficeAppointmentRowMapper {
         return Timestamp.valueOf(date);
     }
 
-
     private int generateId() {
         seqNumber = seqNumber + 1;
         return seqNumber;
