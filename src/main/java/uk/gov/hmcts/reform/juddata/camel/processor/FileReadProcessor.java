@@ -17,7 +17,6 @@ public class FileReadProcessor implements Processor {
     public void process(Exchange exchange) {
         log.info("::FileReadProcessor starts::");
         String blobFilePath = (String) exchange.getProperty(BLOBPATH);
-        log.info("::FileReadProcessor starts File path::" + blobFilePath);
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();
         exchange.getOut().setBody(consumer.receiveBody(blobFilePath));
