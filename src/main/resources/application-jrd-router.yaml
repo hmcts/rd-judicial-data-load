@@ -19,7 +19,7 @@ parent-route:
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
-    child-route: judicial_office_authorisation
+    child-route: judicial_office_authorisation,judicial_office_appointment
 
 child-route:
   judicial_office_authorisation:
@@ -34,6 +34,19 @@ child-route:
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
+
+  judicial_office_appointment:
+    timer: timer://judicial_office_appointment?repeatCount=1&delay=5000
+    truncate-sql:
+      truncate judicial_office_appointment?dataSource=dataSource
+    sql:
+      insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date)
+      values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag, :#extracted_date)?dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialOfficeAppointmentProcessor
+    mapper-class: JudicialOfficeAppointmentRowMapper
+    csv-binder-object: JudicialOfficeAppointment
 
 
 
