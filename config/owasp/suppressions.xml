@@ -334,13 +334,13 @@
 
     <suppress>
         <notes><![CDATA[
-   file name: htmlunit-driver-2.33.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.seleniumhq\.selenium/htmlunit-driver@.*$</packageUrl>
+       This suppresses a CVE-2020-5529 cve in any htmlunit of selenium
+       ]]></notes>
+        <cpe>cpe:/a:htmlunit:htmlunit</cpe>
         <cve>CVE-2020-5529</cve>
     </suppress>
 
-  <suppress>
+    <suppress>
         <notes><![CDATA[
    file name: jetty-webapp-9.4.15.v20190215.jar
    ]]></notes>
