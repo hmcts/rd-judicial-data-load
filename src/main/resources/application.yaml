@@ -24,7 +24,7 @@ spring:
           lob:
             non_contextual_creation: true
   jackson.date-format: yyyy-MM-dd
-  flyway.enabled: ${flyway.enabled:true}
+  flyway.enabled: ${FLYWAY_ENABLED}
   flyway.locations: classpath:db/migration,classpath:db/postgres
 
   ### database configuration

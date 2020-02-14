@@ -8,8 +8,7 @@ java:
     POSTGRES_PORT: 5432
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
-    flyway:
-      enabled: false
+    FLYWAY_ENABLED: false
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
