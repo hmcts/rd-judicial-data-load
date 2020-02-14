@@ -1,40 +1,6 @@
 version: '2.1'
 
 services:
-  rd-judicial-data-load:
-    build:
-      context: .
-      args:
-        - http_proxy
-        - https_proxy
-        - no_proxy
-    image: hmcts/rd-judicial-data-load
-    container_name: rd-judicial-data-load
-    environment:
-      - JAVA_OPTS=-Dhttps.proxyHost=proxyout.reform.hmcts.net -Dhttps.proxyPort=8080
-      - POSTGRES_USERNAME=dbjuddata
-      - POSTGRES_PASSWORD=dbjuddata
-      - POSTGRES_HOST=rd-judicial-db
-      - POSTGRES_PORT=5432
-      # these environment variables are used by java-logging library
-      - JSON_CONSOLE_PRETTY_PRINT
-      - ROOT_APPENDER
-      - ROOT_LOGGING_LEVEL
-      - REFORM_SERVICE_TYPE
-      - REFORM_SERVICE_NAME
-      - REFORM_TEAM
-      - REFORM_ENVIRONMENT
-      - LOGBACK_DATE_FORMAT
-      - LOGBACK_REQUIRE_THREAD
-      - LOGBACK_REQUIRE_ALERT_LEVEL=false
-      - LOGBACK_REQUIRE_ERROR_CODE=false
-
-    ports:
-      - 8000:8000
-      - ${SERVER_PORT:-8090}:${SERVER_PORT:-8090}
-    depends_on:
-      - rd-judicial-db
-      - service-auth-provider-api
 
   rd-judicial-db:
     build:
@@ -47,7 +13,6 @@ services:
       - POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-dbjuddata}"
     ports:
       - 5456:5432
-
 
 volumes:
   rd-judicial-db-volume:

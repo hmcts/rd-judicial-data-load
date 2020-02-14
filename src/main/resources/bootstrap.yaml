@@ -4,7 +4,7 @@ spring:
       prefixed: false
       paths: /mnt/secrets/rd
       aliases:
-        judicial-data-load-POSTGRES-PASS: spring.datasource.password
+        judicial-api-POSTGRES-PASS: spring.datasource.password
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
         ACCOUNT-NAME: azure.storage.account-name
         ACCOUNT-KEY: azure.storage.account-key

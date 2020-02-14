@@ -1,0 +1,39 @@
+aggregation-strategy-completion-size: 100
+aggregation-strategy-timeout: 2000
+parent-route:
+  judicial-user-profile-orchestration:
+    id: judicial-user-profile-orchestration
+    timer: timer://judicial-user-profile-orchestration?repeatCount=1&delay=5000
+    sql:
+      insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
+      active_flag,extracted_date,created_date,last_loaded_date)
+      values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
+      :#contract_type,:#work_pattern, :#email_id,:#joining_date,:#last_working_date,:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
+      known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
+      contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = :#joining_date,
+      last_working_date = :#last_working_date, active_flag = :#active_flag,
+      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/jrdtest/judicial_userprofile.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialUserProfileProcessor
+    mapper-class: JudicialUserProfileRowMapper
+    csv-binder-object: JudicialUserProfile
+    child-route: judicial_office_authorisation
+
+child-route:
+  judicial_office_authorisation:
+    timer: timer://judicial_office_authorisation?repeatCount=1&delay=5000
+    truncate-sql:
+      truncate judicial_office_authorisation?dataSource=dataSource
+    sql:
+      insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,authorisation_id,jurisdiction_id,authorisation_date,extracted_date,created_date,last_loaded_date)
+      values(:#judicial_office_auth_id,:#elinks_id,:#authorisation_id, :#jurisdiction_id,:#authorisation_date,:#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialOfficeAuthorisationProcessor
+    mapper-class: JudicialOfficeAuthorisationRowMapper
+    csv-binder-object: JudicialOfficeAuthorisation
+
+
+

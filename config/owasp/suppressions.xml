@@ -331,104 +331,15 @@
         <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
         <cpe>cpe:/a:opera:opera</cpe>
     </suppress>
+
     <suppress>
         <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2003-1561</cve>
+       This suppresses a CVE-2020-5529 cve in any htmlunit of selenium
+       ]]></notes>
+        <cpe>cpe:/a:htmlunit:htmlunit</cpe>
+        <cve>CVE-2020-5529</cve>
     </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-1761</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-1764</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-3079</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-3172</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-4293</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-4695</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-4696</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-4794</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-4795</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2008-5679</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2009-0915</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2010-5227</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: selenium-opera-driver-3.14.0.jar
-   ]]></notes>
-        <sha1>123ae21ad13ecc888bf3e18d5c65857df32e6a9f</sha1>
-        <cve>CVE-2015-8960</cve>
-    </suppress>
+
     <suppress>
         <notes><![CDATA[
    file name: jetty-webapp-9.4.15.v20190215.jar
