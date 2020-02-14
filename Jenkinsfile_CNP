@@ -31,10 +31,8 @@ withPipeline(type, product, component) {
     overrideVaultEnvironments(vaultOverrides)
     //loadVaultSecrets(secrets)
 
-    //runs flyway only in case of PR and in aat uses rd-judicial-api
-    onPR {
-        enableDbMigration('rd')
-    }
+    enableDbMigration('rd')
+
     installCharts()
     disableLegacyDeployment()
     enableAksStagingDeployment()

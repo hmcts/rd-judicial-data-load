@@ -6,6 +6,9 @@ java:
     POSTGRES_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
     POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    spring:
+      flyway:
+        enabled: false
   postgresql:
     postgresqlUsername: dbjuddata
     postgresqlPassword: dbjuddata
