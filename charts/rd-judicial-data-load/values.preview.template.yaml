@@ -8,7 +8,7 @@ java:
     POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     spring:
       flyway:
-        enabled: false
+        enabled: true
   postgresql:
     postgresqlUsername: dbjuddata
     postgresqlPassword: dbjuddata
