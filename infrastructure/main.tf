@@ -75,36 +75,6 @@ data "azurerm_key_vault_secret" "GPG_PRIVATE_KEY" {
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES-USER" {
-  name      = "${var.component}-POSTGRES-USER"
-  value     = "${module.db-judicial-ref-data.user_name}"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
-  name      = "${var.component}-POSTGRES-PASS"
-  value     = "${module.db-judicial-ref-data.postgresql_password}"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
-  name      = "${var.component}-POSTGRES-HOST"
-  value     = "${module.db-judicial-ref-data.host_name}"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
-  name      = "${var.component}-POSTGRES-PORT"
-  value     = "5432"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
-  name      = "${var.component}-POSTGRES-DATABASE"
-  value     = "${module.db-judicial-ref-data.postgresql_database}"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
 resource "azurerm_resource_group" "rg" {
   name = "${var.product}-${var.component}-${var.env}"
   location = "${var.location}"
@@ -113,19 +83,6 @@ resource "azurerm_resource_group" "rg" {
     "Team Name" = "${var.team_name}"
     "lastUpdated" = "${timestamp()}"
   }
-}
-
-
-
-module "db-judicial-ref-data" {
-  source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product = "${var.product}-${var.component}-postgres-db"
-  location = "${var.location}"
-  subscription = "${var.subscription}"
-  env = "${var.env}"
-  postgresql_user = "dbjuddata"
-  database_name = "dbjuddata"
-  common_tags = "${var.common_tags}"
 }
 
 module "rd_judicial_data_load" {
@@ -146,15 +103,6 @@ module "rd_judicial_data_load" {
   app_settings = {
     LOGBACK_REQUIRE_ALERT_LEVEL = false
     LOGBACK_REQUIRE_ERROR_CODE = false
-
-    POSTGRES_HOST = "${module.db-judicial-ref-data.host_name}"
-    POSTGRES_PORT = "${module.db-judicial-ref-data.postgresql_listen_port}"
-    POSTGRES_DATABASE = "${module.db-judicial-ref-data.postgresql_database}"
-    POSTGRES_USER = "${module.db-judicial-ref-data.user_name}"
-    POSTGRES_USERNAME = "${module.db-judicial-ref-data.user_name}"
-    POSTGRES_PASSWORD = "${module.db-judicial-ref-data.postgresql_password}"
-    POSTGRES_CONNECTION_OPTIONS = "?"
-
 
     ROOT_LOGGING_LEVEL = "${var.root_logging_level}"
     LOG_LEVEL_SPRING_WEB = "${var.log_level_spring_web}"
