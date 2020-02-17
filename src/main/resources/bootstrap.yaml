@@ -17,4 +17,6 @@ spring:
         GPG-PUBLIC-KEY: gpg.public-key
         GPG-PRIVATE-KEY: gpg.private-key
         GPG-PASSWORD: gpg.password
+        ROUTE-CRON-SCHEDULE: scheduler.routeConfig
+
 

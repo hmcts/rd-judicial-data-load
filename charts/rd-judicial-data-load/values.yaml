@@ -30,4 +30,5 @@ java:
         - GPG-PUBLIC-KEY
         - GPG-PASSWORD
         - GPG-PRIVATE-KEY
+        - ROUTE-CRON-SCHEDULE
 

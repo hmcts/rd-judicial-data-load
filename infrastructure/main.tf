@@ -75,6 +75,11 @@ data "azurerm_key_vault_secret" "GPG_PRIVATE_KEY" {
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
+data "azurerm_key_vault_secret" "ROUTE_CRON_SCHEDULE" {
+  name = "ROUTE-CRON-SCHEDULE"
+  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
+}
+
 resource "azurerm_resource_group" "rg" {
   name = "${var.product}-${var.component}-${var.env}"
   location = "${var.location}"
