@@ -60,9 +60,7 @@ spring:
 # Scheduler configuration
 scheduler:
   config: ${CRON_SCHEDULE:*/1000 * * * * *}
-  config2: ${CRON_SCHEDULE:*/1000 * * * * *}
-
-
+  routeConfig: ${ROUTE_CRON_SCHEDULE:0 0/30 * * * ?}
 
 security:
   anonymousPaths:
@@ -75,14 +73,11 @@ security:
     - "/swagger-resources/**"
     - "/v2/api-docs"
     - "/webjars/springfox-swagger-ui/**"
-    - "/search/**"
     - "/csrf"
     - "/error"
     - "/favicon.ico"
-    - "/camel/routes/**"
   authorisedServices:
-    - rd_professional_api
-    - rd_user_profile_api
+    -
 
 azure:
   storage:
