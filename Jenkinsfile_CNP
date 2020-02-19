@@ -24,7 +24,7 @@ def vaultOverrides = [
 withPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
-    enableDbMigration('rd')
+    //enableDbMigration('rd')
     installCharts()
     disableLegacyDeployment()
     enableAksStagingDeployment()
