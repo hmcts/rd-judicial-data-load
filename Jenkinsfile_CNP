@@ -6,11 +6,6 @@ def type = "java"
 def product = "rd"
 def component = "judicial-data-load"
 
-/*def secrets = [
-  's2s-${env}': [
-    secret('microservicekey-rd-judicial-data-load', 'S2S_SECRET')
-  ]
-]*/
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [$class     : 'AzureKeyVaultSecret',
@@ -29,16 +24,11 @@ def vaultOverrides = [
 withPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
-    //loadVaultSecrets(secrets)
-    //enableDbMigration('rd')
-    enableDockerBuild()
     installCharts()
     disableLegacyDeployment()
     enableAksStagingDeployment()
 
-    //env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
-
-    after('functionalTest:preview') {
+   after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
