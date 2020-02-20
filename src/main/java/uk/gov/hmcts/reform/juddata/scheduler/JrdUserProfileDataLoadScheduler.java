@@ -6,6 +6,7 @@ import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
@@ -18,7 +19,7 @@ public class JrdUserProfileDataLoadScheduler {
     @Autowired
     ParentRoute parentRoute;
 
-    @Scheduled(cron = "0 0/3 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void runJrdScheduler() throws Exception {
         camelContext.getGlobalOptions().put(MappingConstants.PARENT_ROUTE_NAME, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();

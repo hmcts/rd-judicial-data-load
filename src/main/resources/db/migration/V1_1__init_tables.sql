@@ -51,9 +51,9 @@ CREATE TABLE judicial_office_authorisation(
 	created_date timestamp,
 	last_loaded_date timestamp,
 	CONSTRAINT jud_auth_pk PRIMARY KEY (judicial_office_auth_id)
-	 WITH (FILLFACTOR = 10),
-	CONSTRAINT jud_auth_jur_unique UNIQUE (jurisdiction_id)
-	 WITH (FILLFACTOR = 10)
+	 WITH (FILLFACTOR = 10)--,
+	--CONSTRAINT jud_auth_jur_unique UNIQUE (jurisdiction_id)
+	 --WITH (FILLFACTOR = 10)
 
 );
 CREATE TABLE authorisation_type(

@@ -11,12 +11,15 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SQL;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TIMER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.Processor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.language.SimpleExpression;
+import org.apache.camel.spi.Policy;
 import org.apache.camel.spring.SpringRouteBuilder;
+import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +29,7 @@ import uk.gov.hmcts.reform.juddata.camel.aggregate.ListAggregationStrategy;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.predicate.BooleanPredicate;
 
+@Slf4j
 @Component
 public class ChildRoute {
 
@@ -57,21 +61,27 @@ public class ChildRoute {
         String sql = environment.getProperty(childRouteName + "." + SQL);
         String truncateSql = environment.getProperty(childRouteName + "." + TRUNCATE_SQL);
         booleanPredicate.setValue(truncateSql != null && !truncateSql.isEmpty());
+        log.info("###Child Route started for " + childRouteName + " ###");
 
         camelContext.addRoutes(
                 new SpringRouteBuilder() {
                     @Override
                     public void configure() {
+
+                        Policy required = lookup("PROPAGATION_MANDATORY", SpringTransactionPolicy.class);
                         from(timer)
+                                //.onException(Exception.class).throwException(Exception.class, "").end()
+                                //.transacted("PROPAGATION_MANDATORY")
+                                .policy(required)
                                 .id(childRouteName)
                                 .setProperty(BLOBPATH, exp)
                                 .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
                                  ctx.getBean(uncapitalize(environment.getProperty(childRouteName + "." + CSVBINDER))).getClass())
-                                .split().body()
+                                //.split().body()
                                 //.setProperty(TRUNCATE_SQL, constant(String.valueOf(environment.containsProperty(childRouteName + "." + TRUNCATE_SQL))))
                                 .to("sql:" + truncateSql) // to do validate null check for truncate sql
-                                .aggregate(constant(true), new ListAggregationStrategy()).completionSize(completionSize)
-                                .completionTimeout(completionTimeout)
+                                //.aggregate(constant(true), new ListAggregationStrategy()).completionSize(completionSize)
+                                //  .completionTimeout(completionTimeout)
                                 .process((Processor) ctx.getBean(uncapitalize(environment.getProperty(childRouteName + "." + PROCESSOR))))
                                 .split().body()
                                 .streaming()
@@ -81,5 +91,6 @@ public class ChildRoute {
                     }
                 }
         );
+        log.info("###Child Route ended for " + childRouteName + " ###");
     }
 }

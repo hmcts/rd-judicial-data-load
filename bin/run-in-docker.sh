@@ -19,6 +19,10 @@ clean_old_docker_artifacts() {
 
 execute_script() {
 
+  docker-compose down -v
+
+  docker system prune
+
   clean_old_docker_artifacts
 
   ./gradlew clean assemble

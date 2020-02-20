@@ -22,7 +22,7 @@ public class JrdBlobScheduler {
     @Autowired
     BlobStoreOrchestrator blobStoreOrchestrator;
 
-    @Scheduled(cron = "${scheduler.config}")
+    //@Scheduled(cron = "${scheduler.config}")
     public void runBlobScheduler() throws IOException, NoSuchProviderException {
         try {
             blobStoreOrchestrator.execute();
