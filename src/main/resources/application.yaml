@@ -75,14 +75,13 @@ security:
     - "/swagger-resources/**"
     - "/v2/api-docs"
     - "/webjars/springfox-swagger-ui/**"
-    - "/search/**"
     - "/csrf"
     - "/error"
     - "/favicon.ico"
     - "/camel/routes/**"
   authorisedServices:
-    - rd_professional_api
-    - rd_user_profile_api
+    -
+
 
 azure:
   storage:
