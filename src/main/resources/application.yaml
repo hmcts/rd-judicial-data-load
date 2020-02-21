@@ -63,7 +63,6 @@ scheduler:
   config2: ${CRON_SCHEDULE:*/1000 * * * * *}
 
 
-
 security:
   anonymousPaths:
     - "/"
@@ -78,10 +77,8 @@ security:
     - "/csrf"
     - "/error"
     - "/favicon.ico"
-    - "/camel/routes/**"
-  authorisedServices:
-    -
-
+   authorisedServices:
+    - rd_professional_api
 
 azure:
   storage:
