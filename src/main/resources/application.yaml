@@ -59,7 +59,7 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  config: ${CRON_SCHEDULE:* */30 * * * *}
+  config: ${CRON_SCHEDULE:* * 0 * * *}
   config2: ${CRON_SCHEDULE:* * 0 * * *}
 
 
