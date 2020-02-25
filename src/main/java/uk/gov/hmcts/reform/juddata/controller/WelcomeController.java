@@ -6,7 +6,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(
     value = "/",
-    produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    produces = MediaType.APPLICATION_JSON_VALUE
 )
 
 @RestController
@@ -46,7 +48,7 @@ public class WelcomeController {
     })
     @GetMapping(
         path = "/",
-        produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+        produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
     public ResponseEntity<String> welcome() {
