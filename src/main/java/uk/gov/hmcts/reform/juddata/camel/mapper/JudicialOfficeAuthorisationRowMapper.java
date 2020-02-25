@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getDateTimeStamp;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,26 +18,17 @@ public class JudicialOfficeAuthorisationRowMapper {
 
     public Map<String, Object> getMap(JudicialOfficeAuthorisation judicialOfficeAuthorisation) {
 
-        Map<String, Object> judOfficeAppointmentRow = new HashMap<>();
+        Map<String, Object> judOfficeAuthorisationRow = new HashMap<>();
 
-        judOfficeAppointmentRow.put("judicial_office_auth_id", generateId());
-        judOfficeAppointmentRow.put("elinks_id", judicialOfficeAuthorisation.getElinksId());
-        judOfficeAppointmentRow.put("authorisation_id", judicialOfficeAuthorisation.getAuthorisationId());
-        judOfficeAppointmentRow.put("jurisdiction_id", judicialOfficeAuthorisation.getJurisdictionId());
-        judOfficeAppointmentRow.put("authorisation_date", judicialOfficeAuthorisation.getAuthorisationDate());
-        judOfficeAppointmentRow.put("extracted_date", getDateTimeStamp(judicialOfficeAuthorisation.getExtractedDate()));
-        judOfficeAppointmentRow.put("created_date", getCurrentTimeStamp());
-        judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
-        return  judOfficeAppointmentRow;
-    }
-
-    private Timestamp getDateTimeStamp(String date) {
-        return Timestamp.valueOf(date);
-    }
-
-    private Timestamp getCurrentTimeStamp() {
-
-        return new Timestamp(new Date().getTime());
+        judOfficeAuthorisationRow.put("judicial_office_auth_id", generateId());
+        judOfficeAuthorisationRow.put("elinks_id", judicialOfficeAuthorisation.getElinksId());
+        judOfficeAuthorisationRow.put("authorisation_id", judicialOfficeAuthorisation.getAuthorisationId());
+        judOfficeAuthorisationRow.put("jurisdiction_id", judicialOfficeAuthorisation.getJurisdictionId());
+        judOfficeAuthorisationRow.put("authorisation_date", judicialOfficeAuthorisation.getAuthorisationDate());
+        judOfficeAuthorisationRow.put("extracted_date", getDateTimeStamp(judicialOfficeAuthorisation.getExtractedDate()));
+        judOfficeAuthorisationRow.put("created_date", getCurrentTimeStamp());
+        judOfficeAuthorisationRow.put("last_loaded_date", getCurrentTimeStamp());
+        return  judOfficeAuthorisationRow;
     }
 
     private int generateId() {

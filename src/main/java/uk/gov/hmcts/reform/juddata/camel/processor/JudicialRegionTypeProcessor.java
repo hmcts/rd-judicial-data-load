@@ -6,17 +6,27 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialRegionType;
 
 @Slf4j
+@Component
 public class JudicialRegionTypeProcessor implements Processor {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
 
         List<JudicialRegionType> regionTypes = new ArrayList<>();
-        List<JudicialRegionType> judicialRegionTypes = (List<JudicialRegionType>) exchange.getIn().getBody();
+        List<JudicialRegionType> judicialRegionTypes;
+
+        if (exchange.getIn().getBody() instanceof List) {
+            judicialRegionTypes = (List<JudicialRegionType>) exchange.getIn().getBody();
+        } else {
+            JudicialRegionType judicialRegionType = (JudicialRegionType) exchange.getIn().getBody();
+            judicialRegionTypes = new ArrayList<>();
+            judicialRegionTypes.add(judicialRegionType);
+        }
 
         log.info("JudicialRegionType Records count before validation::" + judicialRegionTypes.size());
 

@@ -6,9 +6,11 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialAuthorisationType;
 
 @Slf4j
+@Component
 public class JudicialAuthorisationTypeProcessor implements Processor {
 
     @SuppressWarnings("unchecked")
@@ -16,7 +18,16 @@ public class JudicialAuthorisationTypeProcessor implements Processor {
     public void process(Exchange exchange) {
 
         List<JudicialAuthorisationType> authorizationTypes = new ArrayList<>();
-        List<JudicialAuthorisationType> judicialAuthorizationTypes = (List<JudicialAuthorisationType>) exchange.getIn().getBody();
+
+        List<JudicialAuthorisationType> judicialAuthorizationTypes;
+
+        if (exchange.getIn().getBody() instanceof List) {
+            judicialAuthorizationTypes = (List<JudicialAuthorisationType>) exchange.getIn().getBody();
+        } else {
+            judicialAuthorizationTypes = new ArrayList<>();
+            JudicialAuthorisationType judicialAuthorisationType = (JudicialAuthorisationType) exchange.getIn().getBody();
+            judicialAuthorizationTypes.add(judicialAuthorisationType);
+        }
 
         log.info("JudicialAuthorizationTypes Records count before validation::" + judicialAuthorizationTypes.size());
 

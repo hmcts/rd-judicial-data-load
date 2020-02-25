@@ -15,16 +15,24 @@ public class JudicialOfficeAuthorisationProcessor implements Processor {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
 
         List<JudicialOfficeAuthorisation> users = new ArrayList<>();
-        List<JudicialOfficeAuthorisation> judicialOfficeAppointment = (List<JudicialOfficeAuthorisation>) exchange.getIn().getBody();
+        List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations;
 
-        log.info("JudicialOfficeAuthorisation Records count before validation::" + judicialOfficeAppointment.size());
+        if (exchange.getIn().getBody() instanceof List) {
+            judicialOfficeAuthorisations = (List<JudicialOfficeAuthorisation>) exchange.getIn().getBody();
+        } else {
+            JudicialOfficeAuthorisation judicialOfficeAuthorisation = (JudicialOfficeAuthorisation) exchange.getIn().getBody();
+            judicialOfficeAuthorisations = new ArrayList<>();
+            judicialOfficeAuthorisations.add(judicialOfficeAuthorisation);
+        }
 
-        for (JudicialOfficeAuthorisation officeAppointment : judicialOfficeAppointment) {
+        log.info("JudicialOfficeAuthorisation Records count before validation::" + judicialOfficeAuthorisations.size());
 
-            JudicialOfficeAuthorisation validUser = fetch(officeAppointment);
+        for (JudicialOfficeAuthorisation judicialOfficeAuthorisation : judicialOfficeAuthorisations) {
+
+            JudicialOfficeAuthorisation validUser = fetch(judicialOfficeAuthorisation);
             if (null != validUser) {
 
                 users.add(validUser);
@@ -36,8 +44,9 @@ public class JudicialOfficeAuthorisationProcessor implements Processor {
             exchange.getIn().setBody(users);
 
         }
-
         log.info(" JudicialOfficeAuthorisation Records count After Validation::" + users.size());
+        //throw new RuntimeException("transaction rollback check");
+
     }
 
 

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.beans;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import lombok.Getter;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
 @Component
-public class JudicialOfficeAuthorisation {
+public class JudicialOfficeAuthorisation implements Serializable {
 
     @DataField(pos = 1, columnName = "elinks_id")
     String elinksId;
