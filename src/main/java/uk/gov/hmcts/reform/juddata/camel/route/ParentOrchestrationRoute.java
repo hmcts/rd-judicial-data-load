@@ -2,16 +2,16 @@ package uk.gov.hmcts.reform.juddata.camel.route;
 
 import static org.apache.commons.lang.WordUtils.uncapitalize;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CHILD_ROUTE_NAME;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CHILD_ROUTES;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DIRECT_ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.INSERT_SQL;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.MAPPER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.MAPPING_METHOD;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PARENT_ROUTE_NAME;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SQL;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TIMER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
@@ -58,8 +58,6 @@ public class ParentOrchestrationRoute {
     @Autowired
     Environment environment;
 
-    @Autowired
-    ChildRoute childRoute;
 
     @Autowired
     BooleanPredicate booleanPredicate;
@@ -75,9 +73,9 @@ public class ParentOrchestrationRoute {
     public void startRoute() throws Exception {
 
         CamelContext camelContext = ctx.getBean(CamelContext.class);
-        String parentRouteName = camelContext.getGlobalOptions().get(PARENT_ROUTE_NAME);
+        String parentRouteName = camelContext.getGlobalOptions().get(ORCHESTRATED_ROUTE);
         String parentName = ROUTE + "." + parentRouteName;
-        String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTE_NAME;
+        String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;
 
         List<String> childrenList = environment.containsProperty(childNames)
                 ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
@@ -151,11 +149,11 @@ public class ParentOrchestrationRoute {
             RouteProperties properties = new RouteProperties();
             //only applicable for parent
             properties.setChildNames(environment.getProperty(
-                    ROUTE + "." + child + "." + CHILD_ROUTE_NAME));
+                    ROUTE + "." + child + "." + CHILD_ROUTES));
             properties.setRouteName(environment.getProperty(
                     ROUTE + "." + child + "." + ID));
             properties.setSql(environment.getProperty(
-                    ROUTE + "." + child + "." + SQL));
+                    ROUTE + "." + child + "." + INSERT_SQL));
             properties.setTruncateSql(environment.getProperty(
                     ROUTE + "." + child + "." + TRUNCATE_SQL)
                     == null ? "log:test" : environment.getProperty(

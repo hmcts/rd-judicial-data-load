@@ -310,6 +310,9 @@ dependencies {
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
+    // https://mvnrepository.com/artifact/au.com.bytecode/opencsv
+    compile group: 'au.com.bytecode', name: 'opencsv', version: '2.4'
+
     testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
         force = true
     }

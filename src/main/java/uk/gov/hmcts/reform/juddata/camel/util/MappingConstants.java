@@ -5,15 +5,15 @@ import java.util.Date;
 
 public interface MappingConstants {
 
-    String PARENT_ROUTE_NAME = "parent-route";
+    String ORCHESTRATED_ROUTE = "parent-route";
 
-    String CHILD_ROUTE_NAME = "child-route";
+    String CHILD_ROUTES = "child-route";
 
     String ROUTE = "route";
 
     String TIMER = "timer";
 
-    String SQL = "sql";
+    String INSERT_SQL = "insert-sql";
 
     String TRUNCATE_SQL = "truncate-sql";
 
