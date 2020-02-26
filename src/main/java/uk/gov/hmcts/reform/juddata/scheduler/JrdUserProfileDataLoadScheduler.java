@@ -19,7 +19,7 @@ public class JrdUserProfileDataLoadScheduler {
     @Autowired
     ParentRoute parentRoute;
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/3 * * * ?")
     public void runJrdScheduler() throws Exception {
         camelContext.getGlobalOptions().put(MappingConstants.PARENT_ROUTE_NAME, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();

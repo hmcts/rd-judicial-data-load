@@ -85,8 +85,9 @@ public class ParentRoute {
         String parentRouteName = camelContext.getGlobalOptions().get(PARENT_ROUTE_NAME);
         String parentName = PARENT_ROUTE_NAME + "." + parentRouteName;
         String childNames = PARENT_ROUTE_NAME + "." + parentRouteName + "." + CHILD_ROUTE_NAME;
-        List<String> childes = environment.containsProperty(childNames)
-                ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
+        List<String> childes = environment.containsProperty(childNames) ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
+
+        String truncateRoute = "direct:truncate_child_tables";
         String parentRoute= "direct:judicial_user_profile";
         String childRoute_appointment= "direct:judicial_office_appointment";
         String childRoute_Auth = "direct:judicial_office_authorisation";
@@ -97,7 +98,6 @@ public class ParentRoute {
                     public void configure() throws Exception {
                         from("timer://orchastrator?repeatCount=1&delay=5000")
                                 .transacted()
-                                //.onException(Exception.class).rollback("Parent rolled back").end()
                                 .multicast()
                                 .stopOnException()
                                 .to(parentRoute, childRoute_Auth, childRoute_appointment)
@@ -110,14 +110,21 @@ public class ParentRoute {
                                 .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
                                 ctx.getBean(uncapitalize(environment.getProperty(parentName + "." + CSVBINDER))).getClass())
                                 //.split().body()
-                                /*.aggregate(constant(true), new ListAggregationStrategy()).completionSize(completionSize)
-                                .completionTimeout(completionTimeout)*/
+                                //.aggregate(constant(true), new ListAggregationStrategy()).completionSize(completionSize)
+                                //.completionTimeout(completionTimeout)
                                 .process((Processor) ctx.getBean(uncapitalize(environment.getProperty(parentName + "." + PROCESSOR))))
                                 .split().body()
-                                //.streaming()
+                                .streaming()
                                 .bean(ctx.getBean(uncapitalize(environment.getProperty(parentName + "." + MAPPER)), MAPPING_METHOD))
                                 .to("sql:" + environment.getProperty(parentName + "." + SQL))
                                 .end();
+
+                        /*from(truncateRoute)
+                                .id(truncateRoute)
+                                .transacted()
+                                .to("sql:" + "truncate judicial_office_authorisation?dataSource=dataSource")
+                                .to("sql:" + "truncate judicial_office_appointment?dataSource=dataSource")
+                                .end();*/
 
                         from(childRoute_Auth)
                                 .transacted()
@@ -125,10 +132,9 @@ public class ParentRoute {
                                 .setProperty(BLOBPATH, new SimpleExpression("azure-blob://rddemo/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob"))
                                 .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv, JudicialOfficeAuthorisation.class)
                                 //.split().body()
-                                //.setProperty(TRUNCATE_SQL, constant(String.valueOf(environment.containsProperty(childRouteName + "." + TRUNCATE_SQL))))
                                 .to("sql:" + "truncate judicial_office_authorisation?dataSource=dataSource") // to do validate null check for truncate sql
                                 //.aggregate(constant(true), new ListAggregationStrategy()).completionSize(completionSize)
-                                //  .completionTimeout(completionTimeout)
+                                //.completionTimeout(completionTimeout)
                                 .process((Processor) ctx.getBean(JudicialOfficeAuthorisationProcessor.class))
                                 .split().body()
                                 .streaming()
@@ -143,10 +149,9 @@ public class ParentRoute {
                                 .setProperty(BLOBPATH, new SimpleExpression("azure-blob://rddemo/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob"))
                                 .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv, JudicialOfficeAppointment.class)
                                 //.split().body()
-                                //.setProperty(TRUNCATE_SQL, constant(String.valueOf(environment.containsProperty(childRouteName + "." + TRUNCATE_SQL))))
                                 .to("sql:" + "truncate judicial_office_appointment?dataSource=dataSource") // to do validate null check for truncate sql
                                 //.aggregate(constant(true), new ListAggregationStrategy()).completionSize(completionSize)
-                                //  .completionTimeout(completionTimeout)
+                                //.completionTimeout(completionTimeout)
                                 .process((Processor) ctx.getBean(JudicialOfficeAppointmentProcessor.class))
                                 .split().body()
                                 .streaming()
