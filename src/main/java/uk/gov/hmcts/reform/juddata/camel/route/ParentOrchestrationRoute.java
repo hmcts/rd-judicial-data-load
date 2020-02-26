@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
 import uk.gov.hmcts.reform.juddata.predicate.BooleanPredicate;
@@ -66,6 +67,9 @@ public class ParentOrchestrationRoute {
     @Autowired
     SpringTransactionPolicy springTransactionPolicy;
 
+    @Autowired
+    ExceptionProcessor exceptionProcessor;
+
     @SuppressWarnings("unchecked")
     @Transactional
     public void startRoute() throws Exception {
@@ -75,20 +79,25 @@ public class ParentOrchestrationRoute {
         String parentName = ROUTE + "." + parentRouteName;
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTE_NAME;
 
-        List<String> childes = environment.containsProperty(childNames)
+        List<String> childrenList = environment.containsProperty(childNames)
                 ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
-        childes.add(0, parentRouteName);
+        childrenList.add(0, parentRouteName);
 
-        List<RouteProperties> routePropertiesList = getRouteProperties(childes);
+        List<RouteProperties> routePropertiesList = getRouteProperties(childrenList);
 
         camelContext.addRoutes(
                 new SpringRouteBuilder() {
                     @Override
                     public void configure() throws Exception {
 
-                        String[] directChild = new String[childes.size()];
+                        //logging exception
+                        onException(Exception.class)
+                                .handled(true)
+                                .process(exceptionProcessor);
+
+                        String[] directChild = new String[childrenList.size()];
                         int index = 0;
-                        for (String child : childes) {
+                        for (String child : childrenList) {
                             directChild[index] = (DIRECT_ROUTE).concat(child);
                             index++;
                         }

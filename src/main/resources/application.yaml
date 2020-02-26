@@ -60,9 +60,7 @@ spring:
 # Scheduler configuration
 scheduler:
   config: ${CRON_SCHEDULE:*/1000 * * * * *}
-  config2: ${CRON_SCHEDULE:*/1000 * * * * *}
-
-
+  camel-route-config: 0 0/30 * * * ?
 
 security:
   anonymousPaths:

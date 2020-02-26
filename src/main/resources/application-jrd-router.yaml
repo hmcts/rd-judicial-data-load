@@ -22,7 +22,6 @@ route:
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
     child-route: judicial-office-authorisation,judicial-office-appointment
-#      ,judicial-office-appointment
 
   judicial-office-authorisation:
     id: judicial-office-authorisation
