@@ -27,8 +27,6 @@ public class JudicialUserProfileProcessor implements Processor {
             judicialUserProfiles.add(judicialUserProfile);
         }
 
-        log.info(" JudicialUserProfile Records count before validation::" + judicialUserProfiles.size());
-
         for (JudicialUserProfile user : judicialUserProfiles) {
 
             JudicialUserProfile validUser = fetch(user);
@@ -40,7 +38,7 @@ public class JudicialUserProfileProcessor implements Processor {
             }
             exchange.getMessage().setBody(users);
         }
-        log.info(" JudicialUserProfile Records count After Validation::" + users.size());
+        log.info("::JudicialUserProfile Records count::" + users.size());
     }
 
 

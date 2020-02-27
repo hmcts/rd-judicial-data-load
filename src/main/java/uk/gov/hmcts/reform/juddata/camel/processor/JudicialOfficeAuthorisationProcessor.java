@@ -28,8 +28,6 @@ public class JudicialOfficeAuthorisationProcessor implements Processor {
             judicialOfficeAuthorisations.add(judicialOfficeAuthorisation);
         }
 
-        log.info("JudicialOfficeAuthorisation Records count before validation::" + judicialOfficeAuthorisations.size());
-
         for (JudicialOfficeAuthorisation judicialOfficeAuthorisation : judicialOfficeAuthorisations) {
 
             JudicialOfficeAuthorisation validUser = fetch(judicialOfficeAuthorisation);
@@ -37,16 +35,13 @@ public class JudicialOfficeAuthorisationProcessor implements Processor {
 
                 users.add(validUser);
             } else {
-
                 log.info(" Invalid JudicialOfficeAppointment record ");
             }
 
             exchange.getIn().setBody(users);
 
         }
-        log.info(" JudicialOfficeAuthorisation Records count After Validation::" + users.size());
-        //throw new RuntimeException("transaction rollback check");
-
+        log.info("::JudicialOfficeAuthorisation Records count::" + users.size());
     }
 
 

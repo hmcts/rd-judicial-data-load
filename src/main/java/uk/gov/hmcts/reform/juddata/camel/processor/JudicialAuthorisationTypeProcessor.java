@@ -29,8 +29,6 @@ public class JudicialAuthorisationTypeProcessor implements Processor {
             judicialAuthorizationTypes.add(judicialAuthorisationType);
         }
 
-        log.info("JudicialAuthorizationTypes Records count before validation::" + judicialAuthorizationTypes.size());
-
         for (JudicialAuthorisationType authorizationType : judicialAuthorizationTypes) {
 
             JudicialAuthorisationType validAuthorizationType = fetch(authorizationType);
@@ -46,7 +44,7 @@ public class JudicialAuthorisationTypeProcessor implements Processor {
 
         }
 
-        log.info("JudicialAuthorizationTypes Records count After Validation::" + authorizationTypes.size());
+        log.info("::JudicialAuthorizationTypes Records count::" + authorizationTypes.size());
     }
 
 

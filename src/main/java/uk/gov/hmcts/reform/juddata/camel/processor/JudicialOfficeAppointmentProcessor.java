@@ -28,8 +28,6 @@ public class JudicialOfficeAppointmentProcessor implements Processor {
             judicialOfficeAppointments.add(judicialOfficeAppointment);
         }
 
-        log.info("JudicialOfficeAppointment Records count before validation::" + judicialOfficeAppointments.size());
-
         for (JudicialOfficeAppointment officeAppointment : judicialOfficeAppointments) {
 
             JudicialOfficeAppointment validUser = fetch(officeAppointment);
@@ -45,7 +43,7 @@ public class JudicialOfficeAppointmentProcessor implements Processor {
 
         }
 
-        log.info(" JudicialOfficeAppointment Records count After Validation::" + users.size());
+        log.info("::JudicialOfficeAppointment Records count::" + users.size());
     }
 
 

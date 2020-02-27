@@ -77,11 +77,11 @@ public class ParentOrchestrationRoute {
         String parentName = ROUTE + "." + parentRouteName;
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;
 
-        List<String> childrenList = environment.containsProperty(childNames)
+        List<String> dependents = environment.containsProperty(childNames)
                 ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
-        childrenList.add(0, parentRouteName);
+        dependents.add(0, parentRouteName);
 
-        List<RouteProperties> routePropertiesList = getRouteProperties(childrenList);
+        List<RouteProperties> routePropertiesList = getRouteProperties(dependents);
 
         camelContext.addRoutes(
                 new SpringRouteBuilder() {
@@ -93,19 +93,15 @@ public class ParentOrchestrationRoute {
                                 .handled(true)
                                 .process(exceptionProcessor);
 
-                        String[] directChild = new String[childrenList.size()];
-                        int index = 0;
-                        for (String child : childrenList) {
-                            directChild[index] = (DIRECT_ROUTE).concat(child);
-                            index++;
-                        }
+                        String[] directChild = new String[dependents.size()];
+
+                        getDependents(directChild, dependents);
 
                         //User Profile Route Insertion based on  timeout(router:user-profile-aggregation-strategy-timeout)
                         //or aggregate batch size (user-profile-aggregation-strategy-completion-size)
                         from(environment.getProperty(parentName + "." + TIMER))
                                 .transacted()
                                 .policy(springTransactionPolicy)
-                                //.transacted()
                                 .multicast()
                                 .stopOnException().to(directChild).end();
 
@@ -120,12 +116,7 @@ public class ParentOrchestrationRoute {
                                     .setProperty(BLOBPATH, exp)
                                     .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
                                     ctx.getBean(route.getBinder()).getClass())
-                                    //.split().body()
                                     .to(route.getTruncateSql())
-                                    //.aggregate(constant(true), new ListAggregationStrategy()) //commented code requires for aggregation
-                                    //.aggregationRepository(aggregationRepository)
-                                    //.completionSize(completionSize)
-                                    //.completionTimeout(completionTimeout)
                                     .process((Processor) ctx.getBean(route.getProcessor()))
                                     .split().body()
                                     .streaming()
@@ -134,6 +125,15 @@ public class ParentOrchestrationRoute {
                         }
                     }
                 });
+    }
+
+
+    private void getDependents(String[] directChild, List<String> dependents) {
+        int index = 0;
+        for (String child : dependents) {
+            directChild[index] = (DIRECT_ROUTE).concat(child);
+            index++;
+        }
     }
 
     /**

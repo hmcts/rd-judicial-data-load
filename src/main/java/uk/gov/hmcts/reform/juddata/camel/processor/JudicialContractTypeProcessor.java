@@ -28,8 +28,6 @@ public class JudicialContractTypeProcessor implements Processor {
             judicialContractTypes.add(judicialContractType);
         }
 
-        log.info("JudicialContractTypes Records count before validation::" + judicialContractTypes.size());
-
         for (JudicialContractType contractType : judicialContractTypes) {
 
             JudicialContractType validUserRole = fetch(contractType);
@@ -45,7 +43,7 @@ public class JudicialContractTypeProcessor implements Processor {
 
         }
 
-        log.info("JudicialContractTypes Records count After Validation::" + contractTypes.size());
+        log.info("::JudicialContractTypes Records count::" + contractTypes.size());
     }
 
 

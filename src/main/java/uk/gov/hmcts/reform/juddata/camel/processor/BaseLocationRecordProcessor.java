@@ -28,8 +28,6 @@ public class BaseLocationRecordProcessor implements Processor {
             locationsRecords.add(baseLocationType);
         }
 
-        log.info("Location Records count before validation::" + locationsRecords.size());
-
         for (BaseLocationType user : locationsRecords) {
             BaseLocationType validLocation = fetch(user);
             if (null != validLocation) {
@@ -43,7 +41,7 @@ public class BaseLocationRecordProcessor implements Processor {
             exchange.getIn().setBody(locations);
         }
 
-        log.info("Location Records count After Validation::" + locations.size());
+        log.info("::Location Records count::" + locations.size());
     }
 
 
