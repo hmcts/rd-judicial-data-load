@@ -77,11 +77,11 @@ public class ParentOrchestrationRoute {
         String parentName = ROUTE + "." + parentRouteName;
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;
 
-        List<String> dependents = environment.containsProperty(childNames)
+        List<String> dependantRoutes = environment.containsProperty(childNames)
                 ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
-        dependents.add(0, parentRouteName);
+        dependantRoutes.add(0, parentRouteName);
 
-        List<RouteProperties> routePropertiesList = getRouteProperties(dependents);
+        List<RouteProperties> routePropertiesList = getRouteProperties(dependantRoutes);
 
         camelContext.addRoutes(
                 new SpringRouteBuilder() {
@@ -93,9 +93,9 @@ public class ParentOrchestrationRoute {
                                 .handled(true)
                                 .process(exceptionProcessor);
 
-                        String[] directChild = new String[dependents.size()];
+                        String[] directChild = new String[dependantRoutes.size()];
 
-                        getDependents(directChild, dependents);
+                        getDependents(directChild, dependantRoutes);
 
                         //User Profile Route Insertion based on  timeout(router:user-profile-aggregation-strategy-timeout)
                         //or aggregate batch size (user-profile-aggregation-strategy-completion-size)
