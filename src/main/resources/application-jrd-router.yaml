@@ -1,9 +1,9 @@
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
+start-route: direct:JRD
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
-    timer: timer://judicial-user-profile-orchestration?repeatCount=1&delay=5000
     insert-sql:
       sql:insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date)
@@ -21,6 +21,19 @@ route:
     csv-binder-object: JudicialUserProfile
     child-route: judicial-office-appointment
 
+  judicial-office-appointment:
+    id: judicial-office-appointment
+    truncate-sql:
+      sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
+    insert-sql:
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
+      values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag, :#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialOfficeAppointmentProcessor
+    mapper-class: JudicialOfficeAppointmentRowMapper
+    csv-binder-object: JudicialOfficeAppointment
+
   judicial-office-authorisation:
     id: judicial-office-authorisation
     truncate-sql:
@@ -34,17 +47,6 @@ route:
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
 
-  judicial-office-appointment:
-    id: judicial-office-appointment
-    truncate-sql:
-      sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
-    insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
-      values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag, :#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
-    blob-path:
-      azure-blob://${azure.storage.account-name}/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialOfficeAppointmentProcessor
-    mapper-class: JudicialOfficeAppointmentRowMapper
-    csv-binder-object: JudicialOfficeAppointment
+
 
 

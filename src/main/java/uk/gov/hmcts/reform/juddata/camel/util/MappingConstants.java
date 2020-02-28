@@ -11,8 +11,6 @@ public interface MappingConstants {
 
     String ROUTE = "route";
 
-    String TIMER = "timer";
-
     String INSERT_SQL = "insert-sql";
 
     String TRUNCATE_SQL = "truncate-sql";
