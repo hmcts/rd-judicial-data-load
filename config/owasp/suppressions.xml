@@ -1703,23 +1703,24 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: spring-core-5.1.6.RELEASE.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-core@.*$</packageUrl>
-        <vulnerabilityName>CVE-2020-5398</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: checkstyle-8.10.1.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.puppycrawl\.tools/checkstyle@.*$</packageUrl>
-        <cpe>cpe:/a:checkstyle:checkstyle</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
    file name: checkstyle-8.10.1.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/com\.puppycrawl\.tools/checkstyle@.*$</packageUrl>
         <cve>CVE-2019-10782</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: org.apache.sling.javax.activation-0.1.0.jar
+   ]]></notes>
+        <sha1>606ef790ce33d9cd6b892c47cc2a9508efc57698</sha1>
+        <cpe>cpe:/a:apache:sling</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: selenium-opera-driver-3.141.59.jar
+   ]]></notes>
+        <sha1>6b11ed01182bfd8bb62ddeae34cf9eadd3cfc7ff</sha1>
+        <cpe>cpe:/a:opera:opera</cpe>
+    </suppress>
+
 </suppressions>
