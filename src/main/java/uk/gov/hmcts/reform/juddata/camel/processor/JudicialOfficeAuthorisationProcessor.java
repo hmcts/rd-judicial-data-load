@@ -15,29 +15,33 @@ public class JudicialOfficeAuthorisationProcessor implements Processor {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
 
         List<JudicialOfficeAuthorisation> users = new ArrayList<>();
-        List<JudicialOfficeAuthorisation> judicialOfficeAppointment = (List<JudicialOfficeAuthorisation>) exchange.getIn().getBody();
+        List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations;
 
-        log.info("JudicialOfficeAuthorisation Records count before validation::" + judicialOfficeAppointment.size());
+        if (exchange.getIn().getBody() instanceof List) {
+            judicialOfficeAuthorisations = (List<JudicialOfficeAuthorisation>) exchange.getIn().getBody();
+        } else {
+            JudicialOfficeAuthorisation judicialOfficeAuthorisation = (JudicialOfficeAuthorisation) exchange.getIn().getBody();
+            judicialOfficeAuthorisations = new ArrayList<>();
+            judicialOfficeAuthorisations.add(judicialOfficeAuthorisation);
+        }
 
-        for (JudicialOfficeAuthorisation officeAppointment : judicialOfficeAppointment) {
+        for (JudicialOfficeAuthorisation judicialOfficeAuthorisation : judicialOfficeAuthorisations) {
 
-            JudicialOfficeAuthorisation validUser = fetch(officeAppointment);
+            JudicialOfficeAuthorisation validUser = fetch(judicialOfficeAuthorisation);
             if (null != validUser) {
 
                 users.add(validUser);
             } else {
-
                 log.info(" Invalid JudicialOfficeAppointment record ");
             }
 
             exchange.getIn().setBody(users);
 
         }
-
-        log.info(" JudicialOfficeAuthorisation Records count After Validation::" + users.size());
+        log.info("::JudicialOfficeAuthorisation Records count::" + users.size());
     }
 
 

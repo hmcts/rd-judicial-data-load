@@ -24,12 +24,11 @@ def vaultOverrides = [
 withPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
-    //enableDbMigration('rd')
     installCharts()
     disableLegacyDeployment()
     enableAksStagingDeployment()
 
-    after('functionalTest:preview') {
+   after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 

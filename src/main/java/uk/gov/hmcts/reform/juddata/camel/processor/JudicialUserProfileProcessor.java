@@ -15,11 +15,19 @@ public class JudicialUserProfileProcessor implements Processor {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         List<JudicialUserProfile> users = new ArrayList<>();
-        List<JudicialUserProfile> userRecords = (List<JudicialUserProfile>) exchange.getIn().getBody();
-        log.info(" JudicialUserProfile Records count before validation::" + userRecords.size());
-        for (JudicialUserProfile user : userRecords) {
+        List<JudicialUserProfile> judicialUserProfiles;
+
+        if (exchange.getIn().getBody() instanceof List) {
+            judicialUserProfiles = (List<JudicialUserProfile>) exchange.getIn().getBody();
+        } else {
+            JudicialUserProfile judicialUserProfile = (JudicialUserProfile) exchange.getIn().getBody();
+            judicialUserProfiles = new ArrayList<>();
+            judicialUserProfiles.add(judicialUserProfile);
+        }
+
+        for (JudicialUserProfile user : judicialUserProfiles) {
 
             JudicialUserProfile validUser = fetch(user);
             if (null != validUser) {
@@ -28,9 +36,9 @@ public class JudicialUserProfileProcessor implements Processor {
             } else {
                 log.info(" Invalid JudicialUser record ");
             }
-            exchange.getOut().setBody(users);
+            exchange.getMessage().setBody(users);
         }
-        log.info(" JudicialUserProfile Records count After Validation::" + users.size());
+        log.info("::JudicialUserProfile Records count::" + users.size());
     }
 
 

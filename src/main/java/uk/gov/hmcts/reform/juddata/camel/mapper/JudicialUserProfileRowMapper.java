@@ -32,8 +32,6 @@ public class JudicialUserProfileRowMapper implements IMapper {
         judUserProfileRow.put("last_working_date", judicialUserProfile.getLastWorkingDate());
         judUserProfileRow.put("active_flag", judicialUserProfile.isActiveFlag());
         judUserProfileRow.put("extracted_date", judicialUserProfile.getExtractedDate());
-
-        log.info("timestamp Date:: " + judUserProfileRow.get("extracted_date"));
         return  judUserProfileRow;
     }
 

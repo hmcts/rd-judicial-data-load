@@ -1,10 +1,13 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import java.sql.Timestamp;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getDateTimeStamp;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
 
@@ -20,25 +23,31 @@ public class JudicialOfficeAppointmentRowMapper {
 
         judOfficeAppointmentRow.put("judicial_office_appointment_id", generateId());
         judOfficeAppointmentRow.put("elinks_id", officeAppoinemnt.getElinksId());
-        judOfficeAppointmentRow.put("role_id", officeAppoinemnt.getRoleId());
-        judOfficeAppointmentRow.put("contract_type_id", officeAppoinemnt.getContractType());
-        judOfficeAppointmentRow.put("base_location_id", officeAppoinemnt.getBaseLocationId());
-        judOfficeAppointmentRow.put("region_id", officeAppoinemnt.getRegionId());
+        judOfficeAppointmentRow.put("role_id",officeAppoinemnt.getRoleId());
+        judOfficeAppointmentRow.put("contract_type_id", returnNullIfBlank(officeAppoinemnt.getContractType()));
+        judOfficeAppointmentRow.put("base_location_id", returnNullIfBlank(officeAppoinemnt.getBaseLocationId()));
+        judOfficeAppointmentRow.put("region_id", returnNullIfBlank(officeAppoinemnt.getRegionId()));
         judOfficeAppointmentRow.put("is_prinicple_appointment", officeAppoinemnt.getIsPrincipalAppointment());
         judOfficeAppointmentRow.put("start_date", officeAppoinemnt.getStartDate());
         judOfficeAppointmentRow.put("end_date", officeAppoinemnt.getEndDate());
         judOfficeAppointmentRow.put("active_flag", officeAppoinemnt.isActiveFlag());
         judOfficeAppointmentRow.put("extracted_date", getDateTimeStamp(officeAppoinemnt.getExtractedDate()));
+        judOfficeAppointmentRow.put("created_date", getCurrentTimeStamp());
+        judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
         return  judOfficeAppointmentRow;
-    }
-
-    private Timestamp getDateTimeStamp(String date) {
-        return Timestamp.valueOf(date);
     }
 
     private int generateId() {
         seqNumber = seqNumber + 1;
         return seqNumber;
+    }
+
+    public String returnNullIfBlank(String fieldValue) {
+        if (StringUtils.isBlank(fieldValue)) {
+            return null;
+        } else {
+            return fieldValue;
+        }
     }
 
 }

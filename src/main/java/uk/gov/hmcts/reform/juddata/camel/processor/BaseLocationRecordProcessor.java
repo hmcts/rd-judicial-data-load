@@ -6,21 +6,27 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.beans.BaseLocationType;
 
-
 @Slf4j
+@Component
 public class BaseLocationRecordProcessor implements Processor {
-
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
 
         List<BaseLocationType> locations = new ArrayList<>();
-        List<BaseLocationType> locationsRecords = (List<BaseLocationType>) exchange.getIn().getBody();
+        List<BaseLocationType> locationsRecords;
 
-        log.info("Location Records count before validation::" + locationsRecords.size());
+        if (exchange.getIn().getBody() instanceof List) {
+            locationsRecords = (List<BaseLocationType>) exchange.getIn().getBody();
+        } else {
+            locationsRecords = new ArrayList<>();
+            BaseLocationType baseLocationType = (BaseLocationType) exchange.getIn().getBody();
+            locationsRecords.add(baseLocationType);
+        }
 
         for (BaseLocationType user : locationsRecords) {
             BaseLocationType validLocation = fetch(user);
@@ -35,7 +41,7 @@ public class BaseLocationRecordProcessor implements Processor {
             exchange.getIn().setBody(locations);
         }
 
-        log.info("Location Records count After Validation::" + locations.size());
+        log.info("::Location Records count::" + locations.size());
     }
 
 
