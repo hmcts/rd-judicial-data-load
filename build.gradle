@@ -49,6 +49,18 @@ version = '0.0.1'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.55
+            }
+        }
+    }
+}
+
 compileJava {
     options.compilerArgs << '-parameters' << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
 }
@@ -105,7 +117,7 @@ configurations {
     functionalTestRuntime.extendsFrom testRuntime
 
 }
-
+check.dependsOn jacocoTestCoverageVerification
 
 
 checkstyle {
@@ -171,7 +183,11 @@ pitest {
     excludedClasses = [
             'uk.gov.hmcts.reform.juddata.configuration.*',
             'uk.gov.hmcts.reform.juddata.controller.*',
-            'uk.gov.hmcts.reform.juddata.JudicialApplication'
+            'uk.gov.hmcts.reform.juddata.JudicialApplication',
+            'uk.gov.hmcts.reform.juddata.camel.aggregate.*',
+            'uk.gov.hmcts.reform.juddata.scheduler.*',
+            'uk.gov.hmcts.reform.juddata.camel.route.*',
+            'uk.gov.hmcts.reform.juddata.camel.processor.*'
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -179,7 +195,7 @@ pitest {
     historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
     outputFormats = ['XML', 'HTML']
     timestampedReports = true
-    mutationThreshold = 0
+    mutationThreshold = 90
     useClasspathFile = true
 }
 
