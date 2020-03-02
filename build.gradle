@@ -165,6 +165,21 @@ jacocoTestReport {
     }
 }
 
+task codeCoverageReport(type: JacocoReport, dependsOn: ['test', 'integration']) {
+
+    // Gather execution data from all subprojects
+    // (change this if you e.g. want to calculate unit test/integration test coverage separately)
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    reports {
+        csv.enabled = false
+        html.enabled = true
+        html.destination = file("${buildDir}/reports/jacoco/html")
+        xml.enabled = true
+        xml.destination = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
+    }
+}
+
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
     excludedClasses = [
