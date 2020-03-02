@@ -193,8 +193,12 @@ sonarqube {
         property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/integration.exec"
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
-        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/**," +  //@To do need to cover sonar coverage for camel routes
-                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java"
+        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration," //To do remove unused code
+                + "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/controller,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/orchestrator,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/scheduler,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/service,"
     }
 }
 
@@ -309,6 +313,17 @@ dependencies {
     testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+
+    testCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.25.0'
+    testCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
+    testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.2'
+    testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+
+    integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.25.0'
+    integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
+    integrationTestCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.2'
+    integrationTestCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+
 
     testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
         force = true

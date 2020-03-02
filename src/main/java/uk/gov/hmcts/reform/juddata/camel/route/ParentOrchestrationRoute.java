@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
-import uk.gov.hmcts.reform.juddata.predicate.BooleanPredicate;
 
 /**
  * This class is Judicial User Profile Router Triggers Orchestrated data loading.
@@ -56,9 +55,6 @@ public class ParentOrchestrationRoute {
 
     @Autowired
     Environment environment;
-
-    @Autowired
-    BooleanPredicate booleanPredicate;
 
     @Autowired
     SpringTransactionPolicy springTransactionPolicy;

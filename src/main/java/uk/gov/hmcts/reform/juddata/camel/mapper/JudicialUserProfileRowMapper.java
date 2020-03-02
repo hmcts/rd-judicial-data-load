@@ -1,9 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,20 +30,4 @@ public class JudicialUserProfileRowMapper implements IMapper {
         judUserProfileRow.put("extracted_date", judicialUserProfile.getExtractedDate());
         return  judUserProfileRow;
     }
-
-    private Date getDateTime(String date) {
-        SimpleDateFormat newPattern = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date datetime = null;
-        try {
-            datetime = newPattern.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return  datetime;
-    }
-
-    private Timestamp getDateTimeStamp(String date) {
-        return Timestamp.valueOf(date);
-    }
-
 }
