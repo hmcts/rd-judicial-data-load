@@ -53,7 +53,6 @@ public class ParentOrchestrationRouteTest {
     @Autowired
     ProducerTemplate producerTemplate;
 
-
     @Value("${parent-select-jrd-sql}")
     private String sql;
 
@@ -62,6 +61,12 @@ public class ParentOrchestrationRouteTest {
 
     @Value("${truncate-jrd}")
     private String truncateAllTable;
+
+    private final String[] file = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments.csv"};
+
+    private final String[] fileWithError = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments_error.csv"};
+
+    private final String[] fileWithSingleRecord = {"classpath:sourceFiles/judicial_userprofile_singlerecord.csv", "classpath:sourceFiles/judicial_appointments_singlerecord.csv"};
 
 
     @Before
@@ -72,9 +77,7 @@ public class ParentOrchestrationRouteTest {
     @Test
     public void testParentOrchestration() throws Exception {
 
-        setSourcePath("classpath:sourceFiles/judicial_userprofile.csv", "parent.file.path");
-        setSourcePath("classpath:sourceFiles/judicial_appointments.csv", "child1.file.path");
-
+        setSourceData(file);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
@@ -98,12 +101,12 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.get(1).get("elinks_id"), "2");
     }
 
+
     @Test
     public void testParentOrchestrationFailure() throws Exception {
 
-        setSourcePath("classpath:sourceFiles/judicial_userprofile.csv", "parent.file.path");
-        setSourcePath("classpath:sourceFiles/judicial_appointments_error.csv", "child1.file.path");
 
+        setSourceData(fileWithError);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
@@ -118,18 +121,15 @@ public class ParentOrchestrationRouteTest {
     @Test
     public void testParentOrchestrationFailureRollBackKeepExistingData() throws Exception {
 
-
         // Day 1 Success data load
-        setSourcePath("classpath:sourceFiles/judicial_userprofile.csv", "parent.file.path");
-        setSourcePath("classpath:sourceFiles/judicial_appointments.csv", "child1.file.path");
+        setSourceData(file);
 
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
-        //Day 2 Data load fails
-        setSourcePath("classpath:sourceFiles/judicial_userprofile.csv", "parent.file.path");
-        setSourcePath("classpath:sourceFiles/judicial_appointments_error.csv", "child1.file.path");
+        // Day 2 Success load fails
+        setSourceData(fileWithError);
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
         //Keeps Day1 data load state and roll back day2
@@ -155,13 +155,11 @@ public class ParentOrchestrationRouteTest {
     @Test
     public void testParentOrchestrationSingleRecord() throws Exception {
 
-        setSourcePath("classpath:sourceFiles/judicial_userprofile_singlerecord.csv", "parent.file.path");
-        setSourcePath("classpath:sourceFiles/judicial_appointments_singlerecord.csv", "child1.file.path");
+        setSourceData(fileWithSingleRecord);
 
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
-
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
         assertEquals(judicialUserProfileList.size(), 1);
 
@@ -169,6 +167,13 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.size(), 1);
     }
 
+
+    private void setSourceData(String... files) throws Exception {
+        setSourcePath(files[0],
+                "parent.file.path");
+        setSourcePath(files[1],
+                "child1.file.path");
+    }
 
     private void setSourcePath(String path, String propertyPlaceHolder) throws Exception {
 
