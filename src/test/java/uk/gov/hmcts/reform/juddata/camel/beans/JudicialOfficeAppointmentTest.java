@@ -15,16 +15,16 @@ public class JudicialOfficeAppointmentTest {
     public void  test_objects_JudicialOfficeAppointment_correctly() {
 
         JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMockMock(createCurrentLocalDate());
-        assertEquals(judicialOfficeAppointment.getElinksId(), "elinksid_1");
-        assertEquals(judicialOfficeAppointment.getRoleId(), "roleId_1");
-        assertEquals(judicialOfficeAppointment.getContractType(),"contractTypeId_1");
-        assertEquals(judicialOfficeAppointment.getBaseLocationId(), "baseLocationId_1");
-        assertEquals(judicialOfficeAppointment.getRegionId(), "regionId_1");
-        assertEquals(judicialOfficeAppointment.getIsPrincipalAppointment(), true);
+        assertEquals("elinksid_1", judicialOfficeAppointment.getElinksId());
+        assertEquals("roleId_1", judicialOfficeAppointment.getRoleId());
+        assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
+        assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());
+        assertEquals("regionId_1", judicialOfficeAppointment.getRegionId());
+        assertEquals(true, judicialOfficeAppointment.getIsPrincipalAppointment());
         String currentDateString = createCurrentLocalDate();
-        assertEquals(judicialOfficeAppointment.getStartDate(), LocalDate.parse(currentDateString, getDateFormatter()));
-        assertEquals(judicialOfficeAppointment.getEndDate(), LocalDate.parse(currentDateString, getDateFormatter()));
-        assertEquals(judicialOfficeAppointment.isActiveFlag(), true);
-        assertEquals(judicialOfficeAppointment.getExtractedDate(),currentDateString);
+        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), judicialOfficeAppointment.getStartDate());
+        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), judicialOfficeAppointment.getEndDate());
+        assertEquals(true, judicialOfficeAppointment.isActiveFlag());
+        assertEquals(currentDateString, judicialOfficeAppointment.getExtractedDate());
     }
 }

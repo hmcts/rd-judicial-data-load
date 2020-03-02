@@ -12,13 +12,13 @@ public class RoutePropertiesTest {
 
         RouteProperties routeProperties = createRoutePropertiesMock();
 
-        assertEquals(routeProperties.getBinder(), "Binder");
-        assertEquals(routeProperties.getBlobPath(), "Blobpath");
-        assertEquals(routeProperties.getChildNames(), "childNames");
-        assertEquals(routeProperties.getMapper(), "mapper");
-        assertEquals(routeProperties.getProcessor(), "processor");
-        assertEquals(routeProperties.getRouteName(), "routeName");
-        assertEquals(routeProperties.getSql(), "sql");
-        assertEquals(routeProperties.getTruncateSql(), "truncateSql");
+        assertEquals("Binder", routeProperties.getBinder());
+        assertEquals("Blobpath", routeProperties.getBlobPath());
+        assertEquals("childNames", routeProperties.getChildNames());
+        assertEquals("mapper", routeProperties.getMapper());
+        assertEquals("processor", routeProperties.getProcessor());
+        assertEquals("routeName", routeProperties.getRouteName());
+        assertEquals("sql", routeProperties.getSql());
+        assertEquals("truncateSql", routeProperties.getTruncateSql());
     }
 }

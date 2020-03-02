@@ -24,17 +24,17 @@ public class JudicialOfficeAppointmentRowMapperTest {
         JudicialOfficeAppointment judicialOfficeAppointmentMock = createJudicialOfficeAppointmentMockMock(currentDateString);
         Map<String, Object> response = judicialOfficeAppointmentRowMapper.getMap(judicialOfficeAppointmentMock);
 
-        assertEquals(response.get("judicial_office_appointment_id"),1);
-        assertEquals(response.get("elinks_id"), "elinksid_1");
-        assertEquals(response.get("role_id"), "roleId_1");
-        assertEquals(response.get("contract_type_id"),"contractTypeId_1");
-        assertEquals(response.get("base_location_id"), "baseLocationId_1");
-        assertEquals(response.get("region_id"), "regionId_1");
-        assertEquals(response.get("is_prinicple_appointment"), true);
-        assertEquals(response.get("start_date"), LocalDate.parse(currentDateString, getDateFormatter()));
-        assertEquals(response.get("end_date"), LocalDate.parse(currentDateString, getDateFormatter()));
-        assertEquals(response.get("active_flag"), true);
-        assertEquals(response.get("extracted_date"), getDateTimeStamp(judicialOfficeAppointmentMock.getExtractedDate()));
+        assertEquals(1, response.get("judicial_office_appointment_id"));
+        assertEquals("elinksid_1", response.get("elinks_id"));
+        assertEquals("roleId_1", response.get("role_id"));
+        assertEquals("contractTypeId_1", response.get("contract_type_id"));
+        assertEquals("baseLocationId_1",response.get("base_location_id"));
+        assertEquals("regionId_1", response.get("region_id"));
+        assertEquals(true, response.get("is_prinicple_appointment"));
+        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), response.get("start_date"));
+        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), response.get("end_date"));
+        assertEquals(true, response.get("active_flag"));
+        assertEquals(getDateTimeStamp(judicialOfficeAppointmentMock.getExtractedDate()), response.get("extracted_date"));
         assertThat(response.get("created_date")).isNotNull();
         assertThat(response.get("last_loaded_date")).isNotNull();
 
