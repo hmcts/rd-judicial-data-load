@@ -53,10 +53,15 @@ public class ParentOrchestrationRouteTest {
     @Autowired
     ProducerTemplate producerTemplate;
 
+    private final String sql = "SELECT * FROM judicial_user_profile";
+
+    private final String sqlChild1 = "SELECT * FROM judicial_office_appointment";
+
+    private final String truncateAllTable = "truncate judicial_user_profile cascade";
+
     @Before
     public void init() {
-        final String sql = "truncate judicial_user_profile cascade";
-        jdbcTemplate.execute(sql);
+        jdbcTemplate.execute(truncateAllTable);
     }
 
     @Test
@@ -64,10 +69,6 @@ public class ParentOrchestrationRouteTest {
 
         setSourcePath("classpath:sourceFiles/judicial_userprofile.csv", "parent.file.path");
         setSourcePath("classpath:sourceFiles/judicial_appointments.csv", "child1.file.path");
-
-        final String sql = "SELECT * FROM judicial_user_profile";
-
-        final String sqlChild1 = "SELECT * FROM judicial_office_appointment";
 
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
@@ -98,10 +99,6 @@ public class ParentOrchestrationRouteTest {
         setSourcePath("classpath:sourceFiles/judicial_userprofile.csv", "parent.file.path");
         setSourcePath("classpath:sourceFiles/judicial_appointments_error.csv", "child1.file.path");
 
-        final String sql = "SELECT * FROM judicial_user_profile";
-
-        final String sqlChild1 = "SELECT * FROM judicial_office_appointment";
-
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
@@ -120,10 +117,6 @@ public class ParentOrchestrationRouteTest {
         // Day 1 Success data load
         setSourcePath("classpath:sourceFiles/judicial_userprofile.csv", "parent.file.path");
         setSourcePath("classpath:sourceFiles/judicial_appointments.csv", "child1.file.path");
-
-        final String sql = "SELECT * FROM judicial_user_profile";
-
-        final String sqlChild1 = "SELECT * FROM judicial_office_appointment";
 
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
@@ -160,8 +153,6 @@ public class ParentOrchestrationRouteTest {
         setSourcePath("classpath:sourceFiles/judicial_userprofile_singlerecord.csv", "parent.file.path");
         setSourcePath("classpath:sourceFiles/judicial_appointments_singlerecord.csv", "child1.file.path");
 
-        final String sql = "SELECT * FROM judicial_user_profile";
-        final String sqlChild1 = "SELECT * FROM judicial_office_appointment";
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");

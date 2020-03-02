@@ -1722,5 +1722,12 @@
         <sha1>6b11ed01182bfd8bb62ddeae34cf9eadd3cfc7ff</sha1>
         <cpe>cpe:/a:opera:opera</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: postgresql-1.12.5.jar
+   ]]></notes>
+        <sha1>63d989e245505da88f732d69f7267d4a6e400c4d</sha1>
+        <cpe>cpe:/a:postgresql:postgresql</cpe>
+    </suppress>
 
 </suppressions>
