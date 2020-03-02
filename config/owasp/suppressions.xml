@@ -1729,5 +1729,4 @@
         <sha1>63d989e245505da88f732d69f7267d4a6e400c4d</sha1>
         <cpe>cpe:/a:postgresql:postgresql</cpe>
     </suppress>
-
 </suppressions>
