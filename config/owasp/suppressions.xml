@@ -1719,7 +1719,7 @@
         <notes><![CDATA[
    file name: postgresql-1.12.5.jar
    ]]></notes>
-        <sha1>63d989e245505da88f732d69f7267d4a6e400c4d</sha1>
+        <filePath regex="true">.*\bpostgresql-1.12.5\.jar</filePath>
         <cpe>cpe:/a:postgresql:postgresql</cpe>
     </suppress>
 </suppressions>
