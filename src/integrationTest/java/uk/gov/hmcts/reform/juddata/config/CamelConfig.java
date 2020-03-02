@@ -60,7 +60,8 @@ public class CamelConfig {
     }
 
 
-    private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres");
+    private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
+            .withDatabaseName("dbjuddata_test");
 
     static {
         testPostgres.start();

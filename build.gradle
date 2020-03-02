@@ -165,20 +165,6 @@ jacocoTestReport {
     }
 }
 
-task codeCoverageReport(type: JacocoReport, dependsOn: ['test', 'integration']) {
-
-    // Gather execution data from all subprojects
-    // (change this if you e.g. want to calculate unit test/integration test coverage separately)
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    reports {
-        csv.enabled = false
-        html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco/html")
-        xml.enabled = true
-        xml.destination = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
-    }
-}
 
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
@@ -209,12 +195,9 @@ sonarqube {
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
-        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," + //To do remove unused code
+        property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/controller/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/orchestrator/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/scheduler/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/service/**"
+                "src/main/java/uk/gov/hmcts/reform/juddata/scheduler/**"
     }
 }
 
