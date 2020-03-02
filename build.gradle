@@ -195,10 +195,10 @@ sonarqube {
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration," //To do remove unused code
                 + "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java,"
-                + "src/main/java/uk/gov/hmcts/reform/juddata/controller,"
-                + "src/main/java/uk/gov/hmcts/reform/juddata/orchestrator,"
-                + "src/main/java/uk/gov/hmcts/reform/juddata/scheduler,"
-                + "src/main/java/uk/gov/hmcts/reform/juddata/service,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/controller/**,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/orchestrator/**,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/scheduler/**,"
+                + "src/main/java/uk/gov/hmcts/reform/juddata/service/**"
     }
 }
 
