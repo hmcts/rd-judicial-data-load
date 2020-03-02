@@ -34,3 +34,9 @@ route:
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
     csv-binder-object: JudicialOfficeAppointment
+
+parent-select-jrd-sql: SELECT * FROM judicial_user_profile
+
+child-select-child1-sql: SELECT * FROM judicial_office_appointment
+
+truncate-jrd: truncate judicial_user_profile cascade

@@ -53,11 +53,16 @@ public class ParentOrchestrationRouteTest {
     @Autowired
     ProducerTemplate producerTemplate;
 
-    private final String sql = "SELECT * FROM judicial_user_profile";
 
-    private final String sqlChild1 = "SELECT * FROM judicial_office_appointment";
+    @Value("${parent-select-jrd-sql}")
+    private String sql;
 
-    private final String truncateAllTable = "truncate judicial_user_profile cascade";
+    @Value("${child-select-child1-sql}")
+    private String sqlChild1;
+
+    @Value("${truncate-jrd}")
+    private String truncateAllTable;
+
 
     @Before
     public void init() {
