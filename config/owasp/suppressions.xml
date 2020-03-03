@@ -32,13 +32,6 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-        CVE-2018-1115: Vulnerability applies to postgresql before versions 10.4, 9.6.9 is vulnerable.  We use Azure 9.6.10 in Azure which does not have this issue.
-]]></notes>
-        <gav regex="true">^org\.postgresql:postgresql:.*$</gav>
-        <cve>CVE-2018-1115</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
         CVE-2016-7048: Vulnerability applies to PostgreSQL before 9.3.15, 9.4.x before 9.4.10, and 9.5.x before 9.5.5 only.  We use 9.6.10 on Azure.
 ]]></notes>
         <cve>CVE-2016-7048</cve>
@@ -1700,5 +1693,33 @@
    ]]></notes>
         <sha1>3f419c32390d4adabe431d726996479d799cec0e</sha1>
         <cve>CVE-2020-5398</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: checkstyle-8.10.1.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.puppycrawl\.tools/checkstyle@.*$</packageUrl>
+        <cve>CVE-2019-10782</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: org.apache.sling.javax.activation-0.1.0.jar
+   ]]></notes>
+        <sha1>606ef790ce33d9cd6b892c47cc2a9508efc57698</sha1>
+        <cpe>cpe:/a:apache:sling</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: selenium-opera-driver-3.141.59.jar
+   ]]></notes>
+        <sha1>6b11ed01182bfd8bb62ddeae34cf9eadd3cfc7ff</sha1>
+        <cpe>cpe:/a:opera:opera</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: postgresql-1.12.5.jar
+   ]]></notes>
+        <filePath regex="true">.*\bpostgresql-1.12.5\.jar</filePath>
+        <cpe>cpe:/a:postgresql:postgresql</cpe>
     </suppress>
 </suppressions>
