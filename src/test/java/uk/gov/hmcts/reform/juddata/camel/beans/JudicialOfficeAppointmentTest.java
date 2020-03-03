@@ -14,17 +14,18 @@ public class JudicialOfficeAppointmentTest {
     @Test
     public void  test_objects_JudicialOfficeAppointment_correctly() {
 
-        JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMockMock(createCurrentLocalDate());
+        String currentDateInString = createCurrentLocalDate();
+
+        JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMockMock(currentDateInString);
         assertEquals("elinksid_1", judicialOfficeAppointment.getElinksId());
         assertEquals("roleId_1", judicialOfficeAppointment.getRoleId());
         assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());
         assertEquals("regionId_1", judicialOfficeAppointment.getRegionId());
         assertEquals(true, judicialOfficeAppointment.getIsPrincipalAppointment());
-        String currentDateString = createCurrentLocalDate();
-        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), judicialOfficeAppointment.getStartDate());
-        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), judicialOfficeAppointment.getEndDate());
+        assertEquals(LocalDate.parse(currentDateInString, getDateFormatter()), judicialOfficeAppointment.getStartDate());
+        assertEquals(LocalDate.parse(currentDateInString, getDateFormatter()), judicialOfficeAppointment.getEndDate());
         assertEquals(true, judicialOfficeAppointment.isActiveFlag());
-        assertEquals(currentDateString, judicialOfficeAppointment.getExtractedDate());
+        assertEquals(currentDateInString, judicialOfficeAppointment.getExtractedDate());
     }
 }
