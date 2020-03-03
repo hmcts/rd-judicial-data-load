@@ -41,12 +41,6 @@ import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
 @Component
 public class ParentOrchestrationRoute {
 
-    @Value("${aggregation-strategy-completion-size: 5000}")
-    private int completionSize;
-
-    @Value("${aggregation-strategy-timeout: 2000}")
-    private int completionTimeout;
-
     @Autowired
     FileReadProcessor fileReadProcessor;
 
@@ -76,7 +70,7 @@ public class ParentOrchestrationRoute {
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;
 
         List<String> dependantRoutes = environment.containsProperty(childNames)
-                ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
+                ? environment.getProperty(childNames, List.class) : new ArrayList<>();
         dependantRoutes.add(0, parentRouteName);
 
         List<RouteProperties> routePropertiesList = getRouteProperties(dependantRoutes);

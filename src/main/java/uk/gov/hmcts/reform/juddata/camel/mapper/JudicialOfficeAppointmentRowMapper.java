@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
 @Component
 public class JudicialOfficeAppointmentRowMapper {
 
-    private static int seqNumber = 0;
+    private int seqNumber = 0;
 
     public Map<String, Object> getMap(JudicialOfficeAppointment officeAppoinemnt) {
 
