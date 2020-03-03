@@ -172,7 +172,6 @@ pitest {
             'uk.gov.hmcts.reform.juddata.configuration.*',
             'uk.gov.hmcts.reform.juddata.controller.*',
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
-            'uk.gov.hmcts.reform.juddata.camel.aggregate.*',
             'uk.gov.hmcts.reform.juddata.scheduler.*',
             'uk.gov.hmcts.reform.juddata.camel.route.*',
             'uk.gov.hmcts.reform.juddata.camel.processor.*'
@@ -201,8 +200,7 @@ sonarqube {
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/scheduler/**", +
-                "src/main/java/uk/gov/hmcts/reform/juddata/camel/aggregate/ListAggregationStrategy.java"
+                "src/main/java/uk/gov/hmcts/reform/juddata/scheduler/**"
     }
 }
 

@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
-import uk.gov.hmcts.reform.juddata.camel.aggregate.ListAggregationStrategy;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
@@ -52,11 +51,6 @@ public class CamelConfig {
     @Bean
     FileReadProcessor fileReadProcessor() {
         return new FileReadProcessor();
-    }
-
-    @Bean
-    ListAggregationStrategy listAggregationStrategy()  {
-        return new ListAggregationStrategy();
     }
 
 
