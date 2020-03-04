@@ -17,5 +17,6 @@ public class JudicialApplication {
 
     public static void main(final String[] args) {
         SpringApplication.run(JudicialApplication.class, args);
+
     }
 }
