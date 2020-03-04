@@ -12,7 +12,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.MAPPING_ME
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TIMER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
-import uk.gov.hmcts.reform.juddata.predicate.BooleanPredicate;
 
 /**
  * This class is Judicial User Profile Router Triggers Orchestrated data loading.
@@ -43,24 +41,14 @@ import uk.gov.hmcts.reform.juddata.predicate.BooleanPredicate;
 @Component
 public class ParentOrchestrationRoute {
 
-    @Value("${aggregation-strategy-completion-size: 5000}")
-    private int completionSize;
-
-    @Value("${aggregation-strategy-timeout: 2000}")
-    private int completionTimeout;
-
     @Autowired
     FileReadProcessor fileReadProcessor;
 
     @Autowired
-    ApplicationContext ctx;
+    ApplicationContext applicationContext;
 
     @Autowired
     Environment environment;
-
-
-    @Autowired
-    BooleanPredicate booleanPredicate;
 
     @Autowired
     SpringTransactionPolicy springTransactionPolicy;
@@ -68,17 +56,21 @@ public class ParentOrchestrationRoute {
     @Autowired
     ExceptionProcessor exceptionProcessor;
 
+    @Value("${start-route}")
+    private String startRoute;
+
+    @Autowired
+    CamelContext camelContext;
+
     @SuppressWarnings("unchecked")
     @Transactional
     public void startRoute() throws Exception {
 
-        CamelContext camelContext = ctx.getBean(CamelContext.class);
         String parentRouteName = camelContext.getGlobalOptions().get(ORCHESTRATED_ROUTE);
-        String parentName = ROUTE + "." + parentRouteName;
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;
 
         List<String> dependantRoutes = environment.containsProperty(childNames)
-                ? (List<String>) environment.getProperty(childNames, List.class) : new ArrayList<>();
+                ? environment.getProperty(childNames, List.class) : new ArrayList<>();
         dependantRoutes.add(0, parentRouteName);
 
         List<RouteProperties> routePropertiesList = getRouteProperties(dependantRoutes);
@@ -88,7 +80,7 @@ public class ParentOrchestrationRoute {
                     @Override
                     public void configure() throws Exception {
 
-                        //logging exception
+                        //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
                                 .process(exceptionProcessor);
@@ -97,14 +89,13 @@ public class ParentOrchestrationRoute {
 
                         getDependents(directChild, dependantRoutes);
 
-                        //User Profile Route Insertion based on  timeout(router:user-profile-aggregation-strategy-timeout)
-                        //or aggregate batch size (user-profile-aggregation-strategy-completion-size)
-                        from(environment.getProperty(parentName + "." + TIMER))
+                        //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
+                        //with Transaction propagation required
+                        from(startRoute)
                                 .transacted()
                                 .policy(springTransactionPolicy)
                                 .multicast()
                                 .stopOnException().to(directChild).end();
-
 
                         for (RouteProperties route : routePropertiesList) {
 
@@ -115,12 +106,12 @@ public class ParentOrchestrationRoute {
                                     .policy(springTransactionPolicy)
                                     .setProperty(BLOBPATH, exp)
                                     .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
-                                    ctx.getBean(route.getBinder()).getClass())
+                                    applicationContext.getBean(route.getBinder()).getClass())
                                     .to(route.getTruncateSql())
-                                    .process((Processor) ctx.getBean(route.getProcessor()))
+                                    .process((Processor) applicationContext.getBean(route.getProcessor()))
                                     .split().body()
                                     .streaming()
-                                    .bean(ctx.getBean(route.getMapper()), MAPPING_METHOD)
+                                    .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
                                     .to(route.getSql()).end();
                         }
                     }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class ExceptionProcessor implements Processor {
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         Exception exception = (Exception) exchange.getProperty(EXCEPTION_CAUGHT);
         log.error("::::exception in route for data processing::::" + exception);
     }
