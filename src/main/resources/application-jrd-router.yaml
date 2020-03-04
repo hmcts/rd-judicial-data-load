@@ -15,7 +15,7 @@ route:
       last_working_date = :#last_working_date, active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jrdtest/judicial_userprofile.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/judicial_userprofile.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
@@ -29,7 +29,7 @@ route:
       sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
       values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag, :#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jrdtest/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
     csv-binder-object: JudicialOfficeAppointment
@@ -42,7 +42,7 @@ route:
       sql:insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,authorisation_id,jurisdiction_id,authorisation_date,extracted_date,created_date,last_loaded_date)
       values(:#judicial_office_auth_id,:#elinks_id,:#authorisation_id, :#jurisdiction_id,:#authorisation_date,:#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jrdtest/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
