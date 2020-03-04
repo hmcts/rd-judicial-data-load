@@ -78,7 +78,7 @@ security:
     - "/error"
     - "/favicon.ico"
 
-   authorisedServices:
+  authorisedServices:
     -
 
 azure:
