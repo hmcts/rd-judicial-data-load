@@ -14,19 +14,19 @@ public class JudicialUserProfileTest {
         LocalDate currentDate = LocalDate.now();
         JudicialUserProfile judicialUserProfile = createJudicialUserProfileMock(currentDate);
 
-        assertEquals(judicialUserProfile.getElinksId(), "elinksid_1");
-        assertEquals(judicialUserProfile.getPersonalCode(), "personalCode_1");
-        assertEquals(judicialUserProfile.getTitle(), "title");
-        assertEquals(judicialUserProfile.getKnownAs(), "knownAs");
-        assertEquals(judicialUserProfile.getSurName(), "surname");
-        assertEquals(judicialUserProfile.getFullName(), "fullName");
-        assertEquals(judicialUserProfile.getPostNominals(), "postNominals");
-        assertEquals(judicialUserProfile.getContractTypeId(), "contractTypeId");
-        assertEquals(judicialUserProfile.getWorkPattern(), "workpatterns");
-        assertEquals(judicialUserProfile.getEmailId(), "some@hmcts.net");
-        assertEquals(judicialUserProfile.getJoiningDate(), currentDate);
-        assertEquals(judicialUserProfile.getLastWorkingDate(), currentDate);
-        assertEquals(judicialUserProfile.isActiveFlag(), true);
-        assertEquals(judicialUserProfile.getExtractedDate(), currentDate.toString());
+        assertEquals("elinksid_1", judicialUserProfile.getElinksId());
+        assertEquals("personalCode_1", judicialUserProfile.getPersonalCode());
+        assertEquals("title", judicialUserProfile.getTitle());
+        assertEquals("knownAs", judicialUserProfile.getKnownAs());
+        assertEquals("surname", judicialUserProfile.getSurName());
+        assertEquals("fullName", judicialUserProfile.getFullName());
+        assertEquals("postNominals", judicialUserProfile.getPostNominals());
+        assertEquals("contractTypeId", judicialUserProfile.getContractTypeId());
+        assertEquals("workpatterns", judicialUserProfile.getWorkPattern());
+        assertEquals("some@hmcts.net", judicialUserProfile.getEmailId());
+        assertEquals(currentDate, judicialUserProfile.getJoiningDate());
+        assertEquals(currentDate, judicialUserProfile.getLastWorkingDate());
+        assertEquals(true, judicialUserProfile.isActiveFlag());
+        assertEquals(currentDate.toString(), judicialUserProfile.getExtractedDate());
     }
 }
