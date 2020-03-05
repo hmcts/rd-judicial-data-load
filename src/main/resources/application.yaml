@@ -61,7 +61,7 @@ spring:
 # Scheduler configuration
 scheduler:
   config: ${CRON_SCHEDULE:*/1000 * * * * *}
-  camel-route-config: 0 0/1 * * * ?
+  camel-route-config: 0 0/30 * * * ?
 
 security:
   anonymousPaths:
@@ -84,9 +84,9 @@ security:
 
 azure:
   storage:
-    account-name: ${ACCOUNT_NAME:rdaat}
-    account-key: ${ACCOUNT_KEY:OvJl7NtlengOYaNSVkkMAEAu21bDkcMi5vnm3EyXLv5xtjF426b98TG0DhbHVp71wbEOpgINr29eEVsSSVYO5g==}
-    container-name: ${CONTAINER_NAME:jud-ref-data}
+    account-name: ${ACCOUNT_NAME:ACCOUNT_NAME}
+    account-key: ${ACCOUNT_KEY:ACCOUNT_KEY}
+    container-name: ${CONTAINER_NAME:CONTAINER_NAME}
     blob-url-suffix: ${BLOB_URL_SUFFIX:BLOB_URL_SUFFIX}
 
 sftp:

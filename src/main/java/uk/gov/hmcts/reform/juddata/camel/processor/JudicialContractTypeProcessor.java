@@ -21,8 +21,6 @@ public class JudicialContractTypeProcessor implements Processor {
         List<JudicialContractType> contractTypes = new ArrayList<>();
         List<JudicialContractType> judicialContractTypes = (List<JudicialContractType>) exchange.getIn().getBody();
 
-        log.info("JudicialContractTypes Records count before validation::" + judicialContractTypes.size());
-
         for (JudicialContractType contractType : judicialContractTypes) {
 
             JudicialContractType validUserRole = fetch(contractType);

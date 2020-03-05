@@ -1,5 +1,5 @@
 start-leaf-route: direct:leaf
-leaf-route-names: judicial-role-type,judicial-contract-type
+leaf-route-names: judicial-role-type,judicial-contract-type,judicial-region-type,judicial-base-location_type
 
 leaf-route:
   judicial-role-type:
@@ -7,7 +7,7 @@ leaf-route:
     insert-sql:
       sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Roles.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jrd-ref-data/Roles.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper
     csv-binder-object: JudicialUserRoleType
@@ -17,10 +17,29 @@ leaf-route:
     insert-sql:
       sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Contracts.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jrd-ref-data/Contracts.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialContractTypeProcessor
     mapper-class: JudicialContractTypeRowMapper
     csv-binder-object: JudicialContractType
 
+  judicial-region-type:
+    id: judicial-region-type
+    insert-sql:
+      sql:insert into region_type (region_id,region_desc_en,region_desc_cy) values(:#region_id,:#region_desc_en,:#region_desc_cy)?dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/jrd-ref-data/Locations.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialRegionTypeProcessor
+    mapper-class: JudicialRegionTypeRowMapper
+    csv-binder-object: JudicialRegionType
+
+  judicial-base-location_type:
+    id: judicial-base-location_type
+    insert-sql:
+      sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise, national_court_code) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise, :#national_court_code)?dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/jrd-ref-data/BaseLocations.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialBaseLocationProcessor
+    mapper-class: JudicialBaseLocationRowTypeMapper
+    csv-binder-object: JudicialBaseLocationType
 
 
