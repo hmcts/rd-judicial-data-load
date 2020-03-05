@@ -20,7 +20,6 @@ public class JudicialBaseLocationRowTypeMapper {
         locationRow.put("court_type", location.getCourt_type());
         locationRow.put("circuit", location.getCircuit());
         locationRow.put("area_of_expertise", location.getArea());
-        locationRow.put("national_court_code", location.getNational_court_code());
         return  locationRow;
     }
 

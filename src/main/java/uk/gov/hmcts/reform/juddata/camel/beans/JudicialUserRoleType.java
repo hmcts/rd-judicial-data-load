@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 public class JudicialUserRoleType {
 
     @DataField(pos = 1, columnName = "role_id")

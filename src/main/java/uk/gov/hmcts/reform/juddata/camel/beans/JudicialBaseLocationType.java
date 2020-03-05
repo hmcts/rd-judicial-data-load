@@ -26,8 +26,4 @@ public class JudicialBaseLocationType {
 
     @DataField(pos = 5)
     String area;
-
-    @DataField(pos = 6)
-    String national_court_code;
-
 }
