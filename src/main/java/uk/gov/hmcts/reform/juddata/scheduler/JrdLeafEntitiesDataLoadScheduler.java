@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 @Component
-public class JrdUserProfileDataLoadScheduler {
+public class JrdLeafEntitiesDataLoadScheduler {
 
     @Autowired
     CamelContext camelContext;
@@ -28,18 +28,17 @@ public class JrdUserProfileDataLoadScheduler {
     @Autowired
     ProducerTemplate producerTemplate;
 
-    @Value("${start-route}")
-    private String startRoute;
+    @Value("${start-leaf-route}")
+    private String startLeafRoute;
 
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        parentOrchestrationRoute.startRoute();
+        leafTableRoutes.startRoute();
     }
 
-    //@Scheduled(cron = "${scheduler.camel-route-config}")
+    @Scheduled(cron = "${scheduler.camel-route-config}")
     public void runJrdScheduler() {
-        producerTemplate.sendBody(startRoute, "starting JRD orchestration");
+        producerTemplate.sendBody(startLeafRoute, "starting JRD orchestration");
     }
 }
