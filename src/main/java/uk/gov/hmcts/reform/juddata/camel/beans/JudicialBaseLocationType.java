@@ -4,13 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
-import org.apache.camel.dataformat.bindy.annotation.FixedLengthRecord;
 import org.springframework.stereotype.Component;
 
 @Component
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX" , skipFirstLine = true, skipField = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 public class JudicialBaseLocationType {
 
     @DataField(pos = 1)
