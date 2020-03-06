@@ -33,9 +33,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
 
-/**
- * This class is Judicial User Profile Router Triggers Orchestrated data loading.
- */
+
 @Component
 public class LeafTableRoute {
 
