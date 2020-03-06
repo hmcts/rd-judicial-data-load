@@ -7,11 +7,15 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class FileReadProcessor implements Processor {
+
+    @Value("${file-read-time-out}")
+    int fileReadTimeOut;
 
     @Override
     public void process(Exchange exchange) {
@@ -19,7 +23,7 @@ public class FileReadProcessor implements Processor {
         String blobFilePath = (String) exchange.getProperty(BLOBPATH);
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();
-        exchange.getMessage().setBody(consumer.receiveBody(blobFilePath, 600000));
+        exchange.getMessage().setBody(consumer.receiveBody(blobFilePath, fileReadTimeOut));
         log.info("::FileReadProcessor ends::");
     }
 }

@@ -23,16 +23,22 @@ public class ArchiveAzureFileProcessor implements Processor {
     @Value("${archival-cred}")
     String archivalCred;
 
+    @Value("${archival-date-format}")
+    String archivalDateFormat;
+
+    @Value("${file-read-time-out}")
+    int fileReadTimeOut;
+
     @Override
     public void process(Exchange exchange) throws Exception {
         Integer count = exchange.getProperty("CamelLoopIndex", Integer.class);
-        String date = new SimpleDateFormat("dd-MM-yyyy--HH-mm").format(new Date());
+        String date = new SimpleDateFormat(archivalDateFormat).format(new Date());
         String fileName = archivalFileNames.get(count);
         exchange.getIn().setHeader("filename", "/" + fileName.substring(0,
                 fileName.indexOf(".csv")).concat(date + ".csv"));
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();
         exchange.getMessage().setBody(consumer.receiveBody(activeBlobs + "/" + archivalFileNames.get(count)
-                        + "?" + archivalCred, 600000));
+                        + "?" + archivalCred, fileReadTimeOut));
     }
 }

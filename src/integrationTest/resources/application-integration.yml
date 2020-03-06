@@ -9,6 +9,8 @@ archival-path: ${archival.path}
 active-blob-path: ${active.path}
 archival-file-names: test.csv,judicial_userprofile.csv
 archival-cred: noop=true
+archival-date-format: dd-MM-yyyy--HH-mm
+file-read-time-out: 2000
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration

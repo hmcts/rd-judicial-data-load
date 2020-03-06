@@ -34,6 +34,10 @@ public class ArchiveAzureFileProcessorTest {
                 .getClass().getDeclaredField("activeBlobs"), "file:");
         FieldSetter.setField(azureFileProcessor, azureFileProcessor
                 .getClass().getDeclaredField("archivalCred"), "");
+        FieldSetter.setField(azureFileProcessor,azureFileProcessor
+                .getClass().getDeclaredField("archivalDateFormat"), "dd-MM-yyyy--HH-mm");
+        FieldSetter.setField(azureFileProcessor,azureFileProcessor
+                .getClass().getDeclaredField("fileReadTimeOut"), 1000);
         exchange.setProperty("CamelLoopIndex", 0);
         azureFileProcessor.process(exchange);
         Assert.assertNotNull(exchange.getIn().getHeader("fileName"));

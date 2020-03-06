@@ -192,7 +192,7 @@ public class ParentOrchestrationRouteTest {
         if (loadFile.endsWith(".csv")) {
             int lastSlash = loadFile.lastIndexOf("/");
             String result = loadFile.substring(0, lastSlash);
-            String fileName = loadFile.substring(lastSlash).replaceFirst("/", "");
+            String fileName = loadFile.substring(lastSlash + 1);
 
             System.setProperty(propertyPlaceHolder, "file:"
                     + result + "?fileName=" + fileName + "&noop=true");
