@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 @Component
 public class JudicialUserProfile implements Serializable {
 
