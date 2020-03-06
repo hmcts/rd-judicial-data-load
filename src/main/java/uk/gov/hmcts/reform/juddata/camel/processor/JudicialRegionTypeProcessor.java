@@ -41,7 +41,7 @@ public class JudicialRegionTypeProcessor implements Processor {
     private JudicialRegionType fetch(JudicialRegionType regionType) {
 
         JudicialRegionType regionTypeAfterValidation = null;
-        if (null != regionType.getRegion_id()) {
+        if (null != regionType.getRegionId()) {
             regionTypeAfterValidation = regionType;
         }
         return regionTypeAfterValidation;

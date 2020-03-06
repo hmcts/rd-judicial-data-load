@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
 
 @Component
 public class JudicialRoleTypeRowMapper {

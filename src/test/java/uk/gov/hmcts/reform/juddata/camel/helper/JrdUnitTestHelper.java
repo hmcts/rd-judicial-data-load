@@ -3,8 +3,12 @@ package uk.gov.hmcts.reform.juddata.camel.helper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialBaseLocationType;
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
 import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
 
 public class JrdUnitTestHelper {
@@ -74,5 +78,41 @@ public class JrdUnitTestHelper {
 
     public static DateTimeFormatter getDateFormatter() {
         return DateTimeFormatter.ofPattern(DATE_FORMAT);
+    }
+
+    public static JudicialUserRoleType createJudicialUserRoleType() {
+        JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
+        judicialUserRoleType.setRoleDescCy("roleDescCy");
+        judicialUserRoleType.setRoleDescEn("roleDescEn");
+        judicialUserRoleType.setRoleId("roleId");
+        return  judicialUserRoleType;
+    }
+
+    public static JudicialRegionType createJudicialRegionType() {
+        JudicialRegionType judicialRegionType = new JudicialRegionType();
+
+        judicialRegionType.setRegionDescCy("region_desc_cy");
+        judicialRegionType.setRegionDescEn("region_desc_en");
+        judicialRegionType.setRegionId("regionId");
+        return judicialRegionType;
+    }
+
+    public static JudicialBaseLocationType createJudicialOfficeAppointmentMock() {
+        JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
+
+        judicialBaseLocationType.setArea("area");
+        judicialBaseLocationType.setBaseLocationId("baseLocationId");
+        judicialBaseLocationType.setCircuit("circuit");
+        judicialBaseLocationType.setCourtName("courtName");
+        judicialBaseLocationType.setCourtType("courtType");
+        return  judicialBaseLocationType;
+    }
+
+    public static JudicialContractType createJudicialContractType() {
+        JudicialContractType contractType = new JudicialContractType();
+        contractType.setContractTypeDescCy("contractTypeDescCy");
+        contractType.setContractTypeDescEn("contractTypeDescEn");
+        contractType.setContractTypeId("contractTypeId");
+        return  contractType;
     }
 }

@@ -174,7 +174,6 @@ pitest {
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
             'uk.gov.hmcts.reform.juddata.scheduler.*',
             'uk.gov.hmcts.reform.juddata.camel.route.*',
-            'uk.gov.hmcts.reform.juddata.camel.processor.*'
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true

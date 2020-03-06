@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
@@ -22,8 +21,6 @@ public class JrdUserProfileDataLoadScheduler {
     @Autowired
     ParentOrchestrationRoute parentOrchestrationRoute;
 
-    @Autowired
-    LeafTableRoute leafTableRoutes;
 
     @Autowired
     ProducerTemplate producerTemplate;
@@ -38,7 +35,7 @@ public class JrdUserProfileDataLoadScheduler {
         parentOrchestrationRoute.startRoute();
     }
 
-    //@Scheduled(cron = "${scheduler.camel-route-config}")
+    @Scheduled(cron = "${scheduler.camel-route-config}")
     public void runJrdScheduler() {
         producerTemplate.sendBody(startRoute, "starting JRD orchestration");
     }

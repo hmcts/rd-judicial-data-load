@@ -13,6 +13,9 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.MAPPING_ME
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
@@ -29,9 +32,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * This class is Judicial User Profile Router Triggers Orchestrated data loading.
@@ -107,7 +107,9 @@ public class LeafTableRoute {
                                     .split().body()
                                     .streaming()
                                     .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
+                                    .doTry()
                                     .to(route.getSql())
+                                    .doCatch(Exception.class)
                                     .end();
                         }
                     }

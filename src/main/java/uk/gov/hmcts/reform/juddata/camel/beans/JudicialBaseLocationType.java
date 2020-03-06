@@ -12,18 +12,18 @@ import org.springframework.stereotype.Component;
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 public class JudicialBaseLocationType {
 
-    @DataField(pos = 1)
-    String base_location_id;
+    @DataField(pos = 1, columnName = "base_location_id")
+    String baseLocationId;
 
-    @DataField(pos = 2)
-    String court_name;
+    @DataField(pos = 2, columnName = "court_name")
+    String courtName;
 
-    @DataField(pos = 3)
-    String court_type;
+    @DataField(pos = 3, columnName = "court_type")
+    String courtType;
 
-    @DataField(pos = 4)
+    @DataField(pos = 4, columnName = "circuit")
     String circuit;
 
-    @DataField(pos = 5)
+    @DataField(pos = 5, columnName = "area")
     String area;
 }

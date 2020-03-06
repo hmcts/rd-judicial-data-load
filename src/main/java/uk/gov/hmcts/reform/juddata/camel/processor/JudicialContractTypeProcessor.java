@@ -2,12 +2,12 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
 import org.springframework.stereotype.Component;
+
+import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
 
 @Slf4j
 @Component
@@ -43,7 +43,7 @@ public class JudicialContractTypeProcessor implements Processor {
     private JudicialContractType fetch(JudicialContractType contractType) {
 
         JudicialContractType contractTypeAfterValidation = null;
-        if (null != contractType.getContract_type_id()) {
+        if (null != contractType.getContractTypeId()) {
             contractTypeAfterValidation = contractType;
         }
         return contractTypeAfterValidation;
