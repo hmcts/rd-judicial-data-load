@@ -1,0 +1,3 @@
+elinks_Id,Role_Id,Contract_Type_Id,Base_Location_Id,Region_Id,Is_Principal_Appointment,Start_Date,End_Date,Active_Flag,Extracted_Date
+1,1,,,,TRUE,1900-01-01 00:00:00,,TRUE,2019-12-04 11:29:43.480000000
+2,1,,,,TRUE,1900-01-01 00:00:00,,TRUE,2019-12-04 11:29:43.480000000
