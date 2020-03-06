@@ -4,6 +4,13 @@ spring:
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
 start-route: direct:JRD
+archival-route: direct:JrdArchival
+archival-path: ${archival.path}
+active-blob-path: ${active.path}
+archival-file-names: test.csv,judicial_userprofile.csv
+archival-cred: noop=true
+archival-date-format: dd-MM-yyyy--HH-mm
+file-read-time-out: 2000
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
