@@ -14,9 +14,9 @@ public class JudicialContractTypeTest {
     @SuppressWarnings("unchecked")
     public  void  test_objects_JudicialContractType_correctly() {
 
-        assertEquals(judicialContractType.getContractTypeDescCy(),"contractTypeDescCy");
-        assertEquals(judicialContractType.getContractTypeDescEn(),"contractTypeDescEn");
-        assertEquals(judicialContractType.getContractTypeId(),"contractTypeId");
+        assertEquals("contractTypeDescCy", judicialContractType.getContractTypeDescCy());
+        assertEquals("contractTypeDescEn", judicialContractType.getContractTypeDescEn());
+        assertEquals("contractTypeId",  judicialContractType.getContractTypeId());
 
     }
 
