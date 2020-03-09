@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createRoutePropertiesMock;
 
 import org.junit.Test;
+import uk.gov.hmcts.reform.juddata.camel.beans.RouteProperties;
 
 public class RoutePropertiesTest {
 

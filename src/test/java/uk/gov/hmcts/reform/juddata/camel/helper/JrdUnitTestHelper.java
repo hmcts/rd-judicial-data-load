@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
-import uk.gov.hmcts.reform.juddata.camel.vo.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.beans.RouteProperties;
 
 public class JrdUnitTestHelper {
     private JrdUnitTestHelper() {
