@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @Configuration
 @EnableTransactionManagement
@@ -28,6 +30,13 @@ public class DataSourceConfig {
         springTransactionPolicy.setTransactionManager(txManager());
         springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
         return springTransactionPolicy;
+    }
+
+    @Bean
+    public DefaultTransactionDefinition defaultTransactionDefinition() {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(Propagation.REQUIRED.ordinal());
+        return def;
     }
 
     //Aggregation configuration
