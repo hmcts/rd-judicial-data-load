@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
+import static java.util.Objects.nonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class JudicialRegionTypeProcessor implements Processor {
         for (JudicialRegionType regionType : judicialRegionTypes) {
 
             JudicialRegionType validRegionType = fetch(regionType);
-            if (null != validRegionType) {
+            if (nonNull(validRegionType)) {
 
                 regionTypes.add(validRegionType);
             } else {
@@ -41,7 +43,7 @@ public class JudicialRegionTypeProcessor implements Processor {
     private JudicialRegionType fetch(JudicialRegionType regionType) {
 
         JudicialRegionType regionTypeAfterValidation = null;
-        if (null != regionType.getRegionId()) {
+        if (nonNull(regionType.getRegionId())) {
             regionTypeAfterValidation = regionType;
         }
         return regionTypeAfterValidation;

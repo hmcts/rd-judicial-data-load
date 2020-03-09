@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
+import static java.util.Objects.nonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,7 @@ public class JudicialUserRoleTypeProcessor implements Processor {
         for (JudicialUserRoleType user : judicialUserRoleTypes) {
 
             JudicialUserRoleType validUserRole = fetch(user);
-            if (null != validUserRole) {
+            if (nonNull(validUserRole)) {
 
                 userRoles.add(validUserRole);
             } else {
@@ -41,7 +43,7 @@ public class JudicialUserRoleTypeProcessor implements Processor {
     private JudicialUserRoleType fetch(JudicialUserRoleType userRole) {
 
         JudicialUserRoleType roleAfterValidation = null;
-        if (null != userRole.getRoleId()) {
+        if (nonNull(userRole.getRoleId())) {
             roleAfterValidation = userRole;
         }
         return roleAfterValidation;

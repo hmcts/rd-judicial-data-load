@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
+import static java.util.Objects.nonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +23,10 @@ public class JudicialBaseLocationProcessor implements Processor {
         for (JudicialBaseLocationType user : locationsRecords) {
 
             JudicialBaseLocationType validLocation = fetch(user);
-            if (null != validLocation) {
+            if (nonNull(validLocation)) {
 
                 locations.add(validLocation);
+
             } else {
 
                 log.info("Invalid Location record ");
@@ -40,7 +43,7 @@ public class JudicialBaseLocationProcessor implements Processor {
     private JudicialBaseLocationType fetch(JudicialBaseLocationType location) {
 
         JudicialBaseLocationType locationAfterValidation = null;
-        if (null != location.getBaseLocationId()) {
+        if (nonNull(location.getBaseLocationId())) {
             locationAfterValidation = location;
         }
         return locationAfterValidation;

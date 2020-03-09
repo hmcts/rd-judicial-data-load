@@ -81,7 +81,7 @@ public class LeafTableRoute {
 
                         String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 
-                        //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
+                        //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
                         //with Transaction propagation required
                         from(startLeafRoute)
                                 .transacted()
