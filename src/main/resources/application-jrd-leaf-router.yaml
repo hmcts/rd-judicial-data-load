@@ -1,5 +1,6 @@
 start-leaf-route: direct:leaf
 leaf-route-names: judicial-role-type,judicial-contract-type,judicial-region-type,judicial-base-location_type
+leaf-route-start-interval: 60000
 
 leaf-route:
   judicial-role-type:
