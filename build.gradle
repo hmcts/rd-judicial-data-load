@@ -200,7 +200,8 @@ sonarqube {
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/scheduler/**"
+                "src/main/java/uk/gov/hmcts/reform/juddata/scheduler/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/camel/route/LeafTableRoute.java"
     }
 }
 

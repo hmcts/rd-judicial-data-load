@@ -6,7 +6,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJ
 import java.time.LocalDate;
 import java.util.Map;
 import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 public class JudicialUserProfileRowMapperTest {
     @Test

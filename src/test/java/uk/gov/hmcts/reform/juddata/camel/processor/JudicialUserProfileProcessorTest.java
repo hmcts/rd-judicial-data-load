@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 public class JudicialUserProfileProcessorTest {
 

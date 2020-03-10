@@ -1,6 +1,13 @@
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
 start-route: direct:JRD
+archival-route: direct:JrdArchival
+archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
+active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
+archival-file-names: Personal.csv,Appointments.csv
+archival-cred: credentials=#credsreg&operation=updateBlockBlob
+archival-date-format: dd-MM-yyyy--HH-mm
+file-read-time-out: 600000
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
@@ -15,7 +22,7 @@ route:
       last_working_date = :#last_working_date, active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/judicial_userprofile.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Personal.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile

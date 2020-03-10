@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.juddata.camel.vo;
+package uk.gov.hmcts.reform.juddata.camel.route.beans;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

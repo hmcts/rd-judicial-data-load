@@ -13,6 +13,7 @@ import org.apache.camel.test.spring.CamelSpringRunner;
 import org.apache.camel.test.spring.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.MockEndpoints;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +63,21 @@ public class ParentOrchestrationRouteTest {
     @Value("${truncate-jrd}")
     private String truncateAllTable;
 
+    @Value("${archival-cred}")
+    String archivalCred;
+
     private static final String[] file = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments.csv"};
 
     private static final String[] fileWithError = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments_error.csv"};
 
     private static final String[] fileWithSingleRecord = {"classpath:sourceFiles/judicial_userprofile_singlerecord.csv", "classpath:sourceFiles/judicial_appointments_singlerecord.csv"};
 
+
+    @BeforeClass
+    public static void beforeAll() throws Exception {
+        setSourcePath("classpath:archivalFiles", "archival.path");
+        setSourcePath("classpath:sourceFiles", "active.path");
+    }
 
     @Before
     public void init() {
@@ -168,22 +178,27 @@ public class ParentOrchestrationRouteTest {
     }
 
 
-    private void setSourceData(String... files) throws Exception {
+    private static void setSourceData(String... files) throws Exception {
         setSourcePath(files[0],
                 "parent.file.path");
         setSourcePath(files[1],
                 "child1.file.path");
     }
 
-    private void setSourcePath(String path, String propertyPlaceHolder) throws Exception {
+    private static void setSourcePath(String path, String propertyPlaceHolder) throws Exception {
 
         String loadFile = ResourceUtils.getFile(path).getCanonicalPath();
-        int lastSlash = loadFile.lastIndexOf("/");
-        String result = loadFile.substring(0, lastSlash);
-        String fileName = loadFile.substring(lastSlash).replaceFirst("/", "");
 
-        System.setProperty(propertyPlaceHolder, "file:"
-                + result + "?fileName=" + fileName + "&noop=true");
+        if (loadFile.endsWith(".csv")) {
+            int lastSlash = loadFile.lastIndexOf("/");
+            String result = loadFile.substring(0, lastSlash);
+            String fileName = loadFile.substring(lastSlash + 1);
+
+            System.setProperty(propertyPlaceHolder, "file:"
+                    + result + "?fileName=" + fileName + "&noop=true");
+        } else {
+            System.setProperty(propertyPlaceHolder, "file:" + loadFile.replaceFirst("/", ""));
+        }
     }
 }
 

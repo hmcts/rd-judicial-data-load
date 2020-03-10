@@ -55,12 +55,15 @@ spring:
   profiles:
     include:
       - jrd-router
+      - jrd-leaf-router
 
 
 # Scheduler configuration
 scheduler:
   config: ${CRON_SCHEDULE:*/1000 * * * * *}
-  camel-route-config: 0 0/30 * * * ?
+  camel-route-config: 0 0/3 * * * ?
+  camel-leaf-router-config: 0 * 18 * * ?
+
 
 security:
   anonymousPaths:

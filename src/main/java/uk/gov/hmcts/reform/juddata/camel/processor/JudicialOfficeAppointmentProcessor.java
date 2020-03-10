@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 
 @Slf4j
 @Component
