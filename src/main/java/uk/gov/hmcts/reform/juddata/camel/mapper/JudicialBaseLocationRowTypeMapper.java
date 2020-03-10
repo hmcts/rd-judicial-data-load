@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialBaseLocationType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 
 
 @Slf4j
 @Component
-public class JudicialBaseLocationRowTypeMapper implements IMapper{
+public class JudicialBaseLocationRowTypeMapper implements IMapper {
 
     public Map<String, Object> getMap(Object location) {
 

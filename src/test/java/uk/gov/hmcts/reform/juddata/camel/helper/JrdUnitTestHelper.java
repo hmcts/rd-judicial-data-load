@@ -3,13 +3,13 @@ package uk.gov.hmcts.reform.juddata.camel.helper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialBaseLocationType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialRegionType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserProfile;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
-import uk.gov.hmcts.reform.juddata.camel.route.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
+import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
 public class JrdUnitTestHelper {
     private JrdUnitTestHelper() {

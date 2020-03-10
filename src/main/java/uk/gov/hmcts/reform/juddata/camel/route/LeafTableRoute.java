@@ -31,6 +31,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
+import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
 
 @Component

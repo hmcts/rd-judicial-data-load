@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.juddata.camel.beans;
+package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import java.io.Serializable;
 import java.time.LocalDate;

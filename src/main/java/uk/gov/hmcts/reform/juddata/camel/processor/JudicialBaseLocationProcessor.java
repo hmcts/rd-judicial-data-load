@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialBaseLocationType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 
 @Slf4j
 @Component

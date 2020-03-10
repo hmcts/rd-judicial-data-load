@@ -5,7 +5,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJ
 
 import java.util.Map;
 import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialBaseLocationType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 
 public class JudicialBaseLocationRowTypeMapperTest {
 

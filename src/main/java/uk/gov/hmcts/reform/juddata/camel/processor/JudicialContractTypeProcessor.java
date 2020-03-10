@@ -9,7 +9,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
 
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 
 @Slf4j
 @Component

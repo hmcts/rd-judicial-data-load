@@ -10,8 +10,8 @@ import java.util.List;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialBaseLocationType;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 
 public class JudicialBaseLocationProcessorTest {
 

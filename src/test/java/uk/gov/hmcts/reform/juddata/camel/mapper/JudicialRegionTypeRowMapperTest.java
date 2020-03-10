@@ -5,7 +5,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJ
 
 import java.util.Map;
 import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialRegionType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 
 public class JudicialRegionTypeRowMapperTest {
 
