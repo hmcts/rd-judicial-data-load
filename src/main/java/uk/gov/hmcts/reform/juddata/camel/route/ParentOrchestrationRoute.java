@@ -15,7 +15,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,10 +31,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
+
 
 /**
  * This class is Judicial User Profile Router Triggers Orchestrated data loading.
@@ -64,21 +63,6 @@ public class ParentOrchestrationRoute {
     @Autowired
     CamelContext camelContext;
 
-    @Value("${archival-path}")
-    String archivalPath;
-
-    @Value("${archival-file-names}")
-    List<String> archivalFileNames;
-
-    @Autowired
-    ArchiveAzureFileProcessor azureFileProcessor;
-
-    @Value("${archival-route}")
-    String archivalRoute;
-
-    @Value("${archival-cred}")
-    String archivalCred;
-
     @SuppressWarnings("unchecked")
     @Transactional
     public void startRoute() throws Exception {
@@ -105,9 +89,6 @@ public class ParentOrchestrationRoute {
                         String[] directChild = new String[dependantRoutes.size()];
 
                         getDependents(directChild, dependantRoutes);
-                        directChild = Arrays.copyOf(directChild, directChild.length + 1);
-                        //add last child route as  archival
-                        directChild[directChild.length - 1] = archivalRoute;
 
                         //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
                         //with Transaction propagation required
@@ -115,17 +96,7 @@ public class ParentOrchestrationRoute {
                                 .transacted()
                                 .policy(springTransactionPolicy)
                                 .multicast()
-                                .stopOnException()
-                                .to(directChild).end();
-
-
-                        //Archive Blob files
-                        from(archivalRoute)
-                                .loop(archivalFileNames.size())
-                                .process(azureFileProcessor)
-                                .toD(archivalPath + "${header.filename}?" + archivalCred)
-                                .end();
-
+                                .stopOnException().to(directChild).end();
 
                         for (RouteProperties route : routePropertiesList) {
 
@@ -144,7 +115,6 @@ public class ParentOrchestrationRoute {
                                     .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
                                     .to(route.getSql()).end();
                         }
-
                     }
                 });
     }

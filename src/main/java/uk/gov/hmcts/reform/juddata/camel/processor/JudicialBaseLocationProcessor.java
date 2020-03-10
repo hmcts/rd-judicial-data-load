@@ -1,14 +1,15 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Objects.nonNull;
-
-import java.util.ArrayList;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Objects.nonNull;
 
 @Slf4j
 @Component

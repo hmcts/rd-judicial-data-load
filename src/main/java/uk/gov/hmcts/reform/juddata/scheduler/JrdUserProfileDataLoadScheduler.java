@@ -21,7 +21,6 @@ public class JrdUserProfileDataLoadScheduler {
     @Autowired
     ParentOrchestrationRoute parentOrchestrationRoute;
 
-
     @Autowired
     ProducerTemplate producerTemplate;
 
