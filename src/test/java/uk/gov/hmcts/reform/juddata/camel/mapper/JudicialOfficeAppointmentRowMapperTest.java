@@ -10,7 +10,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getDateTim
 import java.time.LocalDate;
 import java.util.Map;
 import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 
 public class JudicialOfficeAppointmentRowMapperTest {
 

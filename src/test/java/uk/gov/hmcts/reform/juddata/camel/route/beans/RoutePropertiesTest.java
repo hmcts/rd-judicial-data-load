@@ -1,16 +1,16 @@
-package uk.gov.hmcts.reform.juddata.camel.vo;
+package uk.gov.hmcts.reform.juddata.camel.route.beans;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createRoutePropertiesMock;
 
 import org.junit.Test;
+import uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper;
 
 public class RoutePropertiesTest {
 
     @Test
     public void  test_objects_RouteProperties_correctly() {
 
-        RouteProperties routeProperties = createRoutePropertiesMock();
+        RouteProperties routeProperties = JrdUnitTestHelper.createRoutePropertiesMock();
 
         assertEquals("Binder", routeProperties.getBinder());
         assertEquals("Blobpath", routeProperties.getBlobPath());

@@ -7,6 +7,8 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     FLYWAY_ENABLED: true
+    ACCOUNT_NAME: "rdpreview"
+    ACCOUNT_KEY: "61Sb95N8fFF5PNn/Gn5FjJFUg6wKJ/j6IWa0URdnAWnmjtluRPpJDk8uA3Zrx+u9gzUA8nF56rVJm1jl5dgTnQ=="
   postgresql:
     postgresqlUsername: dbjuddata
     postgresqlPassword: dbjuddata

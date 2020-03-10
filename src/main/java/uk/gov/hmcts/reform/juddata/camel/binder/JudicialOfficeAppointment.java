@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.juddata.camel.beans;
+package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 @Component
 public class JudicialOfficeAppointment implements Serializable {
 

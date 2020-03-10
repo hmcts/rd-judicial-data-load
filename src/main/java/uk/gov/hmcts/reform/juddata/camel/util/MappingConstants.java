@@ -14,6 +14,10 @@ public class MappingConstants {
 
     public static final String ROUTE = "route";
 
+    public static final String LEAF_ROUTE = "leaf-route";
+
+    public static final String LEAF_ROUTE_NAMES = "leaf-route-names";
+
     public static final String INSERT_SQL = "insert-sql";
 
     public static final String TRUNCATE_SQL = "truncate-sql";
