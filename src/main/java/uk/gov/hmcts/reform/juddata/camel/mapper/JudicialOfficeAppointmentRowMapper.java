@@ -13,12 +13,13 @@ import uk.gov.hmcts.reform.juddata.camel.beans.JudicialOfficeAppointment;
 
 @Slf4j
 @Component
-public class JudicialOfficeAppointmentRowMapper {
+public class JudicialOfficeAppointmentRowMapper implements IMapper {
 
     private int seqNumber = 0;
 
-    public Map<String, Object> getMap(JudicialOfficeAppointment officeAppoinemnt) {
+    public Map<String, Object> getMap(Object officeAppoinemntObject) {
 
+        JudicialOfficeAppointment officeAppoinemnt = (JudicialOfficeAppointment) officeAppoinemntObject;
         Map<String, Object> judOfficeAppointmentRow = new HashMap<>();
 
         judOfficeAppointmentRow.put("judicial_office_appointment_id", generateId());

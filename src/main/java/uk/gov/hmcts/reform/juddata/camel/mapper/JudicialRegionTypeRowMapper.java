@@ -9,9 +9,11 @@ import uk.gov.hmcts.reform.juddata.camel.beans.JudicialRegionType;
 
 @Slf4j
 @Component
-public class JudicialRegionTypeRowMapper {
+public class JudicialRegionTypeRowMapper implements IMapper {
 
-    public Map<String, Object> getMap(JudicialRegionType regionType) {
+    public Map<String, Object> getMap(Object regionTypeObject) {
+
+        JudicialRegionType regionType = (JudicialRegionType) regionTypeObject;
 
         Map<String, Object> roleRow = new HashMap<>();
         roleRow.put("region_id", regionType.getRegionId());

@@ -9,14 +9,16 @@ import uk.gov.hmcts.reform.juddata.camel.beans.JudicialContractType;
 
 @Slf4j
 @Component
-public class JudicialContractTypeRowMapper {
+public class JudicialContractTypeRowMapper implements IMapper {
 
-    public Map<String, Object> getMap(JudicialContractType contractType) {
+    public Map<String, Object> getMap(Object contractType) {
+
+        JudicialContractType judicialContractType = (JudicialContractType) contractType;
 
         Map<String, Object> roleRow = new HashMap<>();
-        roleRow.put("contract_type_id", contractType.getContractTypeId());
-        roleRow.put("contract_type_desc_en", contractType.getContractTypeDescEn());
-        roleRow.put("contract_type_desc_cy", contractType.getContractTypeDescCy());
+        roleRow.put("contract_type_id", judicialContractType.getContractTypeId());
+        roleRow.put("contract_type_desc_en", judicialContractType.getContractTypeDescEn());
+        roleRow.put("contract_type_desc_cy", judicialContractType.getContractTypeDescCy());
         return  roleRow;
     }
 

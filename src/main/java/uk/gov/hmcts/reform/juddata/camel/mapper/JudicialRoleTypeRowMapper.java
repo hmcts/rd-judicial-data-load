@@ -6,9 +6,11 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.beans.JudicialUserRoleType;
 
 @Component
-public class JudicialRoleTypeRowMapper {
+public class JudicialRoleTypeRowMapper implements IMapper {
 
-    public Map<String, Object> getMap(JudicialUserRoleType role) {
+    public Map<String, Object> getMap(Object roleObject) {
+
+        JudicialUserRoleType role = (JudicialUserRoleType) roleObject;
 
         Map<String, Object> roleRow = new HashMap<>();
         roleRow.put("role_id", role.getRoleId());
