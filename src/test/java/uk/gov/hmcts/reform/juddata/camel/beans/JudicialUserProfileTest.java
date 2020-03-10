@@ -5,6 +5,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJ
 
 import java.time.LocalDate;
 import org.junit.Test;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 public class JudicialUserProfileTest {
 
