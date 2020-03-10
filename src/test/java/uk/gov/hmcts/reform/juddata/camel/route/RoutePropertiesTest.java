@@ -1,10 +1,10 @@
-package uk.gov.hmcts.reform.juddata.camel.beans;
+package uk.gov.hmcts.reform.juddata.camel.route;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createRoutePropertiesMock;
 
 import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.beans.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.route.RouteProperties;
 
 public class RoutePropertiesTest {
 

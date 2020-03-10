@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.juddata.camel.beans.JudicialBaseLocationType;
 
 @Slf4j
 @Component
-public class JudicialBaseLocationRowTypeMapper {
+public class JudicialBaseLocationRowTypeMapper implements IMapper{
 
     public Map<String, Object> getMap(Object location) {
 
