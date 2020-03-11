@@ -16,7 +16,7 @@ public class WelcomeControllerTest {
     public void should_return_welcome_response() {
 
         ResponseEntity<String> responseEntity = welcomeController.welcome();
-        String expectedMessage = "Welcome to the Judicial API";
+        String expectedMessage = "Welcome to the Judicial Data Load";
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertThat(

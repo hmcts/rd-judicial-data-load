@@ -27,7 +27,7 @@ public class WelcomeController {
 
     private static final Logger LOG = getLogger(WelcomeController.class);
     private static final String INSTANCE_ID = UUID.randomUUID().toString();
-    private static final String MESSAGE = "Welcome to the Judicial API";
+    private static final String MESSAGE = "Welcome to the Judicial Data Load";
 
     /**
      * Root GET endpoint.

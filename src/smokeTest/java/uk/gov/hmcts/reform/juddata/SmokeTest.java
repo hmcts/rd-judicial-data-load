@@ -13,7 +13,7 @@ public class SmokeTest {
     private final String targetInstance =
         StringUtils.defaultIfBlank(
             System.getenv("TEST_URL"),
-            "http://localhost:8090"
+            "http://localhost:8094"
         );
 
     @Test
@@ -23,14 +23,15 @@ public class SmokeTest {
         RestAssured.useRelaxedHTTPSValidation();
 
         String response = SerenityRest
+            .given().relaxedHTTPSValidation()
             .when()
-            .get("/health")
+            .get("/")
             .then()
             .statusCode(HttpStatus.OK.value())
             .and()
             .extract().body().asString();
 
         assertThat(response)
-            .contains("UP");
+            .contains("Welcome to the Judicial Data Load");
     }
 }
