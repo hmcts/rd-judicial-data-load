@@ -64,24 +64,6 @@ scheduler:
   camel-leaf-router-config: 0 */105 * * * ?
 
 
-security:
-  anonymousPaths:
-    - "/"
-    - "/health"
-    - "/health/liveness"
-    - "/actuator/**"
-    - "/loggers/**"
-    - "/swagger-ui.html"
-    - "/swagger-resources/**"
-    - "/v2/api-docs"
-    - "/webjars/springfox-swagger-ui/**"
-    - "/csrf"
-    - "/error"
-    - "/favicon.ico"
-
-  authorisedServices:
-    -
-
 azure:
   storage:
     account-name: ${ACCOUNT_NAME:ACCOUNT_NAME}
