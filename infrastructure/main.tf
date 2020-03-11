@@ -40,40 +40,7 @@ data "azurerm_key_vault_secret" "BLOB_URL_SUFFIX" {
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
-data "azurerm_key_vault_secret" "SFTP_USER_NAME" {
-  name = "SFTP-USER-NAME"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
 
-data "azurerm_key_vault_secret" "SFTP_USER_PASSWORD" {
-  name = "SFTP-USER-PASSWORD"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-data "azurerm_key_vault_secret" "SFTP_HOST" {
-  name = "SFTP-HOST"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-data "azurerm_key_vault_secret" "SFTP_FILE" {
-  name = "SFTP-FILE"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-data "azurerm_key_vault_secret" "GPG_PASSWORD" {
-  name = "GPG-PASSWORD"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-data "azurerm_key_vault_secret" "GPG_PUBLIC_KEY" {
-  name = "GPG-PUBLIC-KEY"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
-
-data "azurerm_key_vault_secret" "GPG_PRIVATE_KEY" {
-  name = "GPG-PRIVATE-KEY"
-  key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
-}
 
 resource "azurerm_resource_group" "rg" {
   name = "${var.product}-${var.component}-${var.env}"
