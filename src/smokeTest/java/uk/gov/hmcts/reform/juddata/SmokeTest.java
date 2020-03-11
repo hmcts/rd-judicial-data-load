@@ -23,15 +23,14 @@ public class SmokeTest {
         RestAssured.useRelaxedHTTPSValidation();
 
         String response = SerenityRest
-            .given().relaxedHTTPSValidation()
             .when()
-            .get("/")
+            .get("/health")
             .then()
             .statusCode(HttpStatus.OK.value())
             .and()
             .extract().body().asString();
 
         assertThat(response)
-            .contains("Welcome to the Judicial Data Load");
+            .contains("UP");
     }
 }
