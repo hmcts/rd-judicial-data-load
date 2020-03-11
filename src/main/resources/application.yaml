@@ -63,6 +63,12 @@ scheduler:
   camel-route-config: 0 0/120 * * * ?
   camel-leaf-router-config: 0 */105 * * * ?
 
+security:
+  anonymousPaths:
+    - "/"
+    - "/health"
+    - "/health/liveness"
+
 
 azure:
   storage:
