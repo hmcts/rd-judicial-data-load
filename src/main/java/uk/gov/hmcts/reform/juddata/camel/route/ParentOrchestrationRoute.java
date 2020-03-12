@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.transaction.Transactional;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.Processor;
@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
@@ -80,7 +81,7 @@ public class ParentOrchestrationRoute {
     String archivalCred;
 
     @SuppressWarnings("unchecked")
-    @Transactional
+    @Transactional("txManager")
     public void startRoute() throws Exception {
 
         String parentRouteName = camelContext.getGlobalOptions().get(ORCHESTRATED_ROUTE);

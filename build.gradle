@@ -229,6 +229,7 @@ dependencies {
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
     compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.5.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
 
     compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
     compile (group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2') {
@@ -274,6 +275,8 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-csv-starter', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-csv', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-sql', version: '2.25.0'
+    compile group: 'org.apache.camel', name: 'camel-spring-batch', version: '2.25.0'
+
 
 
    // compile group: 'org.apache.camel', name: 'camel-azure', version: '2.20.0'

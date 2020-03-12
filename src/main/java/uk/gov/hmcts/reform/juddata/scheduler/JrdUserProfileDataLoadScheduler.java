@@ -7,7 +7,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
@@ -35,8 +34,8 @@ public class JrdUserProfileDataLoadScheduler {
         parentOrchestrationRoute.startRoute();
     }
 
-    @Scheduled(cron = "${scheduler.camel-route-config}")
-    public void runJrdScheduler() {
-        producerTemplate.sendBody(startRoute, "starting JRD orchestration");
-    }
+    //    @Scheduled(cron = "${scheduler.camel-route-config}")
+    //    public void runJrdScheduler() {
+    //        producerTemplate.sendBody(startRoute, "starting JRD orchestration");
+    //    }
 }
