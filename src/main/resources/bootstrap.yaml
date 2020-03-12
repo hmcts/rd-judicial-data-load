@@ -8,7 +8,7 @@ spring:
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
 #        ACCOUNT-NAME: azure.storage.account-name
 #        ACCOUNT-KEY: azure.storage.account-key
-        CONTAINER-NAME: azure.storage.container-name
-        BLOB-URL-SUFFIX: azure.storage.blob-url-suffix
+#        CONTAINER-NAME: azure.storage.container-name
+#        BLOB-URL-SUFFIX: azure.storage.blob-url-suffix
 
 
