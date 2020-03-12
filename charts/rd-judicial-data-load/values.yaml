@@ -20,8 +20,8 @@ java:
       secrets:
         - judicial-api-POSTGRES-PASS
         - AppInsightsInstrumentationKey
-        - ACCOUNT-NAME
-        - ACCOUNT-KEY
-        - CONTAINER-NAME
-        - BLOB-URL-SUFFIX
+#        - ACCOUNT-NAME
+#        - ACCOUNT-KEY
+#        - CONTAINER-NAME
+#        - BLOB-URL-SUFFIX
 
