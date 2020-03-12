@@ -60,29 +60,8 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  config: ${CRON_SCHEDULE:*/1000 * * * * *}
-  camel-route-config: 0 0/3 * * * ?
-  camel-leaf-router-config: 0 * 18 * * ?
-
-
-security:
-  anonymousPaths:
-    - "/"
-    - "/health"
-    - "/health/liveness"
-    - "/actuator/**"
-    - "/loggers/**"
-    - "/swagger-ui.html"
-    - "/swagger-resources/**"
-    - "/v2/api-docs"
-    - "/webjars/springfox-swagger-ui/**"
-    - "/search/**"
-    - "/csrf"
-    - "/error"
-    - "/favicon.ico"
-
-  authorisedServices:
-    -
+  camel-route-config: 0 0/120 * * * ?
+  camel-leaf-router-config: 0 */105 * * * ?
 
 azure:
   storage:
@@ -91,13 +70,3 @@ azure:
     container-name: ${CONTAINER_NAME:CONTAINER_NAME}
     blob-url-suffix: ${BLOB_URL_SUFFIX:BLOB_URL_SUFFIX}
 
-sftp:
-  user-name: ${SFTP_USER_NAME:SFTP_USER_NAME}
-  user-password: ${SFTP_USER_PASSWORD:SFTP_USER_PASSWORD}
-  host: ${SFTP_HOST:SFTP_HOST}
-  timeout: 60000
-  file_names: ${SFTP_FILE:Courts.csv,Locations.csv,Personal.csv,Roles.csv}
-
-gpg.password: ${GPG_PASSWORD:GPG_PASSWORD}
-gpg.public-key: ${GPG_PUBLIC_KEY:GPG_PUBLIC_KEY}
-gpg.private-key: ${GPG_PRIVATE_KEY:GPG_PRIVATE_KEY}

@@ -254,9 +254,7 @@ dependencies {
 
     }
 
-    //compile group: 'com.microsoft.azure', name: 'azure-storage-spring-boot-starter', version: '2.2.0'
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '10.0.1-Preview'
-   // compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
@@ -276,7 +274,6 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-sql', version: '2.25.0'
 
 
-   // compile group: 'org.apache.camel', name: 'camel-azure', version: '2.20.0'
     compile group: 'org.apache.camel', name: 'camel-azure-starter', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-bindy-starter', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-jdbc-starter', version: '2.25.0'
