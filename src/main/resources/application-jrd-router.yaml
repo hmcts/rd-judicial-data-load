@@ -2,7 +2,7 @@ aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
 start-route: direct:JRD
 archival-route: direct:JrdArchival
-archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
+archival-path: azure-blob://${azure.storage.account-name}/jrd-archieve-test
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
 archival-file-names: user-profile-test.csv,appointment-test.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
