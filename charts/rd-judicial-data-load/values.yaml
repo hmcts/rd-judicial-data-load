@@ -23,11 +23,4 @@ java:
         - ACCOUNT-KEY
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
-        - SFTP-USER-NAME
-        - SFTP-USER-PASSWORD
-        - SFTP-HOST
-        - SFTP-FILE
-        - GPG-PUBLIC-KEY
-        - GPG-PASSWORD
-        - GPG-PRIVATE-KEY
 

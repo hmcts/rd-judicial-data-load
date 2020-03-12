@@ -13,7 +13,7 @@ public class SmokeTest {
     private final String targetInstance =
         StringUtils.defaultIfBlank(
             System.getenv("TEST_URL"),
-            "http://localhost:8090"
+            "http://localhost:8094"
         );
 
     @Test
