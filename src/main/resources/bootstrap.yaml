@@ -10,11 +10,5 @@ spring:
         ACCOUNT-KEY: azure.storage.account-key
         CONTAINER-NAME: azure.storage.container-name
         BLOB-URL-SUFFIX: azure.storage.blob-url-suffix
-        SFTP-USER-NAME: sftp.user-name
-        SFTP-USER-PASSWORD: sftp.user-password
-        SFTP-HOST: sftp.host
-        SFTP-FILE: sftp.file_names
-        GPG-PUBLIC-KEY: gpg.public-key
-        GPG-PRIVATE-KEY: gpg.private-key
-        GPG-PASSWORD: gpg.password
+
 

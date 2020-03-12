@@ -7,7 +7,7 @@ active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
 archival-file-names: Personal.csv,Appointments.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy--HH-mm
-file-read-time-out: 600000
+file-read-time-out: 200000
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
