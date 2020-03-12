@@ -13,7 +13,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.MAPPING_ME
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
@@ -58,14 +59,29 @@ public class LeafTableRoute {
     @Autowired
     CamelContext camelContext;
 
+    @Value("${archival-path}")
+    String archivalPath;
+
+    @Value("${leaf-archival-file-names}")
+    List<String> leafArchivalFileNames;
+
+    @Autowired
+    ArchiveAzureFileProcessor azureFileProcessor;
+
+    @Value("${leaf-archival-route}")
+    String leafArchivalRoute;
+
+    @Value("${archival-cred}")
+    String archivalCred;
+
     @SuppressWarnings("unchecked")
     @Transactional
     public void startRoute() throws Exception {
 
         String leafRouteNames = LEAF_ROUTE_NAMES;
 
-        List<String> leafRoutesList = environment.containsProperty(leafRouteNames)
-                ? environment.getProperty(leafRouteNames, List.class) : new ArrayList<>();
+        LinkedList<String> leafRoutesList = environment.containsProperty(leafRouteNames)
+                ? environment.getProperty(leafRouteNames, LinkedList.class) : new LinkedList<>();
 
         List<RouteProperties> routePropertiesList = getRouteProperties(leafRoutesList);
 
@@ -80,6 +96,9 @@ public class LeafTableRoute {
                                 .process(exceptionProcessor);
 
                         String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
+                        //add last child route as  archival
+                        directRouteNameList = Arrays.copyOf(directRouteNameList, directRouteNameList.length + 1);
+                        directRouteNameList[directRouteNameList.length - 1] = leafArchivalRoute;
 
                         //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
                         //with Transaction propagation required
@@ -87,7 +106,15 @@ public class LeafTableRoute {
                                 .transacted()
                                 .policy(springTransactionPolicy)
                                 .multicast()
-                                .stopOnException().to(directRouteNameList).end();
+                                .stopOnException()
+                                .to(directRouteNameList).end();
+
+                        //Archive Blob files
+                        from(leafArchivalRoute)
+                                .loop(leafArchivalFileNames.size())
+                                .process(azureFileProcessor)
+                                .toD(archivalPath + "${header.filename}?" + archivalCred)
+                                .end();
 
                         for (RouteProperties route : routePropertiesList) {
 
