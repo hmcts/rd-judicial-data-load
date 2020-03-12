@@ -18,8 +18,8 @@ java:
   keyVaults:
     rd:
       secrets:
-          - ACCOUNT-NAME
-          - ACCOUNT-KEY
+#          - ACCOUNT-NAME
+#          - ACCOUNT-KEY
           - CONTAINER-NAME
           - BLOB-URL-SUFFIX
 

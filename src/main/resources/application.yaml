@@ -69,6 +69,6 @@ azure:
   storage:
     account-name: rddemo
     account-key: Vjmr3Yk0DUrygumP7FKJ2eUiOyhWvZ5XczDMk13J+m9vtk2IOXEcOlfjlcTaHDb5mHwAsq7qOYf3GtxEo/uFIA==
-    container-name: ${CONTAINER_NAME:CONTAINER_NAME}
-    blob-url-suffix: ${BLOB_URL_SUFFIX:BLOB_URL_SUFFIX}
+    container-name: http://rddemo.blob.core.windows.net
+    blob-url-suffix: http://rddemo.blob.core.windows.net
 
