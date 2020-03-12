@@ -13,5 +13,10 @@ java:
     postgresqlDatabase: dbjuddata
     #Whether to deploy the Postgres Chart or not
     enabled: true
-
+  keyVaults:
+    "rd":
+      resourceGroup: rd
+      secrets:
+        - judicial-api-POSTGRES-PASS
+        - AppInsightsInstrumentationKey
 
