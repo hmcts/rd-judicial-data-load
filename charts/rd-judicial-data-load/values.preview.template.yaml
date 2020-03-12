@@ -20,6 +20,6 @@ java:
       secrets:
 #          - ACCOUNT-NAME
 #          - ACCOUNT-KEY
-          - CONTAINER-NAME
-          - BLOB-URL-SUFFIX
+#          - CONTAINER-NAME
+#          - BLOB-URL-SUFFIX
 
