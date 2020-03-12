@@ -13,6 +13,9 @@ java:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
   schedule: "*/2 * * * *"
+  global:
+    job:
+      kind: CronJob
   
   keyVaults:
     "rd":
