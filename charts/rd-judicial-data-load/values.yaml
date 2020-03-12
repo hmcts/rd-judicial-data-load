@@ -12,6 +12,7 @@ java:
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
+  schedule: "*/2 * * * *"
   
   keyVaults:
     "rd":

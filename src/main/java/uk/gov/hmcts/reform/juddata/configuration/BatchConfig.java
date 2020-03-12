@@ -40,21 +40,21 @@ public class BatchConfig {
 
 
     @Bean
-    public Step stepLeafRoute(){
+    public Step stepLeafRoute() {
         return steps.get(taskLeaf)
                 .tasklet(leafRouteTask)
                 .build();
     }
 
     @Bean
-    public Step stepOrchestration(){
+    public Step stepOrchestration() {
         return steps.get(taskParent)
                 .tasklet(parentRouteTask)
                 .build();
     }
 
     @Bean
-    public Job runRoutesJob(){
+    public Job runRoutesJob() {
         return jobs.get(jobName)
                 .incrementer(new RunIdIncrementer())
                 .start(stepOrchestration())

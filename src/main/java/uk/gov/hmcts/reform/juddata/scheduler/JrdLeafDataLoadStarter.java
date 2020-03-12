@@ -7,7 +7,6 @@ import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
 
@@ -35,7 +34,7 @@ public class JrdLeafDataLoadStarter {
         leafTableRoutes.startRoute();
     }
 
-    @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
+    //@Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
         producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
     }
