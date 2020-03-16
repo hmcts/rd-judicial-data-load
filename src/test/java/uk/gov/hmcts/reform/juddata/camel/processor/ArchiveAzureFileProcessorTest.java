@@ -69,7 +69,6 @@ public class ArchiveAzureFileProcessorTest {
         FieldSetter.setField(azureFileProcessor, azureFileProcessor
                 .getClass().getDeclaredField("leafArchivalFileNames"), archivalFileNames);
 
-        //exchange.setProperty("CamelLoopIndex", 0);
         azureFileProcessor.process(exchangeMock);
         Assert.assertNotNull(exchangeMock);
     }
