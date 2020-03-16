@@ -17,6 +17,12 @@ public class ArchiveAzureFileProcessor implements Processor {
     @Value("${archival-file-names}")
     List<String> archivalFileNames;
 
+    @Value("${leaf-archival-file-names}")
+    List<String> leafArchivalFileNames;
+
+    @Value("${start-leaf-route}")
+    String leafRouteName;
+
     @Value("${active-blob-path}")
     String activeBlobs;
 
@@ -29,16 +35,23 @@ public class ArchiveAzureFileProcessor implements Processor {
     @Value("${file-read-time-out}")
     int fileReadTimeOut;
 
+    List<String> filesToArchive = archivalFileNames;
+
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
+
+        if ((leafRouteName.replace(":","://")).equalsIgnoreCase(exchange.getFromEndpoint().getEndpointUri())) {
+            filesToArchive = leafArchivalFileNames;
+        }
+
         Integer count = exchange.getProperty("CamelLoopIndex", Integer.class);
         String date = new SimpleDateFormat(archivalDateFormat).format(new Date());
-        String fileName = archivalFileNames.get(count);
+        String fileName = filesToArchive.get(count);
         exchange.getIn().setHeader("filename", "/" + fileName.substring(0,
                 fileName.indexOf(".csv")).concat(date + ".csv"));
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();
-        exchange.getMessage().setBody(consumer.receiveBody(activeBlobs + "/" + archivalFileNames.get(count)
+        exchange.getMessage().setBody(consumer.receiveBody(activeBlobs + "/" + filesToArchive.get(count)
                         + "?" + archivalCred, fileReadTimeOut));
     }
 }
