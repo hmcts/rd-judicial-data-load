@@ -254,11 +254,10 @@ dependencies {
 
     }
 
-    compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '10.0.1-Preview'
+    compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
-
 
     compile group: 'com.google.guava', name: 'guava', version: '28.2-jre'
 
