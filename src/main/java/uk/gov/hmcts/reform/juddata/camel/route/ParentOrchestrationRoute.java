@@ -150,7 +150,7 @@ public class ParentOrchestrationRoute {
                         }
                     });
         } catch (Exception ex) {
-            throw new FailedToCreateRouteException("ParentOrchestrationRoute filed to start", startRoute, ex);
+            throw new FailedToCreateRouteException("ParentOrchestrationRoute failed to start", startRoute, ex);
         }
     }
 
