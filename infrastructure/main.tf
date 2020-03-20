@@ -40,8 +40,6 @@ data "azurerm_key_vault_secret" "BLOB_URL_SUFFIX" {
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
 
-
-
 resource "azurerm_resource_group" "rg" {
   name = "${var.product}-${var.component}-${var.env}"
   location = "${var.location}"
@@ -52,3 +50,27 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+module "rd_judicial_data_load" {
+  source = "git@github.com:hmcts/cnp-module-webapp?ref=master"
+  product = "${var.product}-${var.component}"
+  location = "${var.location}"
+  env = "${var.env}"
+  ilbIp = "${var.ilbIp}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
+  subscription = "${var.subscription}"
+  capacity = "${var.capacity}"
+  instance_size = "${var.instance_size}"
+  common_tags = "${merge(var.common_tags, map("lastUpdated", "${timestamp()}"))}"
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
+  asp_name = "${local.app_service_plan}"
+  asp_rg = "${local.app_service_plan}"
+
+  app_settings = {
+    LOGBACK_REQUIRE_ALERT_LEVEL = false
+    LOGBACK_REQUIRE_ERROR_CODE = false
+    ROOT_LOGGING_LEVEL = "${var.root_logging_level}"
+    LOG_LEVEL_SPRING_WEB = "${var.log_level_spring_web}"
+    LOG_LEVEL_RD = "${var.log_level_rd}"
+    EXCEPTION_LENGTH = 100
+  }
+}
