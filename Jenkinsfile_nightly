@@ -38,7 +38,7 @@ def vaultOverrides = [
 
 withNightlyPipeline(type, product, component) {
 
-    //env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
+    env.TEST_URL = "http://rd-judicial-data-load-aat.service.core-compute-aat.internal"
     env.Rules = params.SecurityRules
 
     overrideVaultEnvironments(vaultOverrides)
