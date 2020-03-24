@@ -46,5 +46,7 @@ withNightlyPipeline(type, product, component) {
 
     enableMutationTest()
     enableFullFunctionalTest()
-    enableSecurityScan()
+
+    //This is not required as this is batch application and we don't have any API
+    //enableSecurityScan()
 }
