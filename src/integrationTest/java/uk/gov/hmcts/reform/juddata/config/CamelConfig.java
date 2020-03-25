@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 
 import javax.sql.DataSource;
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -117,4 +118,8 @@ public class CamelConfig {
         return camelContext;
     }
 
+    @Bean("myValidationProviderResolver")
+    HibernateValidationProviderResolver hibernateValidationProviderResolver() {
+        return new HibernateValidationProviderResolver();
+    }
 }

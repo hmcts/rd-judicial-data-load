@@ -31,8 +31,8 @@ public class JrdUnitTestHelper {
         judicialUserProfileMock.setContractTypeId("contractTypeId");
         judicialUserProfileMock.setWorkPattern("workpatterns");
         judicialUserProfileMock.setEmailId("some@hmcts.net");
-        judicialUserProfileMock.setJoiningDate(currentDate);
-        judicialUserProfileMock.setLastWorkingDate(currentDate);
+        judicialUserProfileMock.setJoiningDate(currentDate.toString());
+        judicialUserProfileMock.setLastWorkingDate(currentDate.toString());
         judicialUserProfileMock.setActiveFlag(true);
         judicialUserProfileMock.setExtractedDate(currentDate.toString());
 

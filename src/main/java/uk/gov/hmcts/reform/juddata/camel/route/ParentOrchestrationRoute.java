@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.transaction.Transactional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.Processor;
@@ -32,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
@@ -141,8 +141,10 @@ public class ParentOrchestrationRoute {
                                     .process((Processor) applicationContext.getBean(route.getProcessor()))
                                     .split().body()
                                     .streaming()
+                                    .to("bean-validator://x?validationProviderResolver=#myValidationProviderResolver")
                                     .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
-                                    .to(route.getSql()).end();
+                                    .to(route.getSql())
+                                    .end();
                         }
 
                     }

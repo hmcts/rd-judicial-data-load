@@ -24,8 +24,8 @@ public class JudicialUserProfileTest {
         assertEquals("contractTypeId", judicialUserProfile.getContractTypeId());
         assertEquals("workpatterns", judicialUserProfile.getWorkPattern());
         assertEquals("some@hmcts.net", judicialUserProfile.getEmailId());
-        assertEquals(currentDate, judicialUserProfile.getJoiningDate());
-        assertEquals(currentDate, judicialUserProfile.getLastWorkingDate());
+        assertEquals(currentDate.toString(), judicialUserProfile.getJoiningDate());
+        assertEquals(currentDate.toString(), judicialUserProfile.getLastWorkingDate());
         assertEquals(true, judicialUserProfile.isActiveFlag());
         assertEquals(currentDate.toString(), judicialUserProfile.getExtractedDate());
     }
