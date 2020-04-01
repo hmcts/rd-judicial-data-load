@@ -31,6 +31,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.SchedulerAuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
@@ -60,6 +61,9 @@ public class LeafTableRoute {
     private String schedulerName;
 
     @Autowired
+    SchedulerAuditProcessor schedulerAuditProcessor;
+
+    @Autowired
     CamelContext camelContext;
 
     @SuppressWarnings("unchecked")
@@ -81,7 +85,12 @@ public class LeafTableRoute {
                         //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
-                                .process(exceptionProcessor);
+                                .choice().when(header("SchedulerStatus").isEqualTo("PartialSuccess"))
+                                .process(schedulerAuditProcessor)
+                                .process(exceptionProcessor)
+                                .otherwise()
+                                .process(exceptionProcessor).end().setHeader("SchedulerStatus").constant("FAILURE").process(schedulerAuditProcessor);
+
 
                         String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 

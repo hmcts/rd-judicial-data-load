@@ -141,8 +141,6 @@ public class ParentOrchestrationRouteTest {
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 0);
 
-        List<Map<String, Object>>  list=jdbcTemplate.queryForList("select *  from dataload_schedular_audit");
-        System.out.println("List "+list);
     }
 
     @Test
@@ -194,8 +192,6 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.size(), 1);
     }
 
-/************ Schedular  Test  cases  ************/
-
     @Test
     public void testParentOrchestrationSchedularFailure() throws Exception {
 
@@ -238,7 +234,6 @@ public class ParentOrchestrationRouteTest {
         assertEquals(dataloadSchedularAudit.get(3).get("scheduler_status"), "Success");
     }
 
-    //  Test  commented  for partial  sucess
     @Test
     public void testParentOrchestrationSchedularPartialSucess() throws Exception
     {
