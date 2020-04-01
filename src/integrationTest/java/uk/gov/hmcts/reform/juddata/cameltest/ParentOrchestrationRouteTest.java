@@ -235,7 +235,7 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.size(), 1);
         List<Map<String, Object>>  dataloadSchedularAudit=jdbcTemplate.queryForList("select *  from dataload_schedular_audit");
         System.out.println("List "+dataloadSchedularAudit);
-        assertEquals(dataloadSchedularAudit.get(0).get("scheduler_status"), "Success");
+        assertEquals(dataloadSchedularAudit.get(3).get("scheduler_status"), "Success");
     }
 
     //  Test  commented  for partial  sucess
@@ -257,7 +257,7 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.size(), 0);
 
         List<Map<String, Object>>  dataloadSchedularAudit=jdbcTemplate.queryForList("select *  from dataload_schedular_audit");
-        assertEquals(dataloadSchedularAudit.get(0).get("scheduler_status"), "PartialSuccess");
+        assertEquals(dataloadSchedularAudit.get(13).get("scheduler_status"), "PartialSuccess");
     }
 
 

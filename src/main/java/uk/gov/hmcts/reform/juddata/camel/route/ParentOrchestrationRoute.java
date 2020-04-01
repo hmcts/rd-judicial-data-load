@@ -37,6 +37,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.SchedulerAuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 /**
  * This class is Judicial User Profile Router Triggers Orchestrated data loading.
@@ -64,6 +65,9 @@ public class ParentOrchestrationRoute {
 
     @Value("${start-route}")
     private String startRoute;
+
+    @Value("${scheduler-name}")
+    private String schedulerName;
 
     @Autowired
     CamelContext camelContext;
@@ -104,7 +108,11 @@ public class ParentOrchestrationRoute {
                         //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
-                                .process(exceptionProcessor).end().process(schedulerAuditProcessor);
+                                .choice().when(header("SchedulerStatus").isEqualTo("PartialSuccess"))
+                                .process(schedulerAuditProcessor)
+                                .process(exceptionProcessor)
+                                .otherwise()
+                                .process(exceptionProcessor).end().setHeader("SchedulerStatus").constant("FAILURE").process(schedulerAuditProcessor);
 
                         String[] directChild = new String[dependantRoutes.size()];
 
@@ -118,6 +126,8 @@ public class ParentOrchestrationRoute {
                         from(startRoute)
                                 .transacted()
                                 .policy(springTransactionPolicy)
+                                .setHeader("SchedulerName").constant(schedulerName)
+                                .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
                                 .multicast()
                                 .stopOnException()
                                 .to(directChild).end().setHeader("SchedulerStatus").constant("Success").process(schedulerAuditProcessor);

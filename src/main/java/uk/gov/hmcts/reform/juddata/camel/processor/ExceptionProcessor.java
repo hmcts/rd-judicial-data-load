@@ -14,6 +14,13 @@ public class ExceptionProcessor implements Processor {
     @Override
     public void process(Exchange exchange) {
         Exception exception = (Exception) exchange.getProperty(EXCEPTION_CAUGHT);
+        String  schedulerStatus=(String )exchange.getIn().getHeader("SchedulerStatus");
+        if (null==schedulerStatus) {
+            exchange.getIn().setHeader("SchedulerStatus", "Failed");
+        }else
+        {
+            exchange.getIn().setHeader("SchedulerStatus", "PartialSucess");
+        }
         log.error("::::exception in route for data processing::::" + exception);
     }
 }

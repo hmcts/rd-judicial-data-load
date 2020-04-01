@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 
 @Component
@@ -54,6 +55,9 @@ public class LeafTableRoute {
 
     @Value("${start-leaf-route}")
     private String startLeafRoute;
+
+    @Value("${scheduler-name}")
+    private String schedulerName;
 
     @Autowired
     CamelContext camelContext;
@@ -86,6 +90,8 @@ public class LeafTableRoute {
                         from(startLeafRoute)
                                 .transacted()
                                 .policy(springTransactionPolicy)
+                                .setHeader("SchedulerName").constant(schedulerName)
+                                .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
                                 .multicast()
                                 .stopOnException().to(directRouteNameList).end();
 
