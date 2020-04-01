@@ -28,6 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 
