@@ -101,6 +101,15 @@ CREATE TABLE region_type(
 
 );
 
+CREATE TABLE dataload_schedular_audit(
+  scheduler_Id SERIAL ,
+  scheduler_Name varchar(64) NOT NULL,
+  scheduler_Start_Time timestamp NOT NULL,
+  scheduler_End_Time timestamp,
+  scheduler_Status varchar(32),
+  CONSTRAINT scheduler_Id PRIMARY KEY (scheduler_Id)
+);
+
 ALTER TABLE judicial_office_appointment ADD CONSTRAINT elinks_Id_fk1 FOREIGN KEY (elinks_Id)
 REFERENCES judicial_user_profile (elinks_Id);
 

@@ -1,8 +1,5 @@
 package uk.gov.hmcts.reform.juddata.config;
 
-import static org.mockito.Mockito.mock;
-
-import javax.sql.DataSource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
@@ -11,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -18,12 +16,12 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
-import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.*;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
+
+import javax.sql.DataSource;
+
+import static org.mockito.Mockito.mock;
 
 @Configuration
 public class CamelConfig {
@@ -60,6 +58,18 @@ public class CamelConfig {
     ArchiveAzureFileProcessor azureFileProcessor() {
         return mock(ArchiveAzureFileProcessor.class);
     }
+
+
+    @Bean
+    JrdUtility jrdUtility() { return new JrdUtility(); }
+
+    @Bean
+    JdbcTemplate jdbcTemplate() { return new JdbcTemplate(this.dataSource()); }
+
+    @Bean
+    SchedulerAuditProcessor schedulerAuditProcessor() { return new SchedulerAuditProcessor(); }
+
+
 
     private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
             .withDatabaseName("dbjuddata_test");

@@ -10,6 +10,10 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Component
 @Slf4j
@@ -29,6 +33,9 @@ public class JrdLeafDataLoadStarter {
 
     private TaskScheduler scheduler;
 
+    @Value("${scheduler-name}")
+    private String schedulerName;
+
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
@@ -37,6 +44,6 @@ public class JrdLeafDataLoadStarter {
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
-        producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
+        producerTemplate.sendBodyAndHeaders(startLeafRoute, "starting JRD leaf routes though scheduler", JrdUtility.getSchedulerHeader(schedulerName, new Timestamp(System.currentTimeMillis())));
     }
 }
