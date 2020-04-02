@@ -100,6 +100,7 @@ file name: tomcat-embed-core-9.0.30.jar
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
         <cve>CVE-2019-17569</cve>
         <cve>CVE-2020-1938</cve>
+        <cve>CVE-2020-1935</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
