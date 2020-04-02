@@ -1,5 +1,22 @@
 spring:
   flyway.locations: classpath:db/testmigration
+  mail:
+      default-encoding: UTF-8
+      host: smtp.gmail.com
+      jndi-name:
+      username: sushantchoudhari@gmail.com
+      password: biowxjepksexxpok
+      port: 587
+      properties:
+        mail:
+          debug: false
+          smtp:
+            debug: false
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
+      protocol: smtp
+      test-connection: false
 
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000

@@ -27,6 +27,27 @@ spring:
   flyway.enabled: ${FLYWAY_ENABLED:true}
   flyway.locations: classpath:db/migration,classpath:db/postgres
 
+  mail:
+    smtp:
+      ssl:
+        trust: smtp.gmail.com
+  spring:
+    mail:
+      host: smtp.gmail.com
+      password: biowxjepksexxpok
+      properties:
+        mail:
+          smtp:
+            auth: true
+            port: 587
+            starttls:
+              enable: true
+          transport:
+            protocol: smtp
+      username: sushantchoudhari@gmail.com
+
+
+
   ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver

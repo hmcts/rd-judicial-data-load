@@ -31,7 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.email.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
@@ -51,6 +53,12 @@ public class ParentOrchestrationRoute {
 
     @Autowired
     Environment environment;
+
+    @Autowired
+    private EmailService email;
+
+    @Autowired
+    JavaMailSender javaMailSender;
 
     @Autowired
     SpringTransactionPolicy springTransactionPolicy;

@@ -229,6 +229,8 @@ dependencies {
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
     compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.5.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: versions.springBoot
+
 
     compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
     compile (group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2') {
@@ -317,6 +319,10 @@ dependencies {
     testCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
     testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+    testCompile group: 'com.icegreen', name: 'greenmail', version: '1.5.0'
+
+    //  testCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.14.0'
+
 
     integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.25.0'
     integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'

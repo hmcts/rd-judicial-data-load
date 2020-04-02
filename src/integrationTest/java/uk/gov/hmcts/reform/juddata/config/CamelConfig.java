@@ -16,6 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.email.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
@@ -40,6 +41,9 @@ public class CamelConfig {
     JudicialUserProfileProcessor judicialUserProfileProcessor() {
         return new JudicialUserProfileProcessor();
     }
+
+    @Bean
+    EmailService email() { return new EmailService(); }
 
     @Bean
     JudicialUserProfileRowMapper judicialUserProfileRowMapper() {
