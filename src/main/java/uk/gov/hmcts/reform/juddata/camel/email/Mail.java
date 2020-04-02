@@ -1,4 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.email;
+
 public class Mail {
 
     private String from;
@@ -48,13 +49,4 @@ public class Mail {
         this.content = content;
     }
 
-    @Override
-    public String toString() {
-        return "Mail{" +
-                "from='" + from + '\'' +
-                ", to='" + to + '\'' +
-                ", subject='" + subject + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
 }

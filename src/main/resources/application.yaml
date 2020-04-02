@@ -28,9 +28,9 @@ spring:
   flyway.locations: classpath:db/migration,classpath:db/postgres
 
   mail:
-    smtp:
-      ssl:
-        trust: smtp.gmail.com
+    from: sushant.choudhari@hmcts.net
+    to: sushant.choudhari@hmcts.net
+
   spring:
     mail:
       host: smtp.gmail.com

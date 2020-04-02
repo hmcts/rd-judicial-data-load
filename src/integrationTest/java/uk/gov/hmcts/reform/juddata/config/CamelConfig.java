@@ -43,7 +43,9 @@ public class CamelConfig {
     }
 
     @Bean
-    EmailService email() { return new EmailService(); }
+    EmailService email() {
+        return new EmailService();
+    }
 
     @Bean
     JudicialUserProfileRowMapper judicialUserProfileRowMapper() {

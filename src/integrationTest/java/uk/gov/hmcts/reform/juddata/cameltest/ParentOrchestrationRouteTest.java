@@ -32,13 +32,11 @@ import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 
-import javax.validation.constraints.Email;
-
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml"})
 @RunWith(CamelSpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {CamelConfig.class, CamelTestContextBootstrapper.class , JavaMailSender.class}, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = {CamelConfig.class, CamelTestContextBootstrapper.class, JavaMailSender.class}, initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration
 public class ParentOrchestrationRouteTest {
@@ -124,8 +122,6 @@ public class ParentOrchestrationRouteTest {
 
     @Test
     public void testParentOrchestrationFailure() throws Exception {
-
-
         setSourceData(fileWithError);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();

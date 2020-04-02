@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.email.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.email.Mail;
@@ -17,15 +18,27 @@ public class ExceptionProcessor implements Processor {
     @Autowired
     EmailService emailService;
 
+    @Value("${spring.mail.from}")
+    private String mailFrom;
+
+    @Value("${spring.mail.to}")
+    private String mailTo;
+
     @Override
     public void process(Exchange exchange) {
         Exception exception = (Exception) exchange.getProperty(EXCEPTION_CAUGHT);
-        Mail mail=new Mail();
-        mail.setFrom("sushant.choudhari@hmcts.net");
-        mail.setTo("sushant.choudhari@hmcts.net");
-        mail.setSubject("Test Email");
-        mail.setContent("Hi  this is  test email");
-        emailService.sendSimpleMessage(mail);
+        String failedRouteId = exchange.getProperty(Exchange.FAILURE_ROUTE_ID, String.class);
+
+        sendExceptionMail(exception, failedRouteId);
         log.error("::::exception in route for data processing::::" + exception);
+    }
+
+    private void sendExceptionMail(Exception exception, String failedRouteId) {
+        Mail mail = new Mail();
+        mail.setFrom(mailFrom);
+        mail.setTo(mailTo);
+        mail.setSubject("::::exception in route for data processing::::".concat(failedRouteId));
+        mail.setContent(exception.getMessage());
+        emailService.sendSimpleMessage(mail);
     }
 }

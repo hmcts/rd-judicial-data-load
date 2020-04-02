@@ -55,7 +55,7 @@ public class ParentOrchestrationRoute {
     Environment environment;
 
     @Autowired
-    private EmailService email;
+    EmailService email;
 
     @Autowired
     JavaMailSender javaMailSender;
