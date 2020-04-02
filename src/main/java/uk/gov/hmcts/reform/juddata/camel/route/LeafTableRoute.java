@@ -102,7 +102,7 @@ public class LeafTableRoute {
                                 .setHeader("SchedulerName").constant(schedulerName)
                                 .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
                                 .multicast()
-                                .stopOnException().to(directRouteNameList).end();
+                                .stopOnException().to(directRouteNameList).end().setHeader("SchedulerStatus").constant("Success").process(schedulerAuditProcessor);;
 
                         for (RouteProperties route : routePropertiesList) {
 

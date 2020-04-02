@@ -1,21 +1,20 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-
-@Service
 @EnableTransactionManagement
+@Service
 public class JrdUtility {
 
     @Autowired
@@ -26,18 +25,18 @@ public class JrdUtility {
     private String schedulerInsertJrdSql;
 
     @NotNull
-    public static Map<String, Object> getSchedulerHeader(String scheduler_Name, Timestamp SchedulerStartTime) {
+    public static Map<String, Object> getSchedulerHeader(final String schedulerName,final Timestamp schedulerStartTime) {
         Map<String, Object> heders = new HashMap<>();
-        heders.put("SchedulerName", scheduler_Name);
-        heders.put("SchedulerStartTime", SchedulerStartTime);
+        heders.put(MappingConstants.SCHEDULER_NAME, schedulerName);
+        heders.put(MappingConstants.SCHEDULER_START_TIME, schedulerStartTime);
         return heders;
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public  void schedularAuditUpdate(Exchange exchange) {
-        String schedulerName = (String) exchange.getIn().getHeader("SchedulerName");
-        String schedulerStatus = (String) exchange.getIn().getHeader("SchedulerStatus");
-        Timestamp schedulerStartTime = (Timestamp) exchange.getIn().getHeader("SchedulerStartTime");
+    public  void schedularAuditUpdate(final Exchange exchange) {
+        String schedulerName = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_NAME);
+        String schedulerStatus = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_STATUS);
+        Timestamp schedulerStartTime = (Timestamp) exchange.getIn().getHeader(MappingConstants.SCHEDULER_START_TIME);
         jdbcTemplate.update(schedulerInsertJrdSql, schedulerName, schedulerStartTime, new  Timestamp(System.currentTimeMillis()), schedulerStatus);
     }
 }

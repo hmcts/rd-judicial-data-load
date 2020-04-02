@@ -17,7 +17,7 @@ public class SchedulerAuditProcessor implements Processor {
     JrdUtility jrdUtility;
 
     /**
-     * Processes the message exchange
+     * Processes the message exchange.
      *
      * @param exchange the message exchange
      * @throws Exception if an internal processing error has occurred.

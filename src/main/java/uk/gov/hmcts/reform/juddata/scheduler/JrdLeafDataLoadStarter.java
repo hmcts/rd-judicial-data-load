@@ -11,9 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
-
-import java.sql.Timestamp;
-import java.time.Instant;
+import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 @Component
 @Slf4j
@@ -44,6 +42,6 @@ public class JrdLeafDataLoadStarter {
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
-        producerTemplate.sendBodyAndHeaders(startLeafRoute, "starting JRD leaf routes though scheduler", JrdUtility.getSchedulerHeader(schedulerName, new Timestamp(System.currentTimeMillis())));
+        producerTemplate.sendBodyAndHeaders(startLeafRoute, "starting JRD leaf routes though scheduler", JrdUtility.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
     }
 }

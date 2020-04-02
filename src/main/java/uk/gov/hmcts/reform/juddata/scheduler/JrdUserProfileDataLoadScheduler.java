@@ -13,9 +13,6 @@ import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-
 @Component
 public class JrdUserProfileDataLoadScheduler {
 
@@ -45,7 +42,7 @@ public class JrdUserProfileDataLoadScheduler {
     @Scheduled(cron = "${scheduler.camel-route-config}")
     public void runJrdScheduler() {
 
-        producerTemplate.sendBodyAndHeaders(startRoute, "starting JRD orchestration", JrdUtility.getSchedulerHeader(schedulerName, new Timestamp(System.currentTimeMillis())));
+        producerTemplate.sendBodyAndHeaders(startRoute, "starting JRD orchestration", JrdUtility.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
 
     }
 }
