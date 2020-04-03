@@ -27,24 +27,26 @@ spring:
   flyway.enabled: ${FLYWAY_ENABLED:true}
   flyway.locations: classpath:db/migration,classpath:db/postgres
 
+
   mail:
     from: sushant.choudhari@hmcts.net
     to: sushant.choudhari@hmcts.net
-
-  spring:
-    mail:
-      host:
-      password:
-      properties:
-        mail:
-          smtp:
-            auth: true
-            port: 587
-            starttls:
-              enable: true
-          transport:
-            protocol: smtp
-      username:
+    default-encoding: UTF-8
+    host: mta.reform.hmcts.net
+    jndi-name:
+    username: sushant.choudhari@hmcts.net
+    password: Prajsush@01
+    port: 25
+    properties:
+      mail:
+        debug: false
+        smtp:
+          debug: false
+          auth: true
+          starttls.enable: true
+          ssl.trust: mta.reform.hmcts.net
+    protocol: smtp
+    test-connection: false
 
 
 
