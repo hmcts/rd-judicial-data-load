@@ -33,7 +33,7 @@ spring:
 
   spring:
     mail:
-      host: smtp.gmail.com
+      host:
       password:
       properties:
         mail:
@@ -44,7 +44,7 @@ spring:
               enable: true
           transport:
             protocol: smtp
-      username: sushantchoudhari@gmail.com
+      username:
 
 
 
