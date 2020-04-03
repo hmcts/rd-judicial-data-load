@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
+import org.mockito.Mockito;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -44,7 +45,7 @@ public class CamelConfig {
 
     @Bean
     EmailService email() {
-        return new EmailService();
+        return Mockito.mock(EmailService.class);
     }
 
     @Bean

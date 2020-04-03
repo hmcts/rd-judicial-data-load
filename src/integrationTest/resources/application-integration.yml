@@ -1,13 +1,13 @@
 spring:
   flyway.locations: classpath:db/testmigration
   mail:
-      from:
-      to:
+      from: sushant.choudhari@hmcts.net
+      to: sushant.choudhari@hmcts.net
       default-encoding: UTF-8
       host: smtp.gmail.com
       jndi-name:
-      username:
-      password:
+      username: sushantchoudhari@gmail.com
+      password: biowxjepksexxpok
       port: 587
       properties:
         mail:

@@ -37,7 +37,7 @@ public class ExceptionProcessor implements Processor {
         Mail mail = new Mail();
         mail.setFrom(mailFrom);
         mail.setTo(mailTo);
-        mail.setSubject("::::exception in route for data processing::::".concat(failedRouteId));
+        mail.setSubject("::::exception in route for data processing::::");
         mail.setContent(exception.getMessage());
         emailService.sendSimpleMessage(mail);
     }

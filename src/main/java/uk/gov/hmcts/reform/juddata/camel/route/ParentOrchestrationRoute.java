@@ -108,7 +108,8 @@ public class ParentOrchestrationRoute {
                         //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
-                                .process(exceptionProcessor);
+                                .onExceptionOccurred(exceptionProcessor);
+
 
                         String[] directChild = new String[dependantRoutes.size()];
 

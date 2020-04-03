@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
+import uk.gov.hmcts.reform.juddata.camel.email.Mail;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
 public class JrdUnitTestHelper {
@@ -114,5 +115,14 @@ public class JrdUnitTestHelper {
         contractType.setContractTypeDescEn("contractTypeDescEn");
         contractType.setContractTypeId("contractTypeId");
         return  contractType;
+    }
+
+    public static Mail mockMail() {
+        String from = "sushant.choudhari@hmcts.net";
+        String to = "sushant.choudhari@hmcts.net";
+        String subject = "Test Email";
+        String content = "Test";
+        Mail mail = new Mail(from,  to,  subject,  content);
+        return  mail;
     }
 }

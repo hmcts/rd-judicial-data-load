@@ -34,7 +34,7 @@ spring:
   spring:
     mail:
       host: smtp.gmail.com
-      password: biowxjepksexxpok
+      password:
       properties:
         mail:
           smtp:
