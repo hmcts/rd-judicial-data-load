@@ -5,6 +5,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CHILD_ROUTES;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DIRECT_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.INSERT_SQL;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.MAPPER;
@@ -12,6 +13,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.MAPPING_ME
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
 import java.util.ArrayList;
@@ -32,9 +34,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
 /**
@@ -79,8 +83,11 @@ public class ParentOrchestrationRoute {
     @Value("${archival-cred}")
     String archivalCred;
 
+    @Autowired
+    HeaderValidationProcessor headerValidationProcessor;
+
     @SuppressWarnings("unchecked")
-    @Transactional
+    @Transactional("txManager")
     public void startRoute() throws Exception {
 
         String parentRouteName = camelContext.getGlobalOptions().get(ORCHESTRATED_ROUTE);
@@ -97,6 +104,9 @@ public class ParentOrchestrationRoute {
                     @Override
                     public void configure() throws Exception {
 
+
+                        onException(RouteFailedException.class)
+                                .handled(true).markRollbackOnly();
                         //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
@@ -118,7 +128,6 @@ public class ParentOrchestrationRoute {
                                 .stopOnException()
                                 .to(directChild).end();
 
-
                         //Archive Blob files
                         from(archivalRoute)
                                 .loop(archivalFileNames.size())
@@ -135,7 +144,10 @@ public class ParentOrchestrationRoute {
                                     .transacted()
                                     .policy(springTransactionPolicy)
                                     .setProperty(BLOBPATH, exp)
-                                    .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
+                                    .process(fileReadProcessor)
+                                    .setHeader(ROUTE_DETAILS, () -> route)
+                                    .process(headerValidationProcessor)
+                                    .unmarshal().bindy(BindyType.Csv,
                                     applicationContext.getBean(route.getBinder()).getClass())
                                     .to(route.getTruncateSql())
                                     .process((Processor) applicationContext.getBean(route.getProcessor()))
@@ -146,7 +158,6 @@ public class ParentOrchestrationRoute {
                                     .to(route.getSql())
                                     .end();
                         }
-
                     }
                 });
     }
@@ -190,6 +201,8 @@ public class ParentOrchestrationRoute {
                     + child + "." + CSVBINDER)));
             properties.setProcessor(uncapitalize(environment.getProperty(ROUTE + "."
                     + child + "." + PROCESSOR)));
+            properties.setFileName(environment.getProperty(
+                    ROUTE + "." + child + "." + FILE_NAME));
             routePropertiesList.add(index, properties);
             index++;
         }

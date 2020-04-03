@@ -8,7 +8,13 @@ public class MappingConstants {
     private MappingConstants() {
     }
 
+    public static final String DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
+
+    public static final String DATE_PATTERN_TIMESTAMP = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}.\\d{4,9}";
+
     public static final String ORCHESTRATED_ROUTE = "parent-route";
+
+    public static final String SCHEDULER_START_TIME = "start-time";
 
     public static final String CHILD_ROUTES = "child-route";
 
@@ -33,6 +39,12 @@ public class MappingConstants {
     public static final String  MAPPING_METHOD = "getMap";
 
     public static final String ID = "id";
+
+    public static final String FILE_NAME = "file-name";
+
+    public static final String HEADER_EXCEPTION = "header-exception";
+
+    public static final String ROUTE_DETAILS = "routedetails";
 
     public static final String JUDICIAL_USER_PROFILE_ORCHESTRATION = "judicial-user-profile-orchestration";
 

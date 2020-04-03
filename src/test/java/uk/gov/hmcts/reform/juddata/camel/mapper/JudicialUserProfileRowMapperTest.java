@@ -29,11 +29,10 @@ public class JudicialUserProfileRowMapperTest {
         assertEquals("contractTypeId", response.get("contract_type"));
         assertEquals("workpatterns", response.get("work_pattern"));
         assertEquals("some@hmcts.net", response.get("email_id"));
-        assertEquals(currentDate, response.get("joining_date"));
-        assertEquals(currentDate, response.get("last_working_date"));
+        assertEquals(currentDate.toString(), response.get("joining_date"));
+        assertEquals(currentDate.toString(), response.get("last_working_date"));
         assertEquals(true, response.get("active_flag"));
         assertEquals(currentDate.toString(), response.get("extracted_date"));
-
     }
 }
          

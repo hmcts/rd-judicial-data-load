@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_PATTERN_TIMESTAMP;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
@@ -7,14 +12,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.validator.DatePattern;
 
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true, generateHeaderColumns = true)
 @Component
 public class JudicialUserProfile implements Serializable {
+
 
     @DataField(pos = 1, columnName = "elinks_id")
     @NotEmpty
@@ -54,17 +61,20 @@ public class JudicialUserProfile implements Serializable {
     String emailId;
 
     @DataField(pos = 11,  columnName = "joining_Date")
-    @DatePattern(isNullAllowed = "true")
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+            message = "date pattern should be yyyy-MM-dd hh:mm:ss")
     String joiningDate;
 
     @DataField(pos = 12, columnName = "lastWorking_Date")
-    @DatePattern(isNullAllowed = "true")
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+            message = "date pattern should be yyyy-MM-dd hh:mm:ss")
     String lastWorkingDate;
 
     @DataField(pos = 13, columnName = "active_Flag")
     boolean activeFlag;
 
     @DataField(pos = 14)
-    @DatePattern(isNullAllowed = "false")
+    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
+            message = "date pattern should be yyyy-MM-dd HH:MI:SS.MSUS")
     String extractedDate;
 }

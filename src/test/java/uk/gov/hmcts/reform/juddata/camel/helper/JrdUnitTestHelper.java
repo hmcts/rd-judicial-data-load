@@ -41,7 +41,6 @@ public class JrdUnitTestHelper {
 
     public static JudicialOfficeAppointment createJudicialOfficeAppointmentMockMock(String currentDateString) {
 
-        LocalDate currentDate = LocalDate.parse(currentDateString, getDateFormatter());
         JudicialOfficeAppointment judicialOfficeAppointmentMock = new JudicialOfficeAppointment();
         judicialOfficeAppointmentMock.setElinksId("elinksid_1");
         judicialOfficeAppointmentMock.setRoleId("roleId_1");
@@ -49,8 +48,8 @@ public class JrdUnitTestHelper {
         judicialOfficeAppointmentMock.setBaseLocationId("baseLocationId_1");
         judicialOfficeAppointmentMock.setRegionId("regionId_1");
         judicialOfficeAppointmentMock.setIsPrincipalAppointment(true);
-        judicialOfficeAppointmentMock.setStartDate(currentDate);
-        judicialOfficeAppointmentMock.setEndDate(currentDate);
+        judicialOfficeAppointmentMock.setStartDate(currentDateString);
+        judicialOfficeAppointmentMock.setEndDate(currentDateString);
         judicialOfficeAppointmentMock.setActiveFlag(true);
         judicialOfficeAppointmentMock.setExtractedDate(currentDateString);
         return judicialOfficeAppointmentMock;

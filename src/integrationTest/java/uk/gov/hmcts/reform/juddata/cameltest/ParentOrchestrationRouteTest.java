@@ -3,7 +3,10 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -77,11 +80,13 @@ public class ParentOrchestrationRouteTest {
     public static void beforeAll() throws Exception {
         setSourcePath("classpath:archivalFiles", "archival.path");
         setSourcePath("classpath:sourceFiles", "active.path");
+
     }
 
     @Before
     public void init() {
         jdbcTemplate.execute(truncateAllTable);
+        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
     }
 
     @Test
@@ -89,6 +94,7 @@ public class ParentOrchestrationRouteTest {
 
         setSourceData(file);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, new Timestamp(new Date().getTime()).toString());
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -179,6 +185,8 @@ public class ParentOrchestrationRouteTest {
 
 
     private static void setSourceData(String... files) throws Exception {
+        System.setProperty("parent.file.name", files[0]);
+        System.setProperty("child.file.name", files[1]);
         setSourcePath(files[0],
                 "parent.file.path");
         setSourcePath(files[1],

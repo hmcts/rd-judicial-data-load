@@ -7,6 +7,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
+import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -22,6 +23,7 @@ import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
@@ -84,6 +86,12 @@ public class CamelConfig {
         return platformTransactionManager;
     }
 
+    @Bean(name = "txManager1")
+    public PlatformTransactionManager txManager1() {
+        PlatformTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        return platformTransactionManager;
+    }
+
     @Bean
     public SpringTransactionPolicy getSpringTransaction() {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
@@ -122,4 +130,15 @@ public class CamelConfig {
     HibernateValidationProviderResolver hibernateValidationProviderResolver() {
         return new HibernateValidationProviderResolver();
     }
+
+    @Bean("myConstraintValidatorFactory")
+    ConstraintValidatorFactoryImpl constraintValidatorFactory() {
+        return new ConstraintValidatorFactoryImpl();
+    }
+
+    @Bean
+    HeaderValidationProcessor headerValidationProcessor() {
+        return new HeaderValidationProcessor();
+    }
+
 }

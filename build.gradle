@@ -277,11 +277,14 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-bindy-starter', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-jdbc-starter', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-bean-validator', version: '2.25.0'
-    //compile group: 'org.apache.camel', name: 'camel-bean-validator-starter', version: '2.25.0'
+    compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: '2.25.0'
 
 
     compile group: 'org.apache.camel', name: 'camel-core', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'spi-annotations', version: '3.0.0'
+
+    // https://mvnrepository.com/artifact/com.opencsv/opencsv
+    compile group: 'com.opencsv', name: 'opencsv', version: '3.7'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok

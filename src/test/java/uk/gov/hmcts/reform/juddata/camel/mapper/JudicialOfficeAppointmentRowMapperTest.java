@@ -2,13 +2,11 @@ package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createCurrentLocalDate;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJudicialOfficeAppointmentMockMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.getDateFormatter;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getDateTimeStamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
+
 import org.junit.Test;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 
@@ -20,7 +18,7 @@ public class JudicialOfficeAppointmentRowMapperTest {
     public void should_return_JudicialOfficeAppointmentRowMapper_response() {
 
 
-        String currentDateString = createCurrentLocalDate();
+        String currentDateString = LocalDateTime.now().toString();
         JudicialOfficeAppointment judicialOfficeAppointmentMock = createJudicialOfficeAppointmentMockMock(currentDateString);
         Map<String, Object> response = judicialOfficeAppointmentRowMapper.getMap(judicialOfficeAppointmentMock);
 
@@ -28,13 +26,13 @@ public class JudicialOfficeAppointmentRowMapperTest {
         assertEquals("elinksid_1", response.get("elinks_id"));
         assertEquals("roleId_1", response.get("role_id"));
         assertEquals("contractTypeId_1", response.get("contract_type_id"));
-        assertEquals("baseLocationId_1",response.get("base_location_id"));
+        assertEquals("baseLocationId_1", response.get("base_location_id"));
         assertEquals("regionId_1", response.get("region_id"));
         assertEquals(true, response.get("is_prinicple_appointment"));
-        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), response.get("start_date"));
-        assertEquals(LocalDate.parse(currentDateString, getDateFormatter()), response.get("end_date"));
+        assertEquals(currentDateString, response.get("start_date"));
+        assertEquals(currentDateString, response.get("end_date"));
         assertEquals(true, response.get("active_flag"));
-        assertEquals(getDateTimeStamp(judicialOfficeAppointmentMock.getExtractedDate()), response.get("extracted_date"));
+        assertEquals(currentDateString, response.get("extracted_date"));
         assertThat(response.get("created_date")).isNotNull();
         assertThat(response.get("last_loaded_date")).isNotNull();
 

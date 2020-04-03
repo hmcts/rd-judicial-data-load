@@ -7,6 +7,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.dataformat.csv.CsvDataFormat;
+import org.apache.camel.spi.DataFormat;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,5 +26,9 @@ public class FileReadProcessor implements Processor {
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();
         exchange.getMessage().setBody(consumer.receiveBody(blobFilePath, fileReadTimeOut));
+        //DataFormat.u
+
+//        DataFormat dataFormat = new CsvDataFormat();
+//        dataFormat.unmarshal()
     }
 }

@@ -24,4 +24,6 @@ public class RouteProperties {
     String mapper;
 
     String binder;
+
+    String fileName;
 }

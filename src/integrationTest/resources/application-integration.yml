@@ -1,5 +1,7 @@
 spring:
   flyway.locations: classpath:db/testmigration
+  aop:
+    proxy-target-class: true
 
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
@@ -11,19 +13,21 @@ archival-file-names: test.csv,judicial_userprofile.csv
 archival-cred: noop=true
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 2000
+invalid-header-sql: insert into dataload_exception_records(file_name,scheduler_start_time,error_description,updated_timestamp) values(?, ?, ?, ?)
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
+    file-name: ${parent.file.name}
     insert-sql:
       sql:insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date)
       values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
       :#contract_type,:#work_pattern, :#email_id,TO_DATE(:#joining_date, 'yyyy-MM-dd'),TO_DATE(:#last_working_date, 'yyyy-MM-dd'),:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
       contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = TO_DATE(:#joining_date, 'yyyy-MM-dd'),
       last_working_date = TO_DATE(:#last_working_date, 'yyyy-MM-dd'), active_flag = :#active_flag,
-      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd hh:mm:ss'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
+      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
     blob-path: ${parent.file.path}
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
@@ -32,11 +36,13 @@ route:
 
   judicial-office-appointment:
     id: judicial-office-appointment
+    file-name: ${child.file.name}
     truncate-sql:
         sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:
         sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
-        values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag, :#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
+        values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
+        TO_DATE(:#start_date, 'yyyy-MM-dd'), TO_DATE(:#end_date, 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource
     blob-path: ${child1.file.path}
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
