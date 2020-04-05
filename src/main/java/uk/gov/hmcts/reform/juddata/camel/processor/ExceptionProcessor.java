@@ -18,11 +18,11 @@ public class ExceptionProcessor implements Processor {
     @Autowired
     EmailService emailService;
 
-//    @Value("${mail.from}")
-//    private String mailFrom;
-//
-//    @Value("${mail.to}")
-//    private String mailTo;
+    @Value("${spring.mail.from}")
+    private String mailFrom;
+
+    @Value("${spring.mail.to}")
+    private String mailTo;
 
     @Override
     public void process(Exchange exchange) {
@@ -35,9 +35,9 @@ public class ExceptionProcessor implements Processor {
 
     private void sendExceptionMail(Exception exception, String failedRouteId) {
         Mail mail = new Mail();
-        mail.setFrom("sushant.choudhari@hmcts.net");
-        mail.setTo("sushant.choudhari@hmcts.net");
-        mail.setSubject("::::exception in route for data processing::::");
+        mail.setFrom(mailFrom);
+        mail.setTo(mailTo);
+        mail.setSubject("::::exception in route for data processing::::" +  failedRouteId);
         mail.setContent(exception.getMessage());
         emailService.sendSimpleMessage(mail);
     }

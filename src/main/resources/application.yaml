@@ -34,8 +34,8 @@ spring:
     default-encoding: UTF-8
     host: mta.reform.hmcts.net
     jndi-name:
-    username: sushant.choudhari@hmcts.net
-    password: Prajsush@01
+    username:
+    password:
     port: 25
     properties:
       mail:

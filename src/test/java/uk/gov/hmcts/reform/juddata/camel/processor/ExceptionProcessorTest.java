@@ -7,9 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.juddata.camel.email.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.email.Mail;
 
+@TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml"})
 public class ExceptionProcessorTest extends CamelTestSupport {
 
     private ExceptionProcessor exceptionProcessorUnderTest;

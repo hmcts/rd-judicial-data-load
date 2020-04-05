@@ -1,11 +1,13 @@
 spring:
   flyway.locations: classpath:db/testmigration
   mail:
+      from: sushant.choudhari@hmcts.net
+      to: sushant.choudhari@hmcts.net
       default-encoding: UTF-8
       host: mta.reform.hmcts.net
       jndi-name:
-      username: sushant.choudhari@hmcts.net
-      password: Prajsush@01
+      username:
+      password:
       port: 25
       properties:
         mail:
@@ -14,7 +16,7 @@ spring:
             debug: true
             auth: true
             starttls.enable: true
-            ssl.trust: mta.reform.hmcts.net
+            ssl.trust: '*'
       protocol: smtp
       test-connection: true
 
