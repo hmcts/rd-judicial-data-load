@@ -24,13 +24,13 @@ public class MappingConstants {
 
     public static final String BLOBPATH = "blob-path";
 
-    public static final String  PROCESSOR = "processor-class";
+    public static final String PROCESSOR = "processor-class";
 
-    public static final String  CSVBINDER = "csv-binder-object";
+    public static final String CSVBINDER = "csv-binder-object";
 
-    public static final String  MAPPER = "mapper-class";
+    public static final String MAPPER = "mapper-class";
 
-    public static final String  MAPPING_METHOD = "getMap";
+    public static final String MAPPING_METHOD = "getMap";
 
     public static final String ID = "id";
 
@@ -39,8 +39,22 @@ public class MappingConstants {
     public static final String DIRECT_ROUTE = "direct:";
 
     public static final String SCHEDULER_STATUS = "SchedulerStatus";
+
     public static final String SCHEDULER_START_TIME = "SchedulerStartTime";
+
     public static final String SCHEDULER_NAME = "SchedulerName";
+
+    public static final String PARTIAL_SUCCESS = "PartialSuccess";
+
+    public static final String FAILURE = "FAILURE";
+
+    public static final String SUCCESS = "Success";
+
+    public static final String HEADER_SCHEDULER_STATUS = "SchedulerStatus";
+
+    public static final String HEADER_SCHEDULER_NAME = "SchedulerName";
+
+    public static final String HEADER_SCHEDULER_START_TIME = "SchedulerStartTime";
 
     public static Timestamp getDateTimeStamp(String date) {
         return Timestamp.valueOf(date);

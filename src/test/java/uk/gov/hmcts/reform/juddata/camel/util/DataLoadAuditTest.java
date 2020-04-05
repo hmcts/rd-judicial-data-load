@@ -13,16 +13,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class JrdUtilityTest {
+public class DataLoadAuditTest {
 
     @Mock
     private JdbcTemplate mockJdbcTemplate;
 
     @InjectMocks
-    private JrdUtility jrdUtilityUnderTest;
+    private DataLoadAudit dataLoadAuditUnderTest;
 
     @Value("${Scheduler-insert-sql}")
-    private String schedulerInsertJrdSql;
+    private String schedulerInsertSql;
 
     @Before
     public void setUp() {
@@ -36,15 +36,15 @@ public class JrdUtilityTest {
         Message message = Mockito.mock(Message.class);
         Timestamp schedulerStartTime = MappingConstants.getCurrentTimeStamp();
         final Exchange exchange = Mockito.mock(Exchange.class);
-        Map<String, Object> schedulerHeader = JrdUtility.getSchedulerHeader(MappingConstants.SCHEDULER_NAME, schedulerStartTime);
+        Map<String, Object> schedulerHeader = DataLoadAudit.getSchedulerHeader(MappingConstants.SCHEDULER_NAME, schedulerStartTime);
         message.setHeaders(schedulerHeader);
         Mockito.when(exchange.getIn()).thenReturn(message);
         Mockito.when(message.getHeader(MappingConstants.SCHEDULER_NAME)).thenReturn(schedulerName);
         Mockito.when(message.getHeader(MappingConstants.SCHEDULER_START_TIME)).thenReturn(schedulerStartTime);
         Mockito.when(message.getHeader(MappingConstants.SCHEDULER_STATUS)).thenReturn(schedulerStatus);
-        Mockito.when(mockJdbcTemplate.update(schedulerInsertJrdSql, schedulerName, schedulerStartTime, new  Timestamp(System.currentTimeMillis()), schedulerStatus)).thenReturn(0);
+        Mockito.when(mockJdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, new  Timestamp(System.currentTimeMillis()), schedulerStatus)).thenReturn(0);
 
         // Run the test
-        jrdUtilityUnderTest.schedularAuditUpdate(exchange);
+        dataLoadAuditUnderTest.schedularAuditUpdate(exchange);
     }
 }

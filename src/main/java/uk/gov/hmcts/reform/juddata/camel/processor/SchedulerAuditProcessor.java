@@ -6,7 +6,7 @@ import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 
 @Component
 @Slf4j
@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
 public class SchedulerAuditProcessor implements Processor {
 
     @Autowired
-    JrdUtility jrdUtility;
+    DataLoadAudit dataLoadAudit;
 
     /**
      * Processes the message exchange.
@@ -27,6 +27,6 @@ public class SchedulerAuditProcessor implements Processor {
     // we  need to  use UTC  GMT   time
     //in  day  light saving how this  works
     public void process(Exchange exchange) throws Exception {
-        jrdUtility.schedularAuditUpdate(exchange);
+        dataLoadAudit.schedularAuditUpdate(exchange);
     }
 }

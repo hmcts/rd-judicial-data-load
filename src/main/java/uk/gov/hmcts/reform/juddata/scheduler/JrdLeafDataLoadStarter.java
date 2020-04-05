@@ -10,7 +10,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 @Component
@@ -42,6 +42,6 @@ public class JrdLeafDataLoadStarter {
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
-        producerTemplate.sendBodyAndHeaders(startLeafRoute, "starting JRD leaf routes though scheduler", JrdUtility.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
+        producerTemplate.sendBodyAndHeaders(startLeafRoute, "starting JRD leaf routes though scheduler", DataLoadAudit.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
     }
 }

@@ -108,11 +108,11 @@ public class ParentOrchestrationRoute {
                         //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
-                                .choice().when(header("SchedulerStatus").isEqualTo("PartialSuccess"))
+                                .choice().when(header(MappingConstants.SCHEDULER_STATUS).isEqualTo(MappingConstants.PARTIAL_SUCCESS))
                                 .process(schedulerAuditProcessor)
                                 .process(exceptionProcessor)
                                 .otherwise()
-                                .process(exceptionProcessor).end().setHeader("SchedulerStatus").constant("FAILURE").process(schedulerAuditProcessor);
+                                .process(exceptionProcessor).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.FAILURE).process(schedulerAuditProcessor);
 
                         String[] directChild = new String[dependantRoutes.size()];
 
@@ -126,11 +126,11 @@ public class ParentOrchestrationRoute {
                         from(startRoute)
                                 .transacted()
                                 .policy(springTransactionPolicy)
-                                .setHeader("SchedulerName").constant(schedulerName)
-                                .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
+                                .setHeader(MappingConstants.HEADER_SCHEDULER_NAME).constant(schedulerName)
+                                .setHeader(MappingConstants.HEADER_SCHEDULER_START_TIME).constant(MappingConstants.getCurrentTimeStamp())
                                 .multicast()
                                 .stopOnException()
-                                .to(directChild).end().setHeader("SchedulerStatus").constant("Success").process(schedulerAuditProcessor);
+                                .to(directChild).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.SUCCESS).process(schedulerAuditProcessor);
 
 
                         //Archive Blob files

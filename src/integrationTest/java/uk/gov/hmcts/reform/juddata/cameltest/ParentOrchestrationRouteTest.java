@@ -28,7 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 
@@ -60,7 +60,7 @@ public class ParentOrchestrationRouteTest {
     ProducerTemplate producerTemplate;
 
     @Autowired
-    JrdUtility jrdUtility;
+    DataLoadAudit dataLoadAudit;
 
     @Value("${scheduler-name}")
     private String schedulerName;
@@ -76,6 +76,9 @@ public class ParentOrchestrationRouteTest {
 
     @Value("${archival-cred}")
     String archivalCred;
+
+    @Value("${select-dataload-schedular-audit}")
+    String selectDataloadSchedularAudit;
 
     private static final String[] file = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments.csv"};
 
@@ -131,8 +134,8 @@ public class ParentOrchestrationRouteTest {
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = JrdUtility.getSchedulerHeader(schedulerName, timestamp);
-        headers.put("SchedulerStatus","FAILURE");
+        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
+        headers.put(MappingConstants.HEADER_SCHEDULER_STATUS,"FAILURE");
         producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
@@ -200,8 +203,8 @@ public class ParentOrchestrationRouteTest {
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = JrdUtility.getSchedulerHeader(schedulerName, timestamp);
-        headers.put("SchedulerStatus","FAILURE");
+        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
+        headers.put(MappingConstants.HEADER_SCHEDULER_STATUS,MappingConstants.FAILURE);
         producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
@@ -210,8 +213,8 @@ public class ParentOrchestrationRouteTest {
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 0);
 
-        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList("select *  from dataload_schedular_audit");
-        assertEquals(dataloadSchedularAudit.get(0).get("scheduler_status"), "FAILURE");
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
+        assertEquals(dataloadSchedularAudit.get(0).get("scheduler_status"), MappingConstants.FAILURE);
     }
 
     @Test
@@ -222,15 +225,15 @@ public class ParentOrchestrationRouteTest {
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = JrdUtility.getSchedulerHeader(schedulerName, timestamp);
+        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
         producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
         assertEquals(judicialUserProfileList.size(), 1);
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 1);
-        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList("select *  from dataload_schedular_audit");
-        assertEquals(dataloadSchedularAudit.get(3).get("scheduler_status"), "Success");
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
+        assertEquals(dataloadSchedularAudit.get(3).get("scheduler_status"), MappingConstants.SUCCESS);
     }
 
     @Test
@@ -239,7 +242,7 @@ public class ParentOrchestrationRouteTest {
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = JrdUtility.getSchedulerHeader(schedulerName, timestamp);
+        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
         headers.put(MappingConstants.SCHEDULER_STATUS,"PartialSuccess");
         producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
 
@@ -249,8 +252,8 @@ public class ParentOrchestrationRouteTest {
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 0);
 
-        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList("select *  from dataload_schedular_audit");
-        assertEquals(dataloadSchedularAudit.get(13).get("scheduler_status"), "PartialSuccess");
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
+        assertEquals(dataloadSchedularAudit.get(13).get("scheduler_status"), MappingConstants.PARTIAL_SUCCESS);
     }
 
 

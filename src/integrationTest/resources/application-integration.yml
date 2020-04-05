@@ -50,3 +50,5 @@ parent-select-jrd-sql: SELECT * FROM judicial_user_profile
 child-select-child1-sql: SELECT * FROM judicial_office_appointment
 
 truncate-jrd: truncate judicial_user_profile cascade
+
+select-dataload-schedular-audit: select *  from dataload_schedular_audit

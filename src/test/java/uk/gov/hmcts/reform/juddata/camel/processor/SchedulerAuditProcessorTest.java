@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 public class SchedulerAuditProcessorTest {
@@ -18,7 +18,7 @@ public class SchedulerAuditProcessorTest {
     @Before
     public void setUp() {
         schedulerAuditProcessorUnderTest = new SchedulerAuditProcessor();
-        schedulerAuditProcessorUnderTest.jrdUtility = Mockito.mock(JrdUtility.class);
+        schedulerAuditProcessorUnderTest.dataLoadAudit = Mockito.mock(DataLoadAudit.class);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class SchedulerAuditProcessorTest {
         // Setup
         final Exchange exchange = Mockito.mock(Exchange.class);
         Message message = Mockito.mock(Message.class);
-        Map<String, Object> schedulerHeader = JrdUtility.getSchedulerHeader(MappingConstants.SCHEDULER_NAME, MappingConstants.getCurrentTimeStamp());
+        Map<String, Object> schedulerHeader = DataLoadAudit.getSchedulerHeader(MappingConstants.SCHEDULER_NAME, MappingConstants.getCurrentTimeStamp());
         message.setHeaders(schedulerHeader);
         Mockito.when(exchange.getIn()).thenReturn(message);
         Mockito.when(message.getHeader(MappingConstants.SCHEDULER_NAME)).thenReturn("schedulerHeader");
@@ -37,6 +37,6 @@ public class SchedulerAuditProcessorTest {
         schedulerAuditProcessorUnderTest.process(exchange);
 
         // Verify the results
-        Mockito.verify(schedulerAuditProcessorUnderTest.jrdUtility).schedularAuditUpdate(ArgumentMatchers.any(Exchange.class));
+        Mockito.verify(schedulerAuditProcessorUnderTest.dataLoadAudit).schedularAuditUpdate(ArgumentMatchers.any(Exchange.class));
     }
 }

@@ -15,14 +15,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @Service
-public class JrdUtility {
+public class DataLoadAudit {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //make  a  generic  names  not JRD
     @Value("${Scheduler-insert-sql}")
-    private String schedulerInsertJrdSql;
+    private String schedulerInsertSql;
 
     @NotNull
     public static Map<String, Object> getSchedulerHeader(final String schedulerName,final Timestamp schedulerStartTime) {
@@ -37,6 +36,6 @@ public class JrdUtility {
         String schedulerName = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_NAME);
         String schedulerStatus = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_STATUS);
         Timestamp schedulerStartTime = (Timestamp) exchange.getIn().getHeader(MappingConstants.SCHEDULER_START_TIME);
-        jdbcTemplate.update(schedulerInsertJrdSql, schedulerName, schedulerStartTime, new  Timestamp(System.currentTimeMillis()), schedulerStatus);
+        jdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, new  Timestamp(System.currentTimeMillis()), schedulerStatus);
     }
 }

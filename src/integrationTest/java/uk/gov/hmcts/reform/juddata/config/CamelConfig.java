@@ -20,7 +20,7 @@ import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapp
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.*;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 
 @Configuration
 public class CamelConfig {
@@ -60,8 +60,8 @@ public class CamelConfig {
 
 
     @Bean
-    JrdUtility jrdUtility() {
-        return new JrdUtility();
+    DataLoadAudit jrdUtility() {
+        return new DataLoadAudit();
     }
 
     @Bean

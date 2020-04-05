@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUtility;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 @Component
@@ -42,7 +42,7 @@ public class JrdUserProfileDataLoadScheduler {
     @Scheduled(cron = "${scheduler.camel-route-config}")
     public void runJrdScheduler() {
 
-        producerTemplate.sendBodyAndHeaders(startRoute, "starting JRD orchestration", JrdUtility.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
+        producerTemplate.sendBodyAndHeaders(startRoute, "starting JRD orchestration", DataLoadAudit.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
 
     }
 }
