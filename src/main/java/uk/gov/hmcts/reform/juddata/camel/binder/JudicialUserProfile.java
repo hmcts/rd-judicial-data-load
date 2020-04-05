@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.juddata.camel.binder;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_PATTERN_TIMESTAMP;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
 import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
@@ -12,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
-import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.validator.DatePattern;
 

@@ -14,12 +14,14 @@ archival-cred: noop=true
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 2000
 invalid-header-sql: insert into dataload_exception_records(file_name,scheduler_start_time,error_description,updated_timestamp) values(?, ?, ?, ?)
+invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?)
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
     file-name: ${parent.file.name}
+    table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date)
       values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
       :#contract_type,:#work_pattern, :#email_id,TO_DATE(:#joining_date, 'yyyy-MM-dd'),TO_DATE(:#last_working_date, 'yyyy-MM-dd'),:#active_flag,
@@ -37,6 +39,7 @@ route:
   judicial-office-appointment:
     id: judicial-office-appointment
     file-name: ${child.file.name}
+    table-name: judicial-office-appointment
     truncate-sql:
         sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:

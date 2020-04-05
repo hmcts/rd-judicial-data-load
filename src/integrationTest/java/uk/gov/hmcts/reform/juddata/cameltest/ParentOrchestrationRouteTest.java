@@ -22,12 +22,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
@@ -39,7 +41,8 @@ import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {CamelConfig.class, CamelTestContextBootstrapper.class}, initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
+@EnableTransactionManagement
 public class ParentOrchestrationRouteTest {
 
     @Autowired
@@ -95,6 +98,7 @@ public class ParentOrchestrationRouteTest {
         setSourceData(file);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, new Timestamp(new Date().getTime()).toString());
+        camelContext.getGlobalOptions().put("JSRCOUNT", "0");
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 

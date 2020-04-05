@@ -6,17 +6,23 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
+import uk.gov.hmcts.reform.juddata.camel.validator.JSRValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialUserProfileProcessor implements Processor {
+public class JudicialUserProfileProcessor implements Processor, DefaultProcessor<JudicialUserProfile> {
+
+    @Autowired
+    JSRValidatorInitializer<JudicialUserProfile> judicialUserProfileJSRValidatorInitializer;
 
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
-        List<JudicialUserProfile> users = new ArrayList<>();
+
         List<JudicialUserProfile> judicialUserProfiles;
 
         if (exchange.getIn().getBody() instanceof List) {
@@ -27,28 +33,22 @@ public class JudicialUserProfileProcessor implements Processor {
             judicialUserProfiles.add(judicialUserProfile);
         }
 
-        for (JudicialUserProfile user : judicialUserProfiles) {
 
-            JudicialUserProfile validUser = fetch(user);
-            if (null != validUser) {
+        log.info("::JudicialUserProfile Records count::" + judicialUserProfiles.size());
 
-                users.add(user);
-            } else {
-                log.info(" Invalid JudicialUser record ");
-            }
-            exchange.getMessage().setBody(users);
+        List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJSRValidatorInitializer,
+                judicialUserProfiles);
+
+        if(judicialUserProfileJSRValidatorInitializer.getConstraintViolations().size() > 5) {
+            throw new RouteFailedException("Jsr exception exceeds threshold limit in Judicial User Profile");
+        } else {
+            //Auditing JSR exceptions in exception table
+            audit(judicialUserProfileJSRValidatorInitializer, exchange);
         }
-        log.info("::JudicialUserProfile Records count::" + users.size());
-    }
 
+        log.info("::JudicialUserProfile Records invalid for JSR::"
+                + (judicialUserProfiles.size() - filteredJudicialUserProfiles.size()));
 
-    private JudicialUserProfile fetch(JudicialUserProfile user) {
-        JudicialUserProfile userAfterValidation = null;
-        if (null != user.getElinksId()) {
-
-            userAfterValidation = user;
-
-        }
-        return userAfterValidation;
+        exchange.getMessage().setBody(filteredJudicialUserProfiles);
     }
 }

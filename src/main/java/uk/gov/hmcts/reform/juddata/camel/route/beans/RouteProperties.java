@@ -26,4 +26,6 @@ public class RouteProperties {
     String binder;
 
     String fileName;
+
+    String tableName;
 }

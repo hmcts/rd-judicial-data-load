@@ -14,6 +14,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRAT
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TABLE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class ParentOrchestrationRoute {
     @Autowired
     HeaderValidationProcessor headerValidationProcessor;
 
+
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
     public void startRoute() throws Exception {
@@ -107,9 +109,11 @@ public class ParentOrchestrationRoute {
 
                         onException(RouteFailedException.class)
                                 .handled(true).markRollbackOnly();
+
                         //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
+                                 .onWhen(header("complete").isNotEqualTo("complete"))
                                 .process(exceptionProcessor);
 
                         String[] directChild = new String[dependantRoutes.size()];
@@ -153,7 +157,7 @@ public class ParentOrchestrationRoute {
                                     .process((Processor) applicationContext.getBean(route.getProcessor()))
                                     .split().body()
                                     .streaming()
-                                    .to("bean-validator://x?validationProviderResolver=#myValidationProviderResolver")
+                                    //.to("bean-validator://x?validationProviderResolver=#myValidationProviderResolver")
                                     .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
                                     .to(route.getSql())
                                     .end();
@@ -203,6 +207,8 @@ public class ParentOrchestrationRoute {
                     + child + "." + PROCESSOR)));
             properties.setFileName(environment.getProperty(
                     ROUTE + "." + child + "." + FILE_NAME));
+            properties.setTableName(environment.getProperty(
+                    ROUTE + "." + child + "." + TABLE_NAME));
             routePropertiesList.add(index, properties);
             index++;
         }

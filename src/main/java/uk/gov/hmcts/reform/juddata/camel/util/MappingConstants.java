@@ -42,6 +42,8 @@ public class MappingConstants {
 
     public static final String FILE_NAME = "file-name";
 
+    public static final String TABLE_NAME = "table-name";
+
     public static final String HEADER_EXCEPTION = "header-exception";
 
     public static final String ROUTE_DETAILS = "routedetails";

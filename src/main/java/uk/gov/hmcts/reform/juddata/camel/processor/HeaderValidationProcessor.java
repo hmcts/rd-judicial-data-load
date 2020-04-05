@@ -40,6 +40,7 @@ public class HeaderValidationProcessor implements Processor {
     CamelContext camelContext;
 
     @Autowired
+    @Qualifier("jdbcTemplate1")
     private JdbcTemplate jdbcTemplate;
 
     @Value("${invalid-header-sql}")
@@ -74,7 +75,7 @@ public class HeaderValidationProcessor implements Processor {
             //Transaction
             DefaultTransactionDefinition def = new DefaultTransactionDefinition();
             def.setName("header exception logs");
-            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
             String schedulerTime = camelContext.getGlobalOptions().get(SCHEDULER_START_TIME);
             Object[] params = new Object[]{routeProperties.getFileName(), Timestamp.valueOf(schedulerTime),
                     "Mismatch headers in csv for ::" + routeProperties.getBinder(), new Timestamp(new Date().getTime())};

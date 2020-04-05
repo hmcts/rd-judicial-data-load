@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -27,6 +28,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
+import uk.gov.hmcts.reform.juddata.camel.validator.JSRValidatorInitializer;
 
 @Configuration
 public class CamelConfig {
@@ -80,15 +82,34 @@ public class CamelConfig {
         return ds;
     }
 
+    @Bean("dataSource1")
+    public DataSource dataSource1() {
+        final PGSimpleDataSource ds = new PGSimpleDataSource();
+        ds.setUrl(testPostgres.getJdbcUrl());
+        ds.setUser(testPostgres.getUsername());
+        ds.setPassword(testPostgres.getPassword());
+        return ds;
+    }
+
+
+    @Bean("jdbcTemplate1")
+    JdbcTemplate jdbcTemplate1(){
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.setDataSource(dataSource1());
+        return jdbcTemplate;
+    }
+
     @Bean(name = "txManager")
     public PlatformTransactionManager txManager() {
-        PlatformTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        platformTransactionManager.setDataSource(dataSource());
         return platformTransactionManager;
     }
 
     @Bean(name = "txManager1")
     public PlatformTransactionManager txManager1() {
-        PlatformTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        platformTransactionManager.setDataSource(dataSource1());
         return platformTransactionManager;
     }
 
@@ -139,6 +160,16 @@ public class CamelConfig {
     @Bean
     HeaderValidationProcessor headerValidationProcessor() {
         return new HeaderValidationProcessor();
+    }
+
+    @Bean
+    JSRValidatorInitializer<JudicialUserProfile> judicialUserProfileJSRValidatorInitializer() {
+        return new JSRValidatorInitializer<>();
+    }
+
+    @Bean
+    JSRValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJSRValidatorInitializer() {
+        return new JSRValidatorInitializer<>();
     }
 
 }
