@@ -38,7 +38,7 @@ import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
 @Component
-public class JSRValidatorInitializer<T> {
+public class JsrValidatorInitializer<T> {
 
     private Validator validator;
 
@@ -68,8 +68,10 @@ public class JSRValidatorInitializer<T> {
     }
 
     /**
-     * @param binders
-     * @return
+     * JSR validation.
+     *
+     * @param binders List
+     * @return List binder list
      */
     public List<T> validate(List<T> binders) {
 
@@ -88,7 +90,9 @@ public class JSRValidatorInitializer<T> {
     }
 
     /**
-     * @param exchange
+     * Auditing JSR Exception.
+     *
+     * @param exchange Exchange
      */
     public void auditJsrExceptions(Exchange exchange) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
@@ -118,10 +122,11 @@ public class JSRValidatorInitializer<T> {
         platformTransactionManager.commit(status);
     }
 
-    /***
+    /**
+     * get key fields.
      *
-     * @param bean
-     * @return
+     * @param bean Object
+     * @return String
      */
     private String getKeyFiled(Object bean) {
         Class objectClass = bean.getClass();

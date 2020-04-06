@@ -2,27 +2,32 @@ package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJudicialOfficeAppointmentMockMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.getDateTimeWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.getDateWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_FORMAT;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.junit.Test;
 
 public class JudicialOfficeAppointmentTest {
 
-
     @Test
     public void test_objects_JudicialOfficeAppointment_correctly() {
-        LocalDate currentDate = LocalDate.now();
-        JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMockMock(currentDate.toString());
+        Date currentDate = new Date();
+        LocalDateTime dateTime = LocalDateTime.now();
+        JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMockMock(currentDate,
+                dateTime);
         assertEquals("elinksid_1", judicialOfficeAppointment.getElinksId());
         assertEquals("roleId_1", judicialOfficeAppointment.getRoleId());
         assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());
         assertEquals("regionId_1", judicialOfficeAppointment.getRegionId());
         assertEquals(true, judicialOfficeAppointment.getIsPrincipalAppointment());
-        assertEquals(currentDate.toString(), judicialOfficeAppointment.getStartDate());
-        assertEquals(currentDate.toString(), judicialOfficeAppointment.getEndDate());
+        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialOfficeAppointment.getStartDate());
+        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialOfficeAppointment.getEndDate());
         assertEquals(true, judicialOfficeAppointment.isActiveFlag());
-        assertEquals(currentDate.toString(), judicialOfficeAppointment.getExtractedDate());
+        assertEquals(getDateTimeWithFormat(dateTime), judicialOfficeAppointment.getExtractedDate());
     }
 }

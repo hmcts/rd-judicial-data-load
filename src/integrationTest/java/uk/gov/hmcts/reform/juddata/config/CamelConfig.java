@@ -28,7 +28,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.validator.JSRValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Configuration
 public class CamelConfig {
@@ -93,7 +93,7 @@ public class CamelConfig {
 
 
     @Bean("jdbcTemplate1")
-    JdbcTemplate jdbcTemplate1(){
+    JdbcTemplate jdbcTemplate1() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         jdbcTemplate.setDataSource(dataSource1());
         return jdbcTemplate;
@@ -163,13 +163,12 @@ public class CamelConfig {
     }
 
     @Bean
-    JSRValidatorInitializer<JudicialUserProfile> judicialUserProfileJSRValidatorInitializer() {
-        return new JSRValidatorInitializer<>();
+    JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer() {
+        return new JsrValidatorInitializer<>();
     }
 
     @Bean
-    JSRValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJSRValidatorInitializer() {
-        return new JSRValidatorInitializer<>();
+    JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer() {
+        return new JsrValidatorInitializer<>();
     }
-
 }

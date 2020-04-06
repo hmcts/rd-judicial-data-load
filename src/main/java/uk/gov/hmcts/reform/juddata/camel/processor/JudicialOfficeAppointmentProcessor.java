@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
-import uk.gov.hmcts.reform.juddata.camel.validator.JSRValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialOfficeAppointmentProcessor implements Processor, DefaultProcessor<JudicialOfficeAppointment>  {
+public class JudicialOfficeAppointmentProcessor implements Processor, DefaultProcessor<JudicialOfficeAppointment> {
 
 
     @Autowired
-    JSRValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJSRValidatorInitializer;
+    JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -36,16 +36,17 @@ public class JudicialOfficeAppointmentProcessor implements Processor, DefaultPro
 
         log.info("::JudicialOfficeAppointment Records count::" + judicialOfficeAppointments.size());
 
-        List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJSRValidatorInitializer,
+        List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
                 judicialOfficeAppointments);
 
         exchange.getMessage().setBody(filteredJudicialAppointments);
 
-        if(judicialOfficeAppointmentJSRValidatorInitializer.getConstraintViolations().size() > 5) {
+        if (judicialOfficeAppointmentJsrValidatorInitializer.getConstraintViolations().size() > 5) {
             throw new RouteFailedException("Jsr exception exceeds threshold limit in Judicial User Profile");
-        } else {
+        } else if (judicialOfficeAppointmentJsrValidatorInitializer.getConstraintViolations() != null
+                && judicialOfficeAppointmentJsrValidatorInitializer.getConstraintViolations().size() > 0) {
             //Auditing JSR exceptions in exception table
-            audit(judicialOfficeAppointmentJSRValidatorInitializer, exchange);
+            audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
         }
 
         log.info("::JudicialOfficeAppointment Records invalid for JSR::"

@@ -10,14 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
-import uk.gov.hmcts.reform.juddata.camel.validator.JSRValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
 public class JudicialUserProfileProcessor implements Processor, DefaultProcessor<JudicialUserProfile> {
 
     @Autowired
-    JSRValidatorInitializer<JudicialUserProfile> judicialUserProfileJSRValidatorInitializer;
+    JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -33,17 +34,17 @@ public class JudicialUserProfileProcessor implements Processor, DefaultProcessor
             judicialUserProfiles.add(judicialUserProfile);
         }
 
-
         log.info("::JudicialUserProfile Records count::" + judicialUserProfiles.size());
 
-        List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJSRValidatorInitializer,
+        List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
                 judicialUserProfiles);
 
-        if(judicialUserProfileJSRValidatorInitializer.getConstraintViolations().size() > 5) {
+        if (judicialUserProfileJsrValidatorInitializer.getConstraintViolations().size() > 5) {
             throw new RouteFailedException("Jsr exception exceeds threshold limit in Judicial User Profile");
-        } else {
+        } else if (judicialUserProfileJsrValidatorInitializer.getConstraintViolations() != null
+                && judicialUserProfileJsrValidatorInitializer.getConstraintViolations().size() > 0) {
             //Auditing JSR exceptions in exception table
-            audit(judicialUserProfileJSRValidatorInitializer, exchange);
+            audit(judicialUserProfileJsrValidatorInitializer, exchange);
         }
 
         log.info("::JudicialUserProfile Records invalid for JSR::"
