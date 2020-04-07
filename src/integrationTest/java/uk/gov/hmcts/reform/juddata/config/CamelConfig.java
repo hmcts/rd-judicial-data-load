@@ -131,4 +131,5 @@ public class CamelConfig {
         CamelContext camelContext = new SpringCamelContext(applicationContext);
         return camelContext;
     }
+
 }

@@ -22,6 +22,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
+import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.Processor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.language.SimpleExpression;
@@ -89,7 +90,7 @@ public class ParentOrchestrationRoute {
 
     @SuppressWarnings("unchecked")
     @Transactional
-    public void startRoute() throws Exception {
+    public void startRoute() throws FailedToCreateRouteException {
 
         String parentRouteName = camelContext.getGlobalOptions().get(ORCHESTRATED_ROUTE);
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;
@@ -100,69 +101,72 @@ public class ParentOrchestrationRoute {
 
         List<RouteProperties> routePropertiesList = getRouteProperties(dependantRoutes);
 
-        camelContext.addRoutes(
-                new SpringRouteBuilder() {
-                    @Override
-                    public void configure() throws Exception {
+        try {
+            camelContext.addRoutes(
+                    new SpringRouteBuilder() {
+                        @Override
+                        public void configure() throws Exception {
 
-                        //logging exception in global exception handler
-                        onException(Exception.class)
-                                .handled(true)
-                                .choice().when(header(MappingConstants.SCHEDULER_STATUS).isEqualTo(MappingConstants.PARTIAL_SUCCESS))
-                                .process(schedulerAuditProcessor)
-                                .process(exceptionProcessor)
-                                .otherwise()
-                                .process(exceptionProcessor).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.FAILURE).process(schedulerAuditProcessor);
+                            //logging exception in global exception handler
+                            onException(Exception.class)
+                                    .handled(true)
+                                    .choice().when(header(MappingConstants.SCHEDULER_STATUS).isEqualTo(MappingConstants.PARTIAL_SUCCESS))
+                                    .process(schedulerAuditProcessor)
+                                    .process(exceptionProcessor)
+                                    .otherwise()
+                                    .process(exceptionProcessor).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.FAILURE).process(schedulerAuditProcessor);;
 
-                        String[] directChild = new String[dependantRoutes.size()];
+                            String[] directChild = new String[dependantRoutes.size()];
 
-                        getDependents(directChild, dependantRoutes);
-                        directChild = Arrays.copyOf(directChild, directChild.length + 1);
-                        //add last child route as  archival
-                        directChild[directChild.length - 1] = archivalRoute;
+                            getDependents(directChild, dependantRoutes);
+                            directChild = Arrays.copyOf(directChild, directChild.length + 1);
+                            //add last child route as  archival
+                            directChild[directChild.length - 1] = archivalRoute;
 
-                        //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
-                        //with Transaction propagation required
-                        from(startRoute)
-                                .transacted()
-                                .policy(springTransactionPolicy)
-                                .setHeader(MappingConstants.HEADER_SCHEDULER_NAME).constant(schedulerName)
-                                .setHeader(MappingConstants.HEADER_SCHEDULER_START_TIME).constant(MappingConstants.getCurrentTimeStamp())
-                                .multicast()
-                                .stopOnException()
-                                .to(directChild).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.SUCCESS).process(schedulerAuditProcessor);
-
-
-                        //Archive Blob files
-                        from(archivalRoute)
-                                .loop(archivalFileNames.size())
-                                .process(azureFileProcessor)
-                                .toD(archivalPath + "${header.filename}?" + archivalCred)
-                                .end();
-
-
-                        for (RouteProperties route : routePropertiesList) {
-
-                            Expression exp = new SimpleExpression(route.getBlobPath());
-
-                            from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
+                            //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
+                            //with Transaction propagation required
+                            from(startRoute)
                                     .transacted()
                                     .policy(springTransactionPolicy)
-                                    .setProperty(BLOBPATH, exp)
-                                    .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
-                                    applicationContext.getBean(route.getBinder()).getClass())
-                                    .to(route.getTruncateSql())
-                                    .process((Processor) applicationContext.getBean(route.getProcessor()))
-                                    .split().body()
-                                    .streaming()
-                                    .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
-                                    .to(route.getSql()).end();
+                                    .setHeader(MappingConstants.HEADER_SCHEDULER_NAME).constant(schedulerName)
+                                    .setHeader(MappingConstants.HEADER_SCHEDULER_START_TIME).constant(MappingConstants.getCurrentTimeStamp())
+                                    .multicast()
+                                    .stopOnException()
+                                    .to(directChild).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.SUCCESS).process(schedulerAuditProcessor);;
+
+
+                            //Archive Blob files
+                            from(archivalRoute)
+                                    .loop(archivalFileNames.size())
+                                    .process(azureFileProcessor)
+                                    .toD(archivalPath + "${header.filename}?" + archivalCred)
+                                    .end();
+
+
+                            for (RouteProperties route : routePropertiesList) {
+
+                                Expression exp = new SimpleExpression(route.getBlobPath());
+
+                                from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
+                                        .transacted()
+                                        .policy(springTransactionPolicy)
+                                        .setProperty(BLOBPATH, exp)
+                                        .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
+                                        applicationContext.getBean(route.getBinder()).getClass())
+                                        .to(route.getTruncateSql())
+                                        .process((Processor) applicationContext.getBean(route.getProcessor()))
+                                        .split().body()
+                                        .streaming()
+                                        .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
+                                        .to(route.getSql()).end();
+                            }
+
                         }
-
-                    }
-                });
+                    });
+        } catch (Exception ex) {
+            throw new FailedToCreateRouteException("Judicial Data Load - ParentOrchestrationRoute failed to start", startRoute, startRoute, ex);
+        }
     }
-
 
     private void getDependents(String[] directChild, List<String> dependents) {
         int index = 0;

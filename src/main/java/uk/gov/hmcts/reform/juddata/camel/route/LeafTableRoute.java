@@ -19,6 +19,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
+import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.Processor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.language.SimpleExpression;
@@ -77,56 +78,59 @@ public class LeafTableRoute {
 
         List<RouteProperties> routePropertiesList = getRouteProperties(leafRoutesList);
 
-        camelContext.addRoutes(
-                new SpringRouteBuilder() {
-                    @Override
-                    public void configure() throws Exception {
+        try {
+            camelContext.addRoutes(
+                    new SpringRouteBuilder() {
+                        @Override
+                        public void configure() throws Exception {
 
-                        //logging exception in global exception handler
-                        onException(Exception.class)
-                                .handled(true)
-                                .choice().when(header("SchedulerStatus").isEqualTo("PartialSuccess"))
-                                .process(schedulerAuditProcessor)
-                                .process(exceptionProcessor)
-                                .otherwise()
-                                .process(exceptionProcessor).end().setHeader("SchedulerStatus").constant("FAILURE").process(schedulerAuditProcessor);
+                            //logging exception in global exception handler
+                            onException(Exception.class)
+                                    .handled(true)
+                                    .choice().when(header("SchedulerStatus").isEqualTo("PartialSuccess"))
+                                    .process(schedulerAuditProcessor)
+                                    .process(exceptionProcessor)
+                                    .otherwise()
+                                    .process(exceptionProcessor).end().setHeader("SchedulerStatus").constant("FAILURE").process(schedulerAuditProcessor);;
 
+                            String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 
-                        String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
-
-                        //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
-                        //with Transaction propagation required
-                        from(startLeafRoute)
-                                .transacted()
-                                .policy(springTransactionPolicy)
-                                .setHeader("SchedulerName").constant(schedulerName)
-                                .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
-                                .multicast()
-                                .stopOnException().to(directRouteNameList).end().setHeader("SchedulerStatus").constant("Success").process(schedulerAuditProcessor);;
-
-                        for (RouteProperties route : routePropertiesList) {
-
-                            Expression exp = new SimpleExpression(route.getBlobPath());
-
-                            from(DIRECT_ROUTE + route.getRouteName())
-                                    .id(DIRECT_ROUTE + route.getRouteName())
+                            //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
+                            //with Transaction propagation required
+                            from(startLeafRoute)
                                     .transacted()
                                     .policy(springTransactionPolicy)
-                                    .setProperty(BLOBPATH, exp)
-                                    .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
-                                    applicationContext.getBean(route.getBinder()).getClass())
-                                    .to(route.getTruncateSql())
-                                    .process((Processor) applicationContext.getBean(route.getProcessor()))
-                                    .split().body()
-                                    .streaming()
-                                    .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
-                                    .doTry()
-                                    .to(route.getSql())
-                                    .doCatch(Exception.class)
-                                    .end();
+                                    .setHeader("SchedulerName").constant(schedulerName)
+                                    .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
+                                    .multicast()
+                                    .stopOnException().to(directRouteNameList).end().setHeader("SchedulerStatus").constant("Success").process(schedulerAuditProcessor);
+
+                            for (RouteProperties route : routePropertiesList) {
+
+                                Expression exp = new SimpleExpression(route.getBlobPath());
+
+                                from(DIRECT_ROUTE + route.getRouteName())
+                                        .id(DIRECT_ROUTE + route.getRouteName())
+                                        .transacted()
+                                        .policy(springTransactionPolicy)
+                                        .setProperty(BLOBPATH, exp)
+                                        .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
+                                        applicationContext.getBean(route.getBinder()).getClass())
+                                        .to(route.getTruncateSql())
+                                        .process((Processor) applicationContext.getBean(route.getProcessor()))
+                                        .split().body()
+                                        .streaming()
+                                        .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
+                                        .doTry()
+                                        .to(route.getSql())
+                                        .doCatch(Exception.class)
+                                        .end();
+                            }
                         }
-                    }
-                });
+                    });
+        } catch (Exception ex) {
+            throw new FailedToCreateRouteException("Judicial Data Load - LeafTableRoute failed to start", startLeafRoute, ex);
+        }
     }
 
 
