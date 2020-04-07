@@ -146,7 +146,6 @@ public class ParentOrchestrationRouteTest {
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 0);
-
     }
 
     @Test

@@ -110,19 +110,31 @@ public class ParentOrchestrationRoute {
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
+                                    .process(exceptionProcessor);
+                            //logging exception in global exception handler
+                            onException(Exception.class)
+                                    .handled(true)
                                     .choice().when(header(MappingConstants.SCHEDULER_STATUS).isEqualTo(MappingConstants.PARTIAL_SUCCESS))
                                     .process(schedulerAuditProcessor)
                                     .process(exceptionProcessor)
                                     .otherwise()
                                     .process(exceptionProcessor).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.FAILURE).process(schedulerAuditProcessor);;
 
-                            String[] directChild = new String[dependantRoutes.size()];
+                        String[] directChild = new String[dependantRoutes.size()];
 
-                            getDependents(directChild, dependantRoutes);
-                            directChild = Arrays.copyOf(directChild, directChild.length + 1);
-                            //add last child route as  archival
-                            directChild[directChild.length - 1] = archivalRoute;
+                        getDependents(directChild, dependantRoutes);
+                        directChild = Arrays.copyOf(directChild, directChild.length + 1);
+                        //add last child route as  archival
+                        directChild[directChild.length - 1] = archivalRoute;
 
+                            //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
+                            //with Transaction propagation required
+                            from(startRoute)
+                                    .transacted()
+                                    .policy(springTransactionPolicy)
+                                    .multicast()
+                                    .stopOnException()
+                                    .to(directChild).end();
                             //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
                             //with Transaction propagation required
                             from(startRoute)
@@ -135,38 +147,36 @@ public class ParentOrchestrationRoute {
                                     .to(directChild).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.SUCCESS).process(schedulerAuditProcessor);;
 
 
-                            //Archive Blob files
-                            from(archivalRoute)
-                                    .loop(archivalFileNames.size())
-                                    .process(azureFileProcessor)
-                                    .toD(archivalPath + "${header.filename}?" + archivalCred)
-                                    .end();
+                        //Archive Blob files
+                        from(archivalRoute)
+                                .loop(archivalFileNames.size())
+                                .process(azureFileProcessor)
+                                .toD(archivalPath + "${header.filename}?" + archivalCred)
+                                .end();
 
 
-                            for (RouteProperties route : routePropertiesList) {
+                        for (RouteProperties route : routePropertiesList) {
 
-                                Expression exp = new SimpleExpression(route.getBlobPath());
+                            Expression exp = new SimpleExpression(route.getBlobPath());
 
-                                from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
-                                        .transacted()
-                                        .policy(springTransactionPolicy)
-                                        .setProperty(BLOBPATH, exp)
-                                        .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
-                                        applicationContext.getBean(route.getBinder()).getClass())
-                                        .to(route.getTruncateSql())
-                                        .process((Processor) applicationContext.getBean(route.getProcessor()))
-                                        .split().body()
-                                        .streaming()
-                                        .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
-                                        .to(route.getSql()).end();
-                            }
-
+                            from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
+                                    .transacted()
+                                    .policy(springTransactionPolicy)
+                                    .setProperty(BLOBPATH, exp)
+                                    .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
+                                    applicationContext.getBean(route.getBinder()).getClass())
+                                    .to(route.getTruncateSql())
+                                    .process((Processor) applicationContext.getBean(route.getProcessor()))
+                                    .split().body()
+                                    .streaming()
+                                    .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
+                                    .to(route.getSql()).end();
                         }
-                    });
-        } catch (Exception ex) {
-            throw new FailedToCreateRouteException("Judicial Data Load - ParentOrchestrationRoute failed to start", startRoute, startRoute, ex);
-        }
+
+                    }
+                });
     }
+
 
     private void getDependents(String[] directChild, List<String> dependents) {
         int index = 0;
