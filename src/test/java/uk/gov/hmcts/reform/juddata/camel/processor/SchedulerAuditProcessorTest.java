@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
+import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultExchange;
@@ -10,8 +11,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
-
-import java.util.Map;
 
 public class SchedulerAuditProcessorTest extends CamelTestSupport {
 
