@@ -16,9 +16,11 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_S
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.transaction.Transactional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
+import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.Processor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.language.SimpleExpression;
@@ -60,7 +62,7 @@ public class LeafTableRoute {
 
     @SuppressWarnings("unchecked")
     @Transactional
-    public void startRoute() throws Exception {
+    public void startRoute() throws FailedToCreateRouteException {
 
         String leafRouteNames = LEAF_ROUTE_NAMES;
 
@@ -69,51 +71,54 @@ public class LeafTableRoute {
 
         List<RouteProperties> routePropertiesList = getRouteProperties(leafRoutesList);
 
-        camelContext.addRoutes(
-                new SpringRouteBuilder() {
-                    @Override
-                    public void configure() throws Exception {
+        try {
+            camelContext.addRoutes(
+                    new SpringRouteBuilder() {
+                        @Override
+                        public void configure() throws Exception {
 
-                        //logging exception in global exception handler
-                        onException(Exception.class)
-                                .handled(true)
-                                .process(exceptionProcessor);
+                            //logging exception in global exception handler
+                            onException(Exception.class)
+                                    .handled(true)
+                                    .process(exceptionProcessor);
 
-                        String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
+                            String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 
-                        //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
-                        //with Transaction propagation required
-                        from(startLeafRoute)
-                                .transacted()
-                                .policy(springTransactionPolicy)
-                                .multicast()
-                                .stopOnException().to(directRouteNameList).end();
-
-                        for (RouteProperties route : routePropertiesList) {
-
-                            Expression exp = new SimpleExpression(route.getBlobPath());
-
-                            from(DIRECT_ROUTE + route.getRouteName())
-                                    .id(DIRECT_ROUTE + route.getRouteName())
+                            //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
+                            //with Transaction propagation required
+                            from(startLeafRoute)
                                     .transacted()
                                     .policy(springTransactionPolicy)
-                                    .setProperty(BLOBPATH, exp)
-                                    .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
-                                    applicationContext.getBean(route.getBinder()).getClass())
-                                    .to(route.getTruncateSql())
-                                    .process((Processor) applicationContext.getBean(route.getProcessor()))
-                                    .split().body()
-                                    .streaming()
-                                    .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
-                                    .doTry()
-                                    .to(route.getSql())
-                                    .doCatch(Exception.class)
-                                    .end();
-                        }
-                    }
-                });
-    }
+                                    .multicast()
+                                    .stopOnException().to(directRouteNameList).end();
 
+                            for (RouteProperties route : routePropertiesList) {
+
+                                Expression exp = new SimpleExpression(route.getBlobPath());
+
+                                from(DIRECT_ROUTE + route.getRouteName())
+                                        .id(DIRECT_ROUTE + route.getRouteName())
+                                        .transacted()
+                                        .policy(springTransactionPolicy)
+                                        .setProperty(BLOBPATH, exp)
+                                        .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
+                                        applicationContext.getBean(route.getBinder()).getClass())
+                                        .to(route.getTruncateSql())
+                                        .process((Processor) applicationContext.getBean(route.getProcessor()))
+                                        .split().body()
+                                        .streaming()
+                                        .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
+                                        .doTry()
+                                        .to(route.getSql())
+                                        .doCatch(Exception.class)
+                                        .end();
+                            }
+                        }
+                    });
+        } catch (Exception ex) {
+            throw new FailedToCreateRouteException("Judicial Data Load - LeafTableRoute failed to start", startLeafRoute, ex);
+        }
+    }
 
     private String[] createDirectRoutesForMulticast(List<String> routeList) {
         int index = 0;

@@ -22,6 +22,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
+import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.Processor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.language.SimpleExpression;
@@ -89,7 +90,7 @@ public class ParentOrchestrationRoute {
 
     @SuppressWarnings("unchecked")
     @Transactional
-    public void startRoute() throws Exception {
+    public void startRoute() throws FailedToCreateRouteException {
 
         String parentRouteName = camelContext.getGlobalOptions().get(ORCHESTRATED_ROUTE);
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;
@@ -100,16 +101,16 @@ public class ParentOrchestrationRoute {
 
         List<RouteProperties> routePropertiesList = getRouteProperties(dependantRoutes);
 
-        camelContext.addRoutes(
-                new SpringRouteBuilder() {
-                    @Override
-                    public void configure() throws Exception {
+        try {
+            camelContext.addRoutes(
+                    new SpringRouteBuilder() {
+                        @Override
+                        public void configure() throws Exception {
 
-                        //logging exception in global exception handler
-                        onException(Exception.class)
-                                .handled(true)
-                                .onExceptionOccurred(exceptionProcessor);
-
+                            //logging exception in global exception handler
+                            onException(Exception.class)
+                                    .handled(true)
+                                    .process(exceptionProcessor);
 
                         String[] directChild = new String[dependantRoutes.size()];
 
@@ -154,10 +155,12 @@ public class ParentOrchestrationRoute {
                                     .to(route.getSql()).end();
                         }
 
-                    }
-                });
+                        }
+                    });
+        } catch (Exception ex) {
+            throw new FailedToCreateRouteException("Judicial Data Load - ParentOrchestrationRoute failed to start", startRoute, startRoute, ex);
+        }
     }
-
 
     private void getDependents(String[] directChild, List<String> dependents) {
         int index = 0;
