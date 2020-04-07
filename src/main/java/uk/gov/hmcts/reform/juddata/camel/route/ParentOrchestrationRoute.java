@@ -132,14 +132,6 @@ public class ParentOrchestrationRoute {
                             from(startRoute)
                                     .transacted()
                                     .policy(springTransactionPolicy)
-                                    .multicast()
-                                    .stopOnException()
-                                    .to(directChild).end();
-                            //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
-                            //with Transaction propagation required
-                            from(startRoute)
-                                    .transacted()
-                                    .policy(springTransactionPolicy)
                                     .setHeader(MappingConstants.HEADER_SCHEDULER_NAME).constant(schedulerName)
                                     .setHeader(MappingConstants.HEADER_SCHEDULER_START_TIME).constant(MappingConstants.getCurrentTimeStamp())
                                     .multicast()
