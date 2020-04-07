@@ -261,6 +261,7 @@ dependencies {
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 
+
     compile group: 'com.google.guava', name: 'guava', version: '28.2-jre'
 
     compile group: 'name.neuhalfen.projects.crypto.bouncycastle.openpgp', name: 'bouncy-gpg', version: '2.0.1'
@@ -275,6 +276,7 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-sql', version: '2.25.0'
 
 
+   // compile group: 'org.apache.camel', name: 'camel-azure', version: '2.20.0'
     compile group: 'org.apache.camel', name: 'camel-azure-starter', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-bindy-starter', version: '2.25.0'
     compile group: 'org.apache.camel', name: 'camel-jdbc-starter', version: '2.25.0'
@@ -319,7 +321,6 @@ dependencies {
     testCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
     testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
-    testCompile group: 'com.icegreen', name: 'greenmail', version: '1.5.0'
 
     integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.25.0'
     integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
