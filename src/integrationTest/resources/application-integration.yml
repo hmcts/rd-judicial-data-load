@@ -14,6 +14,7 @@ file-read-time-out: 2000
 Scheduler-insert-sql:  insert into dataload_schedular_audit (scheduler_Id,scheduler_Name,scheduler_Start_Time,scheduler_End_Time,scheduler_Status)
   values(DEFAULT,?,?,?,?)
 scheduler-name: judicial_leaf_scheduler
+audit-enable: true
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration

@@ -1,6 +1,6 @@
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
-start-route: direct:JRD
+start-leaf-route: direct:leaf
 archival-route: direct:JrdArchival
 archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
@@ -11,6 +11,7 @@ file-read-time-out: 200000
 Scheduler-insert-sql:  insert into dataload_schedular_audit (scheduler_Id,scheduler_Name,scheduler_Start_Time,scheduler_End_Time,scheduler_Status)
   values(nextval('scheduler_sequence'),?,?,?,?)
 scheduler-leaf-name: judicial_main_scheduler
+audit-enable: true
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration

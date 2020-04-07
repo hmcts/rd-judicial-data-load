@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
+
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,7 @@ public class DataLoadAudit {
     private String schedulerInsertSql;
 
     @NotNull
-    public static Map<String, Object> getSchedulerHeader(final String schedulerName,final Timestamp schedulerStartTime) {
+    public static Map<String, Object> getSchedulerHeader(final String schedulerName, final Timestamp schedulerStartTime) {
         Map<String, Object> heders = new HashMap<>();
         heders.put(MappingConstants.SCHEDULER_NAME, schedulerName);
         heders.put(MappingConstants.SCHEDULER_START_TIME, schedulerStartTime);
@@ -32,10 +33,10 @@ public class DataLoadAudit {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public  void schedularAuditUpdate(final Exchange exchange) {
+    public void schedularAuditUpdate(final Exchange exchange) {
         String schedulerName = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_NAME);
         String schedulerStatus = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_STATUS);
         Timestamp schedulerStartTime = (Timestamp) exchange.getIn().getHeader(MappingConstants.SCHEDULER_START_TIME);
-        jdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, new  Timestamp(System.currentTimeMillis()), schedulerStatus);
+        jdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, new Timestamp(System.currentTimeMillis()), schedulerStatus);
     }
 }
