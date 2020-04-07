@@ -79,10 +79,11 @@ public class LeafTableRoute {
 
         List<RouteProperties> routePropertiesList = getRouteProperties(leafRoutesList);
 
-        camelContext.addRoutes(
-                new SpringRouteBuilder() {
-                    @Override
-                    public void configure() throws Exception {
+        try {
+            camelContext.addRoutes(
+                    new SpringRouteBuilder() {
+                        @Override
+                        public void configure() throws Exception {
 
                             //logging exception in global exception handler
                             onException(Exception.class)
@@ -116,25 +117,28 @@ public class LeafTableRoute {
 
                             Expression exp = new SimpleExpression(route.getBlobPath());
 
-                            from(DIRECT_ROUTE + route.getRouteName())
-                                    .id(DIRECT_ROUTE + route.getRouteName())
-                                    .transacted()
-                                    .policy(springTransactionPolicy)
-                                    .setProperty(BLOBPATH, exp)
-                                    .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
-                                    applicationContext.getBean(route.getBinder()).getClass())
-                                    .to(route.getTruncateSql())
-                                    .process((Processor) applicationContext.getBean(route.getProcessor()))
-                                    .split().body()
-                                    .streaming()
-                                    .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
-                                    .doTry()
-                                    .to(route.getSql())
-                                    .doCatch(Exception.class)
-                                    .end();
+                                from(DIRECT_ROUTE + route.getRouteName())
+                                        .id(DIRECT_ROUTE + route.getRouteName())
+                                        .transacted()
+                                        .policy(springTransactionPolicy)
+                                        .setProperty(BLOBPATH, exp)
+                                        .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
+                                        applicationContext.getBean(route.getBinder()).getClass())
+                                        .to(route.getTruncateSql())
+                                        .process((Processor) applicationContext.getBean(route.getProcessor()))
+                                        .split().body()
+                                        .streaming()
+                                        .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
+                                        .doTry()
+                                        .to(route.getSql())
+                                        .doCatch(Exception.class)
+                                        .end();
+                            }
                         }
-                    }
-                });
+                    });
+        } catch (Exception ex) {
+            throw new FailedToCreateRouteException("Judicial Data Load - LeafTableRoute failed to start", startLeafRoute, ex);
+        }
     }
 
     private String[] createDirectRoutesForMulticast(List<String> routeList) {
