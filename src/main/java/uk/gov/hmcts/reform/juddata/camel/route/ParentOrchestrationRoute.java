@@ -173,10 +173,12 @@ public class ParentOrchestrationRoute {
                                     .to(route.getSql()).end();
                         }
 
-                    }
-                });
+                        }
+                    });
+        } catch (Exception ex) {
+            throw new FailedToCreateRouteException("Judicial Data Load - ParentOrchestrationRoute failed to start", startRoute, startRoute, ex);
+        }
     }
-
 
     private void getDependents(String[] directChild, List<String> dependents) {
         int index = 0;
