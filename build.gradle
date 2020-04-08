@@ -317,8 +317,6 @@ dependencies {
     testCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
     testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
-  //  testCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.14.0'
-
 
     integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.25.0'
     integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'

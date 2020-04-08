@@ -1,6 +1,6 @@
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
-start-leaf-route: direct:leaf
+start-route: direct:JRD
 archival-route: direct:JrdArchival
 archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
