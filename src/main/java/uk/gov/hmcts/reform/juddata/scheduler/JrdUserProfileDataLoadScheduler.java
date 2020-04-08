@@ -44,7 +44,7 @@ public class JrdUserProfileDataLoadScheduler {
 
     @Scheduled(cron = "${scheduler.camel-route-config}")
     public void runJrdScheduler() {
-        emailService.sendEmail("no-reply@reform.hmcts.net", null);
+        emailService.sendEmail("no-reply@reform.hmcts.net");
         producerTemplate.sendBody(startRoute, "starting JRD orchestration");
     }
 }
