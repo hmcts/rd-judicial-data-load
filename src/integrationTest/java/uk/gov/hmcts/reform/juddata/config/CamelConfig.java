@@ -1,8 +1,11 @@
 package uk.gov.hmcts.reform.juddata.config;
 
+import javax.sql.DataSource;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
+import org.mockito.Mockito;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,10 +22,6 @@ import uk.gov.hmcts.reform.juddata.camel.processor.*;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
-import javax.sql.DataSource;
-
-import static org.mockito.Mockito.mock;
-
 @Configuration
 public class CamelConfig {
 
@@ -38,11 +37,6 @@ public class CamelConfig {
     JudicialUserProfileProcessor judicialUserProfileProcessor() {
         return new JudicialUserProfileProcessor();
     }
-
-//    @Bean
-//    JavaMailSender javaMailSender() {
-//        return new JavaMailSenderImpl();
-//    }
 
     @Bean
     EmailService emailService() {
@@ -66,7 +60,7 @@ public class CamelConfig {
 
     @Bean
     ArchiveAzureFileProcessor azureFileProcessor() {
-        return mock(ArchiveAzureFileProcessor.class);
+        return Mockito.mock(ArchiveAzureFileProcessor.class);
     }
 
     private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")

@@ -1,5 +1,12 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
+
+import java.util.List;
+import java.util.Map;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.spring.CamelSpringRunner;
@@ -24,18 +31,11 @@ import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 
-import java.util.List;
-import java.util.Map;
-
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
-
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml"})
 @RunWith(CamelSpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {CamelConfig.class , CamelTestContextBootstrapper.class}, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = {CamelConfig.class, CamelTestContextBootstrapper.class}, initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration
 public class ParentOrchestrationRouteTest {
