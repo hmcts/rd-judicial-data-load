@@ -26,6 +26,16 @@ spring:
   jackson.date-format: yyyy-MM-dd
   flyway.enabled: ${FLYWAY_ENABLED:true}
   flyway.locations: classpath:db/migration,classpath:db/postgres
+  mail:
+    host: mta.reform.hmcts.net
+    port: 25
+    properties:
+      mail-smtp:
+        starttls:
+          enable: true
+        ssl:
+          trust: "*"
+
 
   ### database configuration
   datasource:

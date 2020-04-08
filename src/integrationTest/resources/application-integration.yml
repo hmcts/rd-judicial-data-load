@@ -1,4 +1,13 @@
 spring:
+  mail:
+    host: mta.reform.hmcts.net
+    port: 25
+    properties:
+      mail-smtp:
+        starttls:
+          enable: true
+        ssl:
+          trust: "*"
   flyway.locations: classpath:db/testmigration
 
 aggregation-strategy-completion-size: 100
