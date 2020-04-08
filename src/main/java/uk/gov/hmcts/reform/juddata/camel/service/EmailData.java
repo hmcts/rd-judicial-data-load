@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.juddata.camel.service;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
 
-@Value
+@Getter
 @Builder(toBuilder = true)
 public class EmailData {
     String recipient;

@@ -15,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
-import uk.gov.hmcts.reform.juddata.camel.service.EmailFailedSendException;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
 
@@ -48,10 +47,10 @@ public class EmailServiceTest {
     @Test
     public void shouldSendEmailWhenException() {
         EmailData emailData = TestEmailData.getDefault();
-        EmailFailedSendException emailFailedSendException = mock(EmailFailedSendException.class);
-        doThrow(EmailFailedSendException.class).when(mailSender).send(any(SimpleMailMessage.class));
+        RuntimeException emailFailedSendException = mock(RuntimeException.class);
+        doThrow(RuntimeException.class).when(mailSender).send(any(SimpleMailMessage.class));
         final Throwable raisedException = catchThrowable(() -> emailService.sendEmail(EMAIL_FROM));
-        assertThat(raisedException).isExactlyInstanceOf(EmailFailedSendException.class);
+        assertThat(raisedException).isExactlyInstanceOf(RuntimeException.class);
     }
 
     static class TestEmailData {
