@@ -39,13 +39,3 @@ data "azurerm_key_vault_secret" "BLOB_URL_SUFFIX" {
   name = "BLOB-URL-SUFFIX"
   key_vault_id = "${data.azurerm_key_vault.rd_key_vault.id}"
 }
-
-resource "azurerm_resource_group" "rg" {
-  name = "${var.product}-${var.component}-${var.env}"
-  location = "${var.location}"
-  tags {
-    "Deployment Environment" = "${var.env}"
-    "Team Name" = "${var.team_name}"
-    "lastUpdated" = "${timestamp()}"
-  }
-}
