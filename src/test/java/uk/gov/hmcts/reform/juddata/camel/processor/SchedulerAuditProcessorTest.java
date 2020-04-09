@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultExchange;
@@ -10,7 +9,6 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
-import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 public class SchedulerAuditProcessorTest extends CamelTestSupport {
 
@@ -27,8 +25,7 @@ public class SchedulerAuditProcessorTest extends CamelTestSupport {
         // Setup
         final Exchange exchange = new DefaultExchange(context);
         Message message = Mockito.mock(Message.class);
-        Map<String, Object> schedulerHeader = DataLoadAudit.getSchedulerHeader(MappingConstants.SCHEDULER_NAME, MappingConstants.getCurrentTimeStamp());
-        message.setHeaders(schedulerHeader);
+
         schedulerAuditProcessorUnderTest.auditEnablel = Boolean.TRUE;
         // Run the test
         schedulerAuditProcessorUnderTest.process(exchange);

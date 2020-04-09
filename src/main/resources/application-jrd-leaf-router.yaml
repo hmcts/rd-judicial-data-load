@@ -1,6 +1,6 @@
 start-leaf-route: direct:leaf
 leaf-route-names: judicial-role-type,judicial-contract-type,judicial-region-type,judicial-base-location_type
-Scheduler-insert-sql:  insert into schedular_audit (scheduler_Id,scheduler_Name,scheduler_Start_Time,scheduler_End_Time,scheduler_Status)
+Scheduler-insert-sql:  insert into schedular_audit (audit_id,scheduler_Name,scheduler_Start_Time,scheduler_End_Time,scheduler_Status)
   values(DEFAULT,?,?,?,?)
 scheduler-name: judicial_leaf_scheduler
 Audit-Enable: true

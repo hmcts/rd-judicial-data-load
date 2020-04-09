@@ -101,13 +101,6 @@ public class LeafTableRoute {
                             from(startLeafRoute)
                                     .transacted()
                                     .policy(springTransactionPolicy)
-                                    .multicast()
-                                    .stopOnException().to(directRouteNameList).end();
-                            //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
-                            //with Transaction propagation required
-                            from(startLeafRoute)
-                                    .transacted()
-                                    .policy(springTransactionPolicy)
                                     .setHeader("SchedulerName").constant(schedulerName)
                                     .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
                                     .multicast()

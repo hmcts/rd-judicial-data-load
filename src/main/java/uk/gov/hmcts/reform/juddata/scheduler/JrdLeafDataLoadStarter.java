@@ -10,8 +10,6 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
-import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 @Component
 @Slf4j
@@ -37,11 +35,18 @@ public class JrdLeafDataLoadStarter {
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
+        setGlobalOption();
         leafTableRoutes.startRoute();
+    }
+
+    public void setGlobalOption() {
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
     }
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
-        producerTemplate.sendBodyAndHeaders(startLeafRoute, "starting JRD leaf routes though scheduler", DataLoadAudit.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
+        producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
     }
 }

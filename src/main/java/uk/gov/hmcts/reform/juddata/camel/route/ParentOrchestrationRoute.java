@@ -38,7 +38,6 @@ import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.SchedulerAuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
-import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 /**
  * This class is Judicial User Profile Router Triggers Orchestrated data loading.
@@ -107,18 +106,11 @@ public class ParentOrchestrationRoute {
                         @Override
                         public void configure() throws Exception {
 
+
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor);
-                            //logging exception in global exception handler
-                            onException(Exception.class)
-                                    .handled(true)
-                                    .choice().when(header(MappingConstants.SCHEDULER_STATUS).isEqualTo(MappingConstants.PARTIAL_SUCCESS))
-                                    .process(schedulerAuditProcessor)
-                                    .process(exceptionProcessor)
-                                    .otherwise()
-                                    .process(exceptionProcessor).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.FAILURE).process(schedulerAuditProcessor);;
+                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor);;
 
                         String[] directChild = new String[dependantRoutes.size()];
 
@@ -132,11 +124,9 @@ public class ParentOrchestrationRoute {
                             from(startRoute)
                                     .transacted()
                                     .policy(springTransactionPolicy)
-                                    .setHeader(MappingConstants.HEADER_SCHEDULER_NAME).constant(schedulerName)
-                                    .setHeader(MappingConstants.HEADER_SCHEDULER_START_TIME).constant(MappingConstants.getCurrentTimeStamp())
                                     .multicast()
                                     .stopOnException()
-                                    .to(directChild).end().setHeader(MappingConstants.SCHEDULER_STATUS).constant(MappingConstants.SUCCESS).process(schedulerAuditProcessor);;
+                                    .to(directChild).end().process(schedulerAuditProcessor);;
 
 
                         //Archive Blob files

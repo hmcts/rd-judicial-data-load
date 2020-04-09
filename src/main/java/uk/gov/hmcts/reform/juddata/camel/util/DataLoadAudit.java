@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
+import com.google.common.base.*;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
 
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +23,19 @@ public class DataLoadAudit {
     @Value("${Scheduler-insert-sql}")
     private String schedulerInsertSql;
 
-    @NotNull
-    public static Map<String, Object> getSchedulerHeader(final String schedulerName, final Timestamp schedulerStartTime) {
-        Map<String, Object> heders = new HashMap<>();
-        heders.put(MappingConstants.SCHEDULER_NAME, schedulerName);
-        heders.put(MappingConstants.SCHEDULER_START_TIME, schedulerStartTime);
-        return heders;
-    }
-
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void schedularAuditUpdate(final Exchange exchange) {
-        String schedulerName = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_NAME);
-        String schedulerStatus = (String) exchange.getIn().getHeader(MappingConstants.SCHEDULER_STATUS);
-        Timestamp schedulerStartTime = (Timestamp) exchange.getIn().getHeader(MappingConstants.SCHEDULER_START_TIME);
+
+        Map<String, String> globalOptions = exchange.getContext().getGlobalOptions();
+        Timestamp schedulerStartTime = Timestamp.valueOf(globalOptions.get(MappingConstants.SCHEDULER_START_TIME));
+        String schedulerName = globalOptions.get(MappingConstants.SCHEDULER_NAME);
+        String schedulerStatus = globalOptions.get(MappingConstants.SCHEDULER_STATUS);
+        if (Strings.isNullOrEmpty(schedulerStatus) || schedulerStatus.equalsIgnoreCase(MappingConstants.PARTIAL_SUCCESS)) {
+            if (Strings.isNullOrEmpty(schedulerStatus)) {
+                schedulerStatus = MappingConstants.SUCCESS;
+            }
+            schedulerStatus = MappingConstants.PARTIAL_SUCCESS;
+        }
         jdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, new Timestamp(System.currentTimeMillis()), schedulerStatus);
     }
 }

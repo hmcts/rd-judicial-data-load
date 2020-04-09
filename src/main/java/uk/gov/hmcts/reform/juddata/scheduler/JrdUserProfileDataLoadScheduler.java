@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
-import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 @Component
 public class JrdUserProfileDataLoadScheduler {
@@ -35,14 +33,18 @@ public class JrdUserProfileDataLoadScheduler {
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        setGlobalOption();
         parentOrchestrationRoute.startRoute();
+    }
+
+    private void setGlobalOption() {
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
     }
 
     @Scheduled(cron = "${scheduler.camel-route-config}")
     public void runJrdScheduler() {
-
-        producerTemplate.sendBodyAndHeaders(startRoute, "starting JRD orchestration", DataLoadAudit.getSchedulerHeader(schedulerName, MappingConstants.getCurrentTimeStamp()));
-
+        producerTemplate.sendBody(startRoute, "starting JRD orchestration");
     }
 }

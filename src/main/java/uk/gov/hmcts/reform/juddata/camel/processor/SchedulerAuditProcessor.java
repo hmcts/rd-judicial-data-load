@@ -28,10 +28,8 @@ public class SchedulerAuditProcessor implements Processor {
      */
     @SuppressWarnings("unchecked")
     @Override
-    // we  need to  use UTC  GMT   time
-    //in  day  light saving how this  works
     public void process(Exchange exchange) throws Exception {
-        if (auditEnablel) {
+        if (auditEnablel.booleanValue()) {
             dataLoadAudit.schedularAuditUpdate(exchange);
         }
     }

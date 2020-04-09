@@ -4,9 +4,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -41,6 +39,8 @@ import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 @EnableAutoConfiguration
 public class ParentOrchestrationRouteTest {
 
+    public static final String DB_SCHEDULER_STATUS = "scheduler_status";
+    public static final String DB_PARTIAL_SUCCESS = "PartialSuccess";
     @Autowired
     CamelContext camelContext;
 
@@ -106,6 +106,8 @@ public class ParentOrchestrationRouteTest {
 
         setSourceData(file);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -135,11 +137,10 @@ public class ParentOrchestrationRouteTest {
 
         setSourceData(fileWithError);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
         parentRoute.startRoute();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
-        headers.put(MappingConstants.HEADER_SCHEDULER_STATUS,"FAILURE");
-        producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
         assertEquals(judicialUserProfileList.size(), 0);
@@ -155,6 +156,8 @@ public class ParentOrchestrationRouteTest {
         setSourceData(file);
 
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -188,6 +191,8 @@ public class ParentOrchestrationRouteTest {
         setSourceData(fileWithSingleRecord);
 
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
@@ -203,43 +208,41 @@ public class ParentOrchestrationRouteTest {
 
         setSourceData(fileWithError);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
         parentRoute.startRoute();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
-        headers.put(MappingConstants.HEADER_SCHEDULER_STATUS,MappingConstants.FAILURE);
-        producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
         List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
-        assertEquals(dataloadSchedularAudit.get(1).get("scheduler_status"), MappingConstants.FAILURE);
+        assertEquals(dataloadSchedularAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.FAILURE);
     }
 
     @Test
     public void testParentOrchestrationSchedularSucess() throws Exception {
 
-        setSourceData(fileWithSingleRecord);
-
+        setSourceData(file);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
         parentRoute.startRoute();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
-        producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
         List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
-        assertEquals(dataloadSchedularAudit.get(3).get("scheduler_status"), MappingConstants.SUCCESS);
+        assertEquals(dataloadSchedularAudit.get(3).get(DB_SCHEDULER_STATUS), MappingConstants.SUCCESS);
     }
 
     @Test
     public void testParentOrchestrationSchedularPartialSucess() throws Exception {
-        setSourceData(fileWithError);
+        setSourceData(file);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
+        camelContext.getGlobalOptions().put(MappingConstants.SCHEDULER_STATUS, MappingConstants.PARTIAL_SUCCESS);
         parentRoute.startRoute();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Map<String, Object> headers = DataLoadAudit.getSchedulerHeader(schedulerName, timestamp);
-        headers.put(MappingConstants.SCHEDULER_STATUS,"PartialSuccess");
-        producerTemplate.sendBodyAndHeaders(startRoute, "test JRD orchestration",headers);
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
         List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
-        assertEquals(dataloadSchedularAudit.get(13).get("scheduler_status"), MappingConstants.PARTIAL_SUCCESS);
+        assertEquals(dataloadSchedularAudit.get(11).get(DB_SCHEDULER_STATUS), MappingConstants.PARTIAL_SUCCESS);
     }
 
     private static void setSourceData(String... files) throws Exception {
