@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
+import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.Processor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.language.SimpleExpression;
@@ -104,6 +105,7 @@ public class ParentOrchestrationRoute {
 
         List<RouteProperties> routePropertiesList = getRouteProperties(dependantRoutes);
 
+        try {
         camelContext.addRoutes(
                 new SpringRouteBuilder() {
                     @Override
@@ -165,6 +167,9 @@ public class ParentOrchestrationRoute {
                         }
                     }
                 });
+        } catch (Exception ex) {
+            throw new FailedToCreateRouteException("Judicial Data Load - ParentOrchestrationRoute failed to start", startRoute, startRoute, ex);
+        }
     }
 
 
