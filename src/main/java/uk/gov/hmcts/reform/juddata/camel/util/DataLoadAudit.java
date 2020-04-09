@@ -33,8 +33,9 @@ public class DataLoadAudit {
         if (Strings.isNullOrEmpty(schedulerStatus) || schedulerStatus.equalsIgnoreCase(MappingConstants.PARTIAL_SUCCESS)) {
             if (Strings.isNullOrEmpty(schedulerStatus)) {
                 schedulerStatus = MappingConstants.SUCCESS;
+            } else {
+                schedulerStatus = MappingConstants.PARTIAL_SUCCESS;
             }
-            schedulerStatus = MappingConstants.PARTIAL_SUCCESS;
         }
         jdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, new Timestamp(System.currentTimeMillis()), schedulerStatus);
     }

@@ -40,7 +40,6 @@ import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 public class ParentOrchestrationRouteTest {
 
     public static final String DB_SCHEDULER_STATUS = "scheduler_status";
-    public static final String DB_PARTIAL_SUCCESS = "PartialSuccess";
     @Autowired
     CamelContext camelContext;
 
@@ -55,6 +54,15 @@ public class ParentOrchestrationRouteTest {
 
     @Value("${Scheduler-insert-sql}")
     private String schedulerInsertJrdSql;
+
+    @Value("${select-dataload-schedular-audit-failure}")
+    private String schedulerInsertJrdSqlFailure;
+
+    @Value("${select-dataload-schedular-audit-partial-sucess}")
+    private String schedulerInsertJrdSqlPartialSucess;
+
+    @Value("${select-dataload-schedular-audit-sucess}")
+    private String schedulerInsertJrdSqlSucess;
 
     @Autowired
     ProducerTemplate producerTemplate;
@@ -213,7 +221,7 @@ public class ParentOrchestrationRouteTest {
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
-        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure);
         assertEquals(dataloadSchedularAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.FAILURE);
     }
 
@@ -227,8 +235,8 @@ public class ParentOrchestrationRouteTest {
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
-        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
-        assertEquals(dataloadSchedularAudit.get(3).get(DB_SCHEDULER_STATUS), MappingConstants.SUCCESS);
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlSucess);
+        assertEquals(dataloadSchedularAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.SUCCESS);
     }
 
     @Test
@@ -241,8 +249,8 @@ public class ParentOrchestrationRouteTest {
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
-        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(selectDataloadSchedularAudit);
-        assertEquals(dataloadSchedularAudit.get(11).get(DB_SCHEDULER_STATUS), MappingConstants.PARTIAL_SUCCESS);
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlPartialSucess);
+        assertEquals(dataloadSchedularAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.PARTIAL_SUCCESS);
     }
 
     private static void setSourceData(String... files) throws Exception {
