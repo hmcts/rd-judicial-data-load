@@ -44,7 +44,7 @@ public class JsrValidatorInitializer<T> {
     private Validator validator;
 
     @Autowired
-    //@Qualifier("springJdbcTemplate")
+    @Qualifier("springJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Value("${invalid-header-sql}")
@@ -54,8 +54,7 @@ public class JsrValidatorInitializer<T> {
     CamelContext camelContext;
 
     @Autowired
-    //@Qualifier("springJdbcTransactionManager")
-    @Qualifier("txManager")
+    @Qualifier("springJdbcTransactionManager")
     PlatformTransactionManager platformTransactionManager;
 
     private Set<ConstraintViolation<T>> constraintViolations;
