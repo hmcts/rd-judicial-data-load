@@ -2,9 +2,9 @@ aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
 start-route: direct:JRD
 archival-route: direct:JrdArchival
-archival-path: azure-blob://rddemo/jrd-archieve-test
-active-blob-path: azure-blob://rddemo/jud-ref-data
-archival-file-names: Personal-test.csv,Appointments-test.csv
+archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
+active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
+archival-file-names: Personal,Appointments
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 200000
@@ -14,7 +14,7 @@ jsr-threshold-limit: 100
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
-    file-name: Personal.csv
+    file-name: Personal
     table-name: judicial_user_profile
     insert-sql:
       sql:insert into judicial_user_profile (elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
@@ -27,7 +27,7 @@ route:
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://rddemo/jud-ref-data/Personal-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Personal?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
@@ -35,7 +35,7 @@ route:
 
   judicial-office-appointment:
     id: judicial-office-appointment
-    file-name: Appointments.csv
+    file-name: Appointments
     table-name: judicial_office_appointment
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
@@ -44,7 +44,7 @@ route:
       values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
       TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource
     blob-path:
-      azure-blob://rddemo/jud-ref-data/Appointments-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
     csv-binder-object: JudicialOfficeAppointment
@@ -59,7 +59,7 @@ route:
       sql:insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,authorisation_id,jurisdiction_id,authorisation_date,extracted_date,created_date,last_loaded_date)
       values(:#judicial_office_auth_id,:#elinks_id,:#authorisation_id, :#jurisdiction_id,:#authorisation_date,:#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
     blob-path:
-      azure-blob://rddemo/jud-ref-data/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation

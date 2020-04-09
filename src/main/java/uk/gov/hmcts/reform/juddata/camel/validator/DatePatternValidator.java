@@ -15,14 +15,13 @@ public class DatePatternValidator implements ConstraintValidator<DatePattern, St
     String pattern;
 
     public void initialize(DatePattern constraint) {
-
         isNullAllowed = constraint.isNullAllowed();
         pattern  = constraint.regex();
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (valueOf(isNullAllowed) == TRUE && isEmpty(value)) {
+        if (valueOf(isNullAllowed).equals(TRUE) && isEmpty(value)) {
             return true;
         } else {
             return compile(pattern).matcher(value).matches();

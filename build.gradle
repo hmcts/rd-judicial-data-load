@@ -19,6 +19,7 @@ plugins {
     id 'org.sonarqube' version '2.8'
     id 'org.springframework.boot' version '2.2.4.RELEASE'
     id "org.flywaydb.flyway" version "6.2.0"
+    id 'war'
 }
 
 apply plugin: 'java'
@@ -284,8 +285,9 @@ dependencies {
     compile group: 'org.apache.camel', name: 'camel-core', version: versions.camel
     compile group: 'org.apache.camel', name: 'spi-annotations', version: '3.0.0'
 
-    // https://mvnrepository.com/artifact/com.opencsv/opencsv
     compile group: 'com.opencsv', name: 'opencsv', version: '3.7'
+
+    providedCompile group: 'org.apache.camel', name: 'camel-spring-boot-dependencies', version: versions.camel, ext: 'pom'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok

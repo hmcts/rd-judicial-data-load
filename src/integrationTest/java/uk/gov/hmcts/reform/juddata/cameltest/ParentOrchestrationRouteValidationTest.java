@@ -124,9 +124,17 @@ public class ParentOrchestrationRouteValidationTest {
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
+        assertEquals(judicialUserProfileList.get(0).get("elinks_id"), "1");
+        assertEquals(judicialUserProfileList.get(1).get("elinks_id"), "2");
+        assertEquals(judicialUserProfileList.get(0).get("email_id"), "joe.bloggs@ejudiciary.net");
+        assertEquals(judicialUserProfileList.get(1).get("email_id"), "jo1e.bloggs@ejudiciary.net");
         assertEquals(judicialUserProfileList.size(), 2);
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
+        assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
+        assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
+        assertEquals(judicialAppointmentList.get(0).get("elinks_id"), "1");
+        assertEquals(judicialAppointmentList.get(1).get("elinks_id"), "2");
         assertEquals(judicialAppointmentList.size(), 2);
 
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);

@@ -135,25 +135,40 @@ public class LeafRouteValidationTest {
     }
 
     @Test
-    public void testleaffailuresinvalidjsr() throws Exception {
+    public void testLeafFailuresInvalidJsr() throws Exception {
 
         setSourceData(file_jsr_error);
         leafTableRoute.startRoute();
         producerTemplate.sendBody(startLeafRoute, "test JRD leaf");
 
         List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
-        for (int count = 0; count < 3; count++) {
-
-        }
         assertEquals(judicialUserRoleType.size(), 3);
+        assertEquals(judicialUserRoleType.get(0).get("role_id"),"1");
+        assertEquals(judicialUserRoleType.get(1).get("role_id"),"3");
+        assertEquals(judicialUserRoleType.get(2).get("role_id"),"7");
+
+        assertEquals(judicialUserRoleType.get(0).get("role_desc_en"),"Magistrate");
+        assertEquals(judicialUserRoleType.get(1).get("role_desc_en"),"Advisory Committee Member - Non Magistrate");
+        assertEquals(judicialUserRoleType.get(2).get("role_desc_en"),"MAGS - AC Admin User");
 
         List<Map<String, Object>> judicialContractType = jdbcTemplate.queryForList(contractSql);
         assertEquals(judicialContractType.size(), 5);
+        assertEquals(judicialContractType.get(0).get("contract_type_id"),"1");
+        assertEquals(judicialContractType.get(1).get("contract_type_id"),"3");
+        assertEquals(judicialContractType.get(2).get("contract_type_id"),"5");
+        assertEquals(judicialContractType.get(3).get("contract_type_id"),"6");
+        assertEquals(judicialContractType.get(4).get("contract_type_id"),"7");
 
         List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
+        assertEquals(judicialBaseLocationType.get(0).get("base_location_id"),"1");
+        assertEquals(judicialBaseLocationType.get(1).get("base_location_id"),"2");
+        assertEquals(judicialBaseLocationType.get(2).get("base_location_id"),"5");
         assertEquals(judicialBaseLocationType.size(), 3);
 
         List<Map<String, Object>> judicialRegionType = jdbcTemplate.queryForList(regionSql);
+        assertEquals(judicialRegionType.get(0).get("region_id"),"1");
+        assertEquals(judicialRegionType.get(1).get("region_id"),"4");
+        assertEquals(judicialRegionType.get(2).get("region_id"),"5");
         assertEquals(judicialRegionType.size(), 3);
 
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
