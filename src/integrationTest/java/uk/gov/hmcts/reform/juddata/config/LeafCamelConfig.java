@@ -18,7 +18,7 @@ import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Configuration
-public class CamelLeafConfig {
+public class LeafCamelConfig {
 
     @Bean
     LeafTableRoute leafTableRoute() {

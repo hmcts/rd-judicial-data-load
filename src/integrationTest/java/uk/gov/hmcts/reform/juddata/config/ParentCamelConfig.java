@@ -31,7 +31,7 @@ import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Configuration
-public class CamelConfig {
+public class ParentCamelConfig {
 
     @Autowired
     ApplicationContext applicationContext;

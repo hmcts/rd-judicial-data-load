@@ -36,13 +36,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
-import uk.gov.hmcts.reform.juddata.config.CamelConfig;
+import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml"})
 @RunWith(CamelSpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {CamelConfig.class, CamelTestContextBootstrapper.class}, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = {ParentCamelConfig.class, CamelTestContextBootstrapper.class}, initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement

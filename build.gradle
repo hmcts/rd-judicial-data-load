@@ -37,7 +37,8 @@ def versions = [
         sonarPitest        : '0.5',
         springBoot         : '2.1.4.RELEASE',
         springHystrix      : '2.1.1.RELEASE',
-        springfoxSwagger   : '2.9.2'
+        springfoxSwagger   : '2.9.2',
+        camel              : '2.25.0'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
@@ -267,20 +268,20 @@ dependencies {
     compile group: 'com.jcraft', name: 'jsch', version: '0.1.55'
     //GPG
 
-    compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: '2.25.0'
-    compile group: 'org.apache.camel', name: 'camel-csv-starter', version: '2.25.0'
-    compile group: 'org.apache.camel', name: 'camel-csv', version: '2.25.0'
-    compile group: 'org.apache.camel', name: 'camel-sql', version: '2.25.0'
+    compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: versions.camel
+    compile group: 'org.apache.camel', name: 'camel-csv-starter', version: versions.camel
+    compile group: 'org.apache.camel', name: 'camel-csv', version: versions.camel
+    compile group: 'org.apache.camel', name: 'camel-sql', version: versions.camel
 
 
-    compile group: 'org.apache.camel', name: 'camel-azure-starter', version: '2.25.0'
-    compile group: 'org.apache.camel', name: 'camel-bindy-starter', version: '2.25.0'
-    compile group: 'org.apache.camel', name: 'camel-jdbc-starter', version: '2.25.0'
-    compile group: 'org.apache.camel', name: 'camel-bean-validator', version: '2.25.0'
-    compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: '2.25.0'
+    compile group: 'org.apache.camel', name: 'camel-azure-starter', version: versions.camel
+    compile group: 'org.apache.camel', name: 'camel-bindy-starter', version: versions.camel
+    compile group: 'org.apache.camel', name: 'camel-jdbc-starter', version: versions.camel
+    compile group: 'org.apache.camel', name: 'camel-bean-validator', version: versions.camel
+    compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: versions.camel
 
 
-    compile group: 'org.apache.camel', name: 'camel-core', version: '2.25.0'
+    compile group: 'org.apache.camel', name: 'camel-core', version: versions.camel
     compile group: 'org.apache.camel', name: 'spi-annotations', version: '3.0.0'
 
     // https://mvnrepository.com/artifact/com.opencsv/opencsv
@@ -318,13 +319,13 @@ dependencies {
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
-    testCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.25.0'
-    testCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
+    testCompile group: 'org.apache.camel', name: 'camel-test-spring', version: versions.camel
+    testCompile group: 'org.apache.camel', name: 'camel-test', version: versions.camel
     testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 
-    integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: '2.25.0'
-    integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: '2.25.0'
+    integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: versions.camel
+    integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: versions.camel
     integrationTestCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
     integrationTestCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 

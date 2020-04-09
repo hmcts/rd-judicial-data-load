@@ -84,7 +84,7 @@ public class HeaderValidationProcessor implements Processor {
             jdbcTemplate.update(invalidHeaderSql, params);
             TransactionStatus status = platformTransactionManager.getTransaction(def);
             platformTransactionManager.commit(status);
-            throw new RouteFailedException("Mismatch headers in csv for ::" + routeProperties.getBinder());
+            throw new RouteFailedException("Mismatch headers in csv for ::" + routeProperties.getFileName());
         }
 
         InputStream inputStream = new ByteArrayInputStream(csv.getBytes(Charset.forName("UTF-8")));

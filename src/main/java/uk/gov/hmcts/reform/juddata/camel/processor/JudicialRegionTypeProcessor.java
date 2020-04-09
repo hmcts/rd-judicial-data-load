@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialRegionTypeProcessor extends DefaultProcessor<JudicialRegionType> {
+public class JudicialRegionTypeProcessor extends JsrValidationBaseProcessor<JudicialRegionType> {
 
 
     @Autowired

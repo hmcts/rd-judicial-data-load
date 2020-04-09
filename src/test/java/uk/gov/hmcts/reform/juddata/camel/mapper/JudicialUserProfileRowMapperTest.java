@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJudicialUserProfileMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.getDateTimeWithFormat;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.getDateWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_FORMAT;
 
 import java.time.LocalDateTime;

@@ -67,3 +67,5 @@ truncate-jrd-contract: truncate contract_type cascade
 truncate-jrd-role: truncate judicial_role_type cascade
 
 
+
+

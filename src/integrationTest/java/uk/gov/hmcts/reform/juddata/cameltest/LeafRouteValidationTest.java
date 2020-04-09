@@ -33,14 +33,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
-import uk.gov.hmcts.reform.juddata.config.CamelConfig;
-import uk.gov.hmcts.reform.juddata.config.CamelLeafConfig;
+import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
+import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,classpath:application-leaf-integration.yml"})
 @RunWith(CamelSpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {CamelConfig.class, CamelLeafConfig.class, CamelTestContextBootstrapper.class},
+@ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
@@ -142,6 +142,9 @@ public class LeafRouteValidationTest {
         producerTemplate.sendBody(startLeafRoute, "test JRD leaf");
 
         List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
+        for (int count = 0; count < 3; count++) {
+
+        }
         assertEquals(judicialUserRoleType.size(), 3);
 
         List<Map<String, Object>> judicialContractType = jdbcTemplate.queryForList(contractSql);

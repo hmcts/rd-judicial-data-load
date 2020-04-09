@@ -15,9 +15,9 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
-public class JrdUnitTestHelper {
+public class JrdTestSupport {
 
-    private JrdUnitTestHelper() {
+    private JrdTestSupport() {
 
     }
 
