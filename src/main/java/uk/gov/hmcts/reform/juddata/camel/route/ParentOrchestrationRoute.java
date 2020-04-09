@@ -90,7 +90,7 @@ public class ParentOrchestrationRoute {
 
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
-    public void startRoute() throws Exception {
+    public void startRoute() throws FailedToCreateRouteException {
 
         String parentRouteName = camelContext.getGlobalOptions().get(ORCHESTRATED_ROUTE);
         String childNames = ROUTE + "." + parentRouteName + "." + CHILD_ROUTES;

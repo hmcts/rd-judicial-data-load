@@ -71,7 +71,7 @@ public class LeafTableRoute {
 
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
-    public void startRoute() throws Exception {
+    public void startRoute() throws FailedToCreateRouteException {
 
         String leafRouteNames = LEAF_ROUTE_NAMES;
 
