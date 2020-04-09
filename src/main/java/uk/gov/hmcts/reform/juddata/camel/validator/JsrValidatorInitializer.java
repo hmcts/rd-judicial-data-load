@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
@@ -43,7 +44,7 @@ public class JsrValidatorInitializer<T> {
     private Validator validator;
 
     @Autowired
-    @Qualifier("jdbcTemplate1")
+    //@Qualifier("springJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Value("${invalid-header-sql}")
@@ -53,13 +54,17 @@ public class JsrValidatorInitializer<T> {
     CamelContext camelContext;
 
     @Autowired
-    @Qualifier("txManager1")
+    //@Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     PlatformTransactionManager platformTransactionManager;
 
-    private Set<ConstraintViolation<T>> constraintViolations = new LinkedHashSet<>();
+    private Set<ConstraintViolation<T>> constraintViolations;
 
     @Value("${invalid-jsr-sql}")
     String invalidJsrSql;
+
+    @Value("${jsr-threshold-limit}")
+    int jsrThresholdLimit;
 
     @PostConstruct
     public void initializeFactory() {
@@ -75,10 +80,11 @@ public class JsrValidatorInitializer<T> {
      */
     public List<T> validate(List<T> binders) {
 
+        this.constraintViolations = new LinkedHashSet<>();
+
         List<T> binderFilter = new ArrayList<>();
 
         for (T binder : binders) {
-
             Set<ConstraintViolation<T>> constraintViolations = validator.validate(binder);
             if (constraintViolations.size() == 0) {
                 binderFilter.add(binder);
@@ -103,14 +109,17 @@ public class JsrValidatorInitializer<T> {
         RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         String schedulerTime = camelContext.getGlobalOptions().get(SCHEDULER_START_TIME);
 
+        List<ConstraintViolation<T>> violationList = constraintViolations.stream().limit(jsrThresholdLimit)
+                .collect(Collectors.toList());
+
         jdbcTemplate.batchUpdate(
                 invalidJsrSql,
-                constraintViolations,
+                violationList,
                 10,
                 new ParameterizedPreparedStatementSetter<ConstraintViolation<T>>() {
                     public void setValues(PreparedStatement ps, ConstraintViolation<T> argument) throws SQLException {
                         ps.setString(1, routeProperties.getTableName());
-                        ps.setTimestamp(2, Timestamp.valueOf(schedulerTime));
+                        ps.setTimestamp(2, new Timestamp(Long.valueOf(schedulerTime)));
                         ps.setString(3, getKeyFiled(argument.getRootBean()));
                         ps.setString(4, argument.getPropertyPath().toString());
                         ps.setString(5, argument.getMessage());

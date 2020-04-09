@@ -8,8 +8,8 @@ import org.apache.camel.component.bean.validator.HibernateValidationProviderReso
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,27 +75,29 @@ public class CamelConfig {
 
     @Bean
     public DataSource dataSource() {
-        final PGSimpleDataSource ds = new PGSimpleDataSource();
-        ds.setUrl(testPostgres.getJdbcUrl());
-        ds.setUser(testPostgres.getUsername());
-        ds.setPassword(testPostgres.getPassword());
-        return ds;
-    }
-
-    @Bean("dataSource1")
-    public DataSource dataSource1() {
-        final PGSimpleDataSource ds = new PGSimpleDataSource();
-        ds.setUrl(testPostgres.getJdbcUrl());
-        ds.setUser(testPostgres.getUsername());
-        ds.setPassword(testPostgres.getPassword());
-        return ds;
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        dataSourceBuilder.url(testPostgres.getJdbcUrl());
+        dataSourceBuilder.username(testPostgres.getUsername());
+        dataSourceBuilder.password(testPostgres.getPassword());
+        return dataSourceBuilder.build();
     }
 
 
-    @Bean("jdbcTemplate1")
-    JdbcTemplate jdbcTemplate1() {
+    @Bean("springJdbcDataSource")
+    public DataSource springJdbcDataSource() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        dataSourceBuilder.url(testPostgres.getJdbcUrl());
+        dataSourceBuilder.username(testPostgres.getUsername());
+        dataSourceBuilder.password(testPostgres.getPassword());
+        return dataSourceBuilder.build();
+    }
+
+    @Bean("springJdbcTemplate")
+    JdbcTemplate springJdbcTemplate() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        jdbcTemplate.setDataSource(dataSource1());
+        jdbcTemplate.setDataSource(springJdbcDataSource());
         return jdbcTemplate;
     }
 
@@ -106,10 +108,10 @@ public class CamelConfig {
         return platformTransactionManager;
     }
 
-    @Bean(name = "txManager1")
-    public PlatformTransactionManager txManager1() {
-        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
-        platformTransactionManager.setDataSource(dataSource1());
+    @Bean(name = "springJdbcTransactionManager")
+    public PlatformTransactionManager springJdbcTransactionManager() {
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(springJdbcDataSource());
+        platformTransactionManager.setDataSource(springJdbcDataSource());
         return platformTransactionManager;
     }
 

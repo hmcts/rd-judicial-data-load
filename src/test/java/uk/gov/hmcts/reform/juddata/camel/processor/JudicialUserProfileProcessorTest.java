@@ -30,6 +30,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
@@ -113,6 +114,39 @@ public class JudicialUserProfileProcessorTest {
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setTableName("test");
 
+        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 5);
+        setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
+        setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
+        setField(judicialUserProfileJsrValidatorInitializer,
+                "platformTransactionManager", platformTransactionManager);
+
+        int[][] intArray = new int[1][];
+        when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
+        when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
+        doNothing().when(platformTransactionManager).commit(transactionStatus);
+        when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
+
+        judicialUserProfileProcessor.process(exchangeMock);
+        assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
+    }
+
+    @Test(expected = RouteFailedException.class)
+    @SuppressWarnings("unchecked")
+    public void should_return_JudicialOfficeAuthorisationRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
+        judicialUserProfileMock1.setElinksId(null);
+        Exchange exchangeMock = mock(Exchange.class);
+        Message messageMock = mock(Message.class);
+        final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+        final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
+        final TransactionStatus transactionStatus = mock(TransactionStatus.class);
+
+        when(exchangeMock.getIn()).thenReturn(messageMock);
+        when(exchangeMock.getMessage()).thenReturn(messageMock);
+        when(messageMock.getBody()).thenReturn(judicialUserProfileMock1);
+        RouteProperties routeProperties = new RouteProperties();
+        routeProperties.setTableName("test");
+
+        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 0);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,

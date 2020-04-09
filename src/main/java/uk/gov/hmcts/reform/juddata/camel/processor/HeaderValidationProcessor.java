@@ -6,9 +6,11 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_
 
 import com.opencsv.CSVReader;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,23 +42,22 @@ public class HeaderValidationProcessor implements Processor {
     CamelContext camelContext;
 
     @Autowired
-    @Qualifier("jdbcTemplate1")
+    @Qualifier("springJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Value("${invalid-header-sql}")
     String invalidHeaderSql;
 
-
     @Autowired
-    @Qualifier("txManager1")
+    @Qualifier("springJdbcTransactionManager")
     PlatformTransactionManager platformTransactionManager;
 
     @Override
     public void process(Exchange exchange) throws Exception {
 
         RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
-        InputStream csv = exchange.getIn().getBody(InputStream.class);
-        CSVReader reader = new CSVReader(new InputStreamReader(csv));
+        String csv = exchange.getIn().getBody(String.class);
+        CSVReader reader = new CSVReader(new StringReader(csv));
         String[] header = reader.readNext();
         Field[] allFields = applicationContext.getBean(routeProperties.getBinder())
                 .getClass().getDeclaredFields();
@@ -69,7 +70,7 @@ public class HeaderValidationProcessor implements Processor {
         }
 
         //Auditing in database if headers are missing
-        if (header.length < csvFields.size()) {
+        if (header.length > csvFields.size()) {
             exchange.getIn().setHeader(HEADER_EXCEPTION, HEADER_EXCEPTION);
             //separate transaction manager required for auditing as it is independent form route
             //Transaction
@@ -77,7 +78,7 @@ public class HeaderValidationProcessor implements Processor {
             def.setName("header exception logs");
             def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
             String schedulerTime = camelContext.getGlobalOptions().get(SCHEDULER_START_TIME);
-            Object[] params = new Object[]{routeProperties.getFileName(), Timestamp.valueOf(schedulerTime),
+            Object[] params = new Object[]{routeProperties.getFileName(), new Timestamp(Long.valueOf(schedulerTime)),
                 "Mismatch headers in csv for ::" + routeProperties.getBinder(),
                 new Timestamp(new Date().getTime())};
             jdbcTemplate.update(invalidHeaderSql, params);
@@ -85,5 +86,9 @@ public class HeaderValidationProcessor implements Processor {
             platformTransactionManager.commit(status);
             throw new RouteFailedException("Mismatch headers in csv for ::" + routeProperties.getBinder());
         }
+
+        InputStream inputStream = new ByteArrayInputStream(csv.getBytes(Charset.forName("UTF-8")));
+
+        exchange.getMessage().setBody(inputStream);
     }
 }

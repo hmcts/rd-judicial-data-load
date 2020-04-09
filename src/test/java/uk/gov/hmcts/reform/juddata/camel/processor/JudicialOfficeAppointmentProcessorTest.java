@@ -112,6 +112,7 @@ public class JudicialOfficeAppointmentProcessorTest {
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setTableName("test");
 
+        setField(judicialOfficeAppointmentProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAppointmentJsrValidatorInitializer,

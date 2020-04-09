@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.juddata.camel.validator.DatePattern;
 
 @Setter
 @Getter
-@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true, generateHeaderColumns = true)
+@CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 @Component
 public class JudicialUserProfile implements Serializable {
 

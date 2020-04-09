@@ -1,6 +1,9 @@
 package uk.gov.hmcts.reform.juddata.scheduler;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
+
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import org.apache.camel.CamelContext;
@@ -21,7 +24,6 @@ public class JrdUserProfileDataLoadScheduler {
     @Autowired
     ParentOrchestrationRoute parentOrchestrationRoute;
 
-
     @Autowired
     ProducerTemplate producerTemplate;
 
@@ -32,6 +34,7 @@ public class JrdUserProfileDataLoadScheduler {
     public void postConstruct() throws Exception {
         camelContext.start();
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
         parentOrchestrationRoute.startRoute();
     }
 

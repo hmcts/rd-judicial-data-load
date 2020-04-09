@@ -1,21 +1,19 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import java.util.ArrayList;
+import static java.util.Collections.singletonList;
+
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
-import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialOfficeAppointmentProcessor implements Processor, DefaultProcessor<JudicialOfficeAppointment> {
-
+public class JudicialOfficeAppointmentProcessor extends DefaultProcessor<JudicialOfficeAppointment> {
 
     @Autowired
     JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
@@ -26,30 +24,19 @@ public class JudicialOfficeAppointmentProcessor implements Processor, DefaultPro
 
         List<JudicialOfficeAppointment> judicialOfficeAppointments;
 
-        if (exchange.getIn().getBody() instanceof List) {
-            judicialOfficeAppointments = (List<JudicialOfficeAppointment>) exchange.getIn().getBody();
-        } else {
-            JudicialOfficeAppointment judicialOfficeAppointment = (JudicialOfficeAppointment) exchange.getIn().getBody();
-            judicialOfficeAppointments = new ArrayList<>();
-            judicialOfficeAppointments.add(judicialOfficeAppointment);
-        }
+        judicialOfficeAppointments = (exchange.getIn().getBody() instanceof List)
+                ? (List<JudicialOfficeAppointment>) exchange.getIn().getBody()
+                : singletonList((JudicialOfficeAppointment) exchange.getIn().getBody());
 
-        log.info("::JudicialOfficeAppointment Records count::" + judicialOfficeAppointments.size());
+        log.info("Judicial Appointment Records count before Validation:: " + judicialOfficeAppointments.size());
 
         List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
                 judicialOfficeAppointments);
 
+        log.info("Judicial Appointment Records count before Validation:: " + filteredJudicialAppointments.size());
+
+        audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
+
         exchange.getMessage().setBody(filteredJudicialAppointments);
-
-        if (judicialOfficeAppointmentJsrValidatorInitializer.getConstraintViolations().size() > 5) {
-            throw new RouteFailedException("Jsr exception exceeds threshold limit in Judicial User Profile");
-        } else if (judicialOfficeAppointmentJsrValidatorInitializer.getConstraintViolations() != null
-                && judicialOfficeAppointmentJsrValidatorInitializer.getConstraintViolations().size() > 0) {
-            //Auditing JSR exceptions in exception table
-            audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
-        }
-
-        log.info("::JudicialOfficeAppointment Records invalid for JSR::"
-                + (judicialOfficeAppointments.size() - filteredJudicialAppointments.size()));
     }
 }

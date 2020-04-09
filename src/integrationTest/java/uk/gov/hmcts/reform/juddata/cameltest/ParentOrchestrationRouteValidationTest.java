@@ -1,13 +1,13 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestSupport.setSourcePath;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithSingleRecord;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidHeader;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsr;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsrExceedsThreshold;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.setSourceData;
 
 import java.util.Date;
@@ -46,7 +46,7 @@ import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
-public class ParentOrchestrationRouteTest {
+public class ParentOrchestrationRouteValidationTest {
 
     @Autowired
     protected CamelContext camelContext;
@@ -75,6 +75,12 @@ public class ParentOrchestrationRouteTest {
     @Value("${archival-cred}")
     String archivalCred;
 
+    @Value("${exception-select-query}")
+    String exceptionQuery;
+
+    @Value("${exception-truncate-query}")
+    String exceptionTruncateQuery;
+
 
     @BeforeClass
     public static void beforeAll() throws Exception {
@@ -85,39 +91,13 @@ public class ParentOrchestrationRouteTest {
     @Before
     public void init() {
         jdbcTemplate.execute(truncateAllTable);
+        jdbcTemplate.execute(exceptionTruncateQuery);
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
     }
 
     @Test
-    public void testParentOrchestration() throws Exception {
-
-        setSourceData(file);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        parentRoute.startRoute();
-        producerTemplate.sendBody(startRoute, "test JRD orchestration");
-
-        List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
-        assertEquals(judicialUserProfileList.size(), 2);
-        assertNotNull(judicialUserProfileList.get(0));
-        assertNotNull(judicialUserProfileList.get(1));
-        assertEquals(judicialUserProfileList.get(0).get("elinks_id"), "1");
-        assertEquals(judicialUserProfileList.get(1).get("elinks_id"), "2");
-        assertEquals(judicialUserProfileList.get(0).get("email_id"), "joe.bloggs@ejudiciary.net");
-        assertEquals(judicialUserProfileList.get(1).get("email_id"), "jo1e.bloggs@ejudiciary.net");
-
-        List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
-        assertEquals(judicialAppointmentList.size(), 2);
-        assertNotNull(judicialAppointmentList.get(0));
-        assertNotNull(judicialAppointmentList.get(1));
-        assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
-        assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
-        assertEquals(judicialAppointmentList.get(0).get("elinks_id"), "1");
-        assertEquals(judicialAppointmentList.get(1).get("elinks_id"), "2");
-    }
-
-    @Test
-    public void testParentOrchestrationFailure() throws Exception {
-        setSourceData(fileWithError);
+    public void testParentOrchestrationInvalidHeaderRollback() throws Exception {
+        setSourceData(fileWithInvalidHeader);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
@@ -127,53 +107,46 @@ public class ParentOrchestrationRouteTest {
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 0);
+
+        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
+        assertNotNull(exceptionList.get(0).get("file_name"));
+        assertNotNull(exceptionList.get(0).get("scheduler_start_time"));
+        assertNotNull(exceptionList.get(0).get("error_description"));
+        assertNotNull(exceptionList.get(0).get("updated_timestamp"));
+        assertEquals(exceptionList.size(), 1);
     }
 
     @Test
-    public void testParentOrchestrationFailureRollBackKeepExistingData() throws Exception {
-
-        // Day 1 Success data load
-        setSourceData(file);
+    public void testParentOrchestrationJsrAuditTest() throws Exception {
+        setSourceData(fileWithInvalidJsr);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
-        // Day 2 Success load fails
-        setSourceData(fileWithError);
-        producerTemplate.sendBody(startRoute, "test JRD orchestration");
-
-        //Keeps Day1 data load state and roll back day2
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
         assertEquals(judicialUserProfileList.size(), 2);
-        assertNotNull(judicialUserProfileList.get(0));
-        assertNotNull(judicialUserProfileList.get(1));
-        assertEquals(judicialUserProfileList.get(0).get("elinks_id"), "1");
-        assertEquals(judicialUserProfileList.get(1).get("elinks_id"), "2");
-        assertEquals(judicialUserProfileList.get(0).get("email_id"), "joe.bloggs@ejudiciary.net");
-        assertEquals(judicialUserProfileList.get(1).get("email_id"), "jo1e.bloggs@ejudiciary.net");
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 2);
-        assertNotNull(judicialAppointmentList.get(0));
-        assertNotNull(judicialAppointmentList.get(1));
-        assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
-        assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
-        assertEquals(judicialAppointmentList.get(0).get("elinks_id"), "1");
-        assertEquals(judicialAppointmentList.get(1).get("elinks_id"), "2");
+
+        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
+
+        for (int count = 0; count < 6; count++) {
+            assertNotNull(exceptionList.get(0).get("table_name"));
+            assertNotNull(exceptionList.get(0).get("scheduler_start_time"));
+            assertNotNull(exceptionList.get(0).get("key"));
+            assertNotNull(exceptionList.get(0).get("field_in_error"));
+            assertNotNull(exceptionList.get(0).get("error_description"));
+            assertNotNull(exceptionList.get(0).get("updated_timestamp"));
+        }
+        assertEquals(exceptionList.size(), 6);
     }
 
-    @Test
-    public void testParentOrchestrationSingleRecord() throws Exception {
-        setSourceData(fileWithSingleRecord);
-
+    @Test(expected = Exception.class)
+    public void testParentOrchestrationJsrExceedsThresholdAuditTest() throws Exception {
+        setSourceData(fileWithInvalidJsrExceedsThreshold);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
-        List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
-        assertEquals(judicialUserProfileList.size(), 1);
-
-        List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
-        assertEquals(judicialAppointmentList.size(), 1);
     }
 }
-

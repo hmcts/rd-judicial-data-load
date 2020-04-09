@@ -87,6 +87,9 @@ public class ParentOrchestrationRoute {
     @Autowired
     HeaderValidationProcessor headerValidationProcessor;
 
+    @Value("${file-read-time-out}")
+    int fileReadTimeOut;
+
 
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
@@ -106,14 +109,12 @@ public class ParentOrchestrationRoute {
                     @Override
                     public void configure() throws Exception {
 
-
                         onException(RouteFailedException.class)
                                 .handled(true).markRollbackOnly();
 
                         //logging exception in global exception handler
                         onException(Exception.class)
                                 .handled(true)
-                                 .onWhen(header("complete").isNotEqualTo("complete"))
                                 .process(exceptionProcessor);
 
                         String[] directChild = new String[dependantRoutes.size()];
@@ -140,6 +141,7 @@ public class ParentOrchestrationRoute {
                                 .end();
 
 
+
                         for (RouteProperties route : routePropertiesList) {
 
                             Expression exp = new SimpleExpression(route.getBlobPath());
@@ -147,17 +149,16 @@ public class ParentOrchestrationRoute {
                             from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
                                     .transacted()
                                     .policy(springTransactionPolicy)
+                                    .setHeader(ROUTE_DETAILS, () -> route)
                                     .setProperty(BLOBPATH, exp)
                                     .process(fileReadProcessor)
-                                    .setHeader(ROUTE_DETAILS, () -> route)
                                     .process(headerValidationProcessor)
-                                    .unmarshal().bindy(BindyType.Csv,
+                                    .split(body()).unmarshal().bindy(BindyType.Csv,
                                     applicationContext.getBean(route.getBinder()).getClass())
                                     .to(route.getTruncateSql())
                                     .process((Processor) applicationContext.getBean(route.getProcessor()))
                                     .split().body()
                                     .streaming()
-                                    //.to("bean-validator://x?validationProviderResolver=#myValidationProviderResolver")
                                     .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
                                     .to(route.getSql())
                                     .end();
