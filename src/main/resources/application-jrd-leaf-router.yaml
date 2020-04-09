@@ -23,7 +23,7 @@ leaf-route:
       sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)
       on conflict (contract_type_id) do update set contract_type_desc_en = :#contract_type_desc_en,contract_type_desc_cy = :#contract_type_desc_cy?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Contracts.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Contracts?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialContractTypeProcessor
     mapper-class: JudicialContractTypeRowMapper
     csv-binder-object: JudicialContractType
@@ -34,7 +34,7 @@ leaf-route:
       sql:insert into region_type (region_id,region_desc_en,region_desc_cy) values(:#region_id,:#region_desc_en,:#region_desc_cy)
       on conflict (region_id) do update set region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Locations.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Locations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialRegionTypeProcessor
     mapper-class: JudicialRegionTypeRowMapper
     csv-binder-object: JudicialRegionType
@@ -45,7 +45,7 @@ leaf-route:
       sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)
       on conflict (base_location_id) do update set court_name = :#court_name,court_type = :#court_type,circuit = :#circuit,area_of_expertise = :#area_of_expertise?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/BaseLocations.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/BaseLocations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialBaseLocationProcessor
     mapper-class: JudicialBaseLocationRowTypeMapper
     csv-binder-object: JudicialBaseLocationType
