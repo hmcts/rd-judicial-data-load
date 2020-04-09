@@ -66,6 +66,10 @@ insert-default-role:
   insert into judicial_role_type (role_id, role_desc_en,role_desc_cy)
   values ('0', 'default', 'default') on conflict (role_id) do nothing
 
+insert-default-role1:
+  insert into judicial_role_type (role_id, role_desc_en,role_desc_cy)
+  values ('1', 'role_desc_en', 'role_desc_cy') on conflict (role_id) do nothing
+
 insert-default-region:
   insert into region_type(region_id,region_desc_en,region_desc_cy)
   values ('0', 'default', 'default') on conflict (region_id) do nothing

@@ -82,6 +82,21 @@ public class ParentOrchestrationRouteValidationTest {
     String exceptionTruncateQuery;
 
 
+    @Value("${insert-default-role}")
+    private String insertDefaultRole;
+
+    @Value("${insert-default-role1}")
+    private String insertDefaultRole1;
+
+    @Value("${insert-default-region}")
+    private String insertDefaultRegion;
+
+    @Value("${insert-default-base-location}")
+    private String insertDefaultContract;
+
+    @Value("${insert-default-contract}")
+    private String insertDefaultBaseLocation;
+
     @BeforeClass
     public static void beforeAll() throws Exception {
         setSourcePath("classpath:archivalFiles", "archival.path");
@@ -92,6 +107,12 @@ public class ParentOrchestrationRouteValidationTest {
     public void init() {
         jdbcTemplate.execute(truncateAllTable);
         jdbcTemplate.execute(exceptionTruncateQuery);
+        jdbcTemplate.execute(truncateAllTable);
+        jdbcTemplate.execute(insertDefaultRole);
+        jdbcTemplate.execute(insertDefaultRole1);
+        jdbcTemplate.execute(insertDefaultRegion);
+        jdbcTemplate.execute(insertDefaultContract);
+        jdbcTemplate.execute(insertDefaultBaseLocation);
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
     }
 

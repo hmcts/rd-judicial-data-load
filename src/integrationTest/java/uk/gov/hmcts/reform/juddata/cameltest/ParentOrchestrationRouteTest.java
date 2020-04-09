@@ -78,6 +78,9 @@ public class ParentOrchestrationRouteTest {
     @Value("${insert-default-role}")
     private String insertDefaultRole;
 
+    @Value("${insert-default-role1}")
+    private String insertDefaultRole1;
+
     @Value("${insert-default-region}")
     private String insertDefaultRegion;
 
@@ -98,6 +101,7 @@ public class ParentOrchestrationRouteTest {
     public void init() {
         jdbcTemplate.execute(truncateAllTable);
         jdbcTemplate.execute(insertDefaultRole);
+        jdbcTemplate.execute(insertDefaultRole1);
         jdbcTemplate.execute(insertDefaultRegion);
         jdbcTemplate.execute(insertDefaultContract);
         jdbcTemplate.execute(insertDefaultBaseLocation);
