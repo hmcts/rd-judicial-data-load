@@ -88,11 +88,9 @@ public class LeafTableRoute {
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .choice().when(header("SchedulerStatus").isEqualTo("PartialSuccess"))
                                     .process(schedulerAuditProcessor)
                                     .process(exceptionProcessor)
-                                    .otherwise()
-                                    .process(exceptionProcessor).end().setHeader("SchedulerStatus").constant("FAILURE").process(schedulerAuditProcessor);;
+                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor);;
 
                             String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 
@@ -104,7 +102,7 @@ public class LeafTableRoute {
                                     .setHeader("SchedulerName").constant(schedulerName)
                                     .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
                                     .multicast()
-                                    .stopOnException().to(directRouteNameList).end().setHeader("SchedulerStatus").constant("Success").process(schedulerAuditProcessor);
+                                    .stopOnException().to(directRouteNameList).end().process(schedulerAuditProcessor);
 
                         for (RouteProperties route : routePropertiesList) {
 

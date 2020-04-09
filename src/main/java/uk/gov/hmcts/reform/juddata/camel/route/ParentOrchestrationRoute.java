@@ -110,7 +110,7 @@ public class ParentOrchestrationRoute {
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor);;
+                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor);
 
                         String[] directChild = new String[dependantRoutes.size()];
 
