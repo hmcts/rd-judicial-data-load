@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.email;
 
-import static java.lang.String.join;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -9,10 +7,8 @@ import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
 
 public class EmailDataTest {
 
-    private static final String FAMILY_MAN_CASE_NUMBER = randomAlphabetic(12);
     private static final String EMAIL_TO = "recipient@example.com";
-    private static final String EMAIL_FROM = "no-reply@exaple.com";
-    private static final String EMAIL_SUBJECT = join("", "CaseSubmitted_", FAMILY_MAN_CASE_NUMBER);
+    private static final String EMAIL_SUBJECT = "Exception received at Rout id";
 
     private EmailData emailDataUnderTest;
 

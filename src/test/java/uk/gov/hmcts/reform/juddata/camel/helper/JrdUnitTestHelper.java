@@ -117,7 +117,6 @@ public class JrdUnitTestHelper {
         return contractType;
     }
 
-
     public static EmailData getMockEmail() {
         return EmailData.builder()
         .recipient("EMAIL_TO")

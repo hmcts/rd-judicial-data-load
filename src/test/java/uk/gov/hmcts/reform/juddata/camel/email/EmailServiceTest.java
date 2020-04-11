@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.email;
 
-import static java.lang.String.join;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,10 +20,9 @@ import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
 public class EmailServiceTest {
-    private static final String FAMILY_MAN_CASE_NUMBER = randomAlphabetic(12);
     private static final String EMAIL_TO = "recipient@example.com";
     private static final String EMAIL_FROM = "no-reply@exaple.com";
-    private static final String EMAIL_SUBJECT = join("", "CaseSubmitted_", FAMILY_MAN_CASE_NUMBER);
+    private static final String EMAIL_SUBJECT = "Exception received at Rout id";
 
     @Mock
     SimpleMailMessage mimeMessage;
