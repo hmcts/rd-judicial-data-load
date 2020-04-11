@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
 
 public class JrdUnitTestHelper {
     private JrdUnitTestHelper() {
@@ -113,6 +114,15 @@ public class JrdUnitTestHelper {
         contractType.setContractTypeDescCy("contractTypeDescCy");
         contractType.setContractTypeDescEn("contractTypeDescEn");
         contractType.setContractTypeId("contractTypeId");
-        return  contractType;
+        return contractType;
+    }
+
+
+    public static EmailData getMockEmail() {
+        return EmailData.builder()
+        .recipient("EMAIL_TO")
+        .subject("EMAIL_SUBJECT")
+        .message("")
+        .build();
     }
 }

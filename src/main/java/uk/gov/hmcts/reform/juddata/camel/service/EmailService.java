@@ -15,13 +15,13 @@ public class EmailService {
     @Autowired
     JavaMailSender mailSender;
 
-    public void sendEmail(final String from) {
+    public void sendEmail(final String from,EmailData emailData) {
         try {
 
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo("shreedhar.lomte@hmcts.net");
-            message.setSubject("Test");
-            message.setText("Test");
+            message.setTo(emailData.recipient);
+            message.setSubject(emailData.subject);
+            message.setText(emailData.message);
             message.setFrom(from);
 
             mailSender.send(message);

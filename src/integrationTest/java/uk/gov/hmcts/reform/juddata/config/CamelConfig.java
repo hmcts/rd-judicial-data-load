@@ -40,7 +40,7 @@ public class CamelConfig {
 
     @Bean
     EmailService emailService() {
-        return new EmailService();
+        return Mockito.mock(EmailService.class);
     }
 
     @Bean
