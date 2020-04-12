@@ -118,10 +118,10 @@ public class JrdUnitTestHelper {
     }
 
     public static EmailData getMockEmail() {
-        return EmailData.builder()
-        .recipient("EMAIL_TO")
-        .subject("EMAIL_SUBJECT")
-        .message("")
-        .build();
+        EmailData email = new EmailData();
+        email.setRecipient("recipient@example.com");
+        email.setSubject("Exception received at Rout id");
+        email.setMessage("");
+        return email;
     }
 }

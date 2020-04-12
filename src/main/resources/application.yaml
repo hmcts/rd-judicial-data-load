@@ -29,7 +29,7 @@ spring:
   mail:
     from: no-reply@reform.hmcts.net
     to:  sushant.choudhari@hmcts.net
-    subject:  Exception received at Rout id
+    subject:  Exception received at Rout
     host: mta.reform.hmcts.net
     port: 25
     properties:
@@ -73,8 +73,8 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 0/3 * * * ?
-  camel-leaf-router-config: 0 */1 * * * ?
+  camel-route-config: 0 0/120 * * * ?
+  camel-leaf-router-config: 0 */105 * * * ?
 
 azure:
   storage:

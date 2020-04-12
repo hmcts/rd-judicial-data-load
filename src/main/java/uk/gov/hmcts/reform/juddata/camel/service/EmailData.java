@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.service;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@Builder(toBuilder = true)
+@Setter
 public class EmailData {
     String recipient;
     String subject;

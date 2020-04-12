@@ -6,6 +6,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.juddata.exception.EmailFailedSendException;
 
 
 @Service
@@ -23,11 +24,10 @@ public class EmailService {
             message.setSubject(emailData.subject);
             message.setText(emailData.message);
             message.setFrom(from);
-
             mailSender.send(message);
 
         } catch (MailException e) {
-            throw new RuntimeException(e);
+            throw new EmailFailedSendException(e);
         }
     }
 }

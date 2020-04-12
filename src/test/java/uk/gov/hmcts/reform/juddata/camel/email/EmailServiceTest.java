@@ -18,17 +18,17 @@ import org.springframework.mail.javamail.JavaMailSender;
 import uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
+import uk.gov.hmcts.reform.juddata.exception.EmailFailedSendException;
 
 public class EmailServiceTest {
-    private static final String EMAIL_TO = "recipient@example.com";
     private static final String EMAIL_FROM = "no-reply@exaple.com";
-    private static final String EMAIL_SUBJECT = "Exception received at Rout id";
 
     @Mock
     SimpleMailMessage mimeMessage;
 
     @InjectMocks
     EmailService emailService;
+
     @Mock
     JavaMailSender mailSender;
 
@@ -39,7 +39,7 @@ public class EmailServiceTest {
 
     @Test
     public void shouldSendEmailSuccessfullyWhenEmailDataValid() {
-        EmailData emailData = TestEmailData.getDefault();
+        EmailData emailData = JrdUnitTestHelper.getMockEmail();
         emailService.sendEmail(EMAIL_FROM, emailData);
 
         Mockito.verify(mailSender, Mockito.times(1)).send(any(SimpleMailMessage.class));
@@ -48,19 +48,9 @@ public class EmailServiceTest {
     @Test
     public void shouldSendEmailWhenException() {
         EmailData emailData = JrdUnitTestHelper.getMockEmail();
-        RuntimeException emailFailedSendException = Mockito.mock(RuntimeException.class);
-        Mockito.doThrow(RuntimeException.class).when(mailSender).send(any(SimpleMailMessage.class));
+        EmailFailedSendException emailFailedSendException = Mockito.mock(EmailFailedSendException.class);
+        Mockito.doThrow(EmailFailedSendException.class).when(mailSender).send(any(SimpleMailMessage.class));
         final Throwable raisedException = catchThrowable(() -> emailService.sendEmail(EMAIL_FROM, emailData));
-        assertThat(raisedException).isExactlyInstanceOf(RuntimeException.class);
-    }
-
-    static class TestEmailData {
-        static EmailData getDefault() {
-            return EmailData.builder()
-            .recipient(EMAIL_TO)
-            .subject(EMAIL_SUBJECT)
-            .message("")
-            .build();
-        }
+        assertThat(raisedException).isExactlyInstanceOf(EmailFailedSendException.class);
     }
 }

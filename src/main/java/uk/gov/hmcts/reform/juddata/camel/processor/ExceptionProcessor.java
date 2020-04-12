@@ -29,8 +29,11 @@ public class ExceptionProcessor implements Processor {
     public void process(Exchange exchange) {
         Exception exception = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
         String failedRouteId = exchange.getProperty(Exchange.FAILURE_ROUTE_ID, String.class);
-        emailService.sendEmail(mailFrom, EmailData.builder().message(exception.getMessage()).subject(mailsubject + failedRouteId).recipient(mailTo)
-            .build());
+        EmailData emailData = new EmailData();
+        emailData.setRecipient(mailTo);
+        emailData.setMessage(exception.getMessage());
+        emailData.setSubject(mailsubject + failedRouteId);
+        emailService.sendEmail(mailFrom, emailData);
         log.error("::::exception in route for data processing::::" + exception);
     }
 }

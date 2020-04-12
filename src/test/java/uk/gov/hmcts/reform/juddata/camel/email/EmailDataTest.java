@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.email;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
 
 public class EmailDataTest {
@@ -14,20 +15,10 @@ public class EmailDataTest {
 
     @Test
     public void testEmailData() {
-        EmailData emailData = TestEmailData.getDefault();
+        EmailData emailData = JrdUnitTestHelper.getMockEmail();
         assertEquals(EMAIL_TO, emailData.getRecipient());
         assertEquals(EMAIL_SUBJECT, emailData.getSubject());
         assertEquals("", emailData.getMessage());
 
-    }
-
-    static class TestEmailData {
-        static EmailData getDefault() {
-            return EmailData.builder()
-                    .recipient(EMAIL_TO)
-                    .subject(EMAIL_SUBJECT)
-                    .message("")
-                    .build();
-        }
     }
 }
