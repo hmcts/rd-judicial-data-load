@@ -10,6 +10,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 
 @Component
 @Slf4j
@@ -24,25 +25,19 @@ public class JrdLeafDataLoadStarter {
     @Autowired
     ProducerTemplate producerTemplate;
 
+    @Autowired
+    DataLoadUtil dataLoadUtil;
+
     @Value("${start-leaf-route}")
     private String startLeafRoute;
 
     private TaskScheduler scheduler;
 
-    @Value("${scheduler-name}")
-    private String schedulerName;
-
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
-        setGlobalOption();
+        dataLoadUtil.setGlobalConstant(camelContext);
         leafTableRoutes.startRoute();
-    }
-
-    public void setGlobalOption() {
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
     }
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")

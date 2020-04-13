@@ -104,12 +104,12 @@ CREATE TABLE region_type(
 );
 
 CREATE TABLE dataload_schedular_audit(
-  audit_id SERIAL ,
+  "id" serial NOT NULL,
   scheduler_name varchar(64) NOT NULL,
   scheduler_start_time timestamp NOT NULL,
   scheduler_end_time timestamp,
   scheduler_status varchar(32),
-  CONSTRAINT scheduler_Id PRIMARY KEY (audit_id)
+  CONSTRAINT id PRIMARY KEY (id)
 );
 
 
