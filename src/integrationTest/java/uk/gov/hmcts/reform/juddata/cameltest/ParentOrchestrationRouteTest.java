@@ -4,7 +4,8 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -52,7 +53,7 @@ public class ParentOrchestrationRouteTest {
     @Value("${start-route}")
     private String startRoute;
 
-    @Value("${Scheduler-insert-sql}")
+    @Value("${scheduler-insert-sql}")
     private String schedulerInsertJrdSql;
 
     @Value("${select-dataload-schedular-audit-failure}")
@@ -107,15 +108,15 @@ public class ParentOrchestrationRouteTest {
     @Before
     public void init() {
         jdbcTemplate.execute(truncateAllTable);
+        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(MappingConstants.SCHEDULER_START_TIME, MappingConstants.getCurrentTimeStamp().toString());
+        camelContext.getGlobalOptions().put(MappingConstants.SCHEDULER_NAME, schedulerName);
     }
 
     @Test
     public void testParentOrchestration() throws Exception {
 
         setSourceData(file);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -144,9 +145,7 @@ public class ParentOrchestrationRouteTest {
 
 
         setSourceData(fileWithError);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
+
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -163,9 +162,7 @@ public class ParentOrchestrationRouteTest {
         // Day 1 Success data load
         setSourceData(file);
 
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
+
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -198,9 +195,7 @@ public class ParentOrchestrationRouteTest {
 
         setSourceData(fileWithSingleRecord);
 
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
+
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
@@ -215,9 +210,7 @@ public class ParentOrchestrationRouteTest {
 
 
         setSourceData(fileWithError);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
+
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -229,9 +222,7 @@ public class ParentOrchestrationRouteTest {
     public void testParentOrchestrationSchedularSucess() throws Exception {
 
         setSourceData(file);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
+
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -242,9 +233,7 @@ public class ParentOrchestrationRouteTest {
     @Test
     public void testParentOrchestrationSchedularPartialSucess() throws Exception {
         setSourceData(file);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME, uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp().toString());
-        camelContext.getGlobalOptions().put(uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME, schedulerName);
+
         camelContext.getGlobalOptions().put(MappingConstants.SCHEDULER_STATUS, MappingConstants.PARTIAL_SUCCESS);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");

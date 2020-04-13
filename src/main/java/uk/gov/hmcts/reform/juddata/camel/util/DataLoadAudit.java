@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
-import com.google.common.base.*;
+import com.google.common.base.Strings;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.apache.camel.Exchange;
@@ -20,7 +20,7 @@ public class DataLoadAudit {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Value("${Scheduler-insert-sql}")
+    @Value("${scheduler-insert-sql}")
     private String schedulerInsertSql;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)

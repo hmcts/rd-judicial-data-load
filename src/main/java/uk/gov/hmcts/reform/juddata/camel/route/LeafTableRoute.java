@@ -31,11 +31,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.SchedulerAuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
-import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 
 @Component
@@ -63,14 +62,14 @@ public class LeafTableRoute {
     private String schedulerName;
 
     @Autowired
-    SchedulerAuditProcessor schedulerAuditProcessor;
+    Audit schedulerAuditProcessor;
 
     @Autowired
     CamelContext camelContext;
 
     @SuppressWarnings("unchecked")
     @Transactional
-    public void startRoute() throws Exception {
+    public void startRoute() throws FailedToCreateRouteException {
 
         String leafRouteNames = LEAF_ROUTE_NAMES;
 
@@ -88,9 +87,7 @@ public class LeafTableRoute {
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(schedulerAuditProcessor)
-                                    .process(exceptionProcessor)
-                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor);;
+                                    .process(exceptionProcessor).end().bean(schedulerAuditProcessor, "auditUpdate");
 
                             String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 
@@ -99,10 +96,8 @@ public class LeafTableRoute {
                             from(startLeafRoute)
                                     .transacted()
                                     .policy(springTransactionPolicy)
-                                    .setHeader("SchedulerName").constant(schedulerName)
-                                    .setHeader("SchedulerStartTime").constant(MappingConstants.getCurrentTimeStamp())
                                     .multicast()
-                                    .stopOnException().to(directRouteNameList).end().process(schedulerAuditProcessor);
+                                    .stopOnException().to(directRouteNameList).end().bean(schedulerAuditProcessor, "auditUpdate");
 
                         for (RouteProperties route : routePropertiesList) {
 

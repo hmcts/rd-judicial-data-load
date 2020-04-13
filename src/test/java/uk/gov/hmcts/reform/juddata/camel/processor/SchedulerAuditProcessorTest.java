@@ -12,25 +12,39 @@ import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 
 public class SchedulerAuditProcessorTest extends CamelTestSupport {
 
-    private SchedulerAuditProcessor schedulerAuditProcessorUnderTest;
+    private Audit schedulerAuditProcessorUnderTest;
 
     @Before
     public void setUp() {
-        schedulerAuditProcessorUnderTest = new SchedulerAuditProcessor();
+        schedulerAuditProcessorUnderTest = new Audit();
         schedulerAuditProcessorUnderTest.dataLoadAudit = Mockito.mock(DataLoadAudit.class);
     }
 
     @Test
-    public void testProcess() throws Exception {
+    public void testProcessForTrue() throws Exception {
         // Setup
         final Exchange exchange = new DefaultExchange(context);
         Message message = Mockito.mock(Message.class);
 
-        schedulerAuditProcessorUnderTest.auditEnablel = Boolean.TRUE;
+        schedulerAuditProcessorUnderTest.auditEnabled = Boolean.TRUE;
         // Run the test
-        schedulerAuditProcessorUnderTest.process(exchange);
+        schedulerAuditProcessorUnderTest.auditUpdate(exchange);
 
         // Verify the results
-        Mockito.verify(schedulerAuditProcessorUnderTest.dataLoadAudit).schedularAuditUpdate(ArgumentMatchers.any(Exchange.class));
+        Mockito.verify(schedulerAuditProcessorUnderTest.dataLoadAudit, Mockito.times(1)).schedularAuditUpdate(ArgumentMatchers.any(Exchange.class));
+    }
+
+    @Test
+    public void testProcessForFalse() throws Exception {
+        // Setup
+        final Exchange exchange = new DefaultExchange(context);
+        Message message = Mockito.mock(Message.class);
+        schedulerAuditProcessorUnderTest.auditEnabled = Boolean.FALSE;
+
+        // Run the test
+        schedulerAuditProcessorUnderTest.auditUpdate(exchange);
+
+        // Verify the results
+        Mockito.verify(schedulerAuditProcessorUnderTest.dataLoadAudit, Mockito.times(0)).schedularAuditUpdate(ArgumentMatchers.any(Exchange.class));
     }
 }

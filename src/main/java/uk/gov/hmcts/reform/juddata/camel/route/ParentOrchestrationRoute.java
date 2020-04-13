@@ -34,9 +34,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.SchedulerAuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
 /**
@@ -61,7 +61,7 @@ public class ParentOrchestrationRoute {
     ExceptionProcessor exceptionProcessor;
 
     @Autowired
-    SchedulerAuditProcessor schedulerAuditProcessor;
+    Audit schedulerAuditProcessor;
 
     @Value("${start-route}")
     private String startRoute;
@@ -106,18 +106,17 @@ public class ParentOrchestrationRoute {
                         @Override
                         public void configure() throws Exception {
 
-
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor);
+                                    .process(exceptionProcessor).end().bean(schedulerAuditProcessor, "auditUpdate");
 
-                        String[] directChild = new String[dependantRoutes.size()];
+                            String[] directChild = new String[dependantRoutes.size()];
 
-                        getDependents(directChild, dependantRoutes);
-                        directChild = Arrays.copyOf(directChild, directChild.length + 1);
-                        //add last child route as  archival
-                        directChild[directChild.length - 1] = archivalRoute;
+                            getDependents(directChild, dependantRoutes);
+                            directChild = Arrays.copyOf(directChild, directChild.length + 1);
+                            //add last child route as  archival
+                            directChild[directChild.length - 1] = archivalRoute;
 
                             //Started direct route with multicast all the configured routes eg.application-jrd-router.yaml
                             //with Transaction propagation required
@@ -126,34 +125,34 @@ public class ParentOrchestrationRoute {
                                     .policy(springTransactionPolicy)
                                     .multicast()
                                     .stopOnException()
-                                    .to(directChild).end().process(schedulerAuditProcessor);;
+                                    .to(directChild).end().bean(schedulerAuditProcessor, "auditUpdate");
 
 
-                        //Archive Blob files
-                        from(archivalRoute)
-                                .loop(archivalFileNames.size())
-                                .process(azureFileProcessor)
-                                .toD(archivalPath + "${header.filename}?" + archivalCred)
-                                .end();
+                            //Archive Blob files
+                            from(archivalRoute)
+                                    .loop(archivalFileNames.size())
+                                    .process(azureFileProcessor)
+                                    .toD(archivalPath + "${header.filename}?" + archivalCred)
+                                    .end();
 
 
-                        for (RouteProperties route : routePropertiesList) {
+                            for (RouteProperties route : routePropertiesList) {
 
-                            Expression exp = new SimpleExpression(route.getBlobPath());
+                                Expression exp = new SimpleExpression(route.getBlobPath());
 
-                            from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
-                                    .transacted()
-                                    .policy(springTransactionPolicy)
-                                    .setProperty(BLOBPATH, exp)
-                                    .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
-                                    applicationContext.getBean(route.getBinder()).getClass())
-                                    .to(route.getTruncateSql())
-                                    .process((Processor) applicationContext.getBean(route.getProcessor()))
-                                    .split().body()
-                                    .streaming()
-                                    .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
-                                    .to(route.getSql()).end();
-                        }
+                                from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
+                                        .transacted()
+                                        .policy(springTransactionPolicy)
+                                        .setProperty(BLOBPATH, exp)
+                                        .process(fileReadProcessor).unmarshal().bindy(BindyType.Csv,
+                                        applicationContext.getBean(route.getBinder()).getClass())
+                                        .to(route.getTruncateSql())
+                                        .process((Processor) applicationContext.getBean(route.getProcessor()))
+                                        .split().body()
+                                        .streaming()
+                                        .bean(applicationContext.getBean(route.getMapper()), MAPPING_METHOD)
+                                        .to(route.getSql()).end();
+                            }
 
                         }
                     });

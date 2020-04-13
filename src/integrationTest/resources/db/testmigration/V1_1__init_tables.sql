@@ -102,12 +102,12 @@ CREATE TABLE region_type(
 );
 
 CREATE TABLE dataload_schedular_audit(
-  audit_id SERIAL ,
+  "id" serial NOT NULL,
   scheduler_name varchar(64) NOT NULL,
   scheduler_start_time timestamp NOT NULL,
   scheduler_end_time timestamp,
   scheduler_status varchar(32),
-  CONSTRAINT audit_id PRIMARY KEY (audit_id)
+  CONSTRAINT id PRIMARY KEY (id)
 );
 
 ALTER TABLE judicial_office_appointment ADD CONSTRAINT elinks_Id_fk1 FOREIGN KEY (elinks_Id)

@@ -45,7 +45,7 @@ public class DataLoadAuditTest extends CamelTestSupport {
     public void testSchedularAuditUpdate() throws Exception {
 
         final String schedulerName = "judicial_main_scheduler";
-        final String schedulerStatus = "Test";
+        final String schedulerStatus = "Success";
         Message message = Mockito.mock(Message.class);
         final Exchange exchange = Mockito.mock(Exchange.class);
         CamelContext camelContext = Mockito.mock(CamelContext.class);
@@ -57,7 +57,8 @@ public class DataLoadAuditTest extends CamelTestSupport {
 
         Mockito.when(camelContext.getGlobalOptions()).thenReturn(globalOptions);
         Timestamp schedulerStartTime = MappingConstants.getCurrentTimeStamp();
-        Mockito.when(mockJdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, new Timestamp(System.currentTimeMillis()), schedulerStatus)).thenReturn(0);
+        Timestamp schedulerEndTime = MappingConstants.getCurrentTimeStamp();
+        Mockito.when(mockJdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, schedulerEndTime, schedulerStatus)).thenReturn(0);
 
         dataLoadAuditUnderTest.schedularAuditUpdate(exchange);
     }

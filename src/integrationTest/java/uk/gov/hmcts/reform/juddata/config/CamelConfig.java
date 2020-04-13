@@ -1,10 +1,11 @@
 package uk.gov.hmcts.reform.juddata.config;
 
+import static org.mockito.Mockito.mock;
+
 import javax.sql.DataSource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
-import org.mockito.Mockito;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,11 +20,11 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.SchedulerAuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 
@@ -60,9 +61,8 @@ public class CamelConfig {
 
     @Bean
     ArchiveAzureFileProcessor azureFileProcessor() {
-        return Mockito.mock(ArchiveAzureFileProcessor.class);
+        return mock(ArchiveAzureFileProcessor.class);
     }
-
 
     @Bean
     DataLoadAudit jrdUtility() {
@@ -75,11 +75,9 @@ public class CamelConfig {
     }
 
     @Bean
-    SchedulerAuditProcessor schedulerAuditProcessor() {
-        return new SchedulerAuditProcessor();
+    Audit schedulerAuditProcessor() {
+        return new Audit();
     }
-
-
 
     private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
             .withDatabaseName("dbjuddata_test");
