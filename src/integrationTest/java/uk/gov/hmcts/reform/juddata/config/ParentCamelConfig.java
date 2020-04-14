@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
@@ -29,6 +30,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProc
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 
 @Configuration
 public class ParentCamelConfig {
@@ -71,6 +73,16 @@ public class ParentCamelConfig {
 
     static {
         testPostgres.start();
+    }
+
+    @Bean
+    DataLoadAudit jrdUtility() {
+        return new DataLoadAudit();
+    }
+
+    @Bean
+    Audit schedulerAuditProcessor() {
+        return new Audit(); //To Do rename
     }
 
     @Bean

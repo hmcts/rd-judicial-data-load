@@ -11,6 +11,10 @@ file-read-time-out: 200000
 invalid-header-sql: insert into dataload_exception_records(file_name,scheduler_start_time,error_description,updated_timestamp) values(?, ?, ?, ?)
 invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?)
 jsr-threshold-limit: 100
+scheduler-insert-sql:  insert into dataload_schedular_audit (scheduler_name,scheduler_start_time,scheduler_end_time,scheduler_status)
+  values(?,?,?,?)
+# TO do need to removed notr required
+scheduler-leaf-name: judicial_main_scheduler
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration

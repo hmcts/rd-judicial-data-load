@@ -38,6 +38,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
@@ -64,8 +65,14 @@ public class ParentOrchestrationRoute {
     @Autowired
     ExceptionProcessor exceptionProcessor;
 
+    @Autowired
+    Audit schedulerAuditProcessor;
+
     @Value("${start-route}")
     private String startRoute;
+
+    @Value("${scheduler-name}")
+    private String schedulerName;
 
     @Autowired
     CamelContext camelContext;
@@ -113,7 +120,7 @@ public class ParentOrchestrationRoute {
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor);
+                                    .process(exceptionProcessor).end().bean(schedulerAuditProcessor, "auditUpdate");
 
                             String[] directChild = new String[dependantRoutes.size()];
 
@@ -129,7 +136,7 @@ public class ParentOrchestrationRoute {
                                     .policy(springTransactionPolicy)
                                     .multicast()
                                     .stopOnException()
-                                    .to(directChild).end();
+                                    .to(directChild).end().bean(schedulerAuditProcessor, "auditUpdate");
 
                             //Archive Blob files
                             from(archivalRoute)

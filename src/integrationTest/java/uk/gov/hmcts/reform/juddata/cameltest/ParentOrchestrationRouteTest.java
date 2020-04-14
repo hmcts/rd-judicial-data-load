@@ -35,6 +35,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 
@@ -47,6 +48,8 @@ import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 public class ParentOrchestrationRouteTest {
+
+    public static final String DB_SCHEDULER_STATUS = "scheduler_status";
 
     @Autowired
     protected CamelContext camelContext;
@@ -81,6 +84,11 @@ public class ParentOrchestrationRouteTest {
     @Value("${insert-default-role1}")
     private String insertDefaultRole1;
 
+    @Value("${select-dataload-schedular-audit}")
+    String selectDataloadSchedularAudit;
+
+    private static final String[] file = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments.csv"};
+
     @Value("${insert-default-region}")
     private String insertDefaultRegion;
 
@@ -89,6 +97,24 @@ public class ParentOrchestrationRouteTest {
 
     @Value("${insert-default-contract}")
     private String insertDefaultBaseLocation;
+
+    @Value("${scheduler-insert-sql}")
+    private String schedulerInsertJrdSql;
+
+    @Value("${select-dataload-schedular-audit-failure}")
+    private String schedulerInsertJrdSqlFailure;
+
+    @Value("${select-dataload-schedular-audit-partial-sucess}")
+    private String schedulerInsertJrdSqlPartialSucess;
+
+    @Value("${select-dataload-schedular-audit-sucess}")
+    private String schedulerInsertJrdSqlSucess;
+
+    @Autowired
+    DataLoadAudit dataLoadAudit;
+
+    @Value("${audit-enable}")
+    Boolean auditEnable;
 
 
     @BeforeClass
@@ -106,13 +132,15 @@ public class ParentOrchestrationRouteTest {
         jdbcTemplate.execute(insertDefaultContract);
         jdbcTemplate.execute(insertDefaultBaseLocation);
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
+        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(MappingConstants.SCHEDULER_START_TIME, MappingConstants.getCurrentTimeStamp().toString());
+
     }
 
     @Test
     public void testParentOrchestration() throws Exception {
 
         setSourceData(file);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -135,10 +163,11 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.get(1).get("elinks_id"), "2");
     }
 
+
     @Test
     public void testParentOrchestrationFailure() throws Exception {
+
         setSourceData(fileWithError);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -154,7 +183,6 @@ public class ParentOrchestrationRouteTest {
 
         // Day 1 Success data load
         setSourceData(file);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -184,9 +212,8 @@ public class ParentOrchestrationRouteTest {
 
     @Test
     public void testParentOrchestrationSingleRecord() throws Exception {
-        setSourceData(fileWithSingleRecord);
 
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        setSourceData(fileWithSingleRecord);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
@@ -195,5 +222,45 @@ public class ParentOrchestrationRouteTest {
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
         assertEquals(judicialAppointmentList.size(), 1);
     }
+
+
+    @Test
+    public void testParentOrchestrationSchedularFailure() throws Exception {
+
+
+        setSourceData(fileWithError);
+
+        parentRoute.startRoute();
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
+
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure);
+        assertEquals(dataloadSchedularAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.FAILURE);
+    }
+
+    @Test
+    public void testParentOrchestrationSchedularSucess() throws Exception {
+
+        setSourceData(file);
+
+        parentRoute.startRoute();
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
+
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlSucess);
+        assertEquals(dataloadSchedularAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.SUCCESS);
+    }
+
+    @Test
+    public void testParentOrchestrationSchedularPartialSucess() throws Exception {
+        setSourceData(file);
+
+        camelContext.getGlobalOptions().put(MappingConstants.SCHEDULER_STATUS, MappingConstants.PARTIAL_SUCCESS);
+        parentRoute.startRoute();
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
+
+        List<Map<String, Object>>  dataloadSchedularAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlPartialSucess);
+        assertEquals(dataloadSchedularAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.PARTIAL_SUCCESS);
+    }
+
+
 }
 

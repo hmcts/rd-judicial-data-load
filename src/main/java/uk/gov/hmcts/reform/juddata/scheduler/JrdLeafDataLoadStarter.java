@@ -15,6 +15,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 
 @Component
 @Slf4j
@@ -29,6 +30,9 @@ public class JrdLeafDataLoadStarter {
     @Autowired
     ProducerTemplate producerTemplate;
 
+    @Autowired
+    DataLoadUtil dataLoadUtil;
+
     @Value("${start-leaf-route}")
     private String startLeafRoute;
 
@@ -37,6 +41,7 @@ public class JrdLeafDataLoadStarter {
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
+        dataLoadUtil.setGlobalConstant(camelContext);
         leafTableRoutes.startRoute();
     }
 

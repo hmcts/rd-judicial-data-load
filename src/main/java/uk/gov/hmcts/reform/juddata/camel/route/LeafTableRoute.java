@@ -35,6 +35,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
+import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
@@ -68,6 +69,12 @@ public class LeafTableRoute {
     @Autowired
     HeaderValidationProcessor headerValidationProcessor;
 
+    //TO Do need removed
+    @Value("${scheduler-name}")
+    private String schedulerName;
+
+    @Autowired
+    Audit schedulerAuditProcessor;
 
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
@@ -93,7 +100,7 @@ public class LeafTableRoute {
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor);
+                                    .process(exceptionProcessor).end().bean(schedulerAuditProcessor, "auditUpdate"); //To do replace Processor
 
                             String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 
@@ -103,7 +110,8 @@ public class LeafTableRoute {
                                     .transacted()
                                     .policy(springTransactionPolicy)
                                     .multicast()
-                                    .stopOnException().to(directRouteNameList).end();
+                                    .stopOnException().to(directRouteNameList).end()
+                                    .bean(schedulerAuditProcessor, "auditUpdate"); //To do replace with Processor
 
                             for (RouteProperties route : routePropertiesList) {
 
@@ -135,7 +143,6 @@ public class LeafTableRoute {
             throw new FailedToCreateRouteException("Judicial Data Load - LeafTableRoute failed to start", startLeafRoute, ex);
         }
     }
-
 
     private String[] createDirectRoutesForMulticast(List<String> routeList) {
         int index = 0;
