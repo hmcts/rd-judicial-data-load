@@ -35,7 +35,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
-import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
+import uk.gov.hmcts.reform.juddata.camel.processor.AuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
@@ -74,7 +74,7 @@ public class LeafTableRoute {
     private String schedulerName;
 
     @Autowired
-    Audit schedulerAuditProcessor;
+    AuditProcessor schedulerAuditProcessor;
 
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
@@ -100,7 +100,7 @@ public class LeafTableRoute {
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor).end().bean(schedulerAuditProcessor, "auditUpdate"); //To do replace Processor
+                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor); //To do replace Processor
 
                             String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 
@@ -111,7 +111,7 @@ public class LeafTableRoute {
                                     .policy(springTransactionPolicy)
                                     .multicast()
                                     .stopOnException().to(directRouteNameList).end()
-                                    .bean(schedulerAuditProcessor, "auditUpdate"); //To do replace with Processor
+                                    .process(schedulerAuditProcessor); //To do replace with Processor
 
                             for (RouteProperties route : routePropertiesList) {
 

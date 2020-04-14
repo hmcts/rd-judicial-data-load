@@ -68,13 +68,6 @@ public class MappingConstants {
 
     public static final String SUCCESS = "Success";
 
-    public static final String HEADER_SCHEDULER_STATUS = "SchedulerStatus";
-
-    public static final String HEADER_SCHEDULER_NAME = "SchedulerName";
-
-    public static final String HEADER_SCHEDULER_START_TIME = "SchedulerStartTime";
-
-    public static final String HEADER_SCHEDULER_FLAG = "schedulerFlag";
 
     public static Timestamp getDateTimeStamp(String date) {
         return Timestamp.valueOf(date);

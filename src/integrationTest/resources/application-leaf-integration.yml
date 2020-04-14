@@ -58,13 +58,7 @@ contract-select-jrd-sql: SELECT * FROM contract_type
 
 role-select-jrd-sql: SELECT * FROM judicial_role_type
 
-truncate-jrd-base-location: truncate base_location_type cascade
 
-truncate-jrd-region: truncate region_type cascade
-
-truncate-jrd-contract: truncate contract_type cascade
-
-truncate-jrd-role: truncate judicial_role_type cascade
 
 
 

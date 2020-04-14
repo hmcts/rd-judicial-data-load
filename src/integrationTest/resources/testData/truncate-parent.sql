@@ -1,0 +1,1 @@
+truncate judicial_user_profile cascade;

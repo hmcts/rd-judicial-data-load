@@ -3,14 +3,13 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestSupport.setSourcePath;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidHeader;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsr;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsrExceedsThreshold;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.setSourceData;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +32,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml"})
@@ -69,8 +69,6 @@ public class ParentOrchestrationRouteValidationTest {
     @Value("${child-select-child1-sql}")
     private String sqlChild1;
 
-    @Value("${truncate-jrd}")
-    private String truncateAllTable;
 
     @Value("${archival-cred}")
     String archivalCred;
@@ -78,24 +76,8 @@ public class ParentOrchestrationRouteValidationTest {
     @Value("${exception-select-query}")
     String exceptionQuery;
 
-    @Value("${exception-truncate-query}")
-    String exceptionTruncateQuery;
-
-
-    @Value("${insert-default-role}")
-    private String insertDefaultRole;
-
-    @Value("${insert-default-role1}")
-    private String insertDefaultRole1;
-
-    @Value("${insert-default-region}")
-    private String insertDefaultRegion;
-
-    @Value("${insert-default-base-location}")
-    private String insertDefaultContract;
-
-    @Value("${insert-default-contract}")
-    private String insertDefaultBaseLocation;
+    @Autowired
+    DataLoadUtil dataLoadUtil;
 
     @BeforeClass
     public static void beforeAll() throws Exception {
@@ -105,21 +87,14 @@ public class ParentOrchestrationRouteValidationTest {
 
     @Before
     public void init() {
-        jdbcTemplate.execute(truncateAllTable);
-        jdbcTemplate.execute(exceptionTruncateQuery);
-        jdbcTemplate.execute(truncateAllTable);
-        jdbcTemplate.execute(insertDefaultRole);
-        jdbcTemplate.execute(insertDefaultRole1);
-        jdbcTemplate.execute(insertDefaultRegion);
-        jdbcTemplate.execute(insertDefaultContract);
-        jdbcTemplate.execute(insertDefaultBaseLocation);
-        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
+        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_USER_PROFILE_ORCHESTRATION);
     }
 
     @Test
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/initial-parent-role.sql","/testData/truncate-exception.sql"})
     public void testParentOrchestrationInvalidHeaderRollback() throws Exception {
         setSourceData(fileWithInvalidHeader);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -138,9 +113,9 @@ public class ParentOrchestrationRouteValidationTest {
     }
 
     @Test
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/initial-parent-role.sql","/testData/truncate-exception.sql"})
     public void testParentOrchestrationJsrAuditTest() throws Exception {
         setSourceData(fileWithInvalidJsr);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
@@ -172,9 +147,9 @@ public class ParentOrchestrationRouteValidationTest {
     }
 
     @Test(expected = Exception.class)
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/initial-parent-role.sql", "/testData/truncate-exception.sql"})
     public void testParentOrchestrationJsrExceedsThresholdAuditTest() throws Exception {
         setSourceData(fileWithInvalidJsrExceedsThreshold);
-        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
     }

@@ -22,14 +22,14 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
+import uk.gov.hmcts.reform.juddata.camel.processor.AuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.DataLoadAudit;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Configuration
@@ -75,14 +75,10 @@ public class ParentCamelConfig {
         testPostgres.start();
     }
 
-    @Bean
-    DataLoadAudit jrdUtility() {
-        return new DataLoadAudit();
-    }
 
     @Bean
-    Audit schedulerAuditProcessor() {
-        return new Audit(); //To Do rename
+    AuditProcessor schedulerAuditProcessor() {
+        return new AuditProcessor(); //To Do rename
     }
 
     @Bean
@@ -184,5 +180,10 @@ public class ParentCamelConfig {
     @Bean
     JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer() {
         return new JsrValidatorInitializer<>();
+    }
+
+    @Bean
+    DataLoadUtil dataLoadUtil() {
+        return new DataLoadUtil();
     }
 }

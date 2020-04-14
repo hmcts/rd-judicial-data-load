@@ -1,9 +1,7 @@
 package uk.gov.hmcts.reform.juddata.scheduler;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.IS_EXCEPTION_HANDLED;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
-
-import java.util.Date;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.LEAF_ROUTE;
 
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -41,14 +39,13 @@ public class JrdLeafDataLoadStarter {
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
-        dataLoadUtil.setGlobalConstant(camelContext);
         leafTableRoutes.startRoute();
     }
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
         camelContext.getGlobalOptions().remove(IS_EXCEPTION_HANDLED);
-        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
+        dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
         producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
     }
 }

@@ -2,13 +2,12 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.LEAF_ROUTE;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestSupport.setSourcePath;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport.file_error;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport.setSourceData;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +30,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
+import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
@@ -69,23 +70,15 @@ public class LeafRouteTest {
     @Value("${role-select-jrd-sql}")
     private String roleSql;
 
-    @Value("${truncate-jrd-base-location}")
-    private String locationTruncate;
-
-    @Value("${truncate-jrd-region}")
-    private String regionTruncate;
-
-    @Value("${truncate-jrd-contract}")
-    private String contractTruncate;
-
-    @Value("${truncate-jrd-role}")
-    private String roleTruncate;
 
     @Autowired
     ProducerTemplate producerTemplate;
 
     @Value("${start-leaf-route}")
     private String startLeafRoute;
+
+    @Autowired
+    DataLoadUtil dataLoadUtil;
 
 
     @BeforeClass
@@ -96,14 +89,11 @@ public class LeafRouteTest {
 
     @Before
     public void init() {
-        jdbcTemplate.execute(regionTruncate);
-        jdbcTemplate.execute(locationTruncate);
-        jdbcTemplate.execute(contractTruncate);
-        jdbcTemplate.execute(roleTruncate);
-        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
+        dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
     }
 
     @Test
+    @Sql(scripts = {"/testData/truncate-leaf.sql"})
     public void testAllLeafs() throws Exception {
         setSourceData(file);
         leafTableRoute.startRoute();
@@ -123,6 +113,7 @@ public class LeafRouteTest {
     }
 
     @Test
+    @Sql(scripts = {"/testData/truncate-leaf.sql"})
     public void testLeafFailuresRollbackAndKeepExistingState() throws Exception {
 
         setSourceData(file);

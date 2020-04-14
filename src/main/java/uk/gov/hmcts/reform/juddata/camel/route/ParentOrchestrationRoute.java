@@ -1,10 +1,12 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
+import static java.util.Arrays.copyOf;
 import static org.apache.commons.lang.WordUtils.uncapitalize;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CHILD_ROUTES;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DIRECT_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.INSERT_SQL;
@@ -14,11 +16,11 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRAT
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_STATUS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TABLE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.Audit;
+import uk.gov.hmcts.reform.juddata.camel.processor.AuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
@@ -66,7 +68,7 @@ public class ParentOrchestrationRoute {
     ExceptionProcessor exceptionProcessor;
 
     @Autowired
-    Audit schedulerAuditProcessor;
+    AuditProcessor schedulerAuditProcessor;
 
     @Value("${start-route}")
     private String startRoute;
@@ -115,17 +117,22 @@ public class ParentOrchestrationRoute {
                         public void configure() throws Exception {
 
                             onException(RouteFailedException.class)
-                                    .handled(true).markRollbackOnly();
+                                    .handled(true).markRollbackOnly()
+                                    .end()
+                                    .setHeader(SCHEDULER_STATUS, constant(FAILURE))
+                                    .process(schedulerAuditProcessor);
 
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor).end().bean(schedulerAuditProcessor, "auditUpdate");
+                                    .process(exceptionProcessor)
+                                    .end()
+                                    .process(schedulerAuditProcessor);
 
                             String[] directChild = new String[dependantRoutes.size()];
 
                             getDependents(directChild, dependantRoutes);
-                            directChild = Arrays.copyOf(directChild, directChild.length + 1);
+                            directChild = copyOf(directChild, directChild.length + 1);
                             //add last child route as  archival
                             directChild[directChild.length - 1] = archivalRoute;
 
@@ -136,7 +143,7 @@ public class ParentOrchestrationRoute {
                                     .policy(springTransactionPolicy)
                                     .multicast()
                                     .stopOnException()
-                                    .to(directChild).end().bean(schedulerAuditProcessor, "auditUpdate");
+                                    .to(directChild).end().process(schedulerAuditProcessor);
 
                             //Archive Blob files
                             from(archivalRoute)
