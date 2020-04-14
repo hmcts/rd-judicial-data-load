@@ -30,6 +30,7 @@ spring:
     from: no-reply@reform.hmcts.net
     to:  sushant.choudhari@hmcts.net
     subject:  Exception received at Rout
+    enabled: true
     host: mta.reform.hmcts.net
     port: 25
     properties:

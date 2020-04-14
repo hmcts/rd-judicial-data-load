@@ -17,23 +17,28 @@ public class ExceptionProcessor implements Processor {
     EmailService emailService;
 
     @Value("${spring.mail.from}")
-    private String mailFrom;
+    String mailFrom;
 
     @Value("${spring.mail.to}")
-    private String mailTo;
+    String mailTo;
 
     @Value("${spring.mail.subject}")
-    private String mailsubject;
+    String mailSubject;
+
+    @Value("${spring.mail.enabled}")
+    Boolean mailEnabled;
 
     @Override
     public void process(Exchange exchange) {
         Exception exception = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
-        String failedRouteId = exchange.getProperty(Exchange.FAILURE_ROUTE_ID, String.class);
-        EmailData emailData = new EmailData();
-        emailData.setRecipient(mailTo);
-        emailData.setMessage(exception.getMessage());
-        emailData.setSubject(mailsubject + failedRouteId);
-        emailService.sendEmail(mailFrom, emailData);
+        if (mailEnabled.booleanValue()) {
+            String failedRouteId = exchange.getProperty(Exchange.FAILURE_ROUTE_ID, String.class);
+            EmailData emailData = new EmailData();
+            emailData.setRecipient(mailTo);
+            emailData.setMessage(exception.getMessage());
+            emailData.setSubject(mailSubject + failedRouteId);
+            emailService.sendEmail(mailFrom, emailData);
+        }
         log.error("::::exception in route for data processing::::" + exception);
     }
 }

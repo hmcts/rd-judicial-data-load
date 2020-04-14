@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.spring.CamelSpringRunner;
 import org.apache.camel.test.spring.CamelTestContextBootstrapper;
@@ -16,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -26,7 +28,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.ResourceUtils;
+import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.CamelConfig;
@@ -40,23 +44,38 @@ import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 @EnableAutoConfiguration
 public class ParentOrchestrationRouteTest {
 
+    private static final String[] file = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments.csv"};
+    private static final String[] fileWithError = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments_error.csv"};
+    private static final String[] fileWithSingleRecord = {"classpath:sourceFiles/judicial_userprofile_singlerecord.csv", "classpath:sourceFiles/judicial_appointments_singlerecord.csv"};
     @Autowired
     protected CamelContext camelContext;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     JavaMailSender mailSender;
 
     @Autowired
+    uk.gov.hmcts.reform.juddata.camel.service.EmailService emailService;
+
+    @Autowired
+    ExceptionProcessor exceptionProcessor;
+
+    @Autowired
     ParentOrchestrationRoute parentRoute;
+
+    @Autowired
+    ProducerTemplate producerTemplate;
+
+    @Value("${archival-cred}")
+    String archivalCred;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Value("${start-route}")
     private String startRoute;
 
-    @Autowired
-    ProducerTemplate producerTemplate;
+    @Value("${spring.mail.enabled}")
+    private Boolean mailEnabled;
 
     @Value("${parent-select-jrd-sql}")
     private String sql;
@@ -67,20 +86,33 @@ public class ParentOrchestrationRouteTest {
     @Value("${truncate-jrd}")
     private String truncateAllTable;
 
-    @Value("${archival-cred}")
-    String archivalCred;
-
-    private static final String[] file = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments.csv"};
-
-    private static final String[] fileWithError = {"classpath:sourceFiles/judicial_userprofile.csv", "classpath:sourceFiles/judicial_appointments_error.csv"};
-
-    private static final String[] fileWithSingleRecord = {"classpath:sourceFiles/judicial_userprofile_singlerecord.csv", "classpath:sourceFiles/judicial_appointments_singlerecord.csv"};
-
-
     @BeforeClass
     public static void beforeAll() throws Exception {
         setSourcePath("classpath:archivalFiles", "archival.path");
         setSourcePath("classpath:sourceFiles", "active.path");
+    }
+
+    private static void setSourceData(String... files) throws Exception {
+        setSourcePath(files[0],
+            "parent.file.path");
+        setSourcePath(files[1],
+            "child1.file.path");
+    }
+
+    private static void setSourcePath(String path, String propertyPlaceHolder) throws Exception {
+
+        String loadFile = ResourceUtils.getFile(path).getCanonicalPath();
+
+        if (loadFile.endsWith(".csv")) {
+            int lastSlash = loadFile.lastIndexOf("/");
+            String result = loadFile.substring(0, lastSlash);
+            String fileName = loadFile.substring(lastSlash + 1);
+
+            System.setProperty(propertyPlaceHolder, "file:"
+                + result + "?fileName=" + fileName + "&noop=true");
+        } else {
+            System.setProperty(propertyPlaceHolder, "file:" + loadFile.replaceFirst("/", ""));
+        }
     }
 
     @Before
@@ -114,7 +146,6 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.get(0).get("elinks_id"), "1");
         assertEquals(judicialAppointmentList.get(1).get("elinks_id"), "2");
     }
-
 
     @Test
     public void testParentOrchestrationFailure() throws Exception {
@@ -182,28 +213,29 @@ public class ParentOrchestrationRouteTest {
         assertEquals(judicialAppointmentList.size(), 1);
     }
 
-
-    private static void setSourceData(String... files) throws Exception {
-        setSourcePath(files[0],
-                "parent.file.path");
-        setSourcePath(files[1],
-                "child1.file.path");
+    @Test
+    public void testParentOrchestrationFailureEmail() throws Exception {
+        setSourceData(fileWithError);
+        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(Exchange.FAILURE_ROUTE_ID, "Rout 1");
+        ReflectionTestUtils.setField(exceptionProcessor, "mailEnabled", Boolean.FALSE);
+        parentRoute.startRoute();
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
+        Mockito.verify(emailService, Mockito.times(0)).sendEmail(Mockito.any(String.class), Mockito.any(uk.gov.hmcts.reform.juddata.camel.service.EmailData.class));
     }
 
-    private static void setSourcePath(String path, String propertyPlaceHolder) throws Exception {
+    @Test
+    public void testParentOrchestrationSucessEmail() throws Exception {
 
-        String loadFile = ResourceUtils.getFile(path).getCanonicalPath();
 
-        if (loadFile.endsWith(".csv")) {
-            int lastSlash = loadFile.lastIndexOf("/");
-            String result = loadFile.substring(0, lastSlash);
-            String fileName = loadFile.substring(lastSlash + 1);
+        setSourceData(fileWithError);
+        camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(Exchange.FAILURE_ROUTE_ID, "Rout 1");
+        ReflectionTestUtils.setField(exceptionProcessor, "mailEnabled", Boolean.TRUE);
+        parentRoute.startRoute();
+        producerTemplate.sendBody(startRoute, "test JRD orchestration");
+        Mockito.verify(emailService, Mockito.times(2)).sendEmail(Mockito.any(String.class), Mockito.any(uk.gov.hmcts.reform.juddata.camel.service.EmailData.class));
 
-            System.setProperty(propertyPlaceHolder, "file:"
-                    + result + "?fileName=" + fileName + "&noop=true");
-        } else {
-            System.setProperty(propertyPlaceHolder, "file:" + loadFile.replaceFirst("/", ""));
-        }
     }
 }
 

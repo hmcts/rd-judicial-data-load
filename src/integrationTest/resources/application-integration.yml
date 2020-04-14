@@ -2,6 +2,7 @@ spring:
   mail:
     from: no-reply@reform.hmcts.net
     to:  sushant.choudhari@hmcts.net
+    enabled: true
     subject:  Exception received at Rout id
     host: mta.reform.hmcts.net
     port: 25
