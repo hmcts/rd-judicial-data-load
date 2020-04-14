@@ -46,7 +46,7 @@ public class MappingConstants {
 
     public static final String PARTIAL_SUCCESS = "PartialSuccess";
 
-    public static final String FAILURE = "FAILURE";
+    public static final String FAILURE = "Failure";
 
     public static final String SUCCESS = "Success";
 

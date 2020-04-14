@@ -54,6 +54,6 @@ truncate-jrd: truncate judicial_user_profile cascade
 
 select-dataload-schedular-audit: select *  from dataload_schedular_audit
 
-select-dataload-schedular-audit-failure: select *  from dataload_schedular_audit where scheduler_status='FAILURE'
+select-dataload-schedular-audit-failure: select *  from dataload_schedular_audit where scheduler_status='Failure'
 select-dataload-schedular-audit-partial-sucess: select *  from dataload_schedular_audit where scheduler_status='PartialSuccess'
 select-dataload-schedular-audit-sucess: select *  from dataload_schedular_audit where scheduler_status='Success'
