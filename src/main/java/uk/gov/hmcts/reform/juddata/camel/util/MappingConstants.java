@@ -60,8 +60,6 @@ public class MappingConstants {
 
     public static final String SCHEDULER_STATUS = "SchedulerStatus";
 
-    public static final String SCHEDULER_START_TIME = "SchedulerStartTime";
-
     public static final String SCHEDULER_NAME = "SchedulerName";
 
     public static final String PARTIAL_SUCCESS = "PartialSuccess";

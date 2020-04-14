@@ -33,7 +33,7 @@ public class JrdUserProfileDataLoadScheduler {
     private String startRoute;
 
     @Autowired
-    DataLoadUtil dataLoadUtil
+    DataLoadUtil dataLoadUtil;
 
     @PostConstruct
     public void postConstruct() throws Exception {
