@@ -133,9 +133,10 @@ public class ParentOrchestrationRoute {
 
                             //Archive Blob files
                             from(archivalRoute)
-                                    .loop(archivalFileNames.size())
+                                    .loop(archivalFileNames.size()).copy()
                                     .process(azureFileProcessor)
                                     .toD(archivalPath + "${header.filename}?" + archivalCred)
+                                    .end()
                                     .end();
 
 

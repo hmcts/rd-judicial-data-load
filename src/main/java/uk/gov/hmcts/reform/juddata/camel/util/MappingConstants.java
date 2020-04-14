@@ -56,6 +56,8 @@ public class MappingConstants {
 
     public static final String DIRECT_ROUTE = "direct:";
 
+    public static final String IS_EXCEPTION_HANDLED = "is-exception-handled";
+
     public static Timestamp getDateTimeStamp(String date) {
         return Timestamp.valueOf(date);
     }

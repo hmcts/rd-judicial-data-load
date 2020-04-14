@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.scheduler;
 
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.IS_EXCEPTION_HANDLED;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
 import java.util.Date;
@@ -41,6 +42,7 @@ public class JrdLeafDataLoadStarter {
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
+        camelContext.getGlobalOptions().remove(IS_EXCEPTION_HANDLED);
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
         producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
     }

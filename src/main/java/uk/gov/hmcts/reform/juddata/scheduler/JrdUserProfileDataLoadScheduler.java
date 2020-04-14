@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.scheduler;
 
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.IS_EXCEPTION_HANDLED;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
@@ -40,6 +41,7 @@ public class JrdUserProfileDataLoadScheduler {
 
     @Scheduled(cron = "${scheduler.camel-route-config}")
     public void runJrdScheduler() {
+        camelContext.getGlobalOptions().remove(IS_EXCEPTION_HANDLED);
         producerTemplate.sendBody(startRoute, "starting JRD orchestration");
     }
 }
