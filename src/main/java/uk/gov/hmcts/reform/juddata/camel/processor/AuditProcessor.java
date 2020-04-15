@@ -66,7 +66,8 @@ public class AuditProcessor implements Processor {
 
         Timestamp schedulerStartTime =  new Timestamp(Long.valueOf((globalOptions.get(SCHEDULER_START_TIME))));
         String schedulerName = globalOptions.get(SCHEDULER_NAME);
-        String schedulerStatus = isNull(globalOptions.get(SCHEDULER_STATUS)) ? (String) exchange.getIn().getHeader(SCHEDULER_STATUS)
+        String schedulerStatus = isNull(globalOptions.get(SCHEDULER_STATUS))
+                ? (String) exchange.getIn().getHeader(SCHEDULER_STATUS)
                 : globalOptions.get(SCHEDULER_STATUS);
         if (Strings.isNullOrEmpty(schedulerStatus) || schedulerStatus.equalsIgnoreCase(PARTIAL_SUCCESS)) {
             if (Strings.isNullOrEmpty(schedulerStatus)) {

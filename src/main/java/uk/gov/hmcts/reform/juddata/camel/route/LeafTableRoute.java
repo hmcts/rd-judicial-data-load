@@ -15,11 +15,13 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TABLE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.failureProcessor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.validation.ValidationException;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.FailedToCreateRouteException;
@@ -94,13 +96,18 @@ public class LeafTableRoute {
                         public void configure() throws Exception {
 
 
-                            onException(RouteFailedException.class)
-                                    .handled(true).markRollbackOnly();
+                            onException(RouteFailedException.class, ValidationException.class)
+                                    .handled(true).markRollbackOnly()
+                                    .end()
+                                    .process(failureProcessor)
+                                    .process(schedulerAuditProcessor);
 
                             //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
-                                    .process(exceptionProcessor).end().process(schedulerAuditProcessor); //To do replace Processor
+                                    .process(exceptionProcessor)
+                                    .end()
+                                    .process(schedulerAuditProcessor);
 
                             String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
 

@@ -22,6 +22,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
@@ -40,6 +41,7 @@ import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
 @Component
+@Slf4j
 public class JsrValidatorInitializer<T> {
 
     private Validator validator;
@@ -80,6 +82,8 @@ public class JsrValidatorInitializer<T> {
      */
     public List<T> validate(List<T> binders) {
 
+        log.info("::::JsrValidatorInitializer data processing validate starts::::" );
+
         this.constraintViolations = new LinkedHashSet<>();
 
         List<T> binderFilter = new ArrayList<>();
@@ -92,6 +96,7 @@ public class JsrValidatorInitializer<T> {
 
             this.constraintViolations.addAll(constraintViolations);
         }
+        log.info("::::JsrValidatorInitializer data processing validate complete::::" );
         return binderFilter;
     }
 
@@ -101,6 +106,9 @@ public class JsrValidatorInitializer<T> {
      * @param exchange Exchange
      */
     public void auditJsrExceptions(Exchange exchange) {
+
+        log.info("::::JsrValidatorInitializer data processing audit start::::" );
+
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -130,6 +138,7 @@ public class JsrValidatorInitializer<T> {
 
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
+        log.info("::::JsrValidatorInitializer data processing audit complete::::" );
     }
 
     /**

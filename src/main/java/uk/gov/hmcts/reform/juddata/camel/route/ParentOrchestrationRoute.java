@@ -19,12 +19,15 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETA
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_STATUS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TABLE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.failureProcessor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.validation.ValidationException;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
 import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.Processor;
@@ -97,6 +100,8 @@ public class ParentOrchestrationRoute {
     @Autowired
     HeaderValidationProcessor headerValidationProcessor;
 
+
+
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
     public void startRoute() throws FailedToCreateRouteException {
@@ -116,11 +121,12 @@ public class ParentOrchestrationRoute {
                         @Override
                         public void configure() throws Exception {
 
-                            onException(RouteFailedException.class)
-                                    .handled(true).markRollbackOnly()
-                                    .end()
-                                    .setHeader(SCHEDULER_STATUS, constant(FAILURE))
-                                    .process(schedulerAuditProcessor);
+                            onException(RouteFailedException.class, ValidationException.class)
+                                    .handled(true)
+                                    .process(failureProcessor)
+                                    .process(schedulerAuditProcessor)
+                                    .markRollbackOnly()
+                                    .end();
 
                             //logging exception in global exception handler
                             onException(Exception.class)
