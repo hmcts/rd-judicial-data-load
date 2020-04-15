@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.validator;
 import static java.lang.Boolean.TRUE;
 import static org.apache.camel.Exchange.FAILURE_ROUTE_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
 import java.lang.reflect.Field;
@@ -119,10 +120,11 @@ public class JsrValidatorInitializer<T> {
                     public void setValues(PreparedStatement ps, ConstraintViolation<T> argument) throws SQLException {
                         ps.setString(1, routeProperties.getTableName());
                         ps.setTimestamp(2, new Timestamp(Long.valueOf(schedulerTime)));
-                        ps.setString(3, getKeyFiled(argument.getRootBean()));
-                        ps.setString(4, argument.getPropertyPath().toString());
-                        ps.setString(5, argument.getMessage());
-                        ps.setTimestamp(6, new Timestamp(new Date().getTime()));
+                        ps.setString(3, camelContext.getGlobalOptions().get(SCHEDULER_NAME));
+                        ps.setString(4, getKeyFiled(argument.getRootBean()));
+                        ps.setString(5, argument.getPropertyPath().toString());
+                        ps.setString(6, argument.getMessage());
+                        ps.setTimestamp(7, new Timestamp(new Date().getTime()));
                     }
                 });
 

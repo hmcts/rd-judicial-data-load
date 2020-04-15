@@ -33,6 +33,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
@@ -46,6 +47,7 @@ import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
+@SqlConfig(dataSource =  "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class ParentOrchestrationRouteValidationTest {
 
     @Autowired
@@ -92,7 +94,7 @@ public class ParentOrchestrationRouteValidationTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/initial-parent-role.sql","/testData/truncate-exception.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/truncate-exception.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationInvalidHeaderRollback() throws Exception {
         setSourceData(fileWithInvalidHeader);
         parentRoute.startRoute();
@@ -113,7 +115,7 @@ public class ParentOrchestrationRouteValidationTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/initial-parent-role.sql","/testData/truncate-exception.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/truncate-exception.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationJsrAuditTest() throws Exception {
         setSourceData(fileWithInvalidJsr);
         parentRoute.startRoute();
@@ -147,7 +149,7 @@ public class ParentOrchestrationRouteValidationTest {
     }
 
     @Test(expected = Exception.class)
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/initial-parent-role.sql", "/testData/truncate-exception.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationJsrExceedsThresholdAuditTest() throws Exception {
         setSourceData(fileWithInvalidJsrExceedsThreshold);
         parentRoute.startRoute();

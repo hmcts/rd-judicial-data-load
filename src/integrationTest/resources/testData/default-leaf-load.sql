@@ -10,3 +10,5 @@ on conflict (base_location_id) do nothing;
 
 insert into contract_type(contract_type_id,contract_type_desc_en,contract_type_desc_cy)
 values ('0', 'default', 'default') on conflict (contract_type_id) do nothing;
+
+commit;

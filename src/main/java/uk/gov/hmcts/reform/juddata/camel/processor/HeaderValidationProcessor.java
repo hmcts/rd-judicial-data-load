@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.HEADER_EXCEPTION;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
 import com.opencsv.CSVReader;
@@ -78,9 +79,9 @@ public class HeaderValidationProcessor implements Processor {
             def.setName("header exception logs");
             def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
             String schedulerTime = camelContext.getGlobalOptions().get(SCHEDULER_START_TIME);
+            String schedulerName = camelContext.getGlobalOptions().get(SCHEDULER_NAME);
             Object[] params = new Object[]{routeProperties.getFileName(), new Timestamp(Long.valueOf(schedulerTime)),
-                "Mismatch headers in csv for ::" + routeProperties.getBinder(),
-                new Timestamp(new Date().getTime())};
+                schedulerName, "Mismatch headers in csv for ::" + routeProperties.getBinder(), new Timestamp(new Date().getTime())};
             jdbcTemplate.update(invalidHeaderSql, params);
             TransactionStatus status = platformTransactionManager.getTransaction(def);
             platformTransactionManager.commit(status);

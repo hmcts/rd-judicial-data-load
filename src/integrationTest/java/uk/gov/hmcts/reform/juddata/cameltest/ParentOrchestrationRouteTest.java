@@ -34,6 +34,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
@@ -48,6 +49,7 @@ import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
+@SqlConfig(dataSource =  "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class ParentOrchestrationRouteTest {
 
     public static final String DB_SCHEDULER_STATUS = "scheduler_status";
@@ -109,10 +111,11 @@ public class ParentOrchestrationRouteTest {
     public void init() {
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/initial-parent-role.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestration() throws Exception {
 
         setSourceData(file);
@@ -140,7 +143,7 @@ public class ParentOrchestrationRouteTest {
 
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/initial-parent-role.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationFailure() throws Exception {
 
         setSourceData(fileWithError);
@@ -155,7 +158,7 @@ public class ParentOrchestrationRouteTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/initial-parent-role.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationFailureRollBackKeepExistingData() throws Exception {
 
         // Day 1 Success data load
@@ -188,7 +191,7 @@ public class ParentOrchestrationRouteTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/initial-parent-role.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationSingleRecord() throws Exception {
 
         setSourceData(fileWithSingleRecord);
@@ -203,7 +206,6 @@ public class ParentOrchestrationRouteTest {
 
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/initial-parent-role.sql"})
     public void testParentOrchestrationSchedulerFailure() throws Exception {
         setSourceData(fileWithError);
         parentRoute.startRoute();
@@ -214,7 +216,6 @@ public class ParentOrchestrationRouteTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/initial-parent-role.sql"})
     public void testParentOrchestrationSchedulerSuccess() throws Exception {
 
         setSourceData(file);
@@ -227,7 +228,6 @@ public class ParentOrchestrationRouteTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/initial-parent-role.sql"})
     public void testParentOrchestrationSchedulerPartialSuccess() throws Exception {
         setSourceData(file);
 
