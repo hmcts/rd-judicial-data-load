@@ -97,10 +97,11 @@ public class LeafTableRoute {
 
 
                             onException(RouteFailedException.class, ValidationException.class)
-                                    .handled(true).markRollbackOnly()
-                                    .end()
+                                    .handled(true)
                                     .process(failureProcessor)
-                                    .process(schedulerAuditProcessor);
+                                    .process(schedulerAuditProcessor)
+                                    .markRollbackOnly()
+                                    .end();
 
                             //logging exception in global exception handler
                             onException(Exception.class)
