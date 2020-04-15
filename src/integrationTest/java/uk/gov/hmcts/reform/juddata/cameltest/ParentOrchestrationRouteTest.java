@@ -230,8 +230,6 @@ public class ParentOrchestrationRouteTest {
 
         setSourceData(fileWithError);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        camelContext.getGlobalOptions().put(Exchange.FAILURE_ROUTE_ID, "Rout 1");
-        ReflectionTestUtils.setField(exceptionProcessor, "mailEnabled", Boolean.TRUE);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
         Mockito.verify(emailService, Mockito.times(2)).sendEmail(Mockito.any(String.class), Mockito.any(uk.gov.hmcts.reform.juddata.camel.service.EmailData.class));

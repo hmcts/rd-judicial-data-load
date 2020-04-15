@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
 public class EmailDataTest {
 
     private static final String EMAIL_TO = "recipient@example.com";
-    private static final String EMAIL_SUBJECT = "Exception received at Rout id";
+    private static final String EMAIL_SUBJECT = " Ref Data - Exception in JRD data load";
 
     private EmailData emailDataUnderTest;
 

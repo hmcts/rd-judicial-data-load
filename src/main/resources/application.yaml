@@ -29,7 +29,7 @@ spring:
   mail:
     from: no-reply@reform.hmcts.net
     to:  sushant.choudhari@hmcts.net
-    subject:  Exception received at Rout
+    subject:  Ref Data - Exception in JRD data load
     enabled: true
     host: mta.reform.hmcts.net
     port: 25

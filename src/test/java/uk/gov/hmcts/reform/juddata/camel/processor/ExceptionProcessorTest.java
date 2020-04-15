@@ -39,10 +39,8 @@ public class ExceptionProcessorTest extends CamelTestSupport {
         exchange.setProperty(Exchange.FAILURE_ROUTE_ID, "1");
         ReflectionTestUtils.setField(exceptionProcessor, "mailEnabled", Boolean.TRUE);
         exceptionProcessor.process(exchange);
-        assertEquals("1", ((java.lang.String) ((java.util.concurrent.ConcurrentHashMap) exchange.getProperties()).get("CamelFailureRouteId")));
-        Object[] collection = ((org.apache.camel.impl.DefaultMessage) exchange.getIn()).getAttachmentNames().toArray();
-        assertEquals(0, collection.length);
-        assertEquals("1", ((java.lang.String) exchange.getProperties().get("CamelFailureRouteId")));
+        Mockito.verify(emailService, Mockito.times(1)).sendEmail(any(String.class), any(EmailData.class));
+
     }
 
     @Test
@@ -51,14 +49,9 @@ public class ExceptionProcessorTest extends CamelTestSupport {
             .withBody(" ")
             .build();
         exchange.setProperty(Exchange.EXCEPTION_CAUGHT, new Exception("Test"));
-        exchange.setProperty(Exchange.FAILURE_ROUTE_ID, "1");
         ReflectionTestUtils.setField(exceptionProcessor, "mailEnabled", Boolean.TRUE);
         exceptionProcessor.process(exchange);
         Mockito.verify(emailService, Mockito.times(1)).sendEmail(any(String.class), any(EmailData.class));
-        assertEquals("1", ((java.lang.String) ((java.util.concurrent.ConcurrentHashMap) exchange.getProperties()).get("CamelFailureRouteId")));
-        Object[] collection = ((org.apache.camel.impl.DefaultMessage) exchange.getIn()).getAttachmentNames().toArray();
-        assertEquals(0, collection.length);
-        assertEquals("1", ((java.lang.String) exchange.getProperties().get("CamelFailureRouteId")));
     }
 
     @Test
@@ -71,9 +64,5 @@ public class ExceptionProcessorTest extends CamelTestSupport {
         ReflectionTestUtils.setField(exceptionProcessor, "mailEnabled", Boolean.FALSE);
         exceptionProcessor.process(exchange);
         Mockito.verify(emailService, Mockito.times(0)).sendEmail(any(String.class), any(EmailData.class));
-        assertEquals("1", ((java.lang.String) ((java.util.concurrent.ConcurrentHashMap) exchange.getProperties()).get("CamelFailureRouteId")));
-        Object[] collection = ((org.apache.camel.impl.DefaultMessage) exchange.getIn()).getAttachmentNames().toArray();
-        assertEquals(0, collection.length);
-        assertEquals("1", ((java.lang.String) exchange.getProperties().get("CamelFailureRouteId")));
     }
 }

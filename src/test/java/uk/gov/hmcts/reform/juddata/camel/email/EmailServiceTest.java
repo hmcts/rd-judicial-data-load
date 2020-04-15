@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 import uk.gov.hmcts.reform.juddata.exception.EmailFailedSendException;
 
 public class EmailServiceTest {
-    private static final String EMAIL_FROM = "no-reply@exaple.com";
+    private static final String EMAIL_FROM = "no-reply@example.com";
 
     @Mock
     SimpleMailMessage mimeMessage;
