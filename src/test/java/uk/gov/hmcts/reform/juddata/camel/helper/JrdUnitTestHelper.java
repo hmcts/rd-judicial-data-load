@@ -120,7 +120,7 @@ public class JrdUnitTestHelper {
     public static EmailData getMockEmail() {
         EmailData email = new EmailData();
         email.setRecipient("recipient@example.com");
-        email.setSubject("Exception received at Rout id");
+        email.setSubject(" Ref Data - Exception in JRD data load");
         email.setMessage("");
         return email;
     }

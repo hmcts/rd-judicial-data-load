@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.juddata.config;
 
-import javax.sql.DataSource;
+import static org.mockito.Mockito.mock;
 
+import javax.sql.DataSource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
@@ -18,7 +19,11 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
-import uk.gov.hmcts.reform.juddata.camel.processor.*;
+import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
@@ -60,7 +65,7 @@ public class CamelConfig {
 
     @Bean
     ArchiveAzureFileProcessor azureFileProcessor() {
-        return Mockito.mock(ArchiveAzureFileProcessor.class);
+        return mock(ArchiveAzureFileProcessor.class);
     }
 
     private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
