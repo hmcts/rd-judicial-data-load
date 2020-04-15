@@ -32,6 +32,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.CamelConfig;
 
@@ -54,7 +55,7 @@ public class ParentOrchestrationRouteTest {
     JavaMailSender mailSender;
 
     @Autowired
-    uk.gov.hmcts.reform.juddata.camel.service.EmailService emailService;
+    EmailService emailService;
 
     @Autowired
     ExceptionProcessor exceptionProcessor;
