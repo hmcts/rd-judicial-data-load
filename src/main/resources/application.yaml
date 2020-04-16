@@ -36,7 +36,7 @@ spring:
     properties:
       mail-smtp:
         starttls:
-          enable: true
+          enable: false
         ssl:
           trust: "*"
 
