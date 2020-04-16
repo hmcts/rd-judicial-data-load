@@ -80,3 +80,9 @@ select-dataload-scheduler-audit-failure: select * from dataload_schedular_audit 
 select-dataload-scheduler-audit-partial-success: select *  from dataload_schedular_audit where scheduler_status='PartialSuccess'
 
 select-dataload-scheduler-audit-success: select *  from dataload_schedular_audit where scheduler_status='Success'
+
+start-leaf-route: direct:leaf
+
+leaf-archival-file-names: Roles.csv,Contracts.csv,Locations.csv,BaseLocations.csv
+
+leaf-archival-route: direct:jrdLeafArchival
