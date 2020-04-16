@@ -24,8 +24,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-@Component
 @Slf4j
+@Component
 public class AuditProcessor implements Processor {
 
 
@@ -34,10 +34,10 @@ public class AuditProcessor implements Processor {
 
     @Autowired
     @Qualifier("springJdbcTemplate")
-    private JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     @Value("${scheduler-insert-sql}")
-    private String schedulerInsertSql;
+    String schedulerInsertSql;
 
     @Autowired
     @Qualifier("springJdbcTransactionManager")

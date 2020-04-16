@@ -12,7 +12,10 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
 @Component
 @Slf4j
@@ -20,6 +23,21 @@ public class ExceptionProcessor implements Processor {
 
     @Autowired
     CamelContext camelContext;
+
+    @Autowired
+    EmailService emailService;
+
+    @Value("${spring.mail.from}")
+    private String mailFrom;
+
+    @Value("${spring.mail.to}")
+    private String mailTo;
+
+    @Value("${spring.mail.subject}")
+    private String mailsubject;
+
+    @Value("${spring.mail.enabled}")
+    private boolean mailEnabled;
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -29,6 +47,13 @@ public class ExceptionProcessor implements Processor {
             log.error("::::exception in route for data processing::::" + exception);
             exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
             exchange.getContext().getGlobalOptions().put(IS_EXCEPTION_HANDLED, TRUE.toString());
+            //check mail flag and send mail
+            if (mailEnabled) {
+                EmailData emailData = new EmailData();
+                emailData.setRecipient(mailTo);
+                emailData.setMessage(exception.getMessage());
+                emailService.sendEmail(mailFrom, emailData);
+            }
         }
     }
 }

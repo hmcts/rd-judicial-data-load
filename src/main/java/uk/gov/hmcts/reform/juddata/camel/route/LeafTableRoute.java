@@ -96,7 +96,7 @@ public class LeafTableRoute {
                         public void configure() throws Exception {
 
 
-                            onException(RouteFailedException.class, ValidationException.class)
+                            onException(RouteFailedException.class, ValidationException.class, RuntimeException.class)
                                     .handled(true)
                                     .process(failureProcessor)
                                     .process(schedulerAuditProcessor)

@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
@@ -75,12 +76,6 @@ public class ParentCamelConfig {
         testPostgres.start();
     }
 
-
-    @Bean
-    AuditProcessor schedulerAuditProcessor() {
-        return new AuditProcessor(); //To Do rename
-    }
-
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -103,7 +98,7 @@ public class ParentCamelConfig {
     }
 
     @Bean("springJdbcTemplate")
-    JdbcTemplate springJdbcTemplate() {
+    public JdbcTemplate springJdbcTemplate() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         jdbcTemplate.setDataSource(springJdbcDataSource());
         return jdbcTemplate;
@@ -163,27 +158,38 @@ public class ParentCamelConfig {
     }
 
     @Bean("myConstraintValidatorFactory")
-    ConstraintValidatorFactoryImpl constraintValidatorFactory() {
+    public ConstraintValidatorFactoryImpl constraintValidatorFactory() {
         return new ConstraintValidatorFactoryImpl();
     }
 
     @Bean
-    HeaderValidationProcessor headerValidationProcessor() {
+    public HeaderValidationProcessor headerValidationProcessor() {
         return new HeaderValidationProcessor();
     }
 
     @Bean
-    JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer() {
+    public JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer() {
         return new JsrValidatorInitializer<>();
     }
 
     @Bean
-    JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer() {
+    public JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer() {
         return new JsrValidatorInitializer<>();
     }
 
     @Bean
-    DataLoadUtil dataLoadUtil() {
+    public DataLoadUtil dataLoadUtil() {
         return new DataLoadUtil();
     }
+
+    @Bean
+    public AuditProcessor schedulerAuditProcessor() {
+        return new AuditProcessor();
+    }
+
+    @Bean
+    EmailService emailService() {
+        return mock(EmailService.class);
+    }
+
 }

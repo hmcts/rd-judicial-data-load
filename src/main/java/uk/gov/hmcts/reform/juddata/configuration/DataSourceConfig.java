@@ -68,7 +68,6 @@ public class DataSourceConfig {
         return def;
     }
 
-
     @Bean("springJdbcTemplate")
     JdbcTemplate springJdbcTemplate() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();

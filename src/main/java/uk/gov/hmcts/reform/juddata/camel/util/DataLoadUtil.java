@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class DataLoadUtil {
 
     public void setGlobalConstant(CamelContext camelContext, String schedulerName) {

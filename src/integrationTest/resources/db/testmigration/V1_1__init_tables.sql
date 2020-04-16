@@ -21,7 +21,6 @@ CREATE TABLE dbjuddata.judicial_user_profile(
 	CONSTRAINT personal_code_unique UNIQUE (personal_code),
 	CONSTRAINT email_id UNIQUE (email_id),
 	CONSTRAINT elinks_id PRIMARY KEY (elinks_id)
-
 );
 
 CREATE TABLE dbjuddata.judicial_office_appointment(
@@ -73,7 +72,7 @@ CREATE TABLE dbjuddata.judicial_role_type(
 
 );
 
-CREATE TABLE contract_type(
+CREATE TABLE dbjuddata.contract_type(
 	contract_type_id varchar(64) NOT NULL,
 	contract_type_desc_en varchar(256) NOT NULL,
 	contract_type_desc_cy varchar(256),
@@ -103,24 +102,24 @@ CREATE TABLE dbjuddata.region_type(
 
 
 
-ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT elinks_Id_fk1 FOREIGN KEY (elinks_Id)
+ALTER TABLE judicial_office_appointment ADD CONSTRAINT elinks_Id_fk1 FOREIGN KEY (elinks_Id)
 REFERENCES judicial_user_profile (elinks_Id);
 
-ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT role_id_fk1 FOREIGN KEY (role_id)
+ALTER TABLE judicial_office_appointment ADD CONSTRAINT role_id_fk1 FOREIGN KEY (role_id)
 REFERENCES judicial_role_type (role_id);
 
-ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT contract_type_Id_fk1 FOREIGN KEY (contract_type_Id)
+ALTER TABLE judicial_office_appointment ADD CONSTRAINT contract_type_Id_fk1 FOREIGN KEY (contract_type_Id)
 REFERENCES contract_type (contract_type_Id);
 
-ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT base_location_Id_fk1 FOREIGN KEY (base_location_Id)
+ALTER TABLE judicial_office_appointment ADD CONSTRAINT base_location_Id_fk1 FOREIGN KEY (base_location_Id)
 REFERENCES base_location_type (base_location_Id);
 
-ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT region_Id_fk1 FOREIGN KEY (region_Id)
+ALTER TABLE judicial_office_appointment ADD CONSTRAINT region_Id_fk1 FOREIGN KEY (region_Id)
 REFERENCES region_type (region_Id);
 
-ALTER TABLE dbjuddata.judicial_office_authorisation ADD CONSTRAINT elinks_Id_fk2 FOREIGN KEY (elinks_Id)
+ALTER TABLE judicial_office_authorisation ADD CONSTRAINT elinks_Id_fk2 FOREIGN KEY (elinks_Id)
 REFERENCES judicial_user_profile (elinks_Id);
 
-ALTER TABLE dbjuddata.judicial_office_authorisation ADD CONSTRAINT authorisation_Id_fk1 FOREIGN KEY (authorisation_Id)
+ALTER TABLE judicial_office_authorisation ADD CONSTRAINT authorisation_Id_fk1 FOREIGN KEY (authorisation_Id)
 REFERENCES authorisation_type (authorisation_Id);
 

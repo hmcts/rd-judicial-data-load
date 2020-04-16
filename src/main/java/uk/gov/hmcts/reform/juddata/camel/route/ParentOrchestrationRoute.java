@@ -6,7 +6,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CHILD_ROUTES;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DIRECT_ROUTE;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.INSERT_SQL;
@@ -16,7 +15,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRAT
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_STATUS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TABLE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.failureProcessor;
@@ -27,7 +25,6 @@ import java.util.List;
 
 import javax.validation.ValidationException;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
 import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.Processor;
@@ -121,7 +118,7 @@ public class ParentOrchestrationRoute {
                         @Override
                         public void configure() throws Exception {
 
-                            onException(RouteFailedException.class, ValidationException.class)
+                            onException(RouteFailedException.class, ValidationException.class, RuntimeException.class)
                                     .handled(true)
                                     .process(failureProcessor)
                                     .process(schedulerAuditProcessor)

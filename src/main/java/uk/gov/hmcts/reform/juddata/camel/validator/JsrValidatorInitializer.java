@@ -82,7 +82,7 @@ public class JsrValidatorInitializer<T> {
      */
     public List<T> validate(List<T> binders) {
 
-        log.info("::::JsrValidatorInitializer data processing validate starts::::" );
+        log.info("::::JsrValidatorInitializer data processing validate starts::::");
 
         this.constraintViolations = new LinkedHashSet<>();
 
@@ -96,7 +96,7 @@ public class JsrValidatorInitializer<T> {
 
             this.constraintViolations.addAll(constraintViolations);
         }
-        log.info("::::JsrValidatorInitializer data processing validate complete::::" );
+        log.info("::::JsrValidatorInitializer data processing validate complete::::");
         return binderFilter;
     }
 
@@ -107,7 +107,7 @@ public class JsrValidatorInitializer<T> {
      */
     public void auditJsrExceptions(Exchange exchange) {
 
-        log.info("::::JsrValidatorInitializer data processing audit start::::" );
+        log.info("::::JsrValidatorInitializer data processing audit start::::");
 
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
@@ -138,7 +138,7 @@ public class JsrValidatorInitializer<T> {
 
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
-        log.info("::::JsrValidatorInitializer data processing audit complete::::" );
+        log.info("::::JsrValidatorInitializer data processing audit complete::::");
     }
 
     /**
