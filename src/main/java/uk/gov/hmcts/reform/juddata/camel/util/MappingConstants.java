@@ -71,7 +71,6 @@ public class MappingConstants {
 
     public static final String SUCCESS = "Success";
 
-
     public static Timestamp getDateTimeStamp(String date) {
         return Timestamp.valueOf(date);
     }
@@ -81,7 +80,7 @@ public class MappingConstants {
         return new Timestamp(new Date().getTime());
     }
 
-    public static  Processor failureProcessor = new Processor() {
+    public static final Processor failureProcessor = new Processor() {
         @Override
         public void process(Exchange exchange) throws Exception {
             exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
