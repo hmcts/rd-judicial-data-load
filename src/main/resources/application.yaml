@@ -27,7 +27,7 @@ spring:
   flyway:
     enabled: ${FLYWAY_ENABLED:true}
     locations: classpath:db/migration,classpath:db/postgres
-    schemas: dbjuddata
+
   mail:
     from: no-reply@reform.hmcts.net
     to:  sushant.choudhari@hmcts.net;abhijit.diwan@hmcts.net
@@ -75,8 +75,8 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 17 13 * * ?
-  camel-leaf-router-config: 0 16 13 * * ?
+  camel-route-config: 0 09 22 * * ?
+  camel-leaf-router-config: 0 08 22 * * ?
 
 azure:
   storage:

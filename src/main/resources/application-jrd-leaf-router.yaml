@@ -1,6 +1,6 @@
 start-leaf-route: direct:leaf
 leaf-route-names: judicial-role-type,judicial-contract-type,judicial-region-type,judicial-base-location_type
-scheduler-insert-sql: insert into dbjuddata.dataload_schedular_audit (scheduler_name,scheduler_start_time,scheduler_end_time,scheduler_status)
+scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,scheduler_start_time,scheduler_end_time,scheduler_status)
   values(?,?,?,?)
 scheduler-name: judicial_leaf_scheduler
 Audit-Enable: true
@@ -11,7 +11,7 @@ leaf-route:
     file-name: Roles
     table-name: judicial_role_type
     insert-sql:
-      sql:insert into dbjuddata.judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
+      sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
       on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-test.csv?credentials=#credsreg&operation=updateBlockBlob
@@ -24,7 +24,7 @@ leaf-route:
     file-name: Contracts
     table-name: contract_type
     insert-sql:
-      sql:insert into dbjuddata.contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)
+      sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)
       on conflict (contract_type_id) do update set contract_type_desc_en = :#contract_type_desc_en,contract_type_desc_cy = :#contract_type_desc_cy?dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Contracts-test.csv?credentials=#credsreg&operation=updateBlockBlob
@@ -37,7 +37,7 @@ leaf-route:
     file-name: Locations
     table-name: region_type
     insert-sql:
-      sql:insert into dbjuddata.region_type (region_id,region_desc_en,region_desc_cy) values(:#region_id,:#region_desc_en,:#region_desc_cy)
+      sql:insert into region_type (region_id,region_desc_en,region_desc_cy) values(:#region_id,:#region_desc_en,:#region_desc_cy)
       on conflict (region_id) do update set region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy?dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Locations-test.csv?credentials=#credsreg&operation=updateBlockBlob
@@ -50,7 +50,7 @@ leaf-route:
     file-name: BaseLocations
     table-name: base_location_type
     insert-sql:
-      sql:insert into dbjuddata.base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)
+      sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)
       on conflict (base_location_id) do update set court_name = :#court_name,court_type = :#court_type,circuit = :#circuit,area_of_expertise = :#area_of_expertise?dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/BaseLocations-test.csv?credentials=#credsreg&operation=updateBlockBlob
