@@ -144,6 +144,7 @@ public class LeafTableRoute {
 
                             //Archive Blob files
                             from(leafArchivalRoute)
+                                    .setHeader(LEAF_ROUTE, constant(LEAF_ROUTE))
                                     .loop(leafArchivalFileNames.size())
                                     .process(azureFileProcessor)
                                     .toD(archivalPath + "${header.filename}?" + archivalCred)
