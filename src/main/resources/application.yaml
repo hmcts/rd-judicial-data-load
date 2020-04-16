@@ -30,7 +30,7 @@ spring:
     from: no-reply@reform.hmcts.net
     to:  sushant.choudhari@hmcts.net
     subject:  Ref Data - Exception in JRD data load
-    enabled: true
+    enabled: false
     host: mta.reform.hmcts.net
     port: 25
     properties:
