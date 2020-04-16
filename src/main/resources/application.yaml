@@ -30,7 +30,7 @@ spring:
     from: no-reply@reform.hmcts.net
     to:  sushant.choudhari@hmcts.net
     subject:  Ref Data - Exception in JRD data load
-    enabled: true
+    enabled: false
     host: mta.reform.hmcts.net
     port: 25
     properties:
@@ -74,8 +74,8 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 0/120 * * * ?
-  camel-leaf-router-config: 0 */105 * * * ?
+  camel-route-config: 0 0/20 * * * ?
+  camel-leaf-router-config: 0 */10 * * * ?
 
 azure:
   storage:
