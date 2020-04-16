@@ -58,6 +58,10 @@ contract-select-jrd-sql: SELECT * FROM contract_type
 
 role-select-jrd-sql: SELECT * FROM judicial_role_type
 
+leaf-archival-route: direct:jrdLeafArchival
+
+leaf-archival-file-names: Roles.csv,Contracts.csv,Locations.csv,BaseLocations.csv
+
 
 
 

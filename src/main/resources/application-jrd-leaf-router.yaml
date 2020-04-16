@@ -4,6 +4,8 @@ scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,sched
   values(?,?,?,?)
 scheduler-name: judicial_leaf_scheduler
 Audit-Enable: true
+leaf-archival-route: direct:jrdLeafArchival
+leaf-archival-file-names: Roles-test.csv,Contracts-test.csv,Locations-test.csv,BaseLocations-test.csv
 
 leaf-route:
   judicial-role-type:
