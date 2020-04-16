@@ -34,7 +34,7 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
                 judicialUserProfiles);
 
-        log.info("Judicial User Profile Records count before Validation:: " + filteredJudicialUserProfiles.size());
+        log.info("Judicial User Profile Records count after Validation:: " + filteredJudicialUserProfiles.size());
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 

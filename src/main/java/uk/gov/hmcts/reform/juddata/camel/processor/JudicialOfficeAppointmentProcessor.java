@@ -33,7 +33,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
         List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
                 judicialOfficeAppointments);
 
-        log.info("Judicial Appointment Records count before Validation:: " + filteredJudicialAppointments.size());
+        log.info("Judicial Appointment Records count after Validation:: " + filteredJudicialAppointments.size());
 
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
 
