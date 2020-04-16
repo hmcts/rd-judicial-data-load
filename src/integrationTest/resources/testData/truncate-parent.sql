@@ -1,0 +1,3 @@
+truncate dbjuddata.judicial_office_appointment cascade;
+truncate dbjuddata.judicial_user_profile cascade;
+commit;

@@ -1,51 +1,39 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Objects.nonNull;
+import static java.util.Collections.singletonList;
 
-import java.util.ArrayList;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialBaseLocationProcessor implements Processor {
+public class JudicialBaseLocationProcessor extends JsrValidationBaseProcessor<JudicialBaseLocationType> {
+
+    @Autowired
+    JsrValidatorInitializer<JudicialBaseLocationType> judicialBaseLocationTypeJsrValidatorInitializer;
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        List<JudicialBaseLocationType> locations = new ArrayList<>();
-        List<JudicialBaseLocationType> locationsRecords = (List<JudicialBaseLocationType>) exchange.getIn().getBody();
+        List<JudicialBaseLocationType> locationsRecords;
 
-        for (JudicialBaseLocationType user : locationsRecords) {
+        locationsRecords = (exchange.getIn().getBody() instanceof List)
+                ? (List<JudicialBaseLocationType>) exchange.getIn().getBody()
+                : singletonList((JudicialBaseLocationType) exchange.getIn().getBody());
 
-            JudicialBaseLocationType validLocation = fetch(user);
-            if (nonNull(validLocation)) {
+        log.info("Base Location Records count before Validation:: " + locationsRecords.size());
+        List<JudicialBaseLocationType> filteredBaseLocationTypes = validate(judicialBaseLocationTypeJsrValidatorInitializer,
+                locationsRecords);
+        log.info("Base Location Records count after Validation:: " + filteredBaseLocationTypes.size());
+        audit(judicialBaseLocationTypeJsrValidatorInitializer, exchange);
 
-                locations.add(validLocation);
-
-            } else {
-
-                log.info("Invalid Location record ");
-            }
-
-            exchange.getIn().setBody(locations);
-
-        }
-
-        log.info("Location Records count After Validation::" + locations.size());
-    }
-
-
-    private JudicialBaseLocationType fetch(JudicialBaseLocationType location) {
-
-        JudicialBaseLocationType locationAfterValidation = null;
-        if (nonNull(location.getBaseLocationId())) {
-            locationAfterValidation = location;
-        }
-        return locationAfterValidation;
+        exchange.getMessage().setBody(filteredBaseLocationTypes);
     }
 }

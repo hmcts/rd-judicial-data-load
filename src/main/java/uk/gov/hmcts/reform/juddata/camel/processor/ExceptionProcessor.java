@@ -1,19 +1,59 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
+import static java.lang.Boolean.TRUE;
+import static java.util.Objects.isNull;
 import static org.apache.camel.Exchange.EXCEPTION_CAUGHT;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.IS_EXCEPTION_HANDLED;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_STATUS;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailData;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
 @Component
 @Slf4j
 public class ExceptionProcessor implements Processor {
 
+    @Autowired
+    CamelContext camelContext;
+
+    @Autowired
+    EmailService emailService;
+
+    @Value("${spring.mail.from}")
+    private String mailFrom;
+
+    @Value("${spring.mail.to}")
+    private String mailTo;
+
+    @Value("${spring.mail.subject}")
+    private String mailsubject;
+
+    @Value("${spring.mail.enabled}")
+    private boolean mailEnabled;
+
     @Override
-    public void process(Exchange exchange) {
-        Exception exception = (Exception) exchange.getProperty(EXCEPTION_CAUGHT);
-        log.error("::::exception in route for data processing::::" + exception);
+    public void process(Exchange exchange) throws Exception {
+
+        if (isNull(exchange.getContext().getGlobalOptions().get(IS_EXCEPTION_HANDLED))) {
+            Exception exception = (Exception) exchange.getProperty(EXCEPTION_CAUGHT);
+            log.error("::::exception in route for data processing::::" + exception);
+            exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
+            exchange.getContext().getGlobalOptions().put(IS_EXCEPTION_HANDLED, TRUE.toString());
+            //check mail flag and send mail
+            if (mailEnabled) {
+                EmailData emailData = new EmailData();
+                emailData.setRecipient(mailTo);
+                emailData.setMessage(exception.getMessage());
+                emailService.sendEmail(mailFrom, emailData);
+            }
+        }
     }
 }

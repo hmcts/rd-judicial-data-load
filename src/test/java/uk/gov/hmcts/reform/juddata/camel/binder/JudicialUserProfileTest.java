@@ -1,9 +1,14 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_FORMAT;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import org.junit.Test;
 
 public class JudicialUserProfileTest {
@@ -11,8 +16,9 @@ public class JudicialUserProfileTest {
     @Test
     public void  test_objects_JudicialUserProfile_correctly() {
 
-        LocalDate currentDate = LocalDate.now();
-        JudicialUserProfile judicialUserProfile = createJudicialUserProfileMock(currentDate);
+        Date currentDate = new Date();
+        LocalDateTime dateTime = LocalDateTime.now();
+        JudicialUserProfile judicialUserProfile = createJudicialUserProfileMock(currentDate, dateTime);
 
         assertEquals("elinksid_1", judicialUserProfile.getElinksId());
         assertEquals("personalCode_1", judicialUserProfile.getPersonalCode());
@@ -24,9 +30,9 @@ public class JudicialUserProfileTest {
         assertEquals("contractTypeId", judicialUserProfile.getContractTypeId());
         assertEquals("workpatterns", judicialUserProfile.getWorkPattern());
         assertEquals("some@hmcts.net", judicialUserProfile.getEmailId());
-        assertEquals(currentDate, judicialUserProfile.getJoiningDate());
-        assertEquals(currentDate, judicialUserProfile.getLastWorkingDate());
+        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getJoiningDate());
+        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getLastWorkingDate());
         assertEquals(true, judicialUserProfile.isActiveFlag());
-        assertEquals(currentDate.toString(), judicialUserProfile.getExtractedDate());
+        assertEquals(getDateTimeWithFormat(dateTime), judicialUserProfile.getExtractedDate());
     }
 }

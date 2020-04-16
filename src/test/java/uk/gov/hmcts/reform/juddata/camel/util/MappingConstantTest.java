@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createCurrentLocalDate;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createCurrentLocalDate;
 
 import java.sql.Timestamp;
 import org.junit.Test;

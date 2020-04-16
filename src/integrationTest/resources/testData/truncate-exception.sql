@@ -1,0 +1,2 @@
+truncate dbjuddata.dataload_exception_records;
+commit;
