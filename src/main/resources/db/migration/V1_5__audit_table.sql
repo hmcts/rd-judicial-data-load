@@ -1,4 +1,4 @@
-CREATE TABLE dbjuddata.dataload_schedular_audit(
+CREATE TABLE dataload_schedular_audit(
   id serial NOT NULL,
   scheduler_name varchar(64) NOT NULL,
   scheduler_start_time timestamp NOT NULL,

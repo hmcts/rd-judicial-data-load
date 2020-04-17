@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.route;
 
+import static java.util.Arrays.copyOf;
 import static org.apache.commons.lang.WordUtils.uncapitalize;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
@@ -37,6 +38,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
+import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.AuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
@@ -67,6 +69,22 @@ public class LeafTableRoute {
 
     @Autowired
     CamelContext camelContext;
+
+    @Value("${archival-path}")
+    String archivalPath;
+
+    @Value("${leaf-archival-file-names}")
+    List<String> leafArchivalFileNames;
+
+    @Autowired
+    ArchiveAzureFileProcessor azureFileProcessor;
+
+    @Value("${leaf-archival-route}")
+    String leafArchivalRoute;
+
+    @Value("${archival-cred}")
+    String archivalCred;
+
 
     @Autowired
     HeaderValidationProcessor headerValidationProcessor;
@@ -111,6 +129,9 @@ public class LeafTableRoute {
                                     .process(schedulerAuditProcessor);
 
                             String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
+                            //add last child route as  archival
+                            directRouteNameList = copyOf(directRouteNameList, directRouteNameList.length + 1);
+                            directRouteNameList[directRouteNameList.length - 1] = leafArchivalRoute;
 
                             //Started direct route with multicast all the configured routes eg.application-jrd-leaf-router.yaml
                             //with Transaction propagation required
@@ -120,6 +141,14 @@ public class LeafTableRoute {
                                     .multicast()
                                     .stopOnException().to(directRouteNameList).end()
                                     .process(schedulerAuditProcessor); //To do replace with Processor
+
+                            //Archive Blob files
+                            from(leafArchivalRoute)
+                                    .setHeader(LEAF_ROUTE, constant(LEAF_ROUTE))
+                                    .loop(leafArchivalFileNames.size())
+                                    .process(azureFileProcessor)
+                                    .toD(archivalPath + "${header.filename}?" + archivalCred)
+                                    .end();
 
                             for (RouteProperties route : routePropertiesList) {
 

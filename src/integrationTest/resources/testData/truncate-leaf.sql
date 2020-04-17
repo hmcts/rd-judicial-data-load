@@ -1,9 +1,9 @@
-truncate dbjuddata.base_location_type cascade;
+truncate base_location_type cascade;
 
-truncate dbjuddata.region_type cascade;
+truncate region_type cascade;
 
-truncate dbjuddata.contract_type cascade;
+truncate contract_type cascade;
 
-truncate dbjuddata.judicial_role_type cascade;
+truncate judicial_role_type cascade;
 
 commit;
