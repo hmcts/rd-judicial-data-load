@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.route;
 
 import static java.util.Arrays.copyOf;
 import static org.apache.commons.lang.WordUtils.uncapitalize;
+import static uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil.failureProcessor;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DIRECT_ROUTE;
@@ -16,7 +17,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PROCESSOR;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TABLE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.failureProcessor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
