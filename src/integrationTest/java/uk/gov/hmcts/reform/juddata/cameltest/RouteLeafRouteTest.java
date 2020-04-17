@@ -11,8 +11,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationT
 import java.util.List;
 import java.util.Map;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.spring.CamelSpringRunner;
 import org.apache.camel.test.spring.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.MockEndpoints;
@@ -20,21 +18,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
@@ -49,39 +42,7 @@ import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource =  "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
-public class LeafRouteTest {
-
-    @Autowired
-    protected CamelContext camelContext;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    LeafTableRoute leafTableRoute;
-
-    @Value("${base-location-select-jrd-sql}")
-    private String baseLocationSql;
-
-    @Value("${region-select-jrd-sql}")
-    private String regionSql;
-
-    @Value("${contract-select-jrd-sql}")
-    private String contractSql;
-
-    @Value("${role-select-jrd-sql}")
-    private String roleSql;
-
-
-    @Autowired
-    ProducerTemplate producerTemplate;
-
-    @Value("${start-leaf-route}")
-    private String startLeafRoute;
-
-    @Autowired
-    DataLoadUtil dataLoadUtil;
-
+public class RouteLeafRouteTest extends LeafRouteAbstractTest {
 
     @BeforeClass
     public static void beforeAll() throws Exception {
