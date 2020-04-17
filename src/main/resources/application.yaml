@@ -30,11 +30,11 @@ spring:
 
   mail:
     from: no-reply@reform.hmcts.net
-    to:  sushant.choudhari@hmcts.net;abhijit.diwan@hmcts.net
+    to:  sushant.choudhari@hmcts.net
     subject:  Exception received at Rout
     host: mta.reform.hmcts.net
     port: 25
-    enabled: true
+    enabled: false
     properties:
       mail-smtp:
         starttls:
@@ -75,8 +75,8 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 07 23 * * ?
-  camel-leaf-router-config: 0 06 23 * * ?
+  camel-route-config: 0 41 10 * * ?
+  camel-leaf-router-config: 0 40 10 * * ?
 
 azure:
   storage:
