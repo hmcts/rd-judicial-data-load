@@ -81,7 +81,7 @@ CREATE TABLE contract_type(
 
 );
 
-CREATE TABLE dbjuddata.base_location_type(
+CREATE TABLE base_location_type(
 	base_location_id varchar(64) NOT NULL,
 	court_name varchar(128),
 	bench varchar(128),
