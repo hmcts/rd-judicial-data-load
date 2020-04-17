@@ -31,7 +31,7 @@ route:
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Personal-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Personal?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
@@ -48,7 +48,7 @@ route:
       values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
       TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
     csv-binder-object: JudicialOfficeAppointment
