@@ -44,7 +44,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
-
+import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
 @Component
 public class LeafTableRoute {
@@ -96,6 +96,9 @@ public class LeafTableRoute {
     @Autowired
     AuditProcessor schedulerAuditProcessor;
 
+    @Autowired
+    EmailService emailService;
+
     @SuppressWarnings("unchecked")
     @Transactional("txManager")
     public void startRoute() throws FailedToCreateRouteException {
@@ -118,6 +121,7 @@ public class LeafTableRoute {
                                     .handled(true)
                                     .process(failureProcessor)
                                     .process(schedulerAuditProcessor)
+                                    .process(emailService)
                                     .markRollbackOnly()
                                     .end();
 

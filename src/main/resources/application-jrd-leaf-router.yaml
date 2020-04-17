@@ -3,7 +3,7 @@ leaf-route-names: judicial-role-type,judicial-contract-type,judicial-region-type
 scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,scheduler_start_time,scheduler_end_time,scheduler_status)
   values(?,?,?,?)
 scheduler-name: judicial_leaf_scheduler
-Audit-Enable: true
+audit-enable: true
 leaf-archival-route: direct:jrdLeafArchival
 leaf-archival-file-names: Roles-test.csv,Contracts-test.csv,Locations-test.csv,BaseLocations-test.csv
 
