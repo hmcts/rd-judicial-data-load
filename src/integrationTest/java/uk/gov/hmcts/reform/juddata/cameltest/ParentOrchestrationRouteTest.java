@@ -191,10 +191,10 @@ public class ParentOrchestrationRouteTest extends ParentRouteAbstractTest {
     public void testParentOrchestrationFailureEmail() throws Exception {
         setSourceData(fileWithError);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);;
-        setField(emailService, "mailEnabled", Boolean.FALSE);
+        setField(emailService, "mailEnabled", Boolean.TRUE);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
-        verify(emailService, times(1)).sendEmail(any(), any(String.class));
+        verify(emailService, times(1)).sendEmail(any(String.class), any(String.class));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class ParentOrchestrationRouteTest extends ParentRouteAbstractTest {
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
-        verify(emailService, times(0)).sendEmail(any(), any(String.class));
+        verify(emailService, times(0)).sendEmail(any(String.class), any(String.class));
     }
 }
 

@@ -5,6 +5,7 @@ import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mail.javamail.JavaMailSender;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
@@ -61,6 +62,9 @@ public abstract class ParentRouteAbstractTest {
 
     @Autowired
     protected ExceptionProcessor exceptionProcessor;
+
+    @Autowired
+    JavaMailSender mailSender;
 
     @Autowired
     protected EmailService emailService;
