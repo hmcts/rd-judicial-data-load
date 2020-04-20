@@ -164,12 +164,14 @@ public class ParentOrchestrationRoute {
                             for (RouteProperties route : routePropertiesList) {
 
                                 Expression exp = new SimpleExpression(route.getBlobPath());
+                                Expression fileName = new SimpleExpression(route.getFileName());
 
                                 from(DIRECT_ROUTE + route.getRouteName()).id(DIRECT_ROUTE + route.getRouteName())
                                         .transacted()
                                         .policy(springTransactionPolicy)
                                         .setHeader(ROUTE_DETAILS, () -> route)
                                         .setProperty(BLOBPATH, exp)
+                                        .setProperty(FILE_NAME, fileName)
                                         .process(fileReadProcessor)
                                         .process(headerValidationProcessor)
                                         .split(body()).unmarshal().bindy(BindyType.Csv,

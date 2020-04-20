@@ -1,6 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.service;
 
 import static org.apache.camel.Exchange.EXCEPTION_CAUGHT;
+import static org.apache.camel.Exchange.FILE_NAME;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.juddata.camel.exception.EmailFailureException;
 
@@ -33,18 +38,21 @@ public class EmailService implements Processor {
     @Value("${spring.mail.enabled}")
     private boolean mailEnabled;
 
-    public void sendEmail(String messageBody) {
+    public void sendEmail(String messageBody, String filename) {
         try {
             //check mail flag and send mail
             if (mailEnabled) {
                 SimpleMailMessage message = new SimpleMailMessage();
-                message.setTo(mailTo);
-                message.setSubject(mailsubject);
+                MimeMessage mimeMessage = mailSender.createMimeMessage();
+                MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                String[] split = mailTo.split(",");
+                mimeMsgHelperObj.setTo(split);
+                message.setSubject(mailsubject + filename);
                 message.setText(messageBody);
                 message.setFrom(mailFrom);
                 mailSender.send(message);
             }
-        } catch (MailException e) {
+        } catch (MailException | MessagingException e) {
             throw new EmailFailureException(e);
         }
     }
@@ -52,6 +60,7 @@ public class EmailService implements Processor {
     @Override
     public void process(Exchange exchange) {
         Exception exception = (Exception) exchange.getProperty(EXCEPTION_CAUGHT);
-        sendEmail(exception.getMessage());
+        String fileName = (String) exchange.getProperty(FILE_NAME);
+        sendEmail(exception.getMessage(), fileName);
     }
 }

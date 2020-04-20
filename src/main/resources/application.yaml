@@ -30,8 +30,8 @@ spring:
 
   mail:
     from: no-reply@reform.hmcts.net
-    to:  Praveen.Saxena@HMCTS.NET
-    subject:  Ref Data - Exception in JRD data load
+    to:  sushant.choudhari@hmcts.net
+    subject:  "Judicial Reference Data:  Exception in processing :: "
     host: mta.reform.hmcts.net
     port: 25
     enabled: true

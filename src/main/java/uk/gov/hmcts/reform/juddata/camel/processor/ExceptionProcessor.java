@@ -33,8 +33,7 @@ public class ExceptionProcessor implements Processor {
             log.error("::::exception in route for data processing::::" + exception);
             exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
             exchange.getContext().getGlobalOptions().put(IS_EXCEPTION_HANDLED, TRUE.toString());
-            //check mail flag and send mail
-            emailService.sendEmail(exception.getMessage());
+            emailService.sendEmail(exception.getMessage(), exception.getMessage());
         }
     }
 }
