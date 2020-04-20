@@ -54,8 +54,7 @@ public class ArchiveAzureFileProcessor implements Processor {
         Integer count = exchange.getProperty("CamelLoopIndex", Integer.class);
         String date = new SimpleDateFormat(archivalDateFormat).format(new Date());
         String fileName = filesToArchive.get(count);
-        exchange.getIn().setHeader("filename", "/" + fileName.substring(0,
-                fileName.indexOf(".csv")).concat(date + ".csv"));
+        exchange.getIn().setHeader("filename", "/" + fileName.concat(date));
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();
         exchange.getMessage().setBody(consumer.receiveBody(activeBlobs + "/" + filesToArchive.get(count)
