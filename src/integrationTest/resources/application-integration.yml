@@ -1,7 +1,7 @@
 spring:
   mail:
     from: no-reply@reform.hmcts.net
-    to:  sushant.choudhari@hmcts.net
+    to:  sushant.choudhari@hmcts.net,abhijit.diwan@hmcts.net
     enabled: true
     subject:  "Judicial Reference Data:  Exception in processing :: "
     host: mta.reform.hmcts.net

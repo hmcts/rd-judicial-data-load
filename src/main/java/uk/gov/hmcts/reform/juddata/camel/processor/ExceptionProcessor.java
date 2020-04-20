@@ -4,6 +4,7 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static org.apache.camel.Exchange.EXCEPTION_CAUGHT;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.IS_EXCEPTION_HANDLED;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_STATUS;
 
@@ -33,7 +34,8 @@ public class ExceptionProcessor implements Processor {
             log.error("::::exception in route for data processing::::" + exception);
             exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
             exchange.getContext().getGlobalOptions().put(IS_EXCEPTION_HANDLED, TRUE.toString());
-            emailService.sendEmail(exception.getMessage(), exception.getMessage());
+            String fileName = (String) exchange.getProperty(FILE_NAME);
+            emailService.sendEmail(exception.getMessage(), fileName);
         }
     }
 }

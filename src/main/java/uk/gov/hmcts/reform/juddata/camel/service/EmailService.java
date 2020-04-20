@@ -47,10 +47,10 @@ public class EmailService implements Processor {
                 MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");
                 String[] split = mailTo.split(",");
                 mimeMsgHelperObj.setTo(split);
-                message.setSubject(mailsubject + filename);
-                message.setText(messageBody);
-                message.setFrom(mailFrom);
-                mailSender.send(message);
+                mimeMsgHelperObj.setSubject(mailsubject + filename);
+                mimeMsgHelperObj.setText(messageBody);
+                mimeMsgHelperObj.setFrom(mailFrom);
+                mailSender.send(mimeMsgHelperObj.getMimeMessage());
             }
         } catch (MailException | MessagingException e) {
             throw new EmailFailureException(e);
