@@ -34,7 +34,7 @@ spring:
     subject:  Exception received at Rout
     host: mta.reform.hmcts.net
     port: 25
-    enabled: true
+    enabled: false
     properties:
       mail-smtp:
         starttls:
@@ -75,8 +75,8 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 */7 * * * ?
-  camel-leaf-router-config: 0 */5 * * * ?
+  camel-route-config: 0 0 21 * * ?
+  camel-leaf-router-config: 0 0 20 * * ?
 
 azure:
   storage:
