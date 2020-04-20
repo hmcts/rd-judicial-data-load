@@ -12,7 +12,6 @@ import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -27,33 +26,34 @@ public class EmailService implements Processor {
     JavaMailSender mailSender;
 
     @Value("${spring.mail.from}")
-    private String mailFrom;
+    String mailFrom;
 
     @Value("${spring.mail.to}")
-    private String mailTo;
+    String mailTo;
 
     @Value("${spring.mail.subject}")
-    private String mailsubject;
+    String mailsubject;
 
     @Value("${spring.mail.enabled}")
-    private boolean mailEnabled;
+    boolean mailEnabled;
 
     public void sendEmail(String messageBody, String filename) {
-        try {
-            //check mail flag and send mail
-            if (mailEnabled) {
-                SimpleMailMessage message = new SimpleMailMessage();
-                MimeMessage mimeMessage = mailSender.createMimeMessage();
-                MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        if (mailEnabled) {
+            try {
+                //check mail flag and send mail
+                MimeMessage message = mailSender.createMimeMessage();
+
+                MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(message, true);
                 String[] split = mailTo.split(",");
                 mimeMsgHelperObj.setTo(split);
                 mimeMsgHelperObj.setSubject(mailsubject + filename);
                 mimeMsgHelperObj.setText(messageBody);
                 mimeMsgHelperObj.setFrom(mailFrom);
                 mailSender.send(mimeMsgHelperObj.getMimeMessage());
+
+            } catch (MailException | MessagingException e) {
+                throw new EmailFailureException(e);
             }
-        } catch (MailException | MessagingException e) {
-            throw new EmailFailureException(e);
         }
     }
 
