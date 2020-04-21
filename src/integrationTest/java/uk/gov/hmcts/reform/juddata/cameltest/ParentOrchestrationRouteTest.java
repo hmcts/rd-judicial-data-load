@@ -2,7 +2,10 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PARTIAL_SUCCESS;
@@ -15,8 +18,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import java.util.List;
 import java.util.Map;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.spring.CamelSpringRunner;
 import org.apache.camel.test.spring.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.MockEndpoints;
@@ -24,25 +25,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
-import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
-import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 
@@ -55,62 +47,7 @@ import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource =  "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
-public class ParentOrchestrationRouteTest {
-
-    public static final String DB_SCHEDULER_STATUS = "scheduler_status";
-
-    @Autowired
-    protected CamelContext camelContext;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    ParentOrchestrationRoute parentRoute;
-
-    @Value("${start-route}")
-    private String startRoute;
-
-    @Autowired
-    ProducerTemplate producerTemplate;
-
-    @Value("${parent-select-jrd-sql}")
-    private String sql;
-
-    @Value("${child-select-child1-sql}")
-    private String sqlChild1;
-
-    @Value("${archival-cred}")
-    String archivalCred;
-
-    @Value("${select-dataload-schedular-audit}")
-    String selectDataLoadSchedulerAudit;
-
-    @Value("${scheduler-insert-sql}")
-    private String schedulerInsertJrdSql;
-
-    @Value("${select-dataload-scheduler-audit-failure}")
-    private String schedulerInsertJrdSqlFailure;
-
-    @Value("${select-dataload-scheduler-audit-partial-success}")
-    private String schedulerInsertJrdSqlPartialSuccess;
-
-    @Value("${select-dataload-scheduler-audit-success}")
-    private String schedulerInsertJrdSqlSuccess;
-
-
-    @Value("${audit-enable}")
-    Boolean auditEnable;
-
-    @Autowired
-    DataLoadUtil dataLoadUtil;
-
-    @Autowired
-    ExceptionProcessor exceptionProcessor;
-
-    @Autowired
-    EmailService emailService;
-
+public class ParentOrchestrationRouteTest extends ParentRouteAbstractTest {
 
     @BeforeClass
     public static void beforeAll() throws Exception {
@@ -251,23 +188,23 @@ public class ParentOrchestrationRouteTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationFailureEmail() throws Exception {
         setSourceData(fileWithError);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);;
-        ReflectionTestUtils.setField(exceptionProcessor, "mailEnabled", Boolean.FALSE);
+        setField(emailService, "mailEnabled", Boolean.FALSE);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
-        verify(emailService, Mockito.times(0)).sendEmail(Mockito.any(String.class), Mockito.any(uk.gov.hmcts.reform.juddata.camel.service.EmailData.class));
+        verify(emailService, times(1)).sendEmail(any(String.class));
     }
 
     @Test
+    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
     public void testParentOrchestrationSuccessEmail() throws Exception {
-        setSourceData(fileWithError);
+        setSourceData(file);
         camelContext.getGlobalOptions().put(MappingConstants.ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
-        verify(emailService, Mockito.times(1)).sendEmail(Mockito.any(String.class), Mockito.any(uk.gov.hmcts.reform.juddata.camel.service.EmailData.class));
+        verify(emailService, times(0)).sendEmail(any(String.class));
     }
 }
 

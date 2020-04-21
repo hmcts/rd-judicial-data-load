@@ -13,8 +13,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import java.util.List;
 import java.util.Map;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.spring.CamelSpringRunner;
 import org.apache.camel.test.spring.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.MockEndpoints;
@@ -22,21 +20,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml"})
@@ -48,38 +42,11 @@ import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource =  "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
-public class ParentOrchestrationRouteValidationTest {
-
-    @Autowired
-    protected CamelContext camelContext;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    ParentOrchestrationRoute parentRoute;
-
-    @Value("${start-route}")
-    private String startRoute;
-
-    @Autowired
-    ProducerTemplate producerTemplate;
-
-    @Value("${parent-select-jrd-sql}")
-    private String sql;
-
-    @Value("${child-select-child1-sql}")
-    private String sqlChild1;
-
-
-    @Value("${archival-cred}")
-    String archivalCred;
+public class ParentOrchestrationRouteValidationTest extends ParentRouteAbstractTest {
 
     @Value("${exception-select-query}")
     String exceptionQuery;
 
-    @Autowired
-    DataLoadUtil dataLoadUtil;
 
     @BeforeClass
     public static void beforeAll() throws Exception {

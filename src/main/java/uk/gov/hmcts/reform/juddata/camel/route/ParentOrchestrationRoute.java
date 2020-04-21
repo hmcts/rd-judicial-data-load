@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.route;
 
 import static java.util.Arrays.copyOf;
 import static org.apache.commons.lang.WordUtils.uncapitalize;
+import static uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil.failureProcessor;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CHILD_ROUTES;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
@@ -17,7 +18,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TABLE_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.TRUNCATE_SQL;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.failureProcessor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -45,6 +45,7 @@ import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 
 /**
  * This class is Judicial User Profile Router Triggers Orchestrated data loading.
@@ -97,6 +98,8 @@ public class ParentOrchestrationRoute {
     @Autowired
     HeaderValidationProcessor headerValidationProcessor;
 
+    @Autowired
+    EmailService emailService;
 
 
     @SuppressWarnings("unchecked")
@@ -122,6 +125,7 @@ public class ParentOrchestrationRoute {
                                     .handled(true)
                                     .process(failureProcessor)
                                     .process(schedulerAuditProcessor)
+                                    .process(emailService)
                                     .markRollbackOnly()
                                     .end();
 

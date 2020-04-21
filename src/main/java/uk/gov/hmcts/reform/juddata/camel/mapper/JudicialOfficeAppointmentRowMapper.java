@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp;
+import static uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil.getCurrentTimeStamp;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-
 @Configuration
 @EnableTransactionManagement
 public class DataSourceConfig {
@@ -80,17 +79,4 @@ public class DataSourceConfig {
         DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(springJdbcDataSource());
         return platformTransactionManager;
     }
-
-    //Aggregation configuration
-    //    @Bean
-    //    public JdbcAggregationRepository getJdbcAggregationRepository() {
-    //        JdbcAggregationRepository jdbcAggregationRepository = new PostgresAggregationRepository();
-    //        jdbcAggregationRepository.setRepositoryName("aggregationRepo");
-    //        jdbcAggregationRepository.setTransactionManager(txManager());
-    //        jdbcAggregationRepository.setDataSource(dataSource);
-    //        jdbcAggregationRepository.setStoreBodyAsText(true);
-    //        jdbcAggregationRepository.setPropagationBehavior(PROPAGATION_NESTED);
-    //        return  jdbcAggregationRepository;
-    //    }
-
 }

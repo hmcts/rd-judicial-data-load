@@ -1,11 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-
 public class MappingConstants {
 
     private MappingConstants() {
@@ -71,19 +65,4 @@ public class MappingConstants {
 
     public static final String SUCCESS = "Success";
 
-    public static Timestamp getDateTimeStamp(String date) {
-        return Timestamp.valueOf(date);
-    }
-
-    public static Timestamp getCurrentTimeStamp() {
-
-        return new Timestamp(new Date().getTime());
-    }
-
-    public static final Processor failureProcessor = new Processor() {
-        @Override
-        public void process(Exchange exchange) throws Exception {
-            exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
-        }
-    };
 }
