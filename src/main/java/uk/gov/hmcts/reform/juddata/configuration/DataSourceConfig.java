@@ -1,8 +1,11 @@
 package uk.gov.hmcts.reform.juddata.configuration;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import javax.sql.DataSource;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -15,12 +18,31 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @EnableTransactionManagement
 public class DataSourceConfig {
 
-    @Autowired
-    DataSource dataSource;
+    @Value("${spring.datasource.url}")
+    String url;
+
+    @Value("${spring.datasource.username}")
+    String userName;
+
+    @Value("${spring.datasource.password}")
+    String password;
+
+    @Bean
+    public DataSource dataSource() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        dataSourceBuilder.url(url);
+        dataSourceBuilder.username(userName);
+        dataSourceBuilder.password(password);
+        HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
+        dataSource.setMinimumIdle(1);
+        return dataSource;
+    }
+
 
     @Bean(name = "txManager")
     public PlatformTransactionManager txManager() {
-        PlatformTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource);
+        PlatformTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
         return platformTransactionManager;
     }
 
