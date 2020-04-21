@@ -75,8 +75,8 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 5 10 * * ?
-  camel-leaf-router-config: 0 1 10 * * ?
+  camel-route-config: 0 */3 * * * ?
+  camel-leaf-router-config: 0 */1 * * * ?
 
 azure:
   storage:
