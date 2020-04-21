@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import uk.gov.hmcts.reform.juddata.camel.exception.EmailFailureException;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@Slf4j
 public class EmailService implements Processor {
 
     @Autowired
@@ -52,10 +50,8 @@ public class EmailService implements Processor {
                 mimeMsgHelperObj.setText(messageBody);
                 mimeMsgHelperObj.setFrom(mailFrom);
                 mailSender.send(mimeMsgHelperObj.getMimeMessage());
-                log.info("::::  sending mail ::::",mailTo);
 
             } catch (MailException | MessagingException e) {
-                log.error("::::MailException  while  sending mail ::::" + e.toString());
                 throw new EmailFailureException(e);
             }
         }
