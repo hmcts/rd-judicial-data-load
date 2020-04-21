@@ -27,6 +27,15 @@ public class DataSourceConfig {
     @Value("${spring.datasource.password}")
     String password;
 
+    @Value("${spring.datasource.min-idle}")
+    int idleConnections;
+
+    @Value("${spring.datasource.max-timout}")
+    int maxTimeOut;
+
+    @Value("${spring.datasource.idle-timeout}")
+    int idleTimeOut;
+
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -36,6 +45,8 @@ public class DataSourceConfig {
         dataSourceBuilder.password(password);
         HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
         dataSource.setMinimumIdle(1);
+        dataSource.setIdleTimeout(30000);
+        dataSource.setMaxLifetime(600000);
         return dataSource;
     }
 

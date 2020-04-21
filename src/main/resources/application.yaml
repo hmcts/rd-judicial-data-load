@@ -33,6 +33,9 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
     username: ${POSTGRES_USERNAME:dbjuddata}
     password: ${POSTGRES_PASSWORD:dbjuddata}
+    min-idle: 1
+    max-timout: 600000
+    idle-timeout: 30000
     properties:
       charSet: UTF-8
     tomcat:
