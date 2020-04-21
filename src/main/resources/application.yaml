@@ -34,7 +34,7 @@ spring:
     subject:  "Judicial Reference Data:  Exception in processing  "
     host: mta.reform.hmcts.net
     port: 25
-    enabled: true
+    enabled: false
     properties:
       mail-smtp:
         starttls:
