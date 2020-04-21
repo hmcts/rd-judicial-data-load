@@ -44,9 +44,9 @@ public class DataSourceConfig {
         dataSourceBuilder.username(userName);
         dataSourceBuilder.password(password);
         HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
-        dataSource.setMinimumIdle(1);
-        dataSource.setIdleTimeout(30000);
-        dataSource.setMaxLifetime(600000);
+        dataSource.setMinimumIdle(idleConnections);
+        dataSource.setIdleTimeout(idleTimeOut);
+        dataSource.setMaxLifetime(maxTimeOut);
         return dataSource;
     }
 
