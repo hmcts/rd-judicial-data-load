@@ -39,7 +39,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.AuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
@@ -94,9 +93,6 @@ public class LeafTableRoute {
     private String schedulerName;
 
     @Autowired
-    AuditProcessor schedulerAuditProcessor;
-
-    @Autowired
     EmailService emailService;
 
     @SuppressWarnings("unchecked")
@@ -120,7 +116,6 @@ public class LeafTableRoute {
                             onException(RouteFailedException.class, ValidationException.class, RuntimeException.class)
                                     .handled(true)
                                     .process(failureProcessor)
-                                    .process(schedulerAuditProcessor)
                                     .process(emailService)
                                     .markRollbackOnly()
                                     .end();
@@ -129,8 +124,7 @@ public class LeafTableRoute {
                             onException(Exception.class)
                                     .handled(true)
                                     .process(exceptionProcessor)
-                                    .end()
-                                    .process(schedulerAuditProcessor);
+                                    .end();
 
                             String[] directRouteNameList = createDirectRoutesForMulticast(leafRoutesList);
                             //add last child route as  archival
@@ -143,8 +137,8 @@ public class LeafTableRoute {
                                     .transacted()
                                     .policy(springTransactionPolicy)
                                     .multicast()
-                                    .stopOnException().to(directRouteNameList).end()
-                                    .process(schedulerAuditProcessor); //To do replace with Processor
+                                    .stopOnException().to(directRouteNameList).end();
+
 
                             //Archive Blob files
                             from(leafArchivalRoute)

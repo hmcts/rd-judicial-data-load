@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
+import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 
 @Component
@@ -33,6 +34,9 @@ public class JrdUserProfileDataLoadScheduler {
     @Autowired
     DataLoadUtil dataLoadUtil;
 
+    @Autowired
+    AuditProcessingService schedulerAuditProcessingService;
+
     @PostConstruct
     public void postConstruct() throws Exception {
         camelContext.start();
@@ -46,5 +50,8 @@ public class JrdUserProfileDataLoadScheduler {
         camelContext.getGlobalOptions().remove(SCHEDULER_STATUS);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         producerTemplate.sendBody(startRoute, "starting JRD orchestration");
+
+        //runs Job Auditing
+        schedulerAuditProcessingService.auditSchedulerStatus(camelContext);
     }
 }
