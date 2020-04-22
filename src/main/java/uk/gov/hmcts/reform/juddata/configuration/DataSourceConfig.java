@@ -31,8 +31,8 @@ public class DataSourceConfig {
     @Value("${spring.datasource.min-idle}")
     int idleConnections;
 
-    @Value("${spring.datasource.max-timout}")
-    int maxTimeOut;
+    @Value("${spring.datasource.max-life}")
+    int maxLife;
 
     @Value("${spring.datasource.idle-timeout}")
     int idleTimeOut;
@@ -47,7 +47,7 @@ public class DataSourceConfig {
         HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
         dataSource.setMinimumIdle(idleConnections);
         dataSource.setIdleTimeout(idleTimeOut);
-        dataSource.setMaxLifetime(maxTimeOut);
+        dataSource.setMaxLifetime(maxLife);
         return dataSource;
     }
 
@@ -61,7 +61,7 @@ public class DataSourceConfig {
         HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
         dataSource.setMinimumIdle(idleConnections);
         dataSource.setIdleTimeout(idleTimeOut);
-        dataSource.setMaxLifetime(maxTimeOut);
+        dataSource.setMaxLifetime(maxLife);
         return dataSourceBuilder.build();
     }
 
