@@ -10,10 +10,8 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
@@ -21,9 +19,6 @@ public abstract class JsrValidationBaseProcessor<T> implements Processor {
 
     @Value("${jsr-threshold-limit}")
     int jsrThresholdLimit;
-
-    @Autowired
-    AuditProcessingService auditProcessingService;
 
     List<T> validate(JsrValidatorInitializer<T> jsrValidatorInitializer, List<T> list) {
         return jsrValidatorInitializer.validate(list);
