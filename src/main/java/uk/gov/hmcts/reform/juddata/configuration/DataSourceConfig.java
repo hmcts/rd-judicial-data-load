@@ -37,6 +37,9 @@ public class DataSourceConfig {
     @Value("${spring.datasource.idle-timeout}")
     int idleTimeOut;
 
+    @Value("${spring.datasource.maximum-pool-size}")
+    int maxPoolSize;
+
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -48,6 +51,7 @@ public class DataSourceConfig {
         dataSource.setMinimumIdle(idleConnections);
         dataSource.setIdleTimeout(idleTimeOut);
         dataSource.setMaxLifetime(maxLife);
+        dataSource.setMaximumPoolSize(maxPoolSize);
         return dataSource;
     }
 
@@ -62,6 +66,7 @@ public class DataSourceConfig {
         dataSource.setMinimumIdle(idleConnections);
         dataSource.setIdleTimeout(idleTimeOut);
         dataSource.setMaxLifetime(maxLife);
+        dataSource.setMaximumPoolSize(maxPoolSize);
         return dataSourceBuilder.build();
     }
 
