@@ -35,7 +35,6 @@ public class JrdLeafDataLoadStarter {
     @Value("${start-leaf-route}")
     private String startLeafRoute;
 
-
     @Autowired
     AuditProcessingService schedulerAuditProcessingService;
 
@@ -47,12 +46,16 @@ public class JrdLeafDataLoadStarter {
 
     @Scheduled(cron = "${scheduler.camel-leaf-router-config}")
     public void runJrdLeafScheduler() {
-        camelContext.getGlobalOptions().remove(IS_EXCEPTION_HANDLED);
-        camelContext.getGlobalOptions().remove(SCHEDULER_STATUS);
-        dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
-        producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
-
-        //runs Job Auditing
-        schedulerAuditProcessingService.auditSchedulerStatus(camelContext);
+        try {
+            camelContext.getGlobalOptions().remove(IS_EXCEPTION_HANDLED);
+            camelContext.getGlobalOptions().remove(SCHEDULER_STATUS);
+            dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
+            producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
+        } catch (Exception ex) {
+            log.error("::leaf-route failed::", ex.getMessage());
+        } finally {
+            //runs Job Auditing
+            schedulerAuditProcessingService.auditSchedulerStatus(camelContext);
+        }
     }
 }

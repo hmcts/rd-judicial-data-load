@@ -79,13 +79,15 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 0 22 * * ?
-  camel-leaf-router-config: 0 0 21 * * ?
+  camel-route-config: 0 17 23 * * ?
+  camel-leaf-router-config: 0 16 23 * * ?
 
 azure:
   storage:
-    account-name: ${ACCOUNT_NAME:ACCOUNT_NAME}
-    account-key: ${ACCOUNT_KEY:ACCOUNT_KEY}
-    container-name: ${CONTAINER_NAME:CONTAINER_NAME}
-    blob-url-suffix: ${BLOB_URL_SUFFIX:BLOB_URL_SUFFIX}
+    account-name: ${ACCOUNT_NAME:rddemo}
+    account-key: ${ACCOUNT_KEY:Vjmr3Yk0DUrygumP7FKJ2eUiOyhWvZ5XczDMk13J+m9vtk2IOXEcOlfjlcTaHDb5mHwAsq7qOYf3GtxEo/uFIA==}
+    container-name: ${CONTAINER_NAME:jrdtest}
+    https-enabled-url: ${HTTPS_ENABLED_URL:false}
+    blob-url: ${BLOB_URL:http://rddemo.blob.core.windows.net}
+    blob-https-url: ${BLOB_HTTPS_URL:http://rddemo.blob.core.windows.net}
 
