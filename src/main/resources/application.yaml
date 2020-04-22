@@ -49,13 +49,13 @@ spring:
     username: ${POSTGRES_USERNAME:dbjuddata}
     password: ${POSTGRES_PASSWORD:dbjuddata}
     min-idle: 1
-    max-timout: 600000
+    max-life: 600000
     idle-timeout: 30000
     maximum-pool-size: 5
     properties:
       charSet: UTF-8
     tomcat:
-      max-life: 10
+      max-active: 10
       max-idle: 10
       min-idle: 2
       max-wait: 10000
