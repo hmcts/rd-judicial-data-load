@@ -317,7 +317,9 @@
    file name: tomcat-embed-core-9.0.17.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
-        <vulnerabilityName>CVE-2019-0221</vulnerabilityName>
+        <vulnerabilityName>CVE-2019-17569</vulnerabilityName>
+        <vulnerabilityName>CVE-2020-1935</vulnerabilityName>
+        <vulnerabilityName>CVE-2020-1938</vulnerabilityName>
     </suppress>
     <suppress>
         <notes><![CDATA[
