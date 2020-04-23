@@ -50,7 +50,7 @@ public class DataSourceConfig {
         HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
         dataSource.setMinimumIdle(idleConnections);
         dataSource.setIdleTimeout(idleTimeOut);
-        dataSource.setMaxLifetime(maxLife);
+        //dataSource.setMaxLifetime(maxLife);
         dataSource.setMaximumPoolSize(maxPoolSize);
         return dataSource;
     }
@@ -65,7 +65,7 @@ public class DataSourceConfig {
         HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
         dataSource.setMinimumIdle(idleConnections);
         dataSource.setIdleTimeout(idleTimeOut);
-        dataSource.setMaxLifetime(maxLife);
+        //dataSource.setMaxLifetime(maxLife);
         dataSource.setMaximumPoolSize(maxPoolSize);
         return dataSourceBuilder.build();
     }
