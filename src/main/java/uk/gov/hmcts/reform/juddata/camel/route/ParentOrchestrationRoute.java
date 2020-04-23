@@ -120,7 +120,6 @@ public class ParentOrchestrationRoute {
                             onException(RouteFailedException.class, ValidationException.class, RuntimeException.class)
                                     .handled(true)
                                     .process(failureProcessor)
-                                    //.process(schedulerAuditProcessor)
                                     .process(emailService)
                                     .markRollbackOnly()
                                     .end();
@@ -130,7 +129,6 @@ public class ParentOrchestrationRoute {
                                     .handled(true)
                                     .process(exceptionProcessor)
                                     .end();
-                            //.process(schedulerAuditProcessor);
 
                             String[] directChild = new String[dependantRoutes.size()];
 
