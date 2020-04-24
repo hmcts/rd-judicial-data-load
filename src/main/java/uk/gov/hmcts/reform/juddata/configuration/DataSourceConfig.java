@@ -26,6 +26,9 @@ public class DataSourceConfig {
     @Value("${spring.datasource.password}")
     String password;
 
+    @Value("${spring.datasource.propagationBehaviorName}")
+    String propagationBehaviorName ;
+
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -56,7 +59,7 @@ public class DataSourceConfig {
     public SpringTransactionPolicy getSpringTransaction() {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
         springTransactionPolicy.setTransactionManager(txManager());
-        springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
+        springTransactionPolicy.setPropagationBehaviorName(propagationBehaviorName);
         return springTransactionPolicy;
     }
 
