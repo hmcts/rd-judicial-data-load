@@ -1,61 +1,42 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import java.util.ArrayList;
+import static java.util.Collections.singletonList;
+
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialOfficeAppointmentProcessor implements Processor {
+public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcessor<JudicialOfficeAppointment> {
+
+    @Autowired
+    JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
 
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
 
-        List<JudicialOfficeAppointment> users = new ArrayList<>();
         List<JudicialOfficeAppointment> judicialOfficeAppointments;
 
-        if (exchange.getIn().getBody() instanceof List) {
-            judicialOfficeAppointments = (List<JudicialOfficeAppointment>) exchange.getIn().getBody();
-        } else {
-            JudicialOfficeAppointment judicialOfficeAppointment = (JudicialOfficeAppointment) exchange.getIn().getBody();
-            judicialOfficeAppointments = new ArrayList<>();
-            judicialOfficeAppointments.add(judicialOfficeAppointment);
-        }
+        judicialOfficeAppointments = (exchange.getIn().getBody() instanceof List)
+                ? (List<JudicialOfficeAppointment>) exchange.getIn().getBody()
+                : singletonList((JudicialOfficeAppointment) exchange.getIn().getBody());
 
-        for (JudicialOfficeAppointment officeAppointment : judicialOfficeAppointments) {
+        log.info("Judicial Appointment Records count before Validation:: " + judicialOfficeAppointments.size());
 
-            JudicialOfficeAppointment validUser = fetch(officeAppointment);
-            if (null != validUser) {
+        List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
+                judicialOfficeAppointments);
 
-                users.add(validUser);
-            } else {
+        log.info("Judicial Appointment Records count after Validation:: " + filteredJudicialAppointments.size());
 
-                log.info(" Invalid JudicialOfficeAppointment record ");
-            }
+        audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
 
-            exchange.getIn().setBody(users);
-
-        }
-
-        log.info("::JudicialOfficeAppointment Records count::" + users.size());
-    }
-
-
-    private JudicialOfficeAppointment fetch(JudicialOfficeAppointment officeAppointment) {
-
-        JudicialOfficeAppointment offAppAfterValidation = null;
-        if (null != officeAppointment.getElinksId()) {
-
-            offAppAfterValidation = officeAppointment;
-
-        }
-        return offAppAfterValidation;
-
+        exchange.getMessage().setBody(filteredJudicialAppointments);
     }
 }

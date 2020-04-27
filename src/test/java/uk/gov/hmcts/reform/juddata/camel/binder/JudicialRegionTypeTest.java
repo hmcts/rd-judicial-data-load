@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJudicialRegionType;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialRegionType;
 
 import org.junit.Test;
 

@@ -7,7 +7,8 @@ properties([
       string(name: 'APP', defaultValue: 'judicial-data-load', description: 'judicial Reference Data API'),
       string(name: 'TYPE', defaultValue: 'java', description: ''),
       string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be build and deployed'),
-      choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in'),
+      choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')
+
   ])
 ])
 

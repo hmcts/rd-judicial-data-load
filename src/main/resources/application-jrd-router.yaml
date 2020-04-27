@@ -4,25 +4,34 @@ start-route: direct:JRD
 archival-route: direct:JrdArchival
 archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
-archival-file-names: Personal.csv,Appointments.csv
+archival-file-names: Personal,Appointments
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 200000
+invalid-header-sql: insert into dataload_exception_records(file_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
+invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?, ?)
+jsr-threshold-limit: 100
+scheduler-insert-sql:  insert into dataload_schedular_audit (scheduler_name,scheduler_start_time,scheduler_end_time,scheduler_status)
+  values(?,?,?,?)
+# TO do need to removed notr required
+scheduler-leaf-name: judicial_main_scheduler
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
+    file-name: Personal
+    table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date)
       values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
-      :#contract_type,:#work_pattern, :#email_id,:#joining_date,:#last_working_date,:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
+      :#contract_type,:#work_pattern, :#email_id,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
-      contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = :#joining_date,
-      last_working_date = :#last_working_date, active_flag = :#active_flag,
-      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
+      contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
+      last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
+      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Personal.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Personal?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
@@ -30,19 +39,24 @@ route:
 
   judicial-office-appointment:
     id: judicial-office-appointment
+    file-name: Appointments
+    table-name: judicial_office_appointment
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:
       sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
-      values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag, :#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
+      values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
     csv-binder-object: JudicialOfficeAppointment
 
   judicial-office-authorisation:
     id: judicial-office-authorisation
+    file-name: judicial_office_authorisation.csv
+    table-name: judicial_office_authorisation
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:

@@ -1,51 +1,40 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Objects.nonNull;
+import static java.util.Collections.singletonList;
 
-import java.util.ArrayList;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Component
 @Slf4j
-public class JudicialUserRoleTypeProcessor implements Processor {
+public class JudicialUserRoleTypeProcessor extends JsrValidationBaseProcessor<JudicialUserRoleType> {
+
+
+    @Autowired
+    JsrValidatorInitializer<JudicialUserRoleType> judicialUserRoleTypeJsrValidatorInitializer;
 
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
 
-        List<JudicialUserRoleType> userRoles = new ArrayList<>();
-        List<JudicialUserRoleType> judicialUserRoleTypes = (List<JudicialUserRoleType>) exchange.getIn().getBody();
+        List<JudicialUserRoleType> judicialUserRoleTypes;
 
-        for (JudicialUserRoleType user : judicialUserRoleTypes) {
+        judicialUserRoleTypes = (exchange.getIn().getBody() instanceof List)
+                ? (List<JudicialUserRoleType>) exchange.getIn().getBody()
+                : singletonList((JudicialUserRoleType) exchange.getIn().getBody());
 
-            JudicialUserRoleType validUserRole = fetch(user);
-            if (nonNull(validUserRole)) {
+        log.info("Role type Records count before Validation:: " + judicialUserRoleTypes.size());
+        List<JudicialUserRoleType> filteredJudicialRoleTypes = validate(judicialUserRoleTypeJsrValidatorInitializer,
+                judicialUserRoleTypes);
+        log.info("::Role type Records count after Validation:: " + filteredJudicialRoleTypes.size());
+        audit(judicialUserRoleTypeJsrValidatorInitializer, exchange);
 
-                userRoles.add(validUserRole);
-            } else {
-
-                log.info("Invalid JudicialUserRole record ");
-            }
-
-            exchange.getIn().setBody(userRoles);
-
-        }
-
-        log.info("JudicialUserRole Records count After Validation::" + userRoles.size());
-    }
-
-
-    private JudicialUserRoleType fetch(JudicialUserRoleType userRole) {
-
-        JudicialUserRoleType roleAfterValidation = null;
-        if (nonNull(userRole.getRoleId())) {
-            roleAfterValidation = userRole;
-        }
-        return roleAfterValidation;
+        exchange.getMessage().setBody(filteredJudicialRoleTypes);
     }
 }
