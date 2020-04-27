@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.juddata.configuration;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import javax.sql.DataSource;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,18 @@ public class DataSourceConfig {
     @Value("${spring.datasource.password}")
     String password;
 
+    @Value("${spring.datasource.min-idle}")
+    int idleConnections;
+
+    @Value("${spring.datasource.max-life}")
+    int maxLife;
+
+    @Value("${spring.datasource.idle-timeout}")
+    int idleTimeOut;
+
+    @Value("${spring.datasource.maximum-pool-size}")
+    int maxPoolSize;
+
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -33,7 +47,12 @@ public class DataSourceConfig {
         dataSourceBuilder.url(url);
         dataSourceBuilder.username(userName);
         dataSourceBuilder.password(password);
-        return dataSourceBuilder.build();
+        HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
+        dataSource.setMinimumIdle(idleConnections);
+        dataSource.setIdleTimeout(idleTimeOut);
+        //dataSource.setMaxLifetime(maxLife);
+        dataSource.setMaximumPoolSize(maxPoolSize);
+        return dataSource;
     }
 
     @Bean("springJdbcDataSource")
@@ -43,6 +62,11 @@ public class DataSourceConfig {
         dataSourceBuilder.url(url);
         dataSourceBuilder.username(userName);
         dataSourceBuilder.password(password);
+        HikariDataSource dataSource = (HikariDataSource) dataSourceBuilder.build();
+        dataSource.setMinimumIdle(idleConnections);
+        dataSource.setIdleTimeout(idleTimeOut);
+        //dataSource.setMaxLifetime(maxLife);
+        dataSource.setMaximumPoolSize(maxPoolSize);
         return dataSourceBuilder.build();
     }
 

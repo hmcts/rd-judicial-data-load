@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
-import uk.gov.hmcts.reform.juddata.camel.processor.AuditProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.HeaderValidationProcessor;
@@ -67,9 +66,6 @@ public class ParentOrchestrationRoute {
 
     @Autowired
     ExceptionProcessor exceptionProcessor;
-
-    @Autowired
-    AuditProcessor schedulerAuditProcessor;
 
     @Value("${start-route}")
     private String startRoute;
@@ -124,7 +120,6 @@ public class ParentOrchestrationRoute {
                             onException(RouteFailedException.class, ValidationException.class, RuntimeException.class)
                                     .handled(true)
                                     .process(failureProcessor)
-                                    .process(schedulerAuditProcessor)
                                     .process(emailService)
                                     .markRollbackOnly()
                                     .end();
@@ -133,8 +128,7 @@ public class ParentOrchestrationRoute {
                             onException(Exception.class)
                                     .handled(true)
                                     .process(exceptionProcessor)
-                                    .end()
-                                    .process(schedulerAuditProcessor);
+                                    .end();
 
                             String[] directChild = new String[dependantRoutes.size()];
 
@@ -150,7 +144,7 @@ public class ParentOrchestrationRoute {
                                     .policy(springTransactionPolicy)
                                     .multicast()
                                     .stopOnException()
-                                    .to(directChild).end().process(schedulerAuditProcessor);
+                                    .to(directChild).end();
 
                             //Archive Blob files
                             from(archivalRoute)

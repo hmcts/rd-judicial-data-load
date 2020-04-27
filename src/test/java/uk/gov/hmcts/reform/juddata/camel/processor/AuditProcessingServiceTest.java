@@ -27,14 +27,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
-public class AuditProcessorTest {
+public class AuditProcessingServiceTest {
 
 
     private JdbcTemplate mockJdbcTemplate = mock(JdbcTemplate.class);
 
-    private AuditProcessor dataLoadAuditUnderTest = mock(AuditProcessor.class);
+    private AuditProcessingService dataLoadAuditUnderTest = mock(AuditProcessingService.class);
 
     PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
 
@@ -78,8 +79,8 @@ public class AuditProcessorTest {
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         doNothing().when(platformTransactionManager).commit(transactionStatus);
 
-        dataLoadAuditUnderTest.process(exchange);
+        dataLoadAuditUnderTest.auditSchedulerStatus(camelContext);
 
-        verify(dataLoadAuditUnderTest, times(1)).process(any(Exchange.class));
+        verify(dataLoadAuditUnderTest, times(1)).auditSchedulerStatus(any(CamelContext.class));
     }
 }

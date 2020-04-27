@@ -158,6 +158,7 @@ public class ParentOrchestrationRouteTest extends ParentRouteAbstractTest {
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
 
+        auditProcessingService.auditSchedulerStatus(camelContext);
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure);
         assertEquals(dataLoadSchedulerAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.FAILURE);
     }
@@ -169,6 +170,8 @@ public class ParentOrchestrationRouteTest extends ParentRouteAbstractTest {
 
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
+
+        auditProcessingService.auditSchedulerStatus(camelContext);
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlSuccess);
         assertEquals(dataLoadSchedulerAudit.get(0).get(DB_SCHEDULER_STATUS), MappingConstants.SUCCESS);
@@ -182,6 +185,8 @@ public class ParentOrchestrationRouteTest extends ParentRouteAbstractTest {
         camelContext.getGlobalOptions().put(MappingConstants.SCHEDULER_STATUS, PARTIAL_SUCCESS);
         parentRoute.startRoute();
         producerTemplate.sendBody(startRoute, "test JRD orchestration");
+
+        auditProcessingService.auditSchedulerStatus(camelContext);
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlPartialSuccess);
         assertEquals(dataLoadSchedulerAudit.get(0).get(DB_SCHEDULER_STATUS), PARTIAL_SUCCESS);
