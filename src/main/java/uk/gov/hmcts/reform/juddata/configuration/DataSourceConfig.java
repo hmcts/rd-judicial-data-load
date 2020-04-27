@@ -78,7 +78,7 @@ public class DataSourceConfig {
     public SpringTransactionPolicy getSpringTransaction() {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
         springTransactionPolicy.setTransactionManager(txManager());
-        springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
+        springTransactionPolicy.setPropagationBehaviorName(propagationBehaviorName);
         return springTransactionPolicy;
     }
 
