@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.juddata.camel.service;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -28,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 
 public class AuditProcessingServiceTest {
