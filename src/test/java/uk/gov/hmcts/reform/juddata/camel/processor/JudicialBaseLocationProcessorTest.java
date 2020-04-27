@@ -66,5 +66,4 @@ public class JudicialBaseLocationProcessorTest {
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         assertThat(((List<JudicialContractType>) exchangeMock.getMessage().getBody())).isSameAs(judicialBaseLocationTypes);
     }
-
 } 

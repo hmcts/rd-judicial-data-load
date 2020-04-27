@@ -48,6 +48,10 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
     username: ${POSTGRES_USERNAME:dbjuddata}
     password: ${POSTGRES_PASSWORD:dbjuddata}
+    min-idle: 1
+    max-life: 600000
+    idle-timeout: 30000
+    maximum-pool-size: 5
     propagationBehaviorName: PROPAGATION_REQUIRED
     properties:
       charSet: UTF-8

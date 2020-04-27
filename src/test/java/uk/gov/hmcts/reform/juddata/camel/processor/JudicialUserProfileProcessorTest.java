@@ -105,7 +105,6 @@ public class JudicialUserProfileProcessorTest {
         judicialUserProfileMock1.setElinksId(null);
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
-        final AuditProcessor auditProcessor = mock(AuditProcessor.class);
         when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
         final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
@@ -122,13 +121,11 @@ public class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
                 "platformTransactionManager", platformTransactionManager);
-        setField(judicialUserProfileProcessor,"auditProcessor", auditProcessor);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         doNothing().when(platformTransactionManager).commit(transactionStatus);
-        doNothing().when(auditProcessor).process(exchangeMock);
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
 
         judicialUserProfileProcessor.process(exchangeMock);
@@ -141,7 +138,6 @@ public class JudicialUserProfileProcessorTest {
         judicialUserProfileMock1.setElinksId(null);
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
-        final AuditProcessor auditProcessor = mock(AuditProcessor.class);
 
         when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
         final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
@@ -159,7 +155,6 @@ public class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
                 "platformTransactionManager", platformTransactionManager);
-        setField(judicialUserProfileProcessor,"auditProcessor", auditProcessor);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
