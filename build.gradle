@@ -169,14 +169,14 @@ jacocoTestReport {
 
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
+    testSourceSets  = [sourceSets.test, sourceSets.integrationTest]
     excludedClasses = [
             'uk.gov.hmcts.reform.juddata.configuration.*',
-            'uk.gov.hmcts.reform.juddata.controller.*',
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
             'uk.gov.hmcts.reform.juddata.scheduler.*',
-            'uk.gov.hmcts.reform.juddata.camel.route.*',
-            'uk.gov.hmcts.reform.juddata.camel.processor.*'
-    ]
+            'uk.gov.hmcts.reform.juddata.camel.service.EmailData',
+            'uk.gov.hmcts.reform.juddata.camel.service.EmailService'
+   ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
     historyInputLocation = ['build/reports/pitest/fastermutationtesting']

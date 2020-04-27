@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.juddata.camel.processor;
+package uk.gov.hmcts.reform.juddata.camel.service;
 
 import static java.lang.Boolean.TRUE;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -35,7 +36,7 @@ public class AuditProcessingServiceTest {
 
     private JdbcTemplate mockJdbcTemplate = mock(JdbcTemplate.class);
 
-    private AuditProcessingService dataLoadAuditUnderTest = mock(AuditProcessingService.class);
+    private AuditProcessingService dataLoadAuditUnderTest = new AuditProcessingService();
 
     PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
 
@@ -68,19 +69,17 @@ public class AuditProcessingServiceTest {
         final String schedulerName = "judicial_main_scheduler";
 
         final Exchange exchange = Mockito.mock(Exchange.class);
-        CamelContext camelContext = Mockito.mock(CamelContext.class);
+        CamelContext camelContext = new DefaultCamelContext();
 
         when(exchange.getContext()).thenReturn(camelContext);
         Map<String, String> globalOptions = getGlobalOptions(schedulerName);
-        when(exchange.getContext().getGlobalOptions()).thenReturn(globalOptions);
-        when(camelContext.getGlobalOptions()).thenReturn(globalOptions);
-        //when(mockJdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, schedulerEndTime, schedulerStatus)).thenReturn(0);
+        camelContext.getGlobalOptions().putAll(globalOptions);
         when(mockJdbcTemplate.update(anyString(), anyString(), any(), any(), any())).thenReturn(1);
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
-        doNothing().when(platformTransactionManager).commit(transactionStatus);
 
+        AuditProcessingService auditProcessingServiceSpy = Mockito.spy(dataLoadAuditUnderTest);
         dataLoadAuditUnderTest.auditSchedulerStatus(camelContext);
-
-        verify(dataLoadAuditUnderTest, times(1)).auditSchedulerStatus(any(CamelContext.class));
+        auditProcessingServiceSpy.auditSchedulerStatus(camelContext);
+        verify(auditProcessingServiceSpy, times(1)).auditSchedulerStatus(any(CamelContext.class));
     }
 }
