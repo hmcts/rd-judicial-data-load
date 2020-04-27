@@ -41,7 +41,7 @@ public class DataSourceConfig {
     int maxPoolSize;
 
     @Value("${spring.datasource.propagationBehaviorName}")
-    String propagationBehaviorName ;
+    String propagationBehaviorName;
 
     @Bean
     public DataSource dataSource() {
