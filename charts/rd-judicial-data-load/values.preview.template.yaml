@@ -7,6 +7,8 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     FLYWAY_ENABLED: true
+    ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
+    ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
   postgresql:
     postgresqlUsername: dbjuddata
     postgresqlPassword: dbjuddata
@@ -14,8 +16,26 @@ java:
     #Whether to deploy the Postgres Chart or not
     enabled: true
   keyVaults:
-    "rd":
-      resourceGroup: rd
+    rd:
       secrets:
-        - AppInsightsInstrumentationKey
-
+        - CONTAINER-NAME
+        - BLOB-URL-SUFFIX
+  secrets:
+    BLOB_ACCOUNT_NAME:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: storageAccountName
+    BLOB_ACCESS_KEY:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: accessKey
+    BLOB_SERVICE_ENDPOINT:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: primaryBlobServiceEndPoint
+blobstorage:
+  resourceGroup: rd
+  teamName: "RD"
+  location: uksouth
+  setup:
+    containers:
+    - jud-ref-data
+    - jud-ref-data-archive
+  enabled: true
