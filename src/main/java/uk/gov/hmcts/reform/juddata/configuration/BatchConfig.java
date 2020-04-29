@@ -26,7 +26,7 @@ public class BatchConfig {
     @Value("${batchtask-task1}")
     String taskLeaf;
 
-    @Value("${batchtask-task1}")
+    @Value("${batchtask-task2}")
     String taskParent;
 
     @Value("${batchjob-name}")
@@ -57,8 +57,8 @@ public class BatchConfig {
     public Job runRoutesJob() {
         return jobs.get(jobName)
                 .incrementer(new RunIdIncrementer())
-                .start(stepOrchestration())
-                //.next(stepOrchestration())
+                .start(stepLeafRoute())
+                .next(stepOrchestration())
                 .build();
     }
 }
