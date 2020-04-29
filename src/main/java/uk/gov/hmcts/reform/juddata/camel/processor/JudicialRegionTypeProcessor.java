@@ -1,51 +1,40 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Objects.nonNull;
+import static java.util.Collections.singletonList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialRegionTypeProcessor implements Processor {
+public class JudicialRegionTypeProcessor extends JsrValidationBaseProcessor<JudicialRegionType> {
+
+
+    @Autowired
+    JsrValidatorInitializer<JudicialRegionType> judicialRegionTypeJsrValidatorInitializer;
 
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        List<JudicialRegionType> regionTypes = new ArrayList<>();
-        List<JudicialRegionType> judicialRegionTypes = (List<JudicialRegionType>) exchange.getIn().getBody();
-        for (JudicialRegionType regionType : judicialRegionTypes) {
+        List<JudicialRegionType> judicialRegionTypes;
 
-            JudicialRegionType validRegionType = fetch(regionType);
-            if (nonNull(validRegionType)) {
+        judicialRegionTypes = (exchange.getIn().getBody() instanceof List)
+                ? (List<JudicialRegionType>) exchange.getIn().getBody()
+                : singletonList((JudicialRegionType) exchange.getIn().getBody());
 
-                regionTypes.add(validRegionType);
-            } else {
+        log.info("Region type Records count before Validation:: " + judicialRegionTypes.size());
+        List<JudicialRegionType> filteredRegionTypes = validate(judicialRegionTypeJsrValidatorInitializer,
+                judicialRegionTypes);
+        log.info("Region type Records count after Validation:: " + filteredRegionTypes.size());
+        audit(judicialRegionTypeJsrValidatorInitializer, exchange);
 
-                log.info("Invalid JudicialRegionType record ");
-            }
-
-            exchange.getIn().setBody(regionTypes);
-
-        }
-
-        log.info("JudicialRegionType Records count After Validation::" + regionTypes.size());
-    }
-
-
-    private JudicialRegionType fetch(JudicialRegionType regionType) {
-
-        JudicialRegionType regionTypeAfterValidation = null;
-        if (nonNull(regionType.getRegionId())) {
-            regionTypeAfterValidation = regionType;
-        }
-        return regionTypeAfterValidation;
+        exchange.getMessage().setBody(filteredRegionTypes);
     }
 }

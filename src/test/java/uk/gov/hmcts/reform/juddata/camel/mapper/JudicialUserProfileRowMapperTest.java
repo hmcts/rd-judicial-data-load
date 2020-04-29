@@ -1,10 +1,15 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdUnitTestHelper.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_FORMAT;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
+
 import org.junit.Test;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
@@ -12,9 +17,10 @@ public class JudicialUserProfileRowMapperTest {
     @Test
     public void should_return_JudicialUserProfileRow_response() {
 
-        LocalDate currentDate = LocalDate.now();
+        Date currentDate = new Date();
+        LocalDateTime dateTime = LocalDateTime.now();
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime);
 
         JudicialUserProfileRowMapper judicialUserProfileRowMapper = new JudicialUserProfileRowMapper();
         Map<String, Object> response = judicialUserProfileRowMapper.getMap(judicialUserProfileMock);
@@ -29,11 +35,10 @@ public class JudicialUserProfileRowMapperTest {
         assertEquals("contractTypeId", response.get("contract_type"));
         assertEquals("workpatterns", response.get("work_pattern"));
         assertEquals("some@hmcts.net", response.get("email_id"));
-        assertEquals(currentDate, response.get("joining_date"));
-        assertEquals(currentDate, response.get("last_working_date"));
+        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("joining_date"));
+        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("last_working_date"));
         assertEquals(true, response.get("active_flag"));
-        assertEquals(currentDate.toString(), response.get("extracted_date"));
-
+        assertEquals(getDateTimeWithFormat(dateTime), response.get("extracted_date"));
     }
 }
          

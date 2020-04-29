@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getCurrentTimeStamp;
-import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.getDateTimeStamp;
+import static uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil.getCurrentTimeStamp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         judOfficeAppointmentRow.put("start_date", officeAppoinemnt.getStartDate());
         judOfficeAppointmentRow.put("end_date", officeAppoinemnt.getEndDate());
         judOfficeAppointmentRow.put("active_flag", officeAppoinemnt.isActiveFlag());
-        judOfficeAppointmentRow.put("extracted_date", getDateTimeStamp(officeAppoinemnt.getExtractedDate()));
+        judOfficeAppointmentRow.put("extracted_date", officeAppoinemnt.getExtractedDate());
         judOfficeAppointmentRow.put("created_date", getCurrentTimeStamp());
         judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
         return  judOfficeAppointmentRow;

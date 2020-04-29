@@ -1,53 +1,39 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Objects.nonNull;
+import static java.util.Collections.singletonList;
 
-import java.util.ArrayList;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
+import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
 @Component
-public class JudicialContractTypeProcessor implements Processor {
+public class JudicialContractTypeProcessor extends JsrValidationBaseProcessor<JudicialContractType> {
 
+    @Autowired
+    JsrValidatorInitializer<JudicialContractType> judicialContractTypeJsrValidatorInitializer;
 
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        List<JudicialContractType> contractTypes = new ArrayList<>();
-        List<JudicialContractType> judicialContractTypes = (List<JudicialContractType>) exchange.getIn().getBody();
+        List<JudicialContractType> judicialContractTypes;
 
-        for (JudicialContractType contractType : judicialContractTypes) {
+        judicialContractTypes = (exchange.getIn().getBody() instanceof List)
+                ? (List<JudicialContractType>) exchange.getIn().getBody()
+                : singletonList((JudicialContractType) exchange.getIn().getBody());
 
-            JudicialContractType validUserRole = fetch(contractType);
-            if (nonNull(validUserRole)) {
+        log.info("Contract type Records count before Validation:: " + judicialContractTypes.size());
+        List<JudicialContractType> filteredJudicialContractTypes = validate(judicialContractTypeJsrValidatorInitializer,
+                judicialContractTypes);
+        log.info("Contract type Records count after Validation:: " + filteredJudicialContractTypes.size());
+        audit(judicialContractTypeJsrValidatorInitializer, exchange);
 
-                contractTypes.add(validUserRole);
-            } else {
-
-                log.info("Invalid JudicialContractTypes record ");
-            }
-
-            exchange.getIn().setBody(contractTypes);
-
-        }
-
-        log.info("JudicialContractTypes Records count After Validation::" + contractTypes.size());
-    }
-
-
-    private JudicialContractType fetch(JudicialContractType contractType) {
-
-        JudicialContractType contractTypeAfterValidation = null;
-        if (nonNull(contractType.getContractTypeId())) {
-            contractTypeAfterValidation = contractType;
-        }
-        return contractTypeAfterValidation;
+        exchange.getMessage().setBody(filteredJudicialContractTypes);
     }
 }

@@ -24,10 +24,25 @@ spring:
           lob:
             non_contextual_creation: true
   jackson.date-format: yyyy-MM-dd
-  flyway.enabled: ${FLYWAY_ENABLED:true}
-  flyway.locations: classpath:db/migration,classpath:db/postgres
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    locations: classpath:db/migration,classpath:db/postgres
   batch:
     initialize-schema: always
+
+  mail:
+    from: no-reply@reform.hmcts.net
+    to:  Praveen.Saxena@HMCTS.NET
+    subject:  Exception received at Rout
+    host: mta.reform.hmcts.net
+    port: 25
+    enabled: false
+    properties:
+      mail-smtp:
+        starttls:
+          enable: false
+        ssl:
+          trust: "*"
 
   ### database configuration
   datasource:
@@ -62,13 +77,13 @@ spring:
 
 # Scheduler configuration
 scheduler:
-  camel-route-config: 0 0/2 * * * ?
-  camel-leaf-router-config: 0 */105 * * * ?
+  camel-route-config: 0 0 22 * * ?
+  camel-leaf-router-config: 0 0 21 * * ?
 
 azure:
   storage:
-    account-name: rddemo
-    account-key: Vjmr3Yk0DUrygumP7FKJ2eUiOyhWvZ5XczDMk13J+m9vtk2IOXEcOlfjlcTaHDb5mHwAsq7qOYf3GtxEo/uFIA==
-    container-name: http://rddemo.blob.core.windows.net
-    blob-url-suffix: http://rddemo.blob.core.windows.net
+    account-name: ${ACCOUNT_NAME:ACCOUNT_NAME}
+    account-key: ${ACCOUNT_KEY:ACCOUNT_KEY}
+    container-name: ${CONTAINER_NAME:CONTAINER_NAME}
+    blob-url-suffix: ${BLOB_URL_SUFFIX:BLOB_URL_SUFFIX}
 

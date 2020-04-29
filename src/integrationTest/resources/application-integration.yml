@@ -1,8 +1,21 @@
 spring:
-  flyway.locations: classpath:db/testmigration
+  mail:
+    from: no-reply@reform.hmcts.net
+    to:  sushant.choudhari@hmcts.net
+    enabled: true
+    subject:  Ref Data - Exception in JRD data load
+    host: mta.reform.hmcts.net
+    port: 25
+    properties:
+      mail-smtp:
+        starttls:
+          enable: true
+        ssl:
+          trust: "*"
+  flyway:
+    locations: classpath:db/testmigration
+    enabled: true
 
-aggregation-strategy-completion-size: 100
-aggregation-strategy-timeout: 2000
 start-route: direct:JRD
 archival-route: direct:JrdArchival
 archival-path: ${archival.path}
@@ -11,19 +24,28 @@ archival-file-names: test.csv,judicial_userprofile.csv
 archival-cred: noop=true
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 2000
+invalid-header-sql: insert into dataload_exception_records(file_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
+invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?, ?)
+jsr-threshold-limit: 5
+scheduler-insert-sql:  insert into dataload_schedular_audit (scheduler_name,scheduler_start_time,scheduler_end_time,scheduler_status)
+  values(?,?,?,?)
+scheduler-name: judicial_leaf_scheduler
+audit-enable: true
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
+    file-name: ${parent.file.name}
+    table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile(elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date)
       values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
-      :#contract_type,:#work_pattern, :#email_id,:#joining_date,:#last_working_date,:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
+      :#contract_type,:#work_pattern, :#email_id,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc') on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
-      contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = :#joining_date,
-      last_working_date = :#last_working_date, active_flag = :#active_flag,
-      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
+      contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
+      last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
+      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc'?batch=true&dataSource=dataSource
     blob-path: ${parent.file.path}
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
@@ -32,11 +54,14 @@ route:
 
   judicial-office-appointment:
     id: judicial-office-appointment
+    file-name: ${child.file.name}
+    table-name: judicial-office-appointment
     truncate-sql:
         sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:
         sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
-        values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment, :#start_date, :#end_date, :#active_flag, :#extracted_date,:#created_date,:#last_loaded_date)?dataSource=dataSource
+        values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
+        TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource
     blob-path: ${child1.file.path}
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
@@ -46,4 +71,18 @@ parent-select-jrd-sql: SELECT * FROM judicial_user_profile
 
 child-select-child1-sql: SELECT * FROM judicial_office_appointment
 
-truncate-jrd: truncate judicial_user_profile cascade
+exception-select-query: select * from  dataload_exception_records
+
+select-dataload-schedular-audit: select *  from dataload_schedular_audit
+
+select-dataload-scheduler-audit-failure: select * from dataload_schedular_audit where scheduler_status='Failure'
+
+select-dataload-scheduler-audit-partial-success: select *  from dataload_schedular_audit where scheduler_status='PartialSuccess'
+
+select-dataload-scheduler-audit-success: select *  from dataload_schedular_audit where scheduler_status='Success'
+
+start-leaf-route: direct:leaf
+
+leaf-archival-file-names: Roles.csv,Contracts.csv,Locations.csv,BaseLocations.csv
+
+leaf-archival-route: direct:jrdLeafArchival

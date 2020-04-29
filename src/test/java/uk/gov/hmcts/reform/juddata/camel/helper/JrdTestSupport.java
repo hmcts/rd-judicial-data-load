@@ -1,8 +1,12 @@
 package uk.gov.hmcts.reform.juddata.camel.helper;
 
-import java.time.LocalDate;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_FORMAT;
+
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
@@ -11,14 +15,13 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 
-public class JrdUnitTestHelper {
-    private JrdUnitTestHelper() {
+public class JrdTestSupport {
+
+    private JrdTestSupport() {
 
     }
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
-
-    public static JudicialUserProfile createJudicialUserProfileMock(LocalDate currentDate) {
+    public static JudicialUserProfile createJudicialUserProfileMock(Date currentDate, LocalDateTime dateTime) {
 
         JudicialUserProfile judicialUserProfileMock = new JudicialUserProfile();
         judicialUserProfileMock.setElinksId("elinksid_1");
@@ -31,17 +34,16 @@ public class JrdUnitTestHelper {
         judicialUserProfileMock.setContractTypeId("contractTypeId");
         judicialUserProfileMock.setWorkPattern("workpatterns");
         judicialUserProfileMock.setEmailId("some@hmcts.net");
-        judicialUserProfileMock.setJoiningDate(currentDate);
-        judicialUserProfileMock.setLastWorkingDate(currentDate);
+        judicialUserProfileMock.setJoiningDate(getDateWithFormat(currentDate, DATE_FORMAT));
+        judicialUserProfileMock.setLastWorkingDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialUserProfileMock.setActiveFlag(true);
-        judicialUserProfileMock.setExtractedDate(currentDate.toString());
-
+        judicialUserProfileMock.setExtractedDate(getDateTimeWithFormat(dateTime));
         return judicialUserProfileMock;
     }
 
-    public static JudicialOfficeAppointment createJudicialOfficeAppointmentMockMock(String currentDateString) {
+    public static JudicialOfficeAppointment createJudicialOfficeAppointmentMockMock(Date currentDate,
+                                                                                    LocalDateTime dateTime) {
 
-        LocalDate currentDate = LocalDate.parse(currentDateString, getDateFormatter());
         JudicialOfficeAppointment judicialOfficeAppointmentMock = new JudicialOfficeAppointment();
         judicialOfficeAppointmentMock.setElinksId("elinksid_1");
         judicialOfficeAppointmentMock.setRoleId("roleId_1");
@@ -49,10 +51,10 @@ public class JrdUnitTestHelper {
         judicialOfficeAppointmentMock.setBaseLocationId("baseLocationId_1");
         judicialOfficeAppointmentMock.setRegionId("regionId_1");
         judicialOfficeAppointmentMock.setIsPrincipalAppointment(true);
-        judicialOfficeAppointmentMock.setStartDate(currentDate);
-        judicialOfficeAppointmentMock.setEndDate(currentDate);
+        judicialOfficeAppointmentMock.setStartDate(getDateWithFormat(currentDate, DATE_FORMAT));
+        judicialOfficeAppointmentMock.setEndDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialOfficeAppointmentMock.setActiveFlag(true);
-        judicialOfficeAppointmentMock.setExtractedDate(currentDateString);
+        judicialOfficeAppointmentMock.setExtractedDate(getDateTimeWithFormat(dateTime));
         return judicialOfficeAppointmentMock;
     }
 
@@ -85,7 +87,7 @@ public class JrdUnitTestHelper {
         judicialUserRoleType.setRoleDescCy("roleDescCy");
         judicialUserRoleType.setRoleDescEn("roleDescEn");
         judicialUserRoleType.setRoleId("roleId");
-        return  judicialUserRoleType;
+        return judicialUserRoleType;
     }
 
     public static JudicialRegionType createJudicialRegionType() {
@@ -105,7 +107,7 @@ public class JrdUnitTestHelper {
         judicialBaseLocationType.setCircuit("circuit");
         judicialBaseLocationType.setCourtName("courtName");
         judicialBaseLocationType.setCourtType("courtType");
-        return  judicialBaseLocationType;
+        return judicialBaseLocationType;
     }
 
     public static JudicialContractType createJudicialContractType() {
@@ -113,6 +115,17 @@ public class JrdUnitTestHelper {
         contractType.setContractTypeDescCy("contractTypeDescCy");
         contractType.setContractTypeDescEn("contractTypeDescEn");
         contractType.setContractTypeId("contractTypeId");
-        return  contractType;
+        return contractType;
+    }
+
+    public static String getDateWithFormat(Date date, String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        return formatter.format(date);
+    }
+
+    public static String getDateTimeWithFormat(LocalDateTime dateTime) {
+        String datTime = dateTime.toString().replace("T", " ");
+        String tail = datTime.substring(datTime.lastIndexOf(".")).concat("000000");
+        return datTime.substring(0, datTime.lastIndexOf(".")) + tail;
     }
 }

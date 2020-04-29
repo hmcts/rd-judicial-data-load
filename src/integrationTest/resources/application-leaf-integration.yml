@@ -1,0 +1,67 @@
+start-leaf-route: direct:leaf
+leaf-route-names: judicial-role-type,judicial-contract-type,judicial-region-type,judicial-base-location_type
+
+leaf-route:
+  judicial-role-type:
+    id: judicial-role-type
+    file-name: ${role.file.name}
+    table-name: judicial_role_type
+    insert-sql:
+      sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
+      on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource
+    blob-path: ${role.file.path}
+    processor-class: JudicialUserRoleTypeProcessor
+    mapper-class: JudicialRoleTypeRowMapper
+    csv-binder-object: JudicialUserRoleType
+
+  judicial-contract-type:
+    id: judicial-contract-type
+    file-name: ${contract.file.name}
+    table-name: contract_type
+    insert-sql:
+      sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)
+      on conflict (contract_type_id) do update set contract_type_desc_en = :#contract_type_desc_en,contract_type_desc_cy = :#contract_type_desc_cy?dataSource=dataSource
+    blob-path: ${contract.file.path}
+    processor-class: JudicialContractTypeProcessor
+    mapper-class: JudicialContractTypeRowMapper
+    csv-binder-object: JudicialContractType
+
+  judicial-region-type:
+    id: judicial-region-type
+    file-name: ${region.file.name}
+    table-name: region_type
+    insert-sql:
+      sql:insert into region_type (region_id,region_desc_en,region_desc_cy) values(:#region_id,:#region_desc_en,:#region_desc_cy)
+      on conflict (region_id) do update set region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy?dataSource=dataSource
+    blob-path: ${region.file.path}
+    processor-class: JudicialRegionTypeProcessor
+    mapper-class: JudicialRegionTypeRowMapper
+    csv-binder-object: JudicialRegionType
+
+  judicial-base-location_type:
+    id: judicial-base-location_type
+    file-name: ${base.location.file.name}
+    table-name: base_location_type
+    insert-sql:
+      sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)
+      on conflict (base_location_id) do update set court_name = :#court_name,court_type = :#court_type,circuit = :#circuit,area_of_expertise = :#area_of_expertise?dataSource=dataSource
+    blob-path: ${base.location.file.path}
+    processor-class: JudicialBaseLocationProcessor
+    mapper-class: JudicialBaseLocationRowTypeMapper
+    csv-binder-object: JudicialBaseLocationType
+
+base-location-select-jrd-sql: SELECT * FROM base_location_type
+
+region-select-jrd-sql: SELECT * FROM region_type
+
+contract-select-jrd-sql: SELECT * FROM contract_type
+
+role-select-jrd-sql: SELECT * FROM judicial_role_type
+
+
+
+
+
+
+
+
