@@ -52,7 +52,8 @@ spring:
     max-life: 600000
     idle-timeout: 30000
     maximum-pool-size: 5
-    propagationBehaviorName: PROPAGATION_REQUIRED
+    txManager:
+      propagationBehaviorName: PROPAGATION_REQUIRED
     properties:
       charSet: UTF-8
     tomcat:
