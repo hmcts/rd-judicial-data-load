@@ -1,4 +1,4 @@
-java:
+job:
   applicationPort: 8094
   ingressHost: rd-judicial-data-load-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   aadIdentityName: rd
@@ -12,10 +12,10 @@ java:
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
-  schedule: "*/2 * * * *"
+  kind: CronJob
+  schedule: "*/5 * * * *"
   global:
-    job:
-      kind: CronJob
+    jobKind: CronJob
   
   keyVaults:
     "rd":

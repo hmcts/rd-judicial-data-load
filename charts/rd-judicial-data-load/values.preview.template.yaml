@@ -1,4 +1,4 @@
-java:
+job:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
@@ -15,6 +15,10 @@ java:
     postgresqlDatabase: dbjuddata
     #Whether to deploy the Postgres Chart or not
     enabled: true
+  kind: CronJob
+  schedule: "*/5 * * * *"
+  global:
+    jobKind: CronJob
   keyVaults:
     rd:
       secrets:
