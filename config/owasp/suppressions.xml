@@ -1765,4 +1765,11 @@
         <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2020-11612</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: log4j-to-slf4j-2.12.1.jar
+   ]]></notes>
+        <gav regex="true">org\.apache\.logging\.log4j:log4j-*.*</gav>
+        <cpe>cpe:/a:apache:log4j</cpe>
+    </suppress>
 </suppressions>
