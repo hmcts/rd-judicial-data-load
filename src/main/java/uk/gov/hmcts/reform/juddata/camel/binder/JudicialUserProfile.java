@@ -5,8 +5,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_PATTE
 
 import java.io.Serializable;
 
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
@@ -22,31 +21,31 @@ public class JudicialUserProfile implements Serializable {
 
 
     @DataField(pos = 1, columnName = "elinks_id")
-    @NotBlank
+    @NotEmpty
     String elinksId;
 
     @DataField(pos = 2, columnName = "personal_Code")
-    @NotBlank
+    @NotEmpty
     String personalCode;
 
     @DataField(pos = 3)
-    @NotBlank
+    @NotEmpty
     String title;
 
     @DataField(pos = 4, columnName = "known_As")
-    @NotBlank
+    @NotEmpty
     String knownAs;
 
     @DataField(pos = 5)
-    @NotBlank
+    @NotEmpty
     String surName;
 
     @DataField(pos = 6)
-    @NotBlank
+    @NotEmpty
     String fullName;
 
     @DataField(pos = 7, columnName = "post_Nominals")
-    @NotBlank
+    @NotEmpty
     String postNominals;
 
     @DataField(pos = 8, columnName = "contract_Type_id")

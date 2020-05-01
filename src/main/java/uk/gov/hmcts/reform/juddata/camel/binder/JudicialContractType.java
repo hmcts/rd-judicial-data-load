@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
@@ -15,11 +14,11 @@ import org.springframework.stereotype.Component;
 public class JudicialContractType {
 
     @DataField(pos = 1, columnName = "contract_type_id")
-    @NotBlank
+    @NotEmpty
     String contractTypeId;
 
     @DataField(pos = 2, columnName = "contract_type_desc_en")
-    @NotBlank
+    @NotEmpty
     String contractTypeDescEn;
 
     @DataField(pos = 3, columnName = "contract_type_desc_cy")

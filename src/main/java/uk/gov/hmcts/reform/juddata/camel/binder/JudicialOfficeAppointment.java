@@ -5,8 +5,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.DATE_PATTE
 
 import java.io.Serializable;
 
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
@@ -21,7 +20,7 @@ import uk.gov.hmcts.reform.juddata.camel.validator.DatePattern;
 public class JudicialOfficeAppointment implements Serializable {
 
     @DataField(pos = 1, columnName = "elinks_id")
-    @NotBlank
+    @NotEmpty
     String elinksId;
 
     @DataField(pos = 2, columnName = "role_id", defaultValue = "0")

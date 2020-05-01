@@ -42,7 +42,7 @@ withParameterizedPipeline(type, product, component, 'sandbox', 'sandbox') {
     setVaultName('rd')
     loadVaultSecrets(secrets)
 
-    //enableDbMigration()
+    enableDbMigration()
     enableDockerBuild()
     installCharts()
 
