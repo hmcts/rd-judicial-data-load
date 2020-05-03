@@ -7,7 +7,7 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     FLYWAY_ENABLED: true
-   postgresql:
+  postgresql:
     postgresqlUsername: dbjuddata
     postgresqlPassword: dbjuddata
     postgresqlDatabase: dbjuddata
