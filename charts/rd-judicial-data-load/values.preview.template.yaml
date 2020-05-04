@@ -2,6 +2,7 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
+    POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
     FLYWAY_ENABLED: true
     ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
     ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
