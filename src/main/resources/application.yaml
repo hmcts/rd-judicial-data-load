@@ -30,6 +30,7 @@ spring:
   flyway:
     enabled: ${FLYWAY_ENABLED:true}
     locations: classpath:db/migration,classpath:db/postgres
+    baseline-on-migrate: true
 
   mail:
     from: no-reply@reform.hmcts.net
