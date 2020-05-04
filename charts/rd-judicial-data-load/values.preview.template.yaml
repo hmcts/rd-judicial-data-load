@@ -28,8 +28,8 @@ postgresql:
   postgresqlUsername: dbjuddata
   postgresqlPassword: dbjuddata
   postgresqlDatabase: dbjuddata
-    persistence:
-      enabled: false
+  persistence:
+    enabled: false
 
 blobstorage:
   resourceGroup: rd
