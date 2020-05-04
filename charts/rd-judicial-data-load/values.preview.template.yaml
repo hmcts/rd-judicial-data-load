@@ -1,4 +1,4 @@
-java:
+job:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
@@ -21,6 +21,8 @@ java:
     BLOB_SERVICE_ENDPOINT:
       secretRef: storage-secret-{{ .Release.Name }}
       key: primaryBlobServiceEndPoint
+global:
+  jobKind: CronJob
 
 postgresql:
   enabled: true
