@@ -18,7 +18,7 @@ job:
     jobKind: CronJob
 
 postgresql:
-  enabled: flase
+  enabled: false
   
   keyVaults:
     "rd":

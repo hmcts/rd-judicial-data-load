@@ -3,11 +3,11 @@ server:
 
 management:
   endpoints:
-    jmx:
-      exposure:
-        include: 'health'
     web:
       base-path: "/"
+      exposure:
+        include: health, info, prometheus
+
   endpoint:
     health:
       show-details: "always"
