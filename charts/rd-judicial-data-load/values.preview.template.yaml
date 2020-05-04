@@ -2,19 +2,9 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
-    POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
-    POSTGRES_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
-    POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
-    POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     FLYWAY_ENABLED: true
     ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
     ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
-  postgresql:
-    postgresqlUsername: dbjuddata
-    postgresqlPassword: dbjuddata
-    postgresqlDatabase: dbjuddata
-    #Whether to deploy the Postgres Chart or not
-    enabled: true
   keyVaults:
     rd:
       secrets:
@@ -33,8 +23,13 @@ java:
 
 postgresql:
   enabled: true
-  persistence:
-    enabled: false
+  image:
+    tag: '11.3.0'
+  postgresqlUsername: dbjuddata
+  postgresqlPassword: dbjuddata
+  postgresqlDatabase: dbjuddata
+    persistence:
+      enabled: false
 
 blobstorage:
   resourceGroup: rd
