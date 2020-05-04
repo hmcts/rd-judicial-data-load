@@ -3,6 +3,9 @@ job:
   ingressHost: ${SERVICE_FQDN}
   environment:
     POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
+    POSTGRES_NAME: dbjuddata
+    POSTGRES_USERNAME: dbjuddata
+    POSTGRES_PASSWORD: dbjuddata
     FLYWAY_ENABLED: true
     ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
     ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
