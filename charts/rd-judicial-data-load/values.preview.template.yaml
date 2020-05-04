@@ -22,9 +22,6 @@ java:
       key: primaryBlobServiceEndPoint
 
 postgresql:
-  initdbScripts:
-    init.sql: |-
-      CREATE DATABASE dbjuddata WITH OWNER = dbjuddata ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
   enabled: true
   image:
     tag: '11.3.0'
