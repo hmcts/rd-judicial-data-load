@@ -30,6 +30,12 @@ java:
     BLOB_SERVICE_ENDPOINT:
       secretRef: storage-secret-{{ .Release.Name }}
       key: primaryBlobServiceEndPoint
+
+postgresql:
+  enabled: true
+  persistence:
+    enabled: false
+
 blobstorage:
   resourceGroup: rd
   teamName: "RD"

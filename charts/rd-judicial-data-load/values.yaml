@@ -16,6 +16,9 @@ job:
   schedule: "*/5 * * * *"
   global:
     jobKind: CronJob
+
+postgresql:
+  enabled: true
   
   keyVaults:
     "rd":
