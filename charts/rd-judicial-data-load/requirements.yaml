@@ -1,7 +1,7 @@
 dependencies:
   - name: job
     version: ~0.1.1
-    repository: '@hmctspublic'
+    repository: '@hmcts'
   - name: blobstorage
     version: ~0.2.1
     repository: '@hmctspublic'
