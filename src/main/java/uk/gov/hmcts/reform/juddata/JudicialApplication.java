@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform.juddata")
@@ -24,9 +25,10 @@ public class JudicialApplication implements CommandLineRunner {
 
     @Value("${batchjob-name}")
     String jobName;
-
+    
     public static void main(final String[] args) {
-        SpringApplication.run(JudicialApplication.class, args);
+        ApplicationContext context = SpringApplication.run(JudicialApplication.class, args);
+        SpringApplication.exit(context);
     }
 
     @Override
