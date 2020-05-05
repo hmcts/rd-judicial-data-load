@@ -13,7 +13,7 @@ job:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
   kind: CronJob
-  schedule: "*/5 * * * *"
+  schedule: "*/10 * * * *"
   global:
     jobKind: CronJob
 

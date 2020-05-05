@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.validator;
 
 import static java.lang.Boolean.TRUE;
-import static org.apache.camel.Exchange.FAILURE_ROUTE_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
@@ -112,7 +111,6 @@ public class JsrValidatorInitializer<T> {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        String failedRoute = (String) exchange.getProperty(FAILURE_ROUTE_ID);
 
         RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         String schedulerTime = camelContext.getGlobalOptions().get(SCHEDULER_START_TIME);

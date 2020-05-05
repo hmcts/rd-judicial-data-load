@@ -173,8 +173,8 @@ pitest {
     excludedClasses = [
             'uk.gov.hmcts.reform.juddata.configuration.*',
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
-            'uk.gov.hmcts.reform.juddata.camel.route.initializer.*',
-            'uk.gov.hmcts.reform.juddata.camel.service.EmailData.java'
+            'uk.gov.hmcts.reform.juddata.camel.service.EmailData',
+            'uk.gov.hmcts.reform.juddata.camel.service.EmailService'
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -199,8 +199,7 @@ sonarqube {
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/camel/route/initializer/**"
+                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java"
     }
 }
 
