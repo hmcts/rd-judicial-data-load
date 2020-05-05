@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.juddata.scheduler;
+package uk.gov.hmcts.reform.juddata.camel.route.initializer;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
@@ -6,13 +6,9 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRAT
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
-import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 
 @Component
 @Slf4j
@@ -23,18 +19,6 @@ public class JrdUserProfileDataLoadStarter {
 
     @Autowired
     ParentOrchestrationRoute parentOrchestrationRoute;
-
-    @Autowired
-    ProducerTemplate producerTemplate;
-
-    @Value("${start-route}")
-    private String startRoute;
-
-    @Autowired
-    DataLoadUtil dataLoadUtil;
-
-    @Autowired
-    AuditProcessingService schedulerAuditProcessingService;
 
     @PostConstruct
     public void postConstruct() throws Exception {

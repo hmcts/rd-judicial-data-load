@@ -30,6 +30,8 @@ import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
+import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
+import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
@@ -192,4 +194,13 @@ public class ParentCamelConfig {
         return mock(EmailService.class);
     }
 
+    @Bean
+    ParentRouteTask parentRouteTask() {
+        return new ParentRouteTask();
+    }
+
+    @Bean
+    LeafRouteTask leafRouteTask() {
+        return new LeafRouteTask();
+    }
 }

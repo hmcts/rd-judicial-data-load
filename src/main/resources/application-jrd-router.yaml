@@ -8,9 +8,9 @@ archival-file-names: Personal,Appointments
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 180000
-batchtask-task1: leafRouteTask
-batchtask-task2: parentRouteOrchestrationTask
-batchjob-name: parentRouteOrchestrationJob
+leaf-route-task: leafRouteTask
+parent-route-task: parentRouteOrchestrationTask
+batchjob-name: JudicialDataLoad
 invalid-header-sql: insert into dataload_exception_records(file_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
 invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?, ?)
 jsr-threshold-limit: 100

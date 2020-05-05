@@ -42,7 +42,7 @@ import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource =  "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
-public class RouteLeafRouteTest extends LeafRouteAbstractTest {
+public class LeafRouteTest extends LeafRouteAbstractTest {
 
     @BeforeClass
     public static void beforeAll() throws Exception {

@@ -25,7 +25,6 @@ spring:
             non_contextual_creation: true
   batch:
     initialize-schema: always
-    tablePrefix: dbjuddata.BATCH_
   jackson.date-format: yyyy-MM-dd
   flyway:
     enabled: ${FLYWAY_ENABLED:true}

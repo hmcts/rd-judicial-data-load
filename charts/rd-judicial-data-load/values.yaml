@@ -17,9 +17,6 @@ job:
   global:
     jobKind: CronJob
 
-postgresql:
-  enabled: false
-  
   keyVaults:
     "rd":
       resourceGroup: rd
@@ -30,4 +27,10 @@ postgresql:
         - ACCOUNT-KEY
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
+        -
+postgresql:
+  enabled: false
+
+blobstorage:
+  enabled: false
 

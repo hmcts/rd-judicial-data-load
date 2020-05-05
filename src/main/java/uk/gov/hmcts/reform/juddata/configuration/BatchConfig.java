@@ -23,10 +23,10 @@ public class BatchConfig {
     @Autowired
     private StepBuilderFactory steps;
 
-    @Value("${batchtask-task1}")
+    @Value("${leaf-route-task}")
     String taskLeaf;
 
-    @Value("${batchtask-task2}")
+    @Value("${parent-route-task}")
     String taskParent;
 
     @Value("${batchjob-name}")
