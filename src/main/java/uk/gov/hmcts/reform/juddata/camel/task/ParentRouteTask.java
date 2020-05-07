@@ -39,12 +39,13 @@ public class ParentRouteTask implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-
         try {
+            log.info("::ParentRouteTask starts::");
             camelContext.getGlobalOptions().remove(IS_EXCEPTION_HANDLED);
             camelContext.getGlobalOptions().remove(SCHEDULER_STATUS);
             dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_USER_PROFILE_ORCHESTRATION);
             producerTemplate.sendBody(startRoute, "starting JRD orchestration");
+            log.info("::ParentRouteTask completes::");
         } catch (Exception ex) {
             log.error("::judicial-user-profile-orchestration route failed::",  ex.getMessage());
         } finally {

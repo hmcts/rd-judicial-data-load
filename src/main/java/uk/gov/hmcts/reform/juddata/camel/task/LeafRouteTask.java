@@ -39,10 +39,12 @@ public class LeafRouteTask implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         try {
+            log.info("::LeafRouteTask starts::");
             camelContext.getGlobalOptions().remove(IS_EXCEPTION_HANDLED);
             camelContext.getGlobalOptions().remove(SCHEDULER_STATUS);
             dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
             producerTemplate.sendBody(startLeafRoute, "starting JRD leaf routes though scheduler");
+            log.info("::LeafRouteTask completes::");
         } catch (Exception ex) {
             log.error("::leaf-route failed::", ex.getMessage());
         } finally {
