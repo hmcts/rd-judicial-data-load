@@ -611,5 +611,17 @@
         <packageUrl regex="true">^pkg:javascript/handlebars@.*$</packageUrl>
         <vulnerabilityName>A prototype pollution vulnerability in handlebars is exploitable if an attacker can control the template</vulnerabilityName>
         <vulnerabilityName>Disallow calling helperMissing and blockHelperMissing directly</vulnerabilityName>
-        <vulnerabilityName>Prototype pollution</vulnerabilityName>    </suppress>
+        <vulnerabilityName>Prototype pollution</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: bcpg-jdk15on-1.56.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcpg\-jdk15on@.*$</packageUrl>
+        <cpe>cpe:/a:pgp:openpgp</cpe>
+        <cpe>cpe:/a:pgp:pgp</cpe>
+        <cve>CVE-2001-0265</cve>
+        <cve>CVE-2001-0381</cve>
+
+    </suppress>
 </suppressions>
