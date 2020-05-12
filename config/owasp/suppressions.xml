@@ -126,7 +126,6 @@
         <cve>CVE-2020-1745</cve>
         <cve>CVE-2020-1935</cve>
         <cve>CVE-2020-1938</cve>
-
     </suppress>
     <suppress>
         <notes><![CDATA[
