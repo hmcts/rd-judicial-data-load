@@ -7,8 +7,8 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     FLYWAY_ENABLED: true
-    ACCOUNT_NAME: "rdpreview"
-    ACCOUNT_KEY: "61Sb95N8fFF5PNn/Gn5FjJFUg6wKJ/j6IWa0URdnAWnmjtluRPpJDk8uA3Zrx+u9gzUA8nF56rVJm1jl5dgTnQ=="
+    ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
+    ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
   postgresql:
     postgresqlUsername: dbjuddata
     postgresqlPassword: dbjuddata
@@ -18,8 +18,24 @@ java:
   keyVaults:
     rd:
       secrets:
-          - ACCOUNT-NAME
-          - ACCOUNT-KEY
-          - CONTAINER-NAME
-          - BLOB-URL-SUFFIX
-
+        - CONTAINER-NAME
+        - BLOB-URL-SUFFIX
+  secrets:
+    BLOB_ACCOUNT_NAME:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: storageAccountName
+    BLOB_ACCESS_KEY:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: accessKey
+    BLOB_SERVICE_ENDPOINT:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: primaryBlobServiceEndPoint
+blobstorage:
+  resourceGroup: rd
+  teamName: "RD"
+  location: uksouth
+  setup:
+    containers:
+    - jud-ref-data
+    - jud-ref-data-archive
+  enabled: true
