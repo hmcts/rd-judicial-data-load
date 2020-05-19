@@ -1,7 +1,7 @@
 # rd-judicial-data-load
 Judicial reference data load (JRD)
 
-JRD is batch application and JRD batch is scheduled with kuberenets which runs once in day per cluster.
+JRD is batch application and JRD batch is scheduled with kuberenetes which runs once in day per cluster.
 
 # Building and deploying the application
 Building the application
