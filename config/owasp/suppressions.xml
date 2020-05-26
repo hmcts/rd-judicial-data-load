@@ -113,7 +113,6 @@
         <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2020-11612</cve>
     </suppress>
-
     <suppress>
         <notes><![CDATA[
    file name: tomcat-embed-websocket-9.0.30.jar
@@ -245,7 +244,6 @@
         <gav regex="true">org\.codehaus\.groovy:groovy-*.*</gav>
         <cpe>cpe:/a:apache:groovy</cpe>
     </suppress>
-
     <suppress>
         <notes><![CDATA[
    file name: commons-beanutils-core-1.8.3.jar
@@ -295,7 +293,6 @@
         <cpe>cpe:/a:htmlunit_project:htmlunit</cpe>
         <cve>CVE-2020-5529</cve>
     </suppress>
-
     <suppress>
         <notes><![CDATA[
    file name: openhtmltopdf-jsoup-dom-converter-0.0.1-RC13.jar
@@ -490,8 +487,6 @@
         <vulnerabilityName>Disallow calling helperMissing and blockHelperMissing directly</vulnerabilityName>
         <vulnerabilityName>Prototype pollution</vulnerabilityName>
     </suppress>
-
-
     <suppress>
         <notes><![CDATA[
    file name: jruby-complete-1.7.26.jar: readline.jar
@@ -499,7 +494,6 @@
         <packageUrl regex="true">^pkg:maven/org\.jruby/readline@.*$</packageUrl>
         <cpe>cpe:/a:jruby:jruby</cpe>
     </suppress>
-
     <suppress>
         <notes><![CDATA[
    file name: jruby-complete-1.7.26.jar: readline.jar
@@ -507,5 +501,11 @@
         <filePath regex="true">.*\bbcprov-jdk15on-1.54\.jar</filePath>
         <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[
+    file name: ant*.jar
+    ]]></notes>
+        <filePath regex="true">.*\**\.jar</filePath>
+        <cpe>cpe:/a:apache:ant</cpe>
+    </suppress>
 </suppressions>
