@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static org.apache.xmpbox.type.BooleanType.TRUE;
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.valueOf;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.IS_EXCEPTION_HANDLED;
 
 import org.apache.camel.Exchange;
@@ -33,7 +34,7 @@ public class ExceptionProcessorTest extends CamelTestSupport {
                 .withBody(" ")
                 .build();
         exchange.setProperty(Exchange.EXCEPTION_CAUGHT, new Exception("Test"));
-        exchange.getContext().getGlobalOptions().put(IS_EXCEPTION_HANDLED,TRUE);
+        exchange.getContext().getGlobalOptions().put(IS_EXCEPTION_HANDLED, valueOf(TRUE));
         exceptionProcessor.process(exchange);
     }
 }
