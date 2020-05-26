@@ -481,6 +481,7 @@
         <vulnerabilityName>Disallow calling helperMissing and blockHelperMissing directly</vulnerabilityName>
         <vulnerabilityName>Prototype pollution</vulnerabilityName>
     </suppress>
+
     <suppress>
         <notes><![CDATA[
    file name: wiremock-2.19.0.jar: handlebars-4.0.5.js
