@@ -508,4 +508,11 @@
         <filePath regex="true">.*\**\.jar</filePath>
         <cpe>cpe:/a:apache:ant</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: camel*.jar
+   ]]></notes>
+        <filePath regex="true">.*\**\.jar</filePath>
+        <cpe>cpe:/a:apache:camel</cpe>
+    </suppress>
 </suppressions>
