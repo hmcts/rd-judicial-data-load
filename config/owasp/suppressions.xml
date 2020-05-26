@@ -515,4 +515,27 @@
         <filePath regex="true">.*\**\.jar</filePath>
         <cpe>cpe:/a:apache:camel</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: camel-core-2.25.0.jar (shaded: org.apache.camel:json-simple-ordered:2.25.0)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/json\-simple\-ordered@.*$</packageUrl>
+        <cve>CVE-2020-11971</cve>
+        <cve>CVE-2020-11972</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: camel-core-2.25.0.jar (shaded: org.apache.camel:spi-annotations:2.25.0)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/spi\-annotations@.*$</packageUrl>
+        <cpe>cpe:/a:apache:camel</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: camel-core-2.25.0.jar (shaded: org.apache.camel:spi-annotations:2.25.0)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/spi\-annotations@.*$</packageUrl>
+        <cve>CVE-2020-11971</cve>
+        <cve>CVE-2020-11972</cve>
+    </suppress>
 </suppressions>
