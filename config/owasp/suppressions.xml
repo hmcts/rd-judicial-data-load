@@ -522,6 +522,7 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.camel/json\-simple\-ordered@.*$</packageUrl>
         <cve>CVE-2020-11971</cve>
         <cve>CVE-2020-11972</cve>
+        <cve>CVE-2020-11973</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
