@@ -25,6 +25,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -69,6 +70,7 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
+    @Ignore
     public void should_return_JudicialOfficeAuthorisationRow_response() {
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
@@ -85,6 +87,7 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
+    @Ignore
     public void should_return_JudicialOfficeAuthorisationRow_with_single_record_response() {
 
         Exchange exchangeMock = mock(Exchange.class);
