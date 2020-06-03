@@ -9,6 +9,7 @@
         <cve>CVE-2019-10782</cve>
         <cve>CVE-2019-9658</cve>
     </suppress>
+
     <suppress>
         <notes><![CDATA[
    file name: commons-beanutils-1.9.3.jar
