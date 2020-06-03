@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -10,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 
 @Configuration
 @EnableBatchProcessing
+@Slf4j
 public class BatchConfig {
 
     @Autowired
@@ -22,6 +25,9 @@ public class BatchConfig {
 
     @Autowired
     private StepBuilderFactory steps;
+
+    @Autowired
+    AuditProcessingService schedulerAuditProcessingService;
 
     @Value("${leaf-route-task}")
     String taskLeaf;
@@ -37,7 +43,6 @@ public class BatchConfig {
 
     @Autowired
     LeafRouteTask leafRouteTask;
-
 
     @Bean
     public Step stepLeafRoute() {

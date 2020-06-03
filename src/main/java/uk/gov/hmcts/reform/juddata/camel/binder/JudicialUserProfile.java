@@ -45,7 +45,6 @@ public class JudicialUserProfile implements Serializable {
     String fullName;
 
     @DataField(pos = 7, columnName = "post_Nominals")
-    @NotEmpty
     String postNominals;
 
     @DataField(pos = 8, columnName = "contract_Type_id")

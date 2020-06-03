@@ -33,7 +33,7 @@ public class DataLoadUtil {
 
     public void setGlobalConstant(CamelContext camelContext, String schedulerName) {
         Map<String, String> globalOptions = camelContext.getGlobalOptions();
-        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
+        globalOptions.put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
         globalOptions.put(SCHEDULER_NAME, schedulerName);
     }
 }

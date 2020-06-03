@@ -459,13 +459,7 @@
         <cpe>cpe:/a:eclipse:jetty</cpe>
         <cpe>cpe:/a:jetty:jetty</cpe>
     </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: bcpg-jdk15on-*.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcpg\-jdk15on@.*$</packageUrl>
-        <cpe>cpe:/a:openpgp:openpgp</cpe>
-    </suppress>
+
     <suppress>
         <notes><![CDATA[
    file name: dom4j-2.1.1.jar
@@ -508,161 +502,14 @@
         <filePath regex="true">.*\bbcprov-jdk15on-1.54\.jar</filePath>
         <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
     </suppress>
+
+
     <suppress>
         <notes><![CDATA[
-   file name: camel-bean-validator-2.25.0.jar
+   file name: ant*.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-bean\-validator@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-spring-batch-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-spring\-batch@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-azure-starter-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-azure\-starter@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-azure-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-azure@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-csv-starter-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-csv\-starter@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-bindy-starter-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-bindy\-starter@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-jdbc-starter-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-jdbc\-starter@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-spring-boot-starter-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-spring\-boot\-starter@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-csv-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-csv@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-sql-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-sql@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-core-starter-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-core\-starter@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-        <cve>CVE-2020-11971</cve>
-        <cve>CVE-2020-11972</cve>
-        <cve>CVE-2020-11973</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-bindy-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-bindy@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-jdbc-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-jdbc@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-spring-boot-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-spring\-boot@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-spring-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-spring@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-core-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-core@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spi-annotations-3.0.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/spi\-annotations@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: groovy-xml-2.5.10.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.codehaus\.groovy/groovy\-xml@.*$</packageUrl>
-        <cpe>cpe:/a:apache:groovy</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-test-spring-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-test\-spring@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-test-2.25.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/camel\-test@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: camel-core-2.25.0.jar (shaded: org.apache.camel:json-simple-ordered:2.25.0)
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/json\-simple\-ordered@.*$</packageUrl>
-        <cpe>cpe:/a:apache:camel</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-file name: ant*.jar
-]]></notes>
         <filePath regex="true">.*\**\.jar</filePath>
         <cpe>cpe:/a:apache:ant</cpe>
     </suppress>
+
 </suppressions>

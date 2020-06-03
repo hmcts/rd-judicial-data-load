@@ -17,6 +17,10 @@ spring:
     enabled: true
   batch:
     initialize-schema: always
+    # set batch false in integration test and run batch manually with batch runner to set dynamic test property values
+    # eg. dynamic properties ${parent.file.name}
+    job:
+      enabled: false
 
 start-route: direct:JRD
 archival-route: direct:JrdArchival
@@ -26,7 +30,8 @@ archival-file-names: test.csv,judicial_userprofile.csv
 archival-cred: noop=true
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 2000
-invalid-header-sql: insert into dataload_exception_records(file_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
+scheduler-audit-select: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date
+invalid-exception-sql: insert into dataload_exception_records(file_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
 invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?, ?)
 jsr-threshold-limit: 5
 leaf-route-task: leafRouteTask
@@ -91,3 +96,5 @@ start-leaf-route: direct:leaf
 leaf-archival-file-names: Roles.csv,Contracts.csv,Locations.csv,BaseLocations.csv
 
 leaf-archival-route: direct:jrdLeafArchival
+
+truncate-audit: truncate dataload_schedular_audit

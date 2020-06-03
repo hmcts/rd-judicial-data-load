@@ -16,6 +16,8 @@ public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
 
     String[] fileWithInvalidJsrExceedsThreshold = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv"};
 
+    String[] fileWithUniqueViolation = {"classpath:sourceFiles/parent/judicial_userprofile_unique_violation.csv", "classpath:sourceFiles/parent/judicial_appointments.csv"};
+
     static void setSourceData(String... files) throws Exception {
         System.setProperty("parent.file.name", files[0]);
         System.setProperty("child.file.name", files[1]);
