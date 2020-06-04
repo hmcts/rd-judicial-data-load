@@ -37,11 +37,12 @@ public class JudicialApplication implements ApplicationRunner {
 
     private static TelemetryClient telemetryClient;
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
         int exitCode = SpringApplication.exit(context);
         log.info("Judicial Application exiting with exit code " + exitCode);
         telemetryClient.flush();
+        Thread.sleep(10000);
         System.exit(exitCode);
     }
 
