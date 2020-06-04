@@ -35,7 +35,6 @@ public class JudicialApplication implements ApplicationRunner {
     @Autowired
     AuditProcessingService auditProcessingService;
 
-    @Autowired
     private static TelemetryClient telemetryClient;
 
     public static void main(final String[] args) {
@@ -57,5 +56,10 @@ public class JudicialApplication implements ApplicationRunner {
         } else {
             log.info("::no run of Judicial Application as it has ran for the day::");
         }
+    }
+
+    @Autowired
+    public void setTelemetryClient(TelemetryClient telemetryClient) {
+        JudicialApplication.telemetryClient = telemetryClient;
     }
 }
