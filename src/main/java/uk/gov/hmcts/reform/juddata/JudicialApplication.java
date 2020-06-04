@@ -2,8 +2,6 @@ package uk.gov.hmcts.reform.juddata;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.negate;
 
-import com.microsoft.applicationinsights.TelemetryClient;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -35,13 +33,11 @@ public class JudicialApplication implements ApplicationRunner {
     @Autowired
     AuditProcessingService auditProcessingService;
 
-    private static TelemetryClient telemetryClient;
-
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
         int exitCode = SpringApplication.exit(context);
         log.info("Judicial Application exiting with exit code " + exitCode);
-        telemetryClient.flush();
+        //Sleep added to allow app-insights to flush the logs
         Thread.sleep(10000);
         System.exit(exitCode);
     }
@@ -57,10 +53,5 @@ public class JudicialApplication implements ApplicationRunner {
         } else {
             log.info("::no run of Judicial Application as it has ran for the day::");
         }
-    }
-
-    @Autowired
-    public void setTelemetryClient(TelemetryClient telemetryClient) {
-        JudicialApplication.telemetryClient = telemetryClient;
     }
 }
