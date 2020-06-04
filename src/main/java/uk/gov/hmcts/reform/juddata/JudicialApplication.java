@@ -36,12 +36,13 @@ public class JudicialApplication implements ApplicationRunner {
     AuditProcessingService auditProcessingService;
 
     @Autowired
-    private TelemetryClient telemetryClient;
+    private static TelemetryClient telemetryClient;
 
     public static void main(final String[] args) {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
         int exitCode = SpringApplication.exit(context);
         log.info("Judicial Application exiting with exit code " + exitCode);
+        telemetryClient.flush();
         System.exit(exitCode);
     }
 
@@ -56,6 +57,5 @@ public class JudicialApplication implements ApplicationRunner {
         } else {
             log.info("::no run of Judicial Application as it has ran for the day::");
         }
-        telemetryClient.flush();
     }
 }
