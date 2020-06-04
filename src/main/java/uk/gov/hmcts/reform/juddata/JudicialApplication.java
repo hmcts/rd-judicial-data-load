@@ -35,10 +35,10 @@ public class JudicialApplication implements ApplicationRunner {
 
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
+        //Sleep added to allow app-insights to flush the logs
+        Thread.sleep(7000);
         int exitCode = SpringApplication.exit(context);
         log.info("Judicial Application exiting with exit code " + exitCode);
-        //Sleep added to allow app-insights to flush the logs
-        Thread.sleep(10000);
         System.exit(exitCode);
     }
 
