@@ -90,4 +90,4 @@ azure:
     application-insights:
       channel:
         in-process:
-          flush-interval-in-seconds: 0
+          flush-interval-in-seconds: 2
