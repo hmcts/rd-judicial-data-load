@@ -510,9 +510,34 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
+   file name: flexmark*.jar
+   ]]></notes>
+        <filePath regex="true">.*\**\.jar</filePath>
+        <cpe>cpe:/a:xwiki:xwiki</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
    This suppresses a CVE-2013-4580 cve in any gitlab
    ]]></notes>
         <cpe>cpe:/a:gitlab:gitlab</cpe>
         <cve>CVE-2013-4580</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: javax.websocket-api-1.1.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/javax\.websocket/javax\.websocket\-api@.*$</packageUrl>
+        <cpe>cpe:/a:java-websocket_project:java-websocket</cpe>
+        <cve>CVE-2020-11050</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: camel-core-2.25.0.jar (shaded: org.apache.camel:json-simple-ordered:2.25.0)
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.camel/json\-simple\-ordered@.*$</packageUrl>
+        <cpe>cpe:/a:apache:camel</cpe>
+        <cve>CVE-2020-11971</cve>
+        <cve>CVE-2020-11972</cve>
+        <cve>CVE-2020-11973</cve>
     </suppress>
 </suppressions>
