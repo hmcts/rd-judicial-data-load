@@ -43,10 +43,9 @@ withNightlyPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
     //loadVaultSecrets(secrets)
-    nonServiceApp()
 
     enableMutationTest()
-    enableFullFunctionalTest()
+    //enableFullFunctionalTest()
 
     //This is not required as this is batch application and we don't have any API
     //enableSecurityScan()
