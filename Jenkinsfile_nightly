@@ -43,6 +43,7 @@ withNightlyPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
     //loadVaultSecrets(secrets)
+    nonServiceApp()
 
     enableMutationTest()
     enableFullFunctionalTest()
