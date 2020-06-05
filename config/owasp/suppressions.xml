@@ -508,4 +508,11 @@
         <filePath regex="true">.*\**\.jar</filePath>
         <cpe>cpe:/a:apache:camel</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   This suppresses a CVE-2013-4580 cve in any gitlab
+   ]]></notes>
+        <cpe>cpe:/a:gitlab:gitlab</cpe>
+        <cve>CVE-2013-4580</cve>
+    </suppress>
 </suppressions>
