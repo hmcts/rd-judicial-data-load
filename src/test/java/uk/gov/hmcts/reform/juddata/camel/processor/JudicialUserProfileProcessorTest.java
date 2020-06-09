@@ -139,6 +139,7 @@ public class JudicialUserProfileProcessorTest {
     @SuppressWarnings("unchecked")
     public void should_return_JudicialOfficeAuthorisationRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
         judicialUserProfileMock1.setElinksId(null);
+        judicialUserProfileMock1.setFullName(null);
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
 
@@ -153,7 +154,7 @@ public class JudicialUserProfileProcessorTest {
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setTableName("test");
 
-        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 0);
+        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 1);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
