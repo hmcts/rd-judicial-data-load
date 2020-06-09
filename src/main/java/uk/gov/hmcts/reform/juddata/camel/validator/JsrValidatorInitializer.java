@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class JsrValidatorInitializer<T> {
     @Qualifier("springJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
-    @Value("${invalid-header-sql}")
+    @Value("${invalid-exception-sql}")
     String invalidHeaderSql;
 
     @Autowired
@@ -111,9 +112,10 @@ public class JsrValidatorInitializer<T> {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        Map<String, String> globalOptions = camelContext.getGlobalOptions();
 
         RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
-        String schedulerTime = camelContext.getGlobalOptions().get(SCHEDULER_START_TIME);
+        String schedulerTime = globalOptions.get(SCHEDULER_START_TIME);
 
         List<ConstraintViolation<T>> violationList = constraintViolations.stream().limit(jsrThresholdLimit)
                 .collect(Collectors.toList());
@@ -126,7 +128,7 @@ public class JsrValidatorInitializer<T> {
                     public void setValues(PreparedStatement ps, ConstraintViolation<T> argument) throws SQLException {
                         ps.setString(1, routeProperties.getTableName());
                         ps.setTimestamp(2, new Timestamp(Long.valueOf(schedulerTime)));
-                        ps.setString(3, camelContext.getGlobalOptions().get(SCHEDULER_NAME));
+                        ps.setString(3, globalOptions.get(SCHEDULER_NAME));
                         ps.setString(4, getKeyFiled(argument.getRootBean()));
                         ps.setString(5, argument.getPropertyPath().toString());
                         ps.setString(6, argument.getMessage());

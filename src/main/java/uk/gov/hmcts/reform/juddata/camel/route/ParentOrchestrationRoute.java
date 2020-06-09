@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.juddata.camel.route;
 
 import static java.util.Arrays.copyOf;
 import static org.apache.commons.lang.WordUtils.uncapitalize;
-import static uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil.failureProcessor;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.BLOBPATH;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CHILD_ROUTES;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.CSVBINDER;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.validation.ValidationException;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.FailedToCreateRouteException;
@@ -38,7 +36,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.processor.ArchiveAzureFileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.FileReadProcessor;
@@ -117,17 +114,11 @@ public class ParentOrchestrationRoute {
                         @Override
                         public void configure() throws Exception {
 
-                            onException(RouteFailedException.class, ValidationException.class, RuntimeException.class)
-                                    .handled(true)
-                                    .process(failureProcessor)
-                                    .process(emailService)
-                                    .markRollbackOnly()
-                                    .end();
-
-                            //logging exception in global exception handler
                             onException(Exception.class)
                                     .handled(true)
                                     .process(exceptionProcessor)
+                                    .process(emailService)
+                                    .markRollbackOnly()
                                     .end();
 
                             String[] directChild = new String[dependantRoutes.size()];

@@ -33,6 +33,7 @@ import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdTask;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Configuration
@@ -202,5 +203,10 @@ public class ParentCamelConfig {
     @Bean
     LeafRouteTask leafRouteTask() {
         return new LeafRouteTask();
+    }
+
+    @Bean
+    JrdTask jrdTask() {
+        return new JrdTask();
     }
 }

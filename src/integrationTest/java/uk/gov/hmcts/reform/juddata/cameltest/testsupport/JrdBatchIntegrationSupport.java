@@ -1,17 +1,20 @@
-package uk.gov.hmcts.reform.juddata.cameltest;
+package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.hmcts.reform.juddata.camel.processor.ExceptionProcessor;
+import uk.gov.hmcts.reform.juddata.camel.route.LeafTableRoute;
 import uk.gov.hmcts.reform.juddata.camel.route.ParentOrchestrationRoute;
 import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
 import uk.gov.hmcts.reform.juddata.camel.util.DataLoadUtil;
 
-public abstract class ParentRouteAbstractTest {
+public abstract class JrdBatchIntegrationSupport {
+
 
     public static final String DB_SCHEDULER_STATUS = "scheduler_status";
 
@@ -22,13 +25,13 @@ public abstract class ParentRouteAbstractTest {
     protected JdbcTemplate jdbcTemplate;
 
     @Autowired
-    ParentOrchestrationRoute parentRoute;
+    protected ParentOrchestrationRoute parentRoute;
 
     @Value("${start-route}")
     protected String startRoute;
 
     @Autowired
-    ProducerTemplate producerTemplate;
+    protected ProducerTemplate producerTemplate;
 
     @Value("${parent-select-jrd-sql}")
     protected String sql;
@@ -37,10 +40,10 @@ public abstract class ParentRouteAbstractTest {
     protected String sqlChild1;
 
     @Value("${archival-cred}")
-    String archivalCred;
+    protected String archivalCred;
 
     @Value("${select-dataload-schedular-audit}")
-    String selectDataLoadSchedulerAudit;
+    protected String selectDataLoadSchedulerAudit;
 
     @Value("${scheduler-insert-sql}")
     protected String schedulerInsertJrdSql;
@@ -68,4 +71,34 @@ public abstract class ParentRouteAbstractTest {
 
     @Autowired
     protected AuditProcessingService auditProcessingService;
+
+    @Autowired
+    protected LeafTableRoute leafTableRoute;
+
+    @Value("${base-location-select-jrd-sql}")
+    protected String baseLocationSql;
+
+    @Value("${region-select-jrd-sql}")
+    protected String regionSql;
+
+    @Value("${contract-select-jrd-sql}")
+    protected String contractSql;
+
+    @Value("${role-select-jrd-sql}")
+    protected String roleSql;
+
+
+    @Value("${start-leaf-route}")
+    protected String startLeafRoute;
+
+    @Autowired
+    protected JobLauncherTestUtils jobLauncherTestUtils;
+
+
+    @Value("${exception-select-query}")
+    protected String exceptionQuery;
+
+    @Value("${truncate-audit}")
+    protected String truncateAudit;
+
 }
