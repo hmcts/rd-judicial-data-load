@@ -27,7 +27,7 @@ public class LeafRouteTask implements Tasklet {
     JrdTask jrdTask;
 
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         log.info("::LeafRouteTask starts::");
         String status = jrdTask.execute(camelContext, LEAF_ROUTE, startLeafRoute);
         log.info("::LeafRouteTask completes with {}::", status);
