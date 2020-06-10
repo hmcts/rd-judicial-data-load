@@ -12,10 +12,10 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestS
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport.file_error;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport.file_jsr_error;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithElinkIdMissing;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidHeader;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsr;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsrExceedsThreshold;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithUniqueViolation;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.setSourceData;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql", "/testData/truncate-exception.sql"})
     public void testTaskletException() throws Exception {
-        setSourceData(fileWithUniqueViolation);
+        setSourceData(fileWithElinkIdMissing);
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
         leafTableRoute.startRoute();
         parentRoute.startRoute();
