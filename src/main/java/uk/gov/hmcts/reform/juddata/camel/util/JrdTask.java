@@ -37,14 +37,13 @@ public class JrdTask {
 
     public String execute(CamelContext camelContext, String schedulerName, String route) {
 
-        String taskStatus = SUCCESS;
-
         try {
             Map<String, String> globalOptions = camelContext.getGlobalOptions();
             globalOptions.remove(IS_EXCEPTION_HANDLED);
             globalOptions.remove(SCHEDULER_STATUS);
             dataLoadUtil.setGlobalConstant(camelContext, schedulerName);
             producerTemplate.sendBody(route, "starting " + schedulerName);
+            return SUCCESS;
         } catch (Exception ex) {
             //Camel override error stack with route failed hence grabbing exception form context
             String errorMessage = camelContext.getGlobalOptions().get(ERROR_MESSAGE);
@@ -52,11 +51,10 @@ public class JrdTask {
             log.error(":: " + schedulerName + " failed::", errorMessage);
             //check mail flag and send mail
             emailService.sendEmail(errorMessage);
-            taskStatus = FAILURE;
+            return FAILURE;
         } finally {
             //runs Job Auditing
             auditProcessingService.auditSchedulerStatus(camelContext);
-            return taskStatus;
         }
     }
 }
