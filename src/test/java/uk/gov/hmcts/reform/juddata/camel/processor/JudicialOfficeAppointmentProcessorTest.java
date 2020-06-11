@@ -24,8 +24,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -66,7 +66,6 @@ public class JudicialOfficeAppointmentProcessorTest {
     }
 
     @Test
-    @Ignore
     @SuppressWarnings("unchecked")
     public void should_return_JudicialOfficeAppointmentRow_response() {
 
@@ -74,7 +73,7 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
 
-        Exchange exchangeMock = mock(Exchange.class);
+        Exchange exchangeMock = getJudicialOfficeAppExchangeMock();
         Message messageMock = mock(Message.class);
         when(exchangeMock.getIn()).thenReturn(messageMock);
         when(exchangeMock.getMessage()).thenReturn(messageMock);
@@ -86,10 +85,9 @@ public class JudicialOfficeAppointmentProcessorTest {
     }
 
     @Test
-    @Ignore
     public void should_return_JudicialOfficeAppointmentRow_with_single_record_response() {
 
-        Exchange exchangeMock = mock(Exchange.class);
+        Exchange exchangeMock = getJudicialOfficeAppExchangeMock();
         Message messageMock = mock(Message.class);
         when(exchangeMock.getIn()).thenReturn(messageMock);
         when(exchangeMock.getMessage()).thenReturn(messageMock);
@@ -102,6 +100,13 @@ public class JudicialOfficeAppointmentProcessorTest {
     @Test
     public void should_return_JudicialOfficeAppointmentRow_with_single_record_with_elinks_id_nullresponse() {
 
+        Exchange exchangeMock = getJudicialOfficeAppExchangeMock();
+        judicialOfficeAppointmentProcessor.process(exchangeMock);
+        assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAppointmentMock1);
+    }
+
+    @NotNull
+    private Exchange getJudicialOfficeAppExchangeMock() {
         judicialOfficeAppointmentMock1.setElinksId(null);
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
@@ -127,7 +132,6 @@ public class JudicialOfficeAppointmentProcessorTest {
         when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
         doNothing().when(platformTransactionManager).commit(transactionStatus);
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
-        judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAppointmentMock1);
+        return exchangeMock;
     }
 }

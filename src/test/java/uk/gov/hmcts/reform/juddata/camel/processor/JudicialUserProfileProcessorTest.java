@@ -10,29 +10,39 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME;
+import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+
+import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.juddata.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 public class JudicialUserProfileProcessorTest {
@@ -70,14 +80,12 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
-    @Ignore
     public void should_return_JudicialOfficeAuthorisationRow_response() {
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
         judicialUserProfiles.add(judicialUserProfileMock2);
-
-        Exchange exchangeMock = mock(Exchange.class);
+        Exchange exchangeMock = getUserProfileExchangeMock();
         Message messageMock = mock(Message.class);
         when(exchangeMock.getIn()).thenReturn(messageMock);
         when(exchangeMock.getMessage()).thenReturn(messageMock);
@@ -87,21 +95,46 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
-    @Ignore
     public void should_return_JudicialOfficeAuthorisationRow_with_single_record_response() {
 
+
+        Exchange exchangeMock = getUserProfileExchangeMock();
+        judicialUserProfileProcessor.process(exchangeMock);
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock1);
+
+        assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
+    }
+
+    @NotNull
+    private Exchange getUserProfileExchangeMock() {
+        final String schedulerName = "judicial_main_scheduler";
+        final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
+
+        Map<String, String> globalOptions = getGlobalOptions(schedulerName);
+        final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+        final TransactionStatus transactionStatus = mock(TransactionStatus.class);
+        RouteProperties routeProperties = new RouteProperties();
+        routeProperties.setTableName("test");
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
         when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
         when(exchangeMock.getIn()).thenReturn(messageMock);
         when(exchangeMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getBody()).thenReturn(judicialUserProfileMock1);
+        camelContext.setGlobalOptions(globalOptions);
+        setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
+        setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
+        setField(judicialUserProfileJsrValidatorInitializer,
+        "platformTransactionManager", platformTransactionManager);
+        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 20);
 
-        judicialUserProfileProcessor.process(exchangeMock);
-        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
-        judicialUserProfiles.add(judicialUserProfileMock1);
-
-        assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
+        int[][] intArray = new int[1][];
+        when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
+        when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
+        doNothing().when(platformTransactionManager).commit(transactionStatus);
+        when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
+        return exchangeMock;
     }
 
     @Test
@@ -122,7 +155,7 @@ public class JudicialUserProfileProcessorTest {
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setTableName("test");
 
-        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 5);
+        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 20);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
@@ -142,6 +175,7 @@ public class JudicialUserProfileProcessorTest {
     @SuppressWarnings("unchecked")
     public void should_return_JudicialOfficeAuthorisationRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
         judicialUserProfileMock1.setElinksId(null);
+        judicialUserProfileMock1.setFullName(null);
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
 
@@ -170,5 +204,12 @@ public class JudicialUserProfileProcessorTest {
 
         judicialUserProfileProcessor.process(exchangeMock);
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
+    }
+    public static Map<String, String> getGlobalOptions(String schedulerName) {
+        Map<String, String> globalOptions = new HashMap<>();
+        globalOptions.put(ORCHESTRATED_ROUTE, MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        globalOptions.put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
+        globalOptions.put(SCHEDULER_NAME, schedulerName);
+        return globalOptions;
     }
 }

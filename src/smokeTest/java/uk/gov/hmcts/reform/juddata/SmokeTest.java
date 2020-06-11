@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.RestAssured;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -18,7 +17,6 @@ public class SmokeTest {
         );
 
     @Test
-    @Ignore
     public void should_prove_app_is_running_and_healthy() {
 
         RestAssured.baseURI = targetInstance;
