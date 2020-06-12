@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
+import static java.lang.Boolean.FALSE;
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.PARTIAL_SUCCESS;
@@ -17,7 +18,7 @@ import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 @Slf4j
 public abstract class JsrValidationBaseProcessor<T> implements Processor {
 
-    @Value("${jsr-threshold-limit}")
+    @Value("${jsr-threshold-limit:0}")
     int jsrThresholdLimit;
 
     List<T> validate(JsrValidatorInitializer<T> jsrValidatorInitializer, List<T> list) {
@@ -34,7 +35,8 @@ public abstract class JsrValidationBaseProcessor<T> implements Processor {
             exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, PARTIAL_SUCCESS);
         }
 
-        if (jsrValidatorInitializer.getConstraintViolations().size() > jsrThresholdLimit) {
+        if (FALSE.equals(jsrThresholdLimit == 0)
+                && jsrValidatorInitializer.getConstraintViolations().size() > jsrThresholdLimit) {
             exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
             throw new RouteFailedException("Jsr exception exceeds threshold limit in " + this.getClass().getSimpleName());
         }

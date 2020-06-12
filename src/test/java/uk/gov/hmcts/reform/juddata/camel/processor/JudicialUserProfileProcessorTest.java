@@ -187,7 +187,7 @@ public class JudicialUserProfileProcessorTest {
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setTableName("test");
 
-        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 0);
+        setField(judicialUserProfileProcessor, "jsrThresholdLimit", 1);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
