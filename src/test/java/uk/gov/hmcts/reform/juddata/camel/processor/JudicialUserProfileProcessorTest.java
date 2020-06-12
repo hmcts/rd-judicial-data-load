@@ -202,8 +202,8 @@ public class JudicialUserProfileProcessorTest {
         judicialUserProfileProcessor.process(exchangeMock);
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
     }
-    public static Map<String, String> getGlobalOptions(String schedulerName) {
 
+    public static Map<String, String> getGlobalOptions(String schedulerName) {
         Map<String, String> globalOptions = new HashMap<>();
         globalOptions.put(ORCHESTRATED_ROUTE, MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION);
         globalOptions.put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
