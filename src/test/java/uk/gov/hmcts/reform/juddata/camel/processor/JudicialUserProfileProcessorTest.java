@@ -92,7 +92,7 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAuthorisationRow_with_single_record_response() {
+    public void testShould_return_JudicialOfficeAuthorisationRow_with_single_record_response() {
 
 
         Exchange exchangeMock = getUserProfileExchangeMock();
