@@ -15,18 +15,17 @@ import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.ROUTE_DETA
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.juddata.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -34,9 +33,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
@@ -111,7 +108,6 @@ public class JudicialUserProfileProcessorTest {
         final String schedulerName = "judicial_main_scheduler";
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
 
-        Map<String, String> globalOptions = getGlobalOptions(schedulerName);
         final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         final TransactionStatus transactionStatus = mock(TransactionStatus.class);
         RouteProperties routeProperties = new RouteProperties();
@@ -122,11 +118,12 @@ public class JudicialUserProfileProcessorTest {
         when(exchangeMock.getIn()).thenReturn(messageMock);
         when(exchangeMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getBody()).thenReturn(judicialUserProfileMock1);
+        Map<String, String> globalOptions = getGlobalOptions(schedulerName);
         camelContext.setGlobalOptions(globalOptions);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
-        "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
         setField(judicialUserProfileProcessor, "jsrThresholdLimit", 20);
 
         int[][] intArray = new int[1][];
@@ -206,6 +203,7 @@ public class JudicialUserProfileProcessorTest {
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
     }
     public static Map<String, String> getGlobalOptions(String schedulerName) {
+
         Map<String, String> globalOptions = new HashMap<>();
         globalOptions.put(ORCHESTRATED_ROUTE, MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION);
         globalOptions.put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
