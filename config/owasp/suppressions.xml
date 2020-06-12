@@ -519,4 +519,13 @@
         <cpe>cpe:/a:postgresql:postgresql_jdbc_driver</cpe>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[
+file name: gradle-pitest-plugin-1.4.0.jar
+]]></notes>
+        <sha1>29a4ed185eeca1d90b0f4160911029ec692e746f</sha1>
+        <cpe>cpe:/a:gradle:gradle</cpe>
+    </suppress>
+
+
 </suppressions>
