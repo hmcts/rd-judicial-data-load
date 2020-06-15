@@ -26,6 +26,7 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -51,6 +52,8 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     CamelContext camelContext = new DefaultCamelContext();
 
+    JudicialUserProfileProcessor judicialUserProfileProcessor = Mockito.mock(JudicialUserProfileProcessor.class);
+
     @Before
     public void setup() {
 
@@ -59,6 +62,7 @@ public class JudicialOfficeAppointmentProcessorTest {
                 = new JsrValidatorInitializer<>();
         setField(judicialOfficeAppointmentProcessor,
                 "judicialOfficeAppointmentJsrValidatorInitializer", judicialOfficeAppointmentJsrValidatorInitializer);
+        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor", judicialUserProfileProcessor);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
@@ -77,6 +81,9 @@ public class JudicialOfficeAppointmentProcessorTest {
         when(exchangeMock.getIn()).thenReturn(messageMock);
         when(exchangeMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
+        judicialUserProfileProcessor = new JudicialUserProfileProcessor();
+        setField(judicialUserProfileProcessor, "filteredUserProfileKeys", new ArrayList<>());
+        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",judicialUserProfileProcessor);
 
         judicialOfficeAppointmentProcessor.process(exchangeMock);
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);

@@ -18,6 +18,8 @@ public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
 
     String[] fileWithElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments_elinks_missing.csv"};
 
+    String[] fileWithElinkIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv"};
+
     static void setSourceData(String... files) throws Exception {
         System.setProperty("parent.file.name", files[0]);
         System.setProperty("child.file.name", files[1]);

@@ -510,4 +510,12 @@
         <cpe>cpe:/a:apache:ant</cpe>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[
+   file name: postgresql-42.2.8*.jar
+   ]]></notes>
+        <filePath regex="true">.*\bpostgresql-42.2.8\.jar</filePath>
+        <cpe>cpe:/a:postgresql:postgresql_jdbc_driver</cpe>
+    </suppress>
+
 </suppressions>
