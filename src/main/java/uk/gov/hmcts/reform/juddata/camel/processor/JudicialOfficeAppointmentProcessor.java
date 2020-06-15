@@ -5,13 +5,13 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
 @Slf4j
@@ -22,7 +22,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
     JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
 
     @Autowired
-    JudicialUserProfileProcessor judicialUserProfileProcessor;
+    JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -39,34 +39,29 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
         List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
                 judicialOfficeAppointments);
 
-        log.info("Judicial Appointment Records count after Validation:: " + filteredJudicialAppointments.size());
+        List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileJsrValidatorInitializer.getInvalidJsrRecords();
 
-        //Skip elinks records which are invalid in user profile due to JSR
-        filteredJudicialAppointments = filterValidAppointmentsForUserProfile(filteredJudicialAppointments);
+        filterInvalidUserProfileRecords(filteredJudicialAppointments, invalidJudicialUserProfileRecords);
+
+        log.info("Judicial Appointment Records count after Validation:: " + filteredJudicialAppointments.size());
 
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
 
         exchange.getMessage().setBody(filteredJudicialAppointments);
     }
 
-    /**
-     * Filters valid user profile elinks id records and ignore invalid user profile elinks record with JSR errors.
-     *
-     * @param filteredJudicialAppointments List
-     * @return List JudicialOfficeAppointment
-     */
-    private List<JudicialOfficeAppointment> filterValidAppointmentsForUserProfile(List<JudicialOfficeAppointment> filteredJudicialAppointments) {
-        if (nonNull(judicialUserProfileProcessor.getFilteredUserProfileKeys())) {
-            filteredJudicialAppointments = filteredJudicialAppointments.stream().filter(appointments ->
-                    judicialUserProfileProcessor.getFilteredUserProfileKeys().stream()
-                            .noneMatch(skippedIdParent -> appointments.getElinksId().equalsIgnoreCase(skippedIdParent)))
-                    .collect(Collectors.toList());
+    private void filterInvalidUserProfileRecords(List<JudicialOfficeAppointment> filteredJudicialAppointments,
+                                                 List<JudicialUserProfile> invalidJudicialUserProfileRecords) {
+        if (nonNull(invalidJudicialUserProfileRecords)) {
+            invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
+                filteredJudicialAppointments.removeIf(filterInvalidUserProfAppointment ->
+                        filterInvalidUserProfAppointment.getElinksId().equalsIgnoreCase(invalidRecords.getElinksId()));
+            });
 
             log.info("Skipped invalid user profile elinks in Appointments {} & total skipped count {}",
-                    judicialUserProfileProcessor.getFilteredUserProfileKeys()
-                            .stream().collect(joining(",")),
-                    judicialUserProfileProcessor.getFilteredUserProfileKeys().size());
+                    invalidJudicialUserProfileRecords
+                            .stream().map(e -> e.getElinksId()).collect(joining(",")),
+                    invalidJudicialUserProfileRecords.size());
         }
-        return filteredJudicialAppointments;
     }
 }

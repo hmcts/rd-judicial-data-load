@@ -31,6 +31,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
@@ -48,6 +49,8 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     private JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
 
+    private JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
+
     private Validator validator;
 
     CamelContext camelContext = new DefaultCamelContext();
@@ -60,9 +63,11 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointmentProcessor = new JudicialOfficeAppointmentProcessor();
         judicialOfficeAppointmentJsrValidatorInitializer
                 = new JsrValidatorInitializer<>();
+        judicialUserProfileJsrValidatorInitializer = new JsrValidatorInitializer<>();
         setField(judicialOfficeAppointmentProcessor,
                 "judicialOfficeAppointmentJsrValidatorInitializer", judicialOfficeAppointmentJsrValidatorInitializer);
-        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor", judicialUserProfileProcessor);
+        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileJsrValidatorInitializer",
+                judicialUserProfileJsrValidatorInitializer);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
@@ -82,9 +87,6 @@ public class JudicialOfficeAppointmentProcessorTest {
         when(exchangeMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
-        setField(judicialUserProfileProcessor, "filteredUserProfileKeys", new ArrayList<>());
-        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",judicialUserProfileProcessor);
-
         judicialOfficeAppointmentProcessor.process(exchangeMock);
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAppointments);

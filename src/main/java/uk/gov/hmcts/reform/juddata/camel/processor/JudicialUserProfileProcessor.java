@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
@@ -19,7 +18,6 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
     @Autowired
     JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
 
-    public List<String> filteredUserProfileKeys;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -36,20 +34,10 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
                 judicialUserProfiles);
 
-        //Set List of Elinks which are skipped due to JSR violations in CSV ROW
-        filteredUserProfileKeys = judicialUserProfiles.stream()
-                .filter(profileList -> (filteredJudicialUserProfiles.stream().noneMatch(filteredList ->
-                        filteredList.getElinksId().equalsIgnoreCase(profileList.getElinksId()))))
-                .map(map -> map.getElinksId()).collect(toList());
-
         log.info("Judicial User Profile Records count after Validation:: " + filteredJudicialUserProfiles.size());
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
         exchange.getMessage().setBody(filteredJudicialUserProfiles);
-    }
-
-    public List<String> getFilteredUserProfileKeys() {
-        return filteredUserProfileKeys;
     }
 }

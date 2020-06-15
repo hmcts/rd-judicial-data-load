@@ -62,6 +62,8 @@ public class JsrValidatorInitializer<T> {
 
     private Set<ConstraintViolation<T>> constraintViolations;
 
+    private List<T> invalidJsrRecords;
+
     @Value("${invalid-jsr-sql}")
     String invalidJsrSql;
 
@@ -83,19 +85,21 @@ public class JsrValidatorInitializer<T> {
     public List<T> validate(List<T> binders) {
 
         log.info("::::JsrValidatorInitializer data processing validate starts::::");
-
         this.constraintViolations = new LinkedHashSet<>();
-
         List<T> binderFilter = new ArrayList<>();
 
-        for (T binder : binders) {
+        this.invalidJsrRecords = new ArrayList<>();
+
+        binders.forEach(binder -> {
             Set<ConstraintViolation<T>> constraintViolations = validator.validate(binder);
             if (constraintViolations.size() == 0) {
                 binderFilter.add(binder);
+            } else {
+                invalidJsrRecords.add(binder);
             }
-
             this.constraintViolations.addAll(constraintViolations);
-        }
+        });
+
         log.info("::::JsrValidatorInitializer data processing validate complete::::");
         return binderFilter;
     }
@@ -168,6 +172,10 @@ public class JsrValidatorInitializer<T> {
 
     public Set<ConstraintViolation<T>> getConstraintViolations() {
         return constraintViolations;
+    }
+
+    public List<T> getInvalidJsrRecords() {
+        return invalidJsrRecords;
     }
 }
 
