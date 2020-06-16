@@ -71,6 +71,9 @@ public class JsrValidatorInitializer<T> {
     @Value("${jsr-threshold-limit:0}")
     int jsrThresholdLimit;
 
+    @Value("${jdbc-batch-size:10}")
+    int jdbcBatchSize;
+
     @PostConstruct
     public void initializeFactory() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -129,7 +132,7 @@ public class JsrValidatorInitializer<T> {
         jdbcTemplate.batchUpdate(
                 invalidJsrSql,
                 violationList,
-                10,
+                jdbcBatchSize,
                 new ParameterizedPreparedStatementSetter<ConstraintViolation<T>>() {
                     public void setValues(PreparedStatement ps, ConstraintViolation<T> argument) throws SQLException {
                         ps.setString(1, routeProperties.getTableName());
@@ -169,7 +172,7 @@ public class JsrValidatorInitializer<T> {
         jdbcTemplate.batchUpdate(
                 invalidJsrSql,
                 keys,
-                10,
+                jdbcBatchSize,
                 new ParameterizedPreparedStatementSetter<String>() {
                     @Override
                     public void setValues(PreparedStatement ps, String argument) throws SQLException {
@@ -178,7 +181,7 @@ public class JsrValidatorInitializer<T> {
                         ps.setString(3, globalOptions.get(SCHEDULER_NAME));
                         ps.setString(4, argument);
                         ps.setString(5, fieldInError);
-                        ps.setString(6, INVALID_JSR_PARENT  + argument);
+                        ps.setString(6, INVALID_JSR_PARENT);
                         ps.setTimestamp(7, new Timestamp(new Date().getTime()));
                     }
                 });

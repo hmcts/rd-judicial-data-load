@@ -1,3 +1,4 @@
+jdbc-batch-size: 10
 aggregation-strategy-completion-size: 100
 aggregation-strategy-timeout: 2000
 start-route: direct:JRD

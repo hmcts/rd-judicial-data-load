@@ -98,3 +98,5 @@ leaf-archival-file-names: Roles.csv,Contracts.csv,Locations.csv,BaseLocations.cs
 leaf-archival-route: direct:jrdLeafArchival
 
 truncate-audit: truncate dataload_schedular_audit
+
+jdbc-batch-size: 10
