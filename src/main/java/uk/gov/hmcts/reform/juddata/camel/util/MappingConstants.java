@@ -67,4 +67,7 @@ public class MappingConstants {
 
     public static final String ERROR_MESSAGE = "ErrorMessage";
 
+    public static final String INVALID_JSR_PARENT = "Skipped record as it is invalid in parent";
+
+    public static final String ELINKS_ID = "elinks_id";
 }
