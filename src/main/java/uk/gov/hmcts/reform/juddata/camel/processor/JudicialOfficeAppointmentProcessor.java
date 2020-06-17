@@ -24,7 +24,8 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
     JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
 
     @Autowired
-    JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
+    JudicialUserProfileProcessor judicialUserProfileProcessor;
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -41,7 +42,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
         List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
                 judicialOfficeAppointments);
 
-        List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileJsrValidatorInitializer.getInvalidJsrRecords();
+        List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileProcessor.getInvalidRecords();
 
         filterInvalidUserProfileRecords(filteredJudicialAppointments, invalidJudicialUserProfileRecords, exchange);
 

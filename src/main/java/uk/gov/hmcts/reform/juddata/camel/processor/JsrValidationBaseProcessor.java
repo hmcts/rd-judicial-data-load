@@ -21,8 +21,12 @@ public abstract class JsrValidationBaseProcessor<T> implements Processor {
     @Value("${jsr-threshold-limit:0}")
     int jsrThresholdLimit;
 
+    private List<T> invalidRecords;
+
     List<T> validate(JsrValidatorInitializer<T> jsrValidatorInitializer, List<T> list) {
-        return jsrValidatorInitializer.validate(list);
+        List<T> validRecords = jsrValidatorInitializer.validate(list);
+        invalidRecords = jsrValidatorInitializer.getInvalidJsrRecords();
+        return validRecords;
     }
 
     void audit(JsrValidatorInitializer<T> jsrValidatorInitializer, Exchange exchange) {
@@ -40,5 +44,9 @@ public abstract class JsrValidationBaseProcessor<T> implements Processor {
             exchange.getContext().getGlobalOptions().put(SCHEDULER_STATUS, FAILURE);
             throw new RouteFailedException("Jsr exception exceeds threshold limit in " + this.getClass().getSimpleName());
         }
+    }
+
+    public List<T> getInvalidRecords() {
+        return invalidRecords;
     }
 }

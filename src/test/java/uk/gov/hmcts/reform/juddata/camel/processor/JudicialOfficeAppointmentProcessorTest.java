@@ -26,12 +26,10 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
 
@@ -49,13 +47,12 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     private JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
 
-    private JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
 
     private Validator validator;
 
     CamelContext camelContext = new DefaultCamelContext();
 
-    JudicialUserProfileProcessor judicialUserProfileProcessor = Mockito.mock(JudicialUserProfileProcessor.class);
+    JudicialUserProfileProcessor judicialUserProfileProcessor = new JudicialUserProfileProcessor();
 
     @Before
     public void setup() {
@@ -63,11 +60,10 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointmentProcessor = new JudicialOfficeAppointmentProcessor();
         judicialOfficeAppointmentJsrValidatorInitializer
                 = new JsrValidatorInitializer<>();
-        judicialUserProfileJsrValidatorInitializer = new JsrValidatorInitializer<>();
         setField(judicialOfficeAppointmentProcessor,
                 "judicialOfficeAppointmentJsrValidatorInitializer", judicialOfficeAppointmentJsrValidatorInitializer);
-        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileJsrValidatorInitializer",
-                judicialUserProfileJsrValidatorInitializer);
+        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",
+                judicialUserProfileProcessor);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
