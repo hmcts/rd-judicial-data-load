@@ -57,7 +57,7 @@ public class HeaderValidationProcessor implements Processor {
         if (header.length > csvFields.size()) {
             exchange.getIn().setHeader(HEADER_EXCEPTION, HEADER_EXCEPTION);
             camelContext.getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
-            throw new RouteFailedException("Mismatch headers in csv for ::" + routeProperties.getFileName());
+            throw new RouteFailedException("Mismatch headers in csv for::" + routeProperties.getFileName());
         }
 
         InputStream inputStream = new ByteArrayInputStream(csv.getBytes(Charset.forName("UTF-8")));

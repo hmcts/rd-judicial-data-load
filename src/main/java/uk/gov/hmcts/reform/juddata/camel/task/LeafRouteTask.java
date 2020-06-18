@@ -26,11 +26,14 @@ public class LeafRouteTask implements Tasklet {
     @Autowired
     JrdTask jrdTask;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
+
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        log.info("::LeafRouteTask starts::");
+        log.info("{} LeafRouteTask starts::", logComponentName);
         String status = jrdTask.execute(camelContext, LEAF_ROUTE, startLeafRoute);
-        log.info("::LeafRouteTask completes with {}::", status);
+        log.info("{} LeafRouteTask completes with {}::", logComponentName, status);
         return RepeatStatus.FINISHED;
     }
 }

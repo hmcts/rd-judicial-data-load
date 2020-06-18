@@ -30,6 +30,8 @@ public class JudicialApplication implements ApplicationRunner {
     @Value("${batchjob-name}")
     String jobName;
 
+    private static String logComponentName;
+
     @Autowired
     AuditProcessingService auditProcessingService;
 
@@ -38,7 +40,7 @@ public class JudicialApplication implements ApplicationRunner {
         //Sleep added to allow app-insights to flush the logs
         Thread.sleep(7000);
         int exitCode = SpringApplication.exit(context);
-        log.info("Judicial Application exiting with exit code " + exitCode);
+        log.info("{} Judicial Application exiting with exit code {} ", logComponentName, exitCode);
         System.exit(exitCode);
     }
 
@@ -48,10 +50,16 @@ public class JudicialApplication implements ApplicationRunner {
                 .addString(jobName, String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
         if (negate(auditProcessingService.isAuditingCompleted())) {
+            log.info("{} Judicial Application running first time for a day::", logComponentName);
             jobLauncher.run(job, params);
-            log.info("::Judicial Application running first time for day ::");
+            log.info("{} Judicial Application job run completed::", logComponentName);
         } else {
-            log.info("::no run of Judicial Application as it has ran for the day::");
+            log.info("{} no run of Judicial Application as it has ran for the day::", logComponentName);
         }
+    }
+
+    @Value("${logging-component-name}")
+    public void setLogComponentName(String logComponentName) {
+        JudicialApplication.logComponentName = logComponentName;
     }
 }

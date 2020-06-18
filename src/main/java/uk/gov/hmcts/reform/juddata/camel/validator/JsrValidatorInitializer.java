@@ -74,6 +74,9 @@ public class JsrValidatorInitializer<T> {
     @Value("${jdbc-batch-size:10}")
     int jdbcBatchSize;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
+
     @PostConstruct
     public void initializeFactory() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -88,7 +91,7 @@ public class JsrValidatorInitializer<T> {
      */
     public List<T> validate(List<T> binders) {
 
-        log.info("::::JsrValidatorInitializer data processing validate starts::::");
+        log.info("{} JsrValidatorInitializer data processing validate starts::", logComponentName);
         this.constraintViolations = new LinkedHashSet<>();
         List<T> binderFilter = new ArrayList<>();
 
@@ -104,7 +107,7 @@ public class JsrValidatorInitializer<T> {
             this.constraintViolations.addAll(constraintViolations);
         });
 
-        log.info("::::JsrValidatorInitializer data processing validate complete::::");
+        log.info("{} JsrValidatorInitializer data processing validate complete::", logComponentName);
         return binderFilter;
     }
 
@@ -115,7 +118,7 @@ public class JsrValidatorInitializer<T> {
      */
     public void auditJsrExceptions(Exchange exchange) {
 
-        log.info("::::JsrValidatorInitializer data processing audit start::::");
+        log.info("{} JsrValidatorInitializer data processing audit start::", logComponentName);
 
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
@@ -147,7 +150,7 @@ public class JsrValidatorInitializer<T> {
 
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
-        log.info("::::JsrValidatorInitializer data processing audit complete::::");
+        log.info("{} JsrValidatorInitializer data processing audit complete::", logComponentName);
     }
 
 
@@ -160,7 +163,7 @@ public class JsrValidatorInitializer<T> {
      */
     public void auditJsrExceptions(List<String> keys, String fieldInError, Exchange exchange) {
 
-        log.info("::::JsrValidatorInitializer data processing audit start for skipping parent table violation::::");
+        log.info("{} JsrValidatorInitializer data processing audit start for skipping parent table violation {}", logComponentName);
 
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
@@ -188,7 +191,7 @@ public class JsrValidatorInitializer<T> {
 
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
-        log.info("::::JsrValidatorInitializer data processing audit complete for skipping parent table violation::::");
+        log.info(" {} JsrValidatorInitializer data processing audit complete for skipping parent table violation::", logComponentName);
     }
 
     /**

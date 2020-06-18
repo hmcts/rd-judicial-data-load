@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 import uk.gov.hmcts.reform.juddata.camel.service.EmailService;
@@ -35,6 +36,9 @@ public class JrdTask {
     @Autowired
     EmailService emailService;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
+
     public String execute(CamelContext camelContext, String schedulerName, String route) {
 
         try {
@@ -48,7 +52,7 @@ public class JrdTask {
             //Camel override error stack with route failed hence grabbing exception form context
             String errorMessage = camelContext.getGlobalOptions().get(ERROR_MESSAGE);
             auditProcessingService.auditException(camelContext, errorMessage);
-            log.error(":: " + schedulerName + " failed::", errorMessage);
+            log.error(" {} {} failed:: {} ", logComponentName, schedulerName, errorMessage);
             //check mail flag and send mail
             emailService.sendEmail(errorMessage);
             return FAILURE;

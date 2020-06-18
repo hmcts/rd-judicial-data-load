@@ -26,12 +26,14 @@ public class ParentRouteTask implements Tasklet {
     @Autowired
     JrdTask jrdTask;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        log.info("::ParentRouteTask starts::");
+        log.info("{} ParentRouteTask starts::", logComponentName);
         String status = jrdTask.execute(camelContext, JUDICIAL_USER_PROFILE_ORCHESTRATION, startRoute);
-        log.info("::ParentRouteTask completes with {}::", status);
+        log.info("{} ParentRouteTask completes with {}::", logComponentName, status);
         return RepeatStatus.FINISHED;
     }
 }

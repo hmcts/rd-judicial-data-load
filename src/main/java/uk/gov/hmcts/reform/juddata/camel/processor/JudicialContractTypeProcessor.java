@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 import uk.gov.hmcts.reform.juddata.camel.validator.JsrValidatorInitializer;
@@ -18,6 +19,9 @@ public class JudicialContractTypeProcessor extends JsrValidationBaseProcessor<Ju
     @Autowired
     JsrValidatorInitializer<JudicialContractType> judicialContractTypeJsrValidatorInitializer;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -28,10 +32,10 @@ public class JudicialContractTypeProcessor extends JsrValidationBaseProcessor<Ju
                 ? (List<JudicialContractType>) exchange.getIn().getBody()
                 : singletonList((JudicialContractType) exchange.getIn().getBody());
 
-        log.info("Contract type Records count before Validation:: " + judicialContractTypes.size());
+        log.info("{} Contract type Records count before Validation {}:: ", logComponentName, judicialContractTypes.size());
         List<JudicialContractType> filteredJudicialContractTypes = validate(judicialContractTypeJsrValidatorInitializer,
                 judicialContractTypes);
-        log.info("Contract type Records count after Validation:: " + filteredJudicialContractTypes.size());
+        log.info("{} Contract type Records count after Validation {}::", logComponentName, filteredJudicialContractTypes.size());
         audit(judicialContractTypeJsrValidatorInitializer, exchange);
 
         exchange.getMessage().setBody(filteredJudicialContractTypes);

@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
@@ -26,6 +27,8 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
     @Autowired
     JudicialUserProfileProcessor judicialUserProfileProcessor;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -37,7 +40,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
                 ? (List<JudicialOfficeAppointment>) exchange.getIn().getBody()
                 : singletonList((JudicialOfficeAppointment) exchange.getIn().getBody());
 
-        log.info("Judicial Appointment Records count before Validation:: " + judicialOfficeAppointments.size());
+        log.info(" {} Judicial Appointment Records count before Validation {}::", logComponentName, judicialOfficeAppointments.size());
 
         List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
                 judicialOfficeAppointments);
@@ -46,7 +49,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
 
         filterInvalidUserProfileRecords(filteredJudicialAppointments, invalidJudicialUserProfileRecords, exchange);
 
-        log.info("Judicial Appointment Records count after Validation:: " + filteredJudicialAppointments.size());
+        log.info("{} Judicial Appointment Records count after Validation {}:: ", logComponentName, filteredJudicialAppointments.size());
 
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
 
@@ -65,7 +68,8 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
             judicialOfficeAppointmentJsrValidatorInitializer.auditJsrExceptions(invalidJudicialUserProfileRecords
                     .stream().map(e -> e.getElinksId()).collect(toList()), ELINKS_ID, exchange);
 
-            log.info("Skipped invalid user profile elinks in Appointments {} & total skipped count {}",
+            log.info("{} Skipped invalid user profile elinks in Appointments {} & total skipped count {}",
+                    logComponentName,
                     invalidJudicialUserProfileRecords
                             .stream().map(e -> e.getElinksId()).collect(joining(",")),
                     invalidJudicialUserProfileRecords.size());

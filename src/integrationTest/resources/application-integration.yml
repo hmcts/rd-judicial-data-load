@@ -100,3 +100,5 @@ leaf-archival-route: direct:jrdLeafArchival
 truncate-audit: truncate dataload_schedular_audit
 
 jdbc-batch-size: 10
+
+logging-component-name: RD_Judicial_Ref_Data
