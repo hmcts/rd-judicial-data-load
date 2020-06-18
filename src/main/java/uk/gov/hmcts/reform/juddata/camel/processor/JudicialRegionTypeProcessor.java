@@ -32,10 +32,10 @@ public class JudicialRegionTypeProcessor extends JsrValidationBaseProcessor<Judi
                 ? (List<JudicialRegionType>) exchange.getIn().getBody()
                 : singletonList((JudicialRegionType) exchange.getIn().getBody());
 
-        log.info("{} Region type Records count before Validation {}::", logComponentName, judicialRegionTypes.size());
+        log.info("{}:: Region type Records count before Validation {}::", logComponentName, judicialRegionTypes.size());
         List<JudicialRegionType> filteredRegionTypes = validate(judicialRegionTypeJsrValidatorInitializer,
                 judicialRegionTypes);
-        log.info("{} Region type Records count after Validation {}::", logComponentName, filteredRegionTypes.size());
+        log.info("{}:: Region type Records count after Validation {}::", logComponentName, filteredRegionTypes.size());
         audit(judicialRegionTypeJsrValidatorInitializer, exchange);
 
         exchange.getMessage().setBody(filteredRegionTypes);

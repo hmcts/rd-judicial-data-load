@@ -22,7 +22,7 @@ public class FileReadProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) {
-        log.info("{} FileReadProcessor starts::", logComponentName);
+        log.info("{}:: FileReadProcessor starts::", logComponentName);
         String blobFilePath = (String) exchange.getProperty(BLOBPATH);
         CamelContext context = exchange.getContext();
         ConsumerTemplate consumer = context.createConsumerTemplate();

@@ -32,10 +32,10 @@ public class JudicialContractTypeProcessor extends JsrValidationBaseProcessor<Ju
                 ? (List<JudicialContractType>) exchange.getIn().getBody()
                 : singletonList((JudicialContractType) exchange.getIn().getBody());
 
-        log.info("{} Contract type Records count before Validation {}:: ", logComponentName, judicialContractTypes.size());
+        log.info("{}:: Contract type Records count before Validation {}:: ", logComponentName, judicialContractTypes.size());
         List<JudicialContractType> filteredJudicialContractTypes = validate(judicialContractTypeJsrValidatorInitializer,
                 judicialContractTypes);
-        log.info("{} Contract type Records count after Validation {}::", logComponentName, filteredJudicialContractTypes.size());
+        log.info("{}:: Contract type Records count after Validation {}::", logComponentName, filteredJudicialContractTypes.size());
         audit(judicialContractTypeJsrValidatorInitializer, exchange);
 
         exchange.getMessage().setBody(filteredJudicialContractTypes);

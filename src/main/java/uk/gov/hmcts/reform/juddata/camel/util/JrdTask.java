@@ -52,7 +52,7 @@ public class JrdTask {
             //Camel override error stack with route failed hence grabbing exception form context
             String errorMessage = camelContext.getGlobalOptions().get(ERROR_MESSAGE);
             auditProcessingService.auditException(camelContext, errorMessage);
-            log.error(" {} {} failed:: {} ", logComponentName, schedulerName, errorMessage);
+            log.error("{}:: {} failed:: {} ", logComponentName, schedulerName, errorMessage);
             //check mail flag and send mail
             emailService.sendEmail(errorMessage);
             return FAILURE;

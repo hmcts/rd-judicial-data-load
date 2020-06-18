@@ -43,7 +43,7 @@ public class ExceptionProcessor implements Processor {
         if (isNull(exchange.getContext().getGlobalOptions().get(IS_EXCEPTION_HANDLED))) {
             Map<String, String> globalOptions = exchange.getContext().getGlobalOptions();
             Exception exception = (Exception) exchange.getProperty(EXCEPTION_CAUGHT);
-            log.error("{} exception in route for data processing:: {}", logComponentName, getStackTrace(exception));
+            log.error("{}:: exception in route for data processing:: {}", logComponentName, getStackTrace(exception));
             globalOptions.put(SCHEDULER_STATUS, FAILURE);
             globalOptions.put(IS_EXCEPTION_HANDLED, TRUE.toString());
             globalOptions.put(ERROR_MESSAGE, exception.getMessage());

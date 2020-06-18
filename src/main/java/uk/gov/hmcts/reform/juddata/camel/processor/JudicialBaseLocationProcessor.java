@@ -32,10 +32,10 @@ public class JudicialBaseLocationProcessor extends JsrValidationBaseProcessor<Ju
                 ? (List<JudicialBaseLocationType>) exchange.getIn().getBody()
                 : singletonList((JudicialBaseLocationType) exchange.getIn().getBody());
 
-        log.info("{} Base Location Records count before Validation {}::", logComponentName, locationsRecords.size());
+        log.info("{}:: Base Location Records count before Validation {}::", logComponentName, locationsRecords.size());
         List<JudicialBaseLocationType> filteredBaseLocationTypes = validate(judicialBaseLocationTypeJsrValidatorInitializer,
                 locationsRecords);
-        log.info("{} Base Location Records count after Validation {}:: ", logComponentName, filteredBaseLocationTypes.size());
+        log.info("{}:: Base Location Records count after Validation {}:: ", logComponentName, filteredBaseLocationTypes.size());
         audit(judicialBaseLocationTypeJsrValidatorInitializer, exchange);
 
         exchange.getMessage().setBody(filteredBaseLocationTypes);

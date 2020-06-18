@@ -49,7 +49,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
 
         filterInvalidUserProfileRecords(filteredJudicialAppointments, invalidJudicialUserProfileRecords, exchange);
 
-        log.info("{} Judicial Appointment Records count after Validation {}:: ", logComponentName, filteredJudicialAppointments.size());
+        log.info("{}:: Judicial Appointment Records count after Validation {}:: ", logComponentName, filteredJudicialAppointments.size());
 
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
 
@@ -68,7 +68,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
             judicialOfficeAppointmentJsrValidatorInitializer.auditJsrExceptions(invalidJudicialUserProfileRecords
                     .stream().map(e -> e.getElinksId()).collect(toList()), ELINKS_ID, exchange);
 
-            log.info("{} Skipped invalid user profile elinks in Appointments {} & total skipped count {}",
+            log.info("{}:: Skipped invalid user profile elinks in Appointments {} & total skipped count {}",
                     logComponentName,
                     invalidJudicialUserProfileRecords
                             .stream().map(e -> e.getElinksId()).collect(joining(",")),

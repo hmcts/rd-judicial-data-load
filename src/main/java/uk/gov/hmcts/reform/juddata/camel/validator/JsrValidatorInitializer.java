@@ -91,7 +91,7 @@ public class JsrValidatorInitializer<T> {
      */
     public List<T> validate(List<T> binders) {
 
-        log.info("{} JsrValidatorInitializer data processing validate starts::", logComponentName);
+        log.info("{}:: JsrValidatorInitializer data processing validate starts::", logComponentName);
         this.constraintViolations = new LinkedHashSet<>();
         List<T> binderFilter = new ArrayList<>();
 
@@ -107,7 +107,7 @@ public class JsrValidatorInitializer<T> {
             this.constraintViolations.addAll(constraintViolations);
         });
 
-        log.info("{} JsrValidatorInitializer data processing validate complete::", logComponentName);
+        log.info("{}:: JsrValidatorInitializer data processing validate complete::", logComponentName);
         return binderFilter;
     }
 
@@ -118,7 +118,7 @@ public class JsrValidatorInitializer<T> {
      */
     public void auditJsrExceptions(Exchange exchange) {
 
-        log.info("{} JsrValidatorInitializer data processing audit start::", logComponentName);
+        log.info("{}:: JsrValidatorInitializer data processing audit start::", logComponentName);
 
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
@@ -150,7 +150,7 @@ public class JsrValidatorInitializer<T> {
 
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
-        log.info("{} JsrValidatorInitializer data processing audit complete::", logComponentName);
+        log.info("{}:: JsrValidatorInitializer data processing audit complete::", logComponentName);
     }
 
 
@@ -163,7 +163,7 @@ public class JsrValidatorInitializer<T> {
      */
     public void auditJsrExceptions(List<String> keys, String fieldInError, Exchange exchange) {
 
-        log.info("{} JsrValidatorInitializer data processing audit start for skipping parent table violation {}", logComponentName);
+        log.info("{}:: JsrValidatorInitializer data processing audit start for skipping parent table violation {}", logComponentName);
 
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setName("Jsr exception logs");
