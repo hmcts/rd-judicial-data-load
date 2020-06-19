@@ -179,7 +179,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(0).get("error_description"));
             assertNotNull(exceptionList.get(0).get("updated_timestamp"));
         }
-        assertEquals(exceptionList.size(), 7);
+        assertEquals(exceptionList.size(), 5);
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlPartialSuccess);
         assertEquals(dataLoadSchedulerAudit.get(0).get(DB_SCHEDULER_STATUS), PARTIAL_SUCCESS);
