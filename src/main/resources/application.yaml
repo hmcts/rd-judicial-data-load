@@ -68,6 +68,8 @@ scheduler-insert-sql:  insert into dataload_schedular_audit (scheduler_name,sche
 start-leaf-route: direct:leaf
 audit-enable: true
 
-
-
 logging-component-name: RD_Judicial_Ref_Data
+component:
+  name: Judicial Reference Data
+mail:
+  enabled: true

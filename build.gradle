@@ -17,7 +17,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'pmd'
-    id 'com.github.ben-manes.versions' version '0.20.0'
+    id "com.github.ben-manes.versions" version "0.28.0"
     id "info.solidsoft.pitest" version '1.3.0'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'org.owasp.dependencycheck' version '5.3.0'
@@ -52,9 +52,8 @@ def jarName = 'rd-judicial-data-load.jar'
 group = 'uk.gov.hmcts.reform.juddata'
 version = '0.0.1'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
+sourceCompatibility = 11
+targetCompatibility = 11
 
 compileJava {
     options.compilerArgs << '-parameters' << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
@@ -224,6 +223,13 @@ repositories {
 
 dependencies {
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: versions.springBoot
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
 
     compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
     compile (group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2') {
@@ -234,7 +240,10 @@ dependencies {
     }
     compile group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     compile group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+    compile (group: 'io.rest-assured', name: 'rest-assured', version: '4.1.2') {
+        exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
+    }
+    compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
@@ -248,8 +257,8 @@ dependencies {
         exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
     }
 
-    //loads all spring boot and camel dependencies
-    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.1.12'
+
+    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.2.1'
 
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
@@ -309,6 +318,7 @@ dependencies {
         exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
         exclude group: 'javax.websocket', module: 'javax.websocket-api'
     }
+
     testCompile(group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity) {
         exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
         exclude group: 'javax.websocket', module: 'javax.websocket-api'

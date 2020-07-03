@@ -107,9 +107,8 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
         setField(emailService, "mailEnabled", Boolean.FALSE);
 
-
         jobLauncherTestUtils.launchJob();
-        verify(emailService, times(1)).sendEmail(any(String.class));
+        verify(emailService, times(1)).sendEmail(any(), any());
     }
 
     @Test
@@ -121,6 +120,6 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
 
         jobLauncherTestUtils.launchJob();
-        verify(emailService, times(0)).sendEmail(any(String.class));
+        verify(emailService, times(0)).sendEmail(any(), any());
     }
 }

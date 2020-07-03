@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.LEAF_ROUTE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
@@ -77,8 +77,6 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         setSourceData(fileWithElinkIdMissing);
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
 
-
-
         jobLauncherTestUtils.launchJob();
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(sql);
         assertEquals(0, judicialUserProfileList.size());
@@ -99,7 +97,6 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     public void testParentOrchestrationInvalidHeaderRollback() throws Exception {
         setSourceData(fileWithInvalidHeader);
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
-
 
 
         jobLauncherTestUtils.launchJob();
@@ -202,7 +199,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql","/testData/default-leaf-load.sql"})
+    @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql", "/testData/default-leaf-load.sql"})
     public void testLeafFailuresInvalidHeader() throws Exception {
         setSourceData(file);
         LeafIntegrationTestSupport.setSourceData(file_error);
@@ -214,7 +211,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(judicialUserRoleType.size(), 1); //default leaf
 
         List<Map<String, Object>> judicialContractType = jdbcTemplate.queryForList(contractSql);
-        assertEquals(judicialContractType.size(), 1); 
+        assertEquals(judicialContractType.size(), 1);
 
         List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
         assertEquals(judicialBaseLocationType.size(), 1);

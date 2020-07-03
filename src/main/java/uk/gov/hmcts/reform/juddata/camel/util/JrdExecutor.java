@@ -32,7 +32,6 @@ public class JrdExecutor extends RouteExecutor {
         } finally {
             //runs Job Auditing
             auditProcessingService.auditSchedulerStatus(camelContext);
-
         }
     }
 }

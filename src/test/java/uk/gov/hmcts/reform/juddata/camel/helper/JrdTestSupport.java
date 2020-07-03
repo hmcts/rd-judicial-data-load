@@ -125,7 +125,7 @@ public class JrdTestSupport {
 
     public static String getDateTimeWithFormat(LocalDateTime dateTime) {
         String datTime = dateTime.toString().replace("T", " ");
-        String tail = datTime.substring(datTime.lastIndexOf(".")).concat("000000");
+        String tail = datTime.substring(datTime.lastIndexOf(".")).concat("000");
         return datTime.substring(0, datTime.lastIndexOf(".")) + tail;
     }
 }
