@@ -1,11 +1,14 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_PATTERN_TIMESTAMP;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
@@ -40,12 +43,12 @@ public class JudicialOfficeAppointment implements Serializable {
 
     @DataField(pos = 7, columnName = "start_Date")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-            message = "date pattern should be yyyy-MM-dd hh:mm:ss")
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String startDate;
 
     @DataField(pos = 8, columnName = "end_Date")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-            message = "date pattern should be yyyy-MM-dd hh:mm:ss")
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String endDate;
 
     @DataField(pos = 9, columnName = "active_Flag")
@@ -53,6 +56,6 @@ public class JudicialOfficeAppointment implements Serializable {
 
     @DataField(pos = 10)
     @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
-            message = "date pattern should be yyyy-MM-dd HH:MI:SS.MSUS")
+            message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
     String extractedDate;
 }

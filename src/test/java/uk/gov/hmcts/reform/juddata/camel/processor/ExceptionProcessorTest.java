@@ -14,15 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
-import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 
 public class ExceptionProcessorTest extends CamelTestSupport {
+
     @Mock
-    EmailService emailService;
+    IEmailService emailService;
 
     @InjectMocks
     ExceptionProcessor exceptionProcessor;
-
 
     @Before
     public void setUp() {

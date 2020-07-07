@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ELINKS_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
 
 import java.util.ArrayList;
 import java.util.List;

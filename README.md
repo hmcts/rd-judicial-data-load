@@ -6,6 +6,10 @@ JRD is batch application and JRD batch is scheduled with Kubernetes which runs o
 JRD consume data files from an external source, transform that data into the destination format 
 and load the data into JRD database. 
 
+JRD Uses Data-Ingestion-Library (https://github.com/hmcts/data-ingestion-lib) and configure camel routes with
+data-ingestion-lib & JRD custom configuration files & crates camel integration framework which reads CSV files & Stores
+the CSV files data in JRD Database. 
+
 # Consumption of files from a SFTP server
 The files received from SFTP server are encrypted using GPG encryption (which complies with OpenPGP standards).
 

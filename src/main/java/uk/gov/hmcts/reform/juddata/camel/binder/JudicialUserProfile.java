@@ -1,11 +1,14 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_PATTERN_TIMESTAMP;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
@@ -18,7 +21,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 @Component
 public class JudicialUserProfile implements Serializable {
-
 
     @DataField(pos = 1, columnName = "elinks_id")
     @NotEmpty
@@ -56,14 +58,14 @@ public class JudicialUserProfile implements Serializable {
     @DataField(pos = 10, columnName = "email_id")
     String emailId;
 
-    @DataField(pos = 11,  columnName = "joining_Date")
+    @DataField(pos = 11, columnName = "joining_Date")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-            message = "date pattern should be yyyy-MM-dd hh:mm:ss")
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String joiningDate;
 
     @DataField(pos = 12, columnName = "lastWorking_Date")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-            message = "date pattern should be yyyy-MM-dd hh:mm:ss")
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String lastWorkingDate;
 
     @DataField(pos = 13, columnName = "active_Flag")
@@ -71,6 +73,6 @@ public class JudicialUserProfile implements Serializable {
 
     @DataField(pos = 14)
     @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
-            message = "date pattern should be yyyy-MM-dd HH:MI:SS.MSUS")
+            message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
     String extractedDate;
 }

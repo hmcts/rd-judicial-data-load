@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.task;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.LEAF_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.LoadRoutes;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 
 @Component
@@ -33,7 +33,7 @@ public class LeafRouteTask implements Tasklet {
     List<String> routesToExecute;
 
     @Autowired
-    LoadRoutes loadRoutes;
+    DataLoadRoute dataLoadRoute;
 
     @Value("${logging-component-name}")
     private String logComponentName;
@@ -41,7 +41,7 @@ public class LeafRouteTask implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         log.info("{}:: LeafRouteTask starts::", logComponentName);
-        loadRoutes.startRoute(startLeafRoute, routesToExecute);
+        dataLoadRoute.startRoute(startLeafRoute, routesToExecute);
         String status = jrdExecutor.execute(camelContext, LEAF_ROUTE, startLeafRoute);
         log.info("{}:: LeafRouteTask completes with {}::", logComponentName, status);
         return RepeatStatus.FINISHED;

@@ -17,13 +17,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
-import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveAzureFileProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.LoadRoutes;
-import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
@@ -35,7 +36,7 @@ import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
+import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
@@ -50,8 +51,8 @@ public class ParentCamelConfig {
     ApplicationContext applicationContext;
 
     @Bean
-    LoadRoutes parentRoute() {
-        return new LoadRoutes();
+    DataLoadRoute parentRoute() {
+        return new DataLoadRoute();
     }
 
     @Bean
@@ -75,8 +76,8 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    ArchiveAzureFileProcessor azureFileProcessor() {
-        return mock(ArchiveAzureFileProcessor.class);
+    ArchiveFileProcessor azureFileProcessor() {
+        return mock(ArchiveFileProcessor.class);
     }
 
     private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
@@ -193,13 +194,13 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    public AuditProcessingService schedulerAuditProcessor() {
-        return new AuditProcessingService();
+    public JudicialAuditServiceImpl schedulerAuditProcessor() {
+        return new JudicialAuditServiceImpl();
     }
 
     @Bean
-    EmailService emailService() {
-        return mock(EmailService.class);
+    IEmailService emailService() {
+        return mock(EmailServiceImpl.class);
     }
 
     @Bean

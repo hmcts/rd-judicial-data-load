@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.LoadRoutes;
-import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
+import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
 public abstract class JrdBatchIntegrationSupport {
 
@@ -24,7 +24,7 @@ public abstract class JrdBatchIntegrationSupport {
     protected JdbcTemplate jdbcTemplate;
 
     @Autowired
-    protected LoadRoutes parentRoute;
+    protected DataLoadRoute parentRoute;
 
     @Value("${start-route}")
     protected String startRoute;
@@ -66,10 +66,10 @@ public abstract class JrdBatchIntegrationSupport {
     protected ExceptionProcessor exceptionProcessor;
 
     @Autowired
-    protected EmailService emailService;
+    protected IEmailService emailService;
 
     @Autowired
-    protected AuditProcessingService auditProcessingService;
+    protected JudicialAuditServiceImpl judicialAuditServiceImpl;
 
     @Value("${base-location-select-jrd-sql}")
     protected String baseLocationSql;
