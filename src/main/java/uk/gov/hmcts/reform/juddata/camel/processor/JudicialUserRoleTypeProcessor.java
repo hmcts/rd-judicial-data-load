@@ -36,7 +36,9 @@ public class JudicialUserRoleTypeProcessor extends JsrValidationBaseProcessor<Ju
         log.info("{}:: Role type Records count before Validation {}::", logComponentName, judicialUserRoleTypes.size());
         List<JudicialUserRoleType> filteredJudicialRoleTypes = validate(judicialUserRoleTypeJsrValidatorInitializer,
                 judicialUserRoleTypes);
-        log.info("{}:: Role type Records count after Validation {}::", logComponentName, filteredJudicialRoleTypes.size());
+        log.info("{}:: Role type Records count after Validation {}::", logComponentName,
+            filteredJudicialRoleTypes.size());
+
         audit(judicialUserRoleTypeJsrValidatorInitializer, exchange);
 
         exchange.getMessage().setBody(filteredJudicialRoleTypes);

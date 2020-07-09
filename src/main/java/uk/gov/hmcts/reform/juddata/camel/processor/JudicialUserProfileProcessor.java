@@ -30,15 +30,17 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         List<JudicialUserProfile> judicialUserProfiles;
 
         judicialUserProfiles = (exchange.getIn().getBody() instanceof List)
-                ? (List<JudicialUserProfile>) exchange.getIn().getBody()
-                : singletonList((JudicialUserProfile) exchange.getIn().getBody());
+            ? (List<JudicialUserProfile>) exchange.getIn().getBody()
+            : singletonList((JudicialUserProfile) exchange.getIn().getBody());
 
-        log.info("{}:: Judicial User Profile Records count before Validation {}::", logComponentName, judicialUserProfiles.size());
+        log.info("{}:: Judicial User Profile Records count before Validation {}::", logComponentName,
+            judicialUserProfiles.size());
 
         List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
-                judicialUserProfiles);
+            judicialUserProfiles);
 
-        log.info("{}:: Judicial User Profile Records count after Validation {}::", logComponentName, filteredJudicialUserProfiles.size());
+        log.info("{}:: Judicial User Profile Records count after Validation {}::", logComponentName,
+            filteredJudicialUserProfiles.size());
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 

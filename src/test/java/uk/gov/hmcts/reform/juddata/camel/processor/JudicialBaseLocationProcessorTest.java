@@ -12,6 +12,7 @@ import java.util.List;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Before;
@@ -39,10 +40,10 @@ public class JudicialBaseLocationProcessorTest {
     public void setup() {
 
         judicialBaseLocationTypeJsrValidatorInitializer
-                = new JsrValidatorInitializer<>();
+            = new JsrValidatorInitializer<>();
 
         setField(judicialBaseLocationProcessor,
-                "judicialBaseLocationTypeJsrValidatorInitializer", judicialBaseLocationTypeJsrValidatorInitializer);
+            "judicialBaseLocationTypeJsrValidatorInitializer", judicialBaseLocationTypeJsrValidatorInitializer);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
@@ -64,6 +65,7 @@ public class JudicialBaseLocationProcessorTest {
         judicialBaseLocationProcessor.process(exchangeMock);
 
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
-        assertThat(((List<JudicialContractType>) exchangeMock.getMessage().getBody())).isSameAs(judicialBaseLocationTypes);
+        assertThat(((List<JudicialContractType>) exchangeMock.getMessage().getBody()))
+            .isSameAs(judicialBaseLocationTypes);
     }
 } 

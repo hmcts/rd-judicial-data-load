@@ -4,28 +4,36 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestS
 
 public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
 
-    String[] file = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments.csv"};
+    String[] file = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments.csv"};
 
-    String[] fileWithError = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments_error.csv"};
+    String[] fileWithError = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_error.csv"};
 
-    String[] fileWithSingleRecord = {"classpath:sourceFiles/parent/judicial_userprofile_singlerecord.csv", "classpath:sourceFiles/parent/judicial_appointments_singlerecord.csv"};
+    String[] fileWithSingleRecord = {"classpath:sourceFiles/parent/judicial_userprofile_singlerecord.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_singlerecord.csv"};
 
-    String[] fileWithInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments_invalidheader.csv"};
+    String[] fileWithInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_invalidheader.csv"};
 
-    String[] fileWithInvalidJsr = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_jsr.csv"};
+    String[] fileWithInvalidJsr = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_jsr.csv"};
 
-    String[] fileWithInvalidJsrExceedsThreshold = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv"};
+    String[] fileWithInvalidJsrExceedsThreshold = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv"};
 
-    String[] fileWithElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments_elinks_missing.csv"};
+    String[] fileWithElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_elinks_missing.csv"};
 
-    String[] fileWithElinkIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv"};
+    String[] fileWithElinkIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv"};
 
     static void setSourceData(String... files) throws Exception {
         System.setProperty("parent.file.name", files[0]);
         System.setProperty("child.file.name", files[1]);
         setSourcePath(files[0],
-                "parent.file.path");
+            "parent.file.path");
         setSourcePath(files[1],
-                "child1.file.path");
+            "child1.file.path");
     }
 }

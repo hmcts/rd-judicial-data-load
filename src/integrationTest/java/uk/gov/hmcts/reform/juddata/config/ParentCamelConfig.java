@@ -124,7 +124,8 @@ public class ParentCamelConfig {
 
     @Bean(name = "springJdbcTransactionManager")
     public PlatformTransactionManager springJdbcTransactionManager() {
-        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(springJdbcDataSource());
+        DataSourceTransactionManager platformTransactionManager
+            = new DataSourceTransactionManager(springJdbcDataSource());
         platformTransactionManager.setDataSource(springJdbcDataSource());
         return platformTransactionManager;
     }

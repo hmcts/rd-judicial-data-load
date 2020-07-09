@@ -21,6 +21,7 @@ import java.util.List;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -42,9 +43,11 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     LocalDateTime dateTime = LocalDateTime.now();
 
-    JudicialOfficeAppointment judicialOfficeAppointmentMock1 = createJudicialOfficeAppointmentMockMock(currentDate, dateTime);
+    JudicialOfficeAppointment judicialOfficeAppointmentMock1 = createJudicialOfficeAppointmentMockMock(currentDate,
+        dateTime);
 
-    JudicialOfficeAppointment judicialOfficeAppointmentMock2 = createJudicialOfficeAppointmentMockMock(currentDate, dateTime);
+    JudicialOfficeAppointment judicialOfficeAppointmentMock2 = createJudicialOfficeAppointmentMockMock(currentDate,
+        dateTime);
 
     JudicialOfficeAppointmentProcessor judicialOfficeAppointmentProcessor;
 
@@ -63,11 +66,11 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointmentProcessor = new JudicialOfficeAppointmentProcessor();
         judicialOfficeAppointmentMock2.setElinksId("elinks_2");
         judicialOfficeAppointmentJsrValidatorInitializer
-                = new JsrValidatorInitializer<>();
+            = new JsrValidatorInitializer<>();
         setField(judicialOfficeAppointmentProcessor,
-                "judicialOfficeAppointmentJsrValidatorInitializer", judicialOfficeAppointmentJsrValidatorInitializer);
+            "judicialOfficeAppointmentJsrValidatorInitializer", judicialOfficeAppointmentJsrValidatorInitializer);
         setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",
-                judicialUserProfileProcessor);
+            judicialUserProfileProcessor);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
@@ -89,7 +92,8 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
-        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAppointments);
+        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
+            .isSameAs(judicialOfficeAppointments);
     }
 
     @Test
@@ -102,7 +106,8 @@ public class JudicialOfficeAppointmentProcessorTest {
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
 
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAppointmentMock1);
+        assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody()))
+            .isSameAs(judicialOfficeAppointmentMock1);
     }
 
     @Test
@@ -125,7 +130,7 @@ public class JudicialOfficeAppointmentProcessorTest {
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAppointmentJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
@@ -134,7 +139,8 @@ public class JudicialOfficeAppointmentProcessorTest {
         doNothing().when(platformTransactionManager).commit(transactionStatus);
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAppointmentMock1);
+        assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody()))
+            .isSameAs(judicialOfficeAppointmentMock1);
     }
 
     @Test
@@ -159,7 +165,7 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialUserProfileProcessor = mock(JudicialUserProfileProcessor.class);
 
         setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",
-                judicialUserProfileProcessor);
+            judicialUserProfileProcessor);
         JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime);
         JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime);
         judicialUserProfileMock2.setElinksId("elinks_3");
@@ -172,7 +178,7 @@ public class JudicialOfficeAppointmentProcessorTest {
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAppointmentJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
@@ -185,6 +191,7 @@ public class JudicialOfficeAppointmentProcessorTest {
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(1);
         judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
-        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody())).containsAll(judicialOfficeAppointments);
+        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
+            .containsAll(judicialOfficeAppointments);
     }
 }

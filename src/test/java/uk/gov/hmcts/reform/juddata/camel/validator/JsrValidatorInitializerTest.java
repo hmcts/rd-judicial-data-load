@@ -37,7 +37,8 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 public class JsrValidatorInitializerTest {
 
-    static JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer = new JsrValidatorInitializer<>();
+    static JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer
+            = new JsrValidatorInitializer<>();
 
     @BeforeClass
     public static void beforeAll() throws Exception {
@@ -51,7 +52,8 @@ public class JsrValidatorInitializerTest {
         LocalDateTime dateTime = LocalDateTime.now();
         JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime);
         judicialUserProfiles.add(profile);
-        JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy = spy(judicialUserProfileJsrValidatorInitializer);
+        JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
+                = spy(judicialUserProfileJsrValidatorInitializer);
         judicialUserProfileJsrValidatorInitializerSpy.validate(judicialUserProfiles);
         verify(judicialUserProfileJsrValidatorInitializerSpy, times(1)).validate(any());
     }
@@ -72,12 +74,14 @@ public class JsrValidatorInitializerTest {
         JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
         final TransactionStatus transactionStatus = mock(TransactionStatus.class);
-        setField(judicialUserProfileJsrValidatorInitializer, "platformTransactionManager", platformTransactionManager);
+        setField(judicialUserProfileJsrValidatorInitializer, "platformTransactionManager",
+                platformTransactionManager);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jsrThresholdLimit", 5);
 
-        JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy = spy(judicialUserProfileJsrValidatorInitializer);
+        JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
+                = spy(judicialUserProfileJsrValidatorInitializer);
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();

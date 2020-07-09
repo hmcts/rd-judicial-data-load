@@ -46,16 +46,17 @@ import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 
-;
-
-@TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,classpath:application-leaf-integration.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
+        + "classpath:application-leaf-integration.yml"})
 @RunWith(RestartingSpringJUnit4ClassRunner.class)
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class, JobLauncherTestUtils.class, BatchConfig.class}, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class,
+        JobLauncherTestUtils.class, BatchConfig.class}, initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
-@SqlConfig(dataSource = "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
+@SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
+        transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @BeforeClass
@@ -74,7 +75,8 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql", "/testData/truncate-exception.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
+            "/testData/truncate-exception.sql"})
     public void testTaskletException() throws Exception {
         setSourceData(fileWithElinkIdMissing);
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
@@ -95,7 +97,8 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql", "/testData/default-leaf-load.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
+            "/testData/default-leaf-load.sql"})
     public void testParentOrchestrationInvalidHeaderRollback() throws Exception {
         setSourceData(fileWithInvalidHeader);
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
@@ -179,7 +182,8 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         }
         assertEquals(5, exceptionList.size());
 
-        List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlPartialSuccess);
+        List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
+                .queryForList(schedulerInsertJrdSqlPartialSuccess);
         assertEquals(dataLoadSchedulerAudit.get(0).get(DB_SCHEDULER_STATUS), PARTIAL_SUCCESS);
     }
 
@@ -201,7 +205,8 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql", "/testData/default-leaf-load.sql"})
+    @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql",
+            "/testData/default-leaf-load.sql"})
     public void testLeafFailuresInvalidHeader() throws Exception {
         setSourceData(file);
         LeafIntegrationTestSupport.setSourceData(file_error);
@@ -242,7 +247,8 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(judicialUserRoleType.get(2).get("role_id"), "7");
 
         assertEquals(judicialUserRoleType.get(0).get("role_desc_en"), "Magistrate");
-        assertEquals(judicialUserRoleType.get(1).get("role_desc_en"), "Advisory Committee Member - Non Magistrate");
+        assertEquals(judicialUserRoleType.get(1).get("role_desc_en"),
+                "Advisory Committee Member - Non Magistrate");
         assertEquals(judicialUserRoleType.get(2).get("role_desc_en"), "MAGS - AC Admin User");
 
         List<Map<String, Object>> judicialContractType = jdbcTemplate.queryForList(contractSql);

@@ -73,7 +73,6 @@ public class JudicialAuditServiceImplTest {
         Map<String, String> globalOptions = getGlobalOptions(schedulerName);
         when(exchange.getContext().getGlobalOptions()).thenReturn(globalOptions);
         when(camelContext.getGlobalOptions()).thenReturn(globalOptions);
-        //when(mockJdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, schedulerEndTime, schedulerStatus)).thenReturn(0);
         when(mockJdbcTemplate.update(anyString(), anyString(), any(), any(), any())).thenReturn(1);
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         doNothing().when(platformTransactionManager).commit(transactionStatus);
