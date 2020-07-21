@@ -47,6 +47,6 @@ spring:
       - lib
       - camel-routes-common
 mail:
-  enabled: true
+  enabled: false
 
 
