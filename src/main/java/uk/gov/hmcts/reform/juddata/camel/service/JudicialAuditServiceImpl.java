@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.service;
 
 import static java.lang.System.currentTimeMillis;
+
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
@@ -14,11 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import uk.gov.hmcts.reform.data.ingestion.camel.service.DefaultAuditProcessingService;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 
 @Slf4j
 @Component
-public class AuditProcessingService extends DefaultAuditProcessingService {
+public class JudicialAuditServiceImpl extends AuditServiceImpl {
 
     @Value("${invalid-exception-sql}")
     String invalidExceptionSql;

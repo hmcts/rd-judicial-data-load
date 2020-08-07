@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ELINKS_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +39,22 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
         List<JudicialOfficeAppointment> judicialOfficeAppointments;
 
         judicialOfficeAppointments = (exchange.getIn().getBody() instanceof List)
-                ? (List<JudicialOfficeAppointment>) exchange.getIn().getBody()
-                : singletonList((JudicialOfficeAppointment) exchange.getIn().getBody());
+            ? (List<JudicialOfficeAppointment>) exchange.getIn().getBody()
+            : singletonList((JudicialOfficeAppointment) exchange.getIn().getBody());
 
-        log.info(" {} Judicial Appointment Records count before Validation {}::", logComponentName, judicialOfficeAppointments.size());
+        log.info(" {} Judicial Appointment Records count before Validation {}::", logComponentName,
+            judicialOfficeAppointments.size());
 
-        List<JudicialOfficeAppointment> filteredJudicialAppointments = validate(judicialOfficeAppointmentJsrValidatorInitializer,
-                judicialOfficeAppointments);
+        List<JudicialOfficeAppointment> filteredJudicialAppointments
+            = validate(judicialOfficeAppointmentJsrValidatorInitializer, judicialOfficeAppointments);
+
 
         List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileProcessor.getInvalidRecords();
 
         filterInvalidUserProfileRecords(filteredJudicialAppointments, invalidJudicialUserProfileRecords, exchange);
 
-        log.info("{}:: Judicial Appointment Records count after Validation {}:: ", logComponentName, filteredJudicialAppointments.size());
+        log.info("{}:: Judicial Appointment Records count after Validation {}:: ", logComponentName,
+            filteredJudicialAppointments.size());
 
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
 
@@ -59,7 +62,8 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
     }
 
     private void filterInvalidUserProfileRecords(List<JudicialOfficeAppointment> filteredJudicialAppointments,
-                                                 List<JudicialUserProfile> invalidJudicialUserProfileRecords, Exchange exchange) {
+                                                 List<JudicialUserProfile> invalidJudicialUserProfileRecords,
+                                                 Exchange exchange) {
         if (nonNull(invalidJudicialUserProfileRecords)) {
 
             List<String> invalidElinks = new ArrayList<>();
@@ -67,7 +71,7 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
             invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
                 //Remove invalid appointment for user profile and add to invalidElinks List
                 if (filteredJudicialAppointments.removeIf(filterInvalidUserProfAppointment ->
-                        filterInvalidUserProfAppointment.getElinksId().equalsIgnoreCase(invalidRecords.getElinksId()))) {
+                    filterInvalidUserProfAppointment.getElinksId().equalsIgnoreCase(invalidRecords.getElinksId()))) {
                     invalidElinks.add(invalidRecords.getElinksId());
                 }
             });
@@ -76,9 +80,9 @@ public class JudicialOfficeAppointmentProcessor extends JsrValidationBaseProcess
             judicialOfficeAppointmentJsrValidatorInitializer.auditJsrExceptions(invalidElinks, ELINKS_ID, exchange);
 
             log.info("{}:: Skipped invalid user profile elinks in Appointments {} & total skipped count {}",
-                    logComponentName,
-                    invalidElinks.stream().collect(joining(",")),
-                    invalidElinks.size());
+                logComponentName,
+                invalidElinks.stream().collect(joining(",")),
+                invalidElinks.size());
         }
     }
 }

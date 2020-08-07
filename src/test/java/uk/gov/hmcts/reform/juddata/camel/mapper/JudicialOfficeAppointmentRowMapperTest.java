@@ -23,7 +23,8 @@ public class JudicialOfficeAppointmentRowMapperTest {
 
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialOfficeAppointment judicialOfficeAppointmentMock = createJudicialOfficeAppointmentMockMock(currentDate, dateTime);
+        JudicialOfficeAppointment judicialOfficeAppointmentMock = createJudicialOfficeAppointmentMockMock(currentDate,
+            dateTime);
         Map<String, Object> response = judicialOfficeAppointmentRowMapper.getMap(judicialOfficeAppointmentMock);
 
         assertEquals(1, response.get("judicial_office_appointment_id"));

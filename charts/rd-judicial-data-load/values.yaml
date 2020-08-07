@@ -9,6 +9,7 @@ job:
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
     FLYWAY_ENABLED: false
+    ENV_NAME: "{{ .Values.global.environment }}"
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
@@ -16,7 +17,6 @@ job:
   schedule: "*/10 * * * *"
   global:
     jobKind: CronJob
-
   keyVaults:
     "rd":
       resourceGroup: rd

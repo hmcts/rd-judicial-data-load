@@ -9,6 +9,7 @@ job:
     FLYWAY_ENABLED: true
     ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
     ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
+    ENV_NAME: preview
   keyVaults:
     rd:
       secrets:

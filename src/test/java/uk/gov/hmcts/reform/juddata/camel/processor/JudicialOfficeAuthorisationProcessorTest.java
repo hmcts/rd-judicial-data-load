@@ -54,7 +54,8 @@ public class JudicialOfficeAuthorisationProcessorTest {
         judicialOfficeAuthorisationJsrValidatorInitializer
                 = new JsrValidatorInitializer<>();
         setField(judicialOfficeAuthorisationProcessor,
-                "judicialOfficeAuthorisationJsrValidatorInitializer", judicialOfficeAuthorisationJsrValidatorInitializer);
+                "judicialOfficeAuthorisationJsrValidatorInitializer",
+                judicialOfficeAuthorisationJsrValidatorInitializer);
         setField(judicialOfficeAuthorisationProcessor, "judicialUserProfileProcessor",
                 judicialUserProfileProcessor);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -77,7 +78,8 @@ public class JudicialOfficeAuthorisationProcessorTest {
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisations);
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
-        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAuthorisations);
+        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
+                .isSameAs(judicialOfficeAuthorisations);
     }
 
     @Test
@@ -90,7 +92,8 @@ public class JudicialOfficeAuthorisationProcessorTest {
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
 
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
-        assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAuthorisation1);
+        assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody()))
+                .isSameAs(judicialOfficeAuthorisation1);
     }
 
     @Test
@@ -122,6 +125,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
         doNothing().when(platformTransactionManager).commit(transactionStatus);
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
-        assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody())).isSameAs(judicialOfficeAuthorisation1);
+        assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody()))
+                .isSameAs(judicialOfficeAuthorisation1);
     }
 }

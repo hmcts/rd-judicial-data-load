@@ -27,25 +27,45 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 
 public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
 
-    String[] file = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments.csv", "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+    String[] file = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithError = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments_error.csv", "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+    String[] fileWithError = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_error.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithSingleRecord = {"classpath:sourceFiles/parent/judicial_userprofile_singlerecord.csv", "classpath:sourceFiles/parent/judicial_appointments_singlerecord.csv", "classpath:sourceFiles/parent/judicial_office_authorisation_singlerecord.csv"};
+    String[] fileWithSingleRecord = {"classpath:sourceFiles/parent/judicial_userprofile_singlerecord.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_singlerecord.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation_singlerecord.csv"};
 
-    String[] fileWithInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments_invalidheader.csv", "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+    String[] fileWithInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_invalidheader.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithAuthorisationInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments.csv", "classpath:sourceFiles/parent/judicial_office_authorisation_invalidheader.csv"};
+    String[] fileWithAuthorisationInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation_invalidheader.csv"};
 
-    String[] fileWithInvalidJsr = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_jsr.csv", "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv"};
+    String[] fileWithInvalidJsr = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_jsr.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv"};
 
-    String[] fileWithInvalidJsrExceedsThreshold = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv", "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+    String[] fileWithInvalidJsrExceedsThreshold = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments_elinks_missing.csv", "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+    String[] fileWithElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_elinks_missing.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithAuthElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv", "classpath:sourceFiles/parent/judicial_appointments.csv", "classpath:sourceFiles/parent/judicial_office_authorisation_elinks_missings.csv"};
+    String[] fileWithAuthElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation_elinks_missings.csv"};
 
-    String[] fileWithElinkIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv", "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv", "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+    String[] fileWithElinkIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
     static void setSourceData(String... files) throws Exception {
         System.setProperty("parent.file.name", files[0]);
@@ -63,7 +83,9 @@ public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
         assertEquals(expectedCount, jdbcTemplate.queryForList(queryName).size());
     }
 
-    static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate, String queryName, int expectedCount, boolean isPartialSuccessValidation) {
+    static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate,
+                                               String queryName, int expectedCount,
+                                               boolean isPartialSuccessValidation) {
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(queryName);
 
         exceptionList.forEach(exception -> {
@@ -104,24 +126,28 @@ public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
 
     static void validateAuthorisationFile(JdbcTemplate jdbcTemplate, String sqlChild2) {
         List<Map<String, Object>> judicialAuthorisationList = jdbcTemplate.queryForList(sqlChild2);
-        List<JudicialOfficeAuthorisation> actualAuthorisations = judicialAuthorisationList.stream().map(authorisationMap -> {
-            JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
-            judicialOfficeAuthorisation.setElinksId((String)authorisationMap.get("elinks_id"));
-            judicialOfficeAuthorisation.setJurisdiction((String)authorisationMap.get("jurisdiction"));
-            judicialOfficeAuthorisation.setTicketId((Long)authorisationMap.get("ticket_id"));
-            judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp)authorisationMap.get("start_date")));
-            judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp)authorisationMap.get("end_date")));
-            judicialOfficeAuthorisation.setCreatedDate(handleNull((Timestamp)authorisationMap.get("created_date")));
-            judicialOfficeAuthorisation.setLastUpdated(handleNull((Timestamp)authorisationMap.get("last_updated")));
-            judicialOfficeAuthorisation.setLowerLevel((String)authorisationMap.get("lower_level"));
-            return judicialOfficeAuthorisation;
-        }).collect(Collectors.toList());
+        List<JudicialOfficeAuthorisation> actualAuthorisations =
+                judicialAuthorisationList.stream().map(authorisationMap -> {
+                    JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
+                    judicialOfficeAuthorisation.setElinksId((String)authorisationMap.get("elinks_id"));
+                    judicialOfficeAuthorisation.setJurisdiction((String)authorisationMap.get("jurisdiction"));
+                    judicialOfficeAuthorisation.setTicketId((Long)authorisationMap.get("ticket_id"));
+                    judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp)authorisationMap.get("start_date")));
+                    judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp)authorisationMap.get("end_date")));
+                    judicialOfficeAuthorisation.setCreatedDate(handleNull((Timestamp)authorisationMap
+                            .get("created_date")));
+                    judicialOfficeAuthorisation.setLastUpdated(handleNull((Timestamp)authorisationMap
+                            .get("last_updated")));
+                    judicialOfficeAuthorisation.setLowerLevel((String)authorisationMap.get("lower_level"));
+                    return judicialOfficeAuthorisation;
+                }).collect(Collectors.toList());
 
         //size check
         List<JudicialOfficeAuthorisation> expectedAuthorisations = getFileAuthorisationObjectsFromCsv(file[2]);
         assertEquals(judicialAuthorisationList.size(), expectedAuthorisations.size());
         //exact field checks
-        Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator().containsAll(expectedAuthorisations);
+        Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
+                .containsAll(expectedAuthorisations);
     }
 
     static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath)  {
@@ -130,7 +156,8 @@ public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
             File file = ResourceUtils.getFile(inputFilePath);
             InputStream inputStream = new FileInputStream(file);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            authorisations = bufferedReader.lines().skip(1).map(line -> mapJudicialOfficeAuthorisation(line)).collect(Collectors.toList());
+            authorisations = bufferedReader.lines().skip(1).map(line -> mapJudicialOfficeAuthorisation(line))
+                    .collect(Collectors.toList());
             bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();

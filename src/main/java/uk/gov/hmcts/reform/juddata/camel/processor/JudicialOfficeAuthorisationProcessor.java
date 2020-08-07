@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ELINKS_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +42,16 @@ public class JudicialOfficeAuthorisationProcessor extends JsrValidationBaseProce
 
         log.info("Judicial Authorisation Records count before Validation:: " + judicialOfficeAuthorisations.size());
 
-        List<JudicialOfficeAuthorisation> filteredJudicialAuthorisations = validate(judicialOfficeAuthorisationJsrValidatorInitializer,
+        List<JudicialOfficeAuthorisation> filteredJudicialAuthorisations =
+                validate(judicialOfficeAuthorisationJsrValidatorInitializer,
                 judicialOfficeAuthorisations);
 
         List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileProcessor.getInvalidRecords();
 
         filterInvalidUserProfileRecords(filteredJudicialAuthorisations, invalidJudicialUserProfileRecords, exchange);
 
-        log.info("{}:: Judicial Authorisation Records count after Validation {}:: ", logComponentName, filteredJudicialAuthorisations.size());
+        log.info("{}:: Judicial Authorisation Records count after Validation {}:: ", logComponentName,
+                filteredJudicialAuthorisations.size());
 
         audit(judicialOfficeAuthorisationJsrValidatorInitializer, exchange);
 
@@ -57,7 +59,8 @@ public class JudicialOfficeAuthorisationProcessor extends JsrValidationBaseProce
     }
 
     private void filterInvalidUserProfileRecords(List<JudicialOfficeAuthorisation> filteredJudicialOfficeAuthorisations,
-                                                 List<JudicialUserProfile> invalidJudicialUserProfileRecords, Exchange exchange) {
+                                                 List<JudicialUserProfile> invalidJudicialUserProfileRecords,
+                                                 Exchange exchange) {
         if (nonNull(invalidJudicialUserProfileRecords)) {
 
             List<String> invalidElinks = new ArrayList<>();
@@ -65,7 +68,8 @@ public class JudicialOfficeAuthorisationProcessor extends JsrValidationBaseProce
             invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
                 //Remove invalid Authorisations for user profile and add to invalidElinks List
                 if (filteredJudicialOfficeAuthorisations.removeIf(filterInvalidUserProfAuthorisations ->
-                        filterInvalidUserProfAuthorisations.getElinksId().equalsIgnoreCase(invalidRecords.getElinksId()))) {
+                        filterInvalidUserProfAuthorisations.getElinksId()
+                                .equalsIgnoreCase(invalidRecords.getElinksId()))) {
                     invalidElinks.add(invalidRecords.getElinksId());
                 }
             });

@@ -69,7 +69,7 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAuthorisationRow_response() {
+    public void should_return_JudicialUserProfileRow_response() {
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
@@ -85,7 +85,7 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAuthorisationRow_with_single_record_response() {
+    public void should_return_JudicialUserProfileRow_with_single_record_response() {
 
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
@@ -103,7 +103,7 @@ public class JudicialUserProfileProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAuthorisationRow_with_single_record_with_elinks_id_nullresponse() {
+    public void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_nullresponse() {
 
         judicialUserProfileMock1.setElinksId(null);
         Exchange exchangeMock = mock(Exchange.class);
@@ -137,7 +137,7 @@ public class JudicialUserProfileProcessorTest {
 
     @Test(expected = RouteFailedException.class)
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAuthorisationRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
+    public void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
         judicialUserProfileMock1.setElinksId(null);
         judicialUserProfileMock1.setFullName(null);
         Exchange exchangeMock = mock(Exchange.class);

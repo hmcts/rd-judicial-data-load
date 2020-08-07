@@ -13,8 +13,10 @@ public class JudicialOfficeAuthorisationRowMapperTest {
 
     @Test
     public void should_return_JudicialOfficeAppointmentRowMapper_response() {
-        JudicialOfficeAuthorisation judicialOfficeAuthorisation = createJudicialOfficeAuthorisation("2017-10-01 00:00:00.000");
-        JudicialOfficeAuthorisationRowMapper judicialOfficeAuthorisationRowMapper = new JudicialOfficeAuthorisationRowMapper();
+        JudicialOfficeAuthorisation judicialOfficeAuthorisation =
+                createJudicialOfficeAuthorisation("2017-10-01 00:00:00.000");
+        JudicialOfficeAuthorisationRowMapper judicialOfficeAuthorisationRowMapper =
+                new JudicialOfficeAuthorisationRowMapper();
         Map<String, Object> authMap = judicialOfficeAuthorisationRowMapper.getMap(judicialOfficeAuthorisation);
 
         assertNotNull(authMap.get("judicial_office_auth_id"));

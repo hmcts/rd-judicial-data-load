@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.RouteExecutor;
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
+import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
 @Slf4j
 @Component
@@ -17,7 +17,7 @@ import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
 public class JrdExecutor extends RouteExecutor {
 
     @Autowired
-    AuditProcessingService auditProcessingService;
+    JudicialAuditServiceImpl judicialAuditServiceImpl;
 
     @Override
     public String execute(CamelContext camelContext, String schedulerName, String route) {
@@ -26,13 +26,12 @@ public class JrdExecutor extends RouteExecutor {
         } catch (Exception ex) {
             //Camel override error stack with route failed hence grabbing exception form context
             String errorMessage = camelContext.getGlobalOptions().get(ERROR_MESSAGE);
-            auditProcessingService.auditException(camelContext, errorMessage);
+            judicialAuditServiceImpl.auditException(camelContext, errorMessage);
             log.error(":: " + schedulerName + " failed:: {}", errorMessage);
             return FAILURE;
         } finally {
             //runs Job Auditing
-            auditProcessingService.auditSchedulerStatus(camelContext);
-
+            judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
         }
     }
 }

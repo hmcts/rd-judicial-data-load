@@ -15,7 +15,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import uk.gov.hmcts.reform.health.HealthAutoConfiguration;
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
+import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform", exclude = HealthAutoConfiguration.class)
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
@@ -34,7 +34,7 @@ public class JudicialApplication implements ApplicationRunner {
     private static String logComponentName;
 
     @Autowired
-    AuditProcessingService auditProcessingService;
+    JudicialAuditServiceImpl judicialAuditServiceImpl;
 
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
@@ -51,11 +51,11 @@ public class JudicialApplication implements ApplicationRunner {
                 .addString(jobName, String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
 
-        if (FALSE.equals(auditProcessingService.isAuditingCompleted())) {
+        if (FALSE.equals(judicialAuditServiceImpl.isAuditingCompleted())) {
             log.info("{}:: Judicial Application running first time for a day::", logComponentName);
             jobLauncher.run(job, params);
             log.info("{}:: Judicial Application job run completed::", logComponentName);
-        }  else {
+        } else {
             log.info("{}:: no run of Judicial Application as it has ran for the day::", logComponentName);
         }
     }

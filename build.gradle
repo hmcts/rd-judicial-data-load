@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.6.RELEASE'
+        springBootVersion = '2.3.2.RELEASE'
     }
     repositories {
         jcenter()
@@ -17,12 +17,13 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'pmd'
-    id 'com.github.ben-manes.versions' version '0.20.0'
-    id "info.solidsoft.pitest" version '1.3.0'
+    id "com.github.ben-manes.versions" version "0.28.0"
+    id "info.solidsoft.pitest" version '1.5.1'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'org.owasp.dependencycheck' version '5.3.0'
     id 'org.sonarqube' version '2.8'
     id "org.flywaydb.flyway" version "6.2.0"
+    id 'uk.gov.hmcts.java' version '0.9.0'
 }
 
 apply plugin: 'java'
@@ -33,17 +34,15 @@ apply plugin: 'org.springframework.boot'
 
 def versions = [
         lombok             : '1.18.6',
-        gradlePitest       : '1.3.0',
-        pitest             : '1.4.2',
-        reformHealthStarter: '0.0.4',
+        reformHealthStarter: '0.0.5',
         reformLogging      : '5.1.0',
-        reformS2sClient    : '3.0.0',
+        reformS2sClient    : '3.1.2',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
-        springBoot         : '2.3.1.RELEASE',
+        springBoot         : '2.3.2.RELEASE',
         springHystrix      : '2.1.1.RELEASE',
         springfoxSwagger   : '2.9.2',
-        camel              : '2.25.1'
+        camel              : '2.25.2'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
@@ -52,9 +51,8 @@ def jarName = 'rd-judicial-data-load.jar'
 group = 'uk.gov.hmcts.reform.juddata'
 version = '0.0.1'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
+sourceCompatibility = 11
+targetCompatibility = 11
 
 compileJava {
     options.compilerArgs << '-parameters' << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
@@ -114,14 +112,6 @@ configurations {
 
 }
 check.dependsOn jacocoTestCoverageVerification
-
-
-checkstyle {
-    maxWarnings = 0
-    toolVersion = '8.10.1'
-    // need to set configDir to rootDir otherwise submodule will use submodule/config/checkstyle
-    configDir = new File(rootDir, 'config/checkstyle')
-}
 
 pmd {
     toolVersion = '6.12.0'
@@ -185,8 +175,8 @@ pitest {
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
-    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
-    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
+    historyInputLocation = 'build/reports/pitest/fastermutationtesting'
+    historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = true
     mutationThreshold = 90
@@ -224,6 +214,13 @@ repositories {
 
 dependencies {
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: versions.springBoot
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
 
     compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
     compile (group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2') {
@@ -234,27 +231,23 @@ dependencies {
     }
     compile group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     compile group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+
+    compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
+    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
     compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: versions.reformHealthStarter
-    compile(group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3') {
-        // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
-        exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
-    }
 
-    //loads all spring boot and camel dependencies
-    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.1.12'
+    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.3.6'
 
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
     compile group: 'com.google.guava', name: 'guava', version: '28.2-jre'
 
@@ -283,19 +276,19 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-library"
     }
 
+    testCompile (group: 'io.rest-assured', name: 'rest-assured', version: '4.1.2') {
+        exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
+    }
     testCompile group: 'com.h2database', name: 'h2'
     testCompile "com.github.tomakehurst:wiremock:2.19.0"
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
     testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.1.0'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.4'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+
     testCompile group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.4.RELEASE'
 
-    testCompile group: 'org.pitest', name: 'pitest', version: versions.pitest
-    testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
     testCompile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
-    testCompile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.1.11'
-
 
     testCompile(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
         exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
@@ -309,6 +302,7 @@ dependencies {
         exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
         exclude group: 'javax.websocket', module: 'javax.websocket-api'
     }
+
     testCompile(group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity) {
         exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
         exclude group: 'javax.websocket', module: 'javax.websocket-api'
@@ -347,12 +341,8 @@ dependencies {
     smokeTestCompile sourceSets.test.runtimeClasspath
 }
 
-// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
-    // Specifies if the build should be failed if a CVSS score above a specified level is identified.
-    // range of 0-10 fails the build, anything greater and it doesn't fail the build
-    failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
-    suppressionFiles = ['config/owasp/suppressions.xml']
+    suppressionFile = 'config/owasp/suppressions.xml'
 }
 
 dependencyUpdates.resolutionStrategy = {

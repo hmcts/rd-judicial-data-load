@@ -9,10 +9,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHESTRATED_ROUTE;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -28,14 +28,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import uk.gov.hmcts.reform.juddata.camel.service.AuditProcessingService;
+import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
-public class AuditProcessingServiceTest {
-
+public class JudicialAuditServiceImplTest {
 
     private JdbcTemplate mockJdbcTemplate = mock(JdbcTemplate.class);
 
-    private AuditProcessingService dataLoadAuditUnderTest = mock(AuditProcessingService.class);
+    private JudicialAuditServiceImpl dataLoadAuditUnderTest = mock(JudicialAuditServiceImpl.class);
 
     PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
 
@@ -46,7 +45,7 @@ public class AuditProcessingServiceTest {
 
     public static Map<String, String> getGlobalOptions(String schedulerName) {
         Map<String, String> globalOptions = new HashMap<>();
-        globalOptions.put(ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        globalOptions.put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         globalOptions.put(SCHEDULER_START_TIME, String.valueOf(new Date().getTime()));
         globalOptions.put(SCHEDULER_NAME, schedulerName);
         return globalOptions;
@@ -74,7 +73,6 @@ public class AuditProcessingServiceTest {
         Map<String, String> globalOptions = getGlobalOptions(schedulerName);
         when(exchange.getContext().getGlobalOptions()).thenReturn(globalOptions);
         when(camelContext.getGlobalOptions()).thenReturn(globalOptions);
-        //when(mockJdbcTemplate.update(schedulerInsertSql, schedulerName, schedulerStartTime, schedulerEndTime, schedulerStatus)).thenReturn(0);
         when(mockJdbcTemplate.update(anyString(), anyString(), any(), any(), any())).thenReturn(1);
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         doNothing().when(platformTransactionManager).commit(transactionStatus);

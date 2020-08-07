@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.negate;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.JUDICIAL_USER_PROFILE_ORCHESTRATION;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.LEAF_ROUTE;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ORCHESTRATED_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestSupport.setSourcePath;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
@@ -38,14 +38,17 @@ import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 
-@TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,classpath:application-leaf-integration.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
+       + "classpath:application-leaf-integration.yml"})
 @RunWith(RestartingSpringJUnit4ClassRunner.class)
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class, JobLauncherTestUtils.class, BatchConfig.class}, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class,
+        JobLauncherTestUtils.class, BatchConfig.class}, initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
-@SqlConfig(dataSource = "dataSource", transactionManager = "txManager", transactionMode = SqlConfig.TransactionMode.ISOLATED)
+@SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
+        transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @BeforeClass
@@ -58,15 +61,15 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     public void init() {
         jdbcTemplate.execute(truncateAudit);
         SpringRestarter.getInstance().restart();
-        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_USER_PROFILE_ORCHESTRATION);
-        dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_USER_PROFILE_ORCHESTRATION);
+        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
+        dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
     }
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testTasklet() throws Exception {
-        
+
         setSourceData(file);
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
 
@@ -85,7 +88,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         SpringRestarter.getInstance().restart();
         setSourceData(file);
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
-        if (negate(auditProcessingService.isAuditingCompleted())) {
+        if (negate(judicialAuditServiceImpl.isAuditingCompleted())) {
             jobLauncherTestUtils.launchJob();
         }
 
@@ -95,7 +98,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testParentOrchestration() throws Exception {
 
         setSourceData(file);
@@ -109,7 +112,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testParentOrchestrationFailure() throws Exception {
 
         setSourceData(fileWithError);
@@ -123,7 +126,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql","/testData/default-leaf-load.sql"})
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testParentOrchestrationSingleRecord() throws Exception {
 
         setSourceData(fileWithSingleRecord);

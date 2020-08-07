@@ -1,15 +1,15 @@
 spring:
   mail:
     from: no-reply@reform.hmcts.net
-    to:  sushant.choudhari@hmcts.net
-    enabled: true
-    subject:  Ref Data - Exception in JRD data load
+    to:  sushant.choudhari@hmcts.net,abhijit.diwan@hmcts.net,mallikarjun.puttana@hmcts.net
+    subject:  JRD - Exception in processing -
     host: mta.reform.hmcts.net
     port: 25
+    enabled: true
     properties:
       mail-smtp:
         starttls:
-          enable: true
+          enable: false
         ssl:
           trust: "*"
   flyway:
@@ -115,3 +115,7 @@ truncate-audit: truncate dataload_schedular_audit
 jdbc-batch-size: 10
 
 logging-component-name: RD_Judicial_Ref_Data
+component:
+  name: Judicial Reference Data
+mail:
+  enabled: true
