@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 public class JudicialOfficeAuthorisationRowMapperTest {
 
     @Test
-    public void should_return_JudicialOfficeAppointmentRowMapper_response() {
+    public void should_return_JudicialOfficeAuthorizationtRowMapper_response() {
         JudicialOfficeAuthorisation judicialOfficeAuthorisation =
                 createJudicialOfficeAuthorisation("2017-10-01 00:00:00.000");
         JudicialOfficeAuthorisationRowMapper judicialOfficeAuthorisationRowMapper =

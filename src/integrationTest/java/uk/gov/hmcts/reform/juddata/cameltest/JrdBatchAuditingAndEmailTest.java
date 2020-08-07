@@ -81,7 +81,6 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
 
 
-
         jobLauncherTestUtils.launchJob();
 
         judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
@@ -111,7 +110,6 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         setField(emailService, "mailEnabled", Boolean.FALSE);
-
 
         jobLauncherTestUtils.launchJob();
         verify(emailService, times(1)).sendEmail(any(), any());

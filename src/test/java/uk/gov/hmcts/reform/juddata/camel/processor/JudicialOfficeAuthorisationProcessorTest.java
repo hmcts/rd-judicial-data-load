@@ -7,7 +7,9 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
@@ -80,6 +82,10 @@ public class JudicialOfficeAuthorisationProcessorTest {
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
                 .isSameAs(judicialOfficeAuthorisations);
+
+        verify(exchangeMock, times(2)).getIn();
+        verify(exchangeMock, times(3)).getMessage();
+        verify(messageMock, times(4)).getBody();
     }
 
     @Test
@@ -94,10 +100,13 @@ public class JudicialOfficeAuthorisationProcessorTest {
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
         assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody()))
                 .isSameAs(judicialOfficeAuthorisation1);
+        verify(exchangeMock, times(2)).getIn();
+        verify(exchangeMock, times(2)).getMessage();
+        verify(messageMock, times(3)).getBody();
     }
 
     @Test
-    public void should_return_JudicialOfficeAppointmentRow_with_single_record_with_elinks_id_null_response() {
+    public void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_elinks_id_null_response() {
 
         judicialOfficeAuthorisation1.setElinksId(null);
         Exchange exchangeMock = mock(Exchange.class);
@@ -127,5 +136,10 @@ public class JudicialOfficeAuthorisationProcessorTest {
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
         assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody()))
                 .isSameAs(judicialOfficeAuthorisation1);
+        verify(exchangeMock, times(4)).getIn();
+        verify(exchangeMock, times(2)).getMessage();
+        verify(messageMock, times(3)).getBody();
+        verify(platformTransactionManager, times(1)).getTransaction(any());
+        verify(exchangeMock, times(1)).getContext();
     }
 }
