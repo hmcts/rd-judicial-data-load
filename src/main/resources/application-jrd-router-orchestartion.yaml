@@ -39,7 +39,7 @@ route:
 
   judicial-office-authorisation:
     id: judicial-office-authorisation
-    file-name: judicial_office_authorisation.csv
+    file-name: Authorisations
     table-name: judicial_office_authorisation
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
@@ -47,7 +47,7 @@ route:
       sql:insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level)
       values(:#judicial_office_auth_id,:#elinks_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,:#created_date,:#last_updated,:#lower_level)?dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/judicial_office_authorisation.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
