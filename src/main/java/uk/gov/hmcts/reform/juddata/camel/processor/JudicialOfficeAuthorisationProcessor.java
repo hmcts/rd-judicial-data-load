@@ -40,7 +40,8 @@ public class JudicialOfficeAuthorisationProcessor extends JsrValidationBaseProce
                 ? (List<JudicialOfficeAuthorisation>) exchange.getIn().getBody()
                 : singletonList((JudicialOfficeAuthorisation) exchange.getIn().getBody());
 
-        log.info("Judicial Authorisation Records count before Validation:: " + judicialOfficeAuthorisations.size());
+        log.info("{}:: Judicial Authorisation Records count before Validation:: {}", logComponentName,
+                judicialOfficeAuthorisations.size());
 
         List<JudicialOfficeAuthorisation> filteredJudicialAuthorisations =
                 validate(judicialOfficeAuthorisationJsrValidatorInitializer,

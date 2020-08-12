@@ -14,7 +14,6 @@ Library should be included with build.gradle like follows
 compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.2.5'
 And release versions library can be found in bintray (https://bintray.com/hmcts/hmcts-maven/data-ingestion-lib)  
 
-
 # Consumption of files from a SFTP server
 The files received from SFTP server are encrypted using GPG encryption (which complies with OpenPGP standards).
 

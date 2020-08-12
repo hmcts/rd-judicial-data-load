@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAI
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.RouteExecutor;
@@ -19,6 +20,9 @@ public class JrdExecutor extends RouteExecutor {
     @Autowired
     JudicialAuditServiceImpl judicialAuditServiceImpl;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
+
     @Override
     public String execute(CamelContext camelContext, String schedulerName, String route) {
         try {
@@ -27,7 +31,7 @@ public class JrdExecutor extends RouteExecutor {
             //Camel override error stack with route failed hence grabbing exception form context
             String errorMessage = camelContext.getGlobalOptions().get(ERROR_MESSAGE);
             judicialAuditServiceImpl.auditException(camelContext, errorMessage);
-            log.error(":: " + schedulerName + " failed:: {}", errorMessage);
+            log.error("{}:: {} failed:: {}", logComponentName, schedulerName, errorMessage);
             return FAILURE;
         } finally {
             //runs Job Auditing

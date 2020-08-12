@@ -28,9 +28,12 @@ public class JobResultListener implements JobExecutionListener {
     @Value("${archival-route}")
     String archivalRouteName;
 
+    @Value("${logging-component-name}")
+    private String logComponentName;
+
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        log.info("Batch Job execution Started");
+        log.info("{}:: Batch Job execution Started", logComponentName);
     }
 
     @Override
