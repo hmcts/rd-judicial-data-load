@@ -4,7 +4,7 @@ start-route: direct:JRD
 archival-route: direct:JrdArchival
 archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
-archival-file-names: Personal,Appointments,Roles,Contracts,Locations,BaseLocations
+archival-file-names: Personal,Appointments,Authorisations,Roles,Contracts,Locations,BaseLocations
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 180000
