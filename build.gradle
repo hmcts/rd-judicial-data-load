@@ -165,7 +165,7 @@ jacocoTestReport {
 
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
-    testSourceSets = [sourceSets.test, sourceSets.integrationTest]
+    testSourceSets = [sourceSets.integrationTest, sourceSets.test]
     excludedClasses = [
             'uk.gov.hmcts.reform.juddata.configuration.*',
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
