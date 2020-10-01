@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.juddata;
 
-import static java.lang.Boolean.FALSE;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -14,10 +12,11 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import uk.gov.hmcts.reform.health.HealthAutoConfiguration;
 import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
-@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform", exclude = HealthAutoConfiguration.class)
+import static java.lang.Boolean.FALSE;
+
+@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
 @Slf4j
 public class JudicialApplication implements ApplicationRunner {
@@ -48,8 +47,8 @@ public class JudicialApplication implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         JobParameters params = new JobParametersBuilder()
-                .addString(jobName, String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
+            .addString(jobName, String.valueOf(System.currentTimeMillis()))
+            .toJobParameters();
 
         if (FALSE.equals(judicialAuditServiceImpl.isAuditingCompleted())) {
             log.info("{}:: Judicial Application running first time for a day::", logComponentName);
