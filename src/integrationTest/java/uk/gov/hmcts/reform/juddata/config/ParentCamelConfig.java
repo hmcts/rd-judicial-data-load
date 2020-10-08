@@ -23,10 +23,12 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
@@ -38,8 +40,6 @@ import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAuthorisationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
-
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
@@ -117,6 +117,12 @@ public class ParentCamelConfig {
     // Route configuration ends
 
     // processor configuration starts
+
+    @Bean
+    AzureBlobConfig azureBlobConfig () {
+        return new AzureBlobConfig();
+    }
+
     @Bean
     FileReadProcessor fileReadProcessor() {
         return new FileReadProcessor();
@@ -133,8 +139,8 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    public JudicialAuditServiceImpl schedulerAuditProcessor() {
-        return new JudicialAuditServiceImpl();
+    public AuditServiceImpl schedulerAuditProcessor() {
+        return new AuditServiceImpl();
     }
 
     @Bean

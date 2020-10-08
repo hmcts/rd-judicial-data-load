@@ -1,0 +1,1 @@
+ALTER TABLE dataload_exception_records DROP file_name;

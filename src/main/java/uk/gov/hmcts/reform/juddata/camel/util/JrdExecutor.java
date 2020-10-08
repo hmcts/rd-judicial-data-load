@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.RouteExecutor;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
 @Slf4j
 @Component
@@ -18,7 +18,7 @@ import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 public class JrdExecutor extends RouteExecutor {
 
     @Autowired
-    JudicialAuditServiceImpl judicialAuditServiceImpl;
+    AuditServiceImpl judicialAuditServiceImpl;
 
     @Value("${logging-component-name}")
     private String logComponentName;
@@ -30,7 +30,7 @@ public class JrdExecutor extends RouteExecutor {
         } catch (Exception ex) {
             //Camel override error stack with route failed hence grabbing exception form context
             String errorMessage = camelContext.getGlobalOptions().get(ERROR_MESSAGE);
-            judicialAuditServiceImpl.auditException(camelContext, errorMessage);
+            judicialAuditServiceImpl.auditException(camelContext, errorMessage, false);
             log.error("{}:: {} failed:: {}", logComponentName, schedulerName, errorMessage);
             return FAILURE;
         } finally {

@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 
 public abstract class JrdBatchIntegrationSupport {
 
@@ -72,7 +72,7 @@ public abstract class JrdBatchIntegrationSupport {
     protected IEmailService emailService;
 
     @Autowired
-    protected JudicialAuditServiceImpl judicialAuditServiceImpl;
+    protected AuditServiceImpl judicialAuditServiceImpl;
 
     @Value("${base-location-select-jrd-sql}")
     protected String baseLocationSql;

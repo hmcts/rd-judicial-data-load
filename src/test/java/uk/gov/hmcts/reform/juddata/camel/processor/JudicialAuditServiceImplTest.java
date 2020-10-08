@@ -28,13 +28,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 
 public class JudicialAuditServiceImplTest {
 
     private JdbcTemplate mockJdbcTemplate = mock(JdbcTemplate.class);
 
-    private JudicialAuditServiceImpl dataLoadAuditUnderTest = mock(JudicialAuditServiceImpl.class);
+    private AuditServiceImpl dataLoadAuditUnderTest = mock(AuditServiceImpl.class);
 
     PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
 

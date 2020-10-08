@@ -14,8 +14,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.health.HealthAutoConfiguration;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
+
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform", exclude = HealthAutoConfiguration.class)
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
@@ -34,7 +35,7 @@ public class JudicialApplication implements ApplicationRunner {
     private static String logComponentName;
 
     @Autowired
-    JudicialAuditServiceImpl judicialAuditServiceImpl;
+    AuditServiceImpl judicialAuditServiceImpl;
 
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
