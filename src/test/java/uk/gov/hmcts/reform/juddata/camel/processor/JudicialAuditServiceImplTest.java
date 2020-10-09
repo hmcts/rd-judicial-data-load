@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.lang.Boolean.TRUE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -53,7 +52,6 @@ public class JudicialAuditServiceImplTest {
 
     @Before
     public void setUp() {
-        setField(dataLoadAuditUnderTest, "auditEnabled", TRUE);
         setField(dataLoadAuditUnderTest, "jdbcTemplate", mockJdbcTemplate);
         setField(dataLoadAuditUnderTest, "platformTransactionManager", platformTransactionManager);
         //jdbcTemplate

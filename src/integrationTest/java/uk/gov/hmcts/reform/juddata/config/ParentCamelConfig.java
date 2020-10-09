@@ -19,7 +19,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
-import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
@@ -45,6 +44,7 @@ import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
+import uk.gov.hmcts.reform.juddata.cameltest.testsupport.TestFileReadProcessor;
 
 
 @Configuration
@@ -119,13 +119,13 @@ public class ParentCamelConfig {
     // processor configuration starts
 
     @Bean
-    AzureBlobConfig azureBlobConfig () {
+    AzureBlobConfig azureBlobConfig() {
         return new AzureBlobConfig();
     }
 
     @Bean
-    FileReadProcessor fileReadProcessor() {
-        return new FileReadProcessor();
+    TestFileReadProcessor fileReadProcessor() {
+        return new TestFileReadProcessor();
     }
 
     @Bean
