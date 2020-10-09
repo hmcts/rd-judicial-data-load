@@ -15,7 +15,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
-import uk.gov.hmcts.reform.health.HealthAutoConfiguration;
 
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
