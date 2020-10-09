@@ -18,7 +18,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.health.HealthAutoConfiguration;
 
 
-@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform", exclude = HealthAutoConfiguration.class)
+@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
 @Slf4j
 public class JudicialApplication implements ApplicationRunner {
@@ -49,8 +49,8 @@ public class JudicialApplication implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         JobParameters params = new JobParametersBuilder()
-                .addString(jobName, String.valueOf(System.currentTimeMillis()))
-                .toJobParameters();
+            .addString(jobName, String.valueOf(System.currentTimeMillis()))
+            .toJobParameters();
 
         if (FALSE.equals(judicialAuditServiceImpl.isAuditingCompleted())) {
             log.info("{}:: Judicial Application running first time for a day::", logComponentName);
