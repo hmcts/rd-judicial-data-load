@@ -16,11 +16,6 @@ def type = "java"
 def product = "rd"
 def component = "judicial-data-load"
 
-/*def secrets = [
-  's2s-${env}': [
-    secret('microservicekey-rd-judicial-data-load', 'S2S_SECRET')
-  ]
-]*/
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [$class     : 'AzureKeyVaultSecret',
@@ -36,17 +31,38 @@ def vaultOverrides = [
     'spreview': 'saat'
 ]
 
+def secrets = [
+        'rd-${env}': [
+                secret('ACCOUNT-KEY-PREVIEW', 'ACCOUNT_KEY_PREVIEW'),
+                secret('ACCOUNT-NAME', 'ACCOUNT_NAME'),
+                secret('ACCOUNT-KEY', 'ACCOUNT_KEY')
+        ]
+]
+
+GradleBuilder builder = new GradleBuilder(this, product)
+
 withNightlyPipeline(type, product, component) {
 
     env.TEST_URL = "http://rd-judicial-data-load-aat.service.core-compute-aat.internal"
     env.Rules = params.SecurityRules
+    env.execution_environment = "aat"
 
     overrideVaultEnvironments(vaultOverrides)
-    //loadVaultSecrets(secrets)
-
+    loadVaultSecrets(secrets)
+    enableSlackNotifications('#rd-location-ref-data-load-builds')
+    env.execution_environment = "aat"
     enableMutationTest()
-    //enableFullFunctionalTest()
 
-    //This is not required as this is batch application and we don't have any API
-    //enableSecurityScan()
+
+    after('securityScan') {
+        def time = "120"
+        echo "Waiting ${time} seconds for deployment to complete prior starting functional testing"
+        sleep time.toInteger() // seconds
+        try {
+            builder.gradle('functional')
+        } finally {
+            junit '**/test-results/**/*.xml'
+        }
+    }
+
 }
