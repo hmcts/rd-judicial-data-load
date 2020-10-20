@@ -210,9 +210,6 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'lib', includes: ['*.jar'])
-    compile fileTree(dir: 'lib', includes: ['*.tar'])
-    compile "commons-codec:commons-codec:1.10:sources"
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
@@ -240,7 +237,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    //compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.3.7'
+    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.3.7'
 
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
