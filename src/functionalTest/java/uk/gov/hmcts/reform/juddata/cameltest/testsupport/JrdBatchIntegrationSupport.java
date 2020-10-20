@@ -1,7 +1,11 @@
 package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.junit.After;
+import org.junit.BeforeClass;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +15,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
+import java.util.List;
 
 public abstract class JrdBatchIntegrationSupport {
 
@@ -99,4 +104,26 @@ public abstract class JrdBatchIntegrationSupport {
 
     @Value("${truncate-audit}")
     protected String truncateAudit;
+
+    @Autowired
+    protected JrdBlobSupport jrdBlobSupport;
+
+    @Value("${archival-file-names}")
+    protected List<String> archivalFileNames;
+
+    @BeforeClass
+    public static void setupBlobProperties() throws Exception {
+        if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
+            System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY_PREVIEW"));
+            System.setProperty("azure.storage.account-name", "rdpreview");
+        } else {
+            System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
+            System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
+        }
+    }
+
+    @After
+    public void cleanUp() throws Exception {
+        deleteBlobs(jrdBlobSupport, archivalFileNames);
+    }
 }

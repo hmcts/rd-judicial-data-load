@@ -1,14 +1,10 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.negate;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHESTRATED_ROUTE;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestSupport.setSourcePath;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithSingleRecord;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.setSourceData;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAppointmentFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAuthorisationFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordCountFor;
@@ -17,7 +13,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import org.apache.camel.test.spring.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.MockEndpoints;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.batch.test.JobLauncherTestUtils;
@@ -30,6 +25,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
+import uk.gov.hmcts.reform.data.ingestion.configuration.StorageCredentials;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.RestartingSpringJUnit4ClassRunner;
@@ -43,7 +40,8 @@ import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 @RunWith(RestartingSpringJUnit4ClassRunner.class)
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class,
-        JobLauncherTestUtils.class, BatchConfig.class}, initializers = ConfigFileApplicationContextInitializer.class)
+        JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, StorageCredentials.class},
+        initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
@@ -51,33 +49,26 @@ import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
         transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
-    @BeforeClass
-    public static void beforeAll() throws Exception {
-        setSourcePath("classpath:archivalFiles", "archival.path");
-        setSourcePath("classpath:sourceFiles", "active.path");
-    }
-
     @Before
     public void init() {
         jdbcTemplate.execute(truncateAudit);
         SpringRestarter.getInstance().restart();
-        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
-        dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
-        dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
     }
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testTasklet() throws Exception {
 
-        setSourceData(file);
-        LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
+
     }
+
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
@@ -86,8 +77,8 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         testTasklet();
         SpringRestarter.getInstance().restart();
-        setSourceData(file);
-        LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         if (negate(judicialAuditServiceImpl.isAuditingCompleted())) {
             jobLauncherTestUtils.launchJob();
         }
@@ -101,8 +92,8 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testParentOrchestration() throws Exception {
 
-        setSourceData(file);
-        LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
@@ -115,8 +106,8 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testParentOrchestrationFailure() throws Exception {
 
-        setSourceData(fileWithError);
-        LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
@@ -129,8 +120,8 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
     public void testParentOrchestrationSingleRecord() throws Exception {
 
-        setSourceData(fileWithSingleRecord);
-        LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithSingleRecord);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
@@ -142,8 +133,9 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-leaf.sql"})
     public void testAllLeafs() throws Exception {
-        setSourceData(file);
-        LeafIntegrationTestSupport.setSourceData(LeafIntegrationTestSupport.file);
+
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 

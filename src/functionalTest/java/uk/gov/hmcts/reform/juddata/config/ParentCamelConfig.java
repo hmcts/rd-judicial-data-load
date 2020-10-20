@@ -45,6 +45,7 @@ import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
+import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 
 
 @Configuration
@@ -124,7 +125,7 @@ public class ParentCamelConfig {
 
     @Bean
     ArchiveFileProcessor azureFileProcessor() {
-        return mock(ArchiveFileProcessor.class);
+        return new ArchiveFileProcessor();
     }
 
     @Bean
@@ -237,6 +238,11 @@ public class ParentCamelConfig {
     public CamelContext camelContext() {
         CamelContext camelContext = new SpringCamelContext(applicationContext);
         return camelContext;
+    }
+
+    @Bean
+    JrdBlobSupport integrationTestSupport() {
+        return new JrdBlobSupport();
     }
     // camel related configuration ends
 

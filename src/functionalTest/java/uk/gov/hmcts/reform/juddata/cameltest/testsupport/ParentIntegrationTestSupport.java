@@ -3,8 +3,14 @@ package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.IntegrationTestSupport.setSourcePath;
+import static org.springframework.util.ResourceUtils.getFile;
 
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.api.Assertions;
+import org.hibernate.validator.internal.util.Contracts;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.ResourceUtils;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,14 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.api.Assertions;
-import org.hibernate.validator.internal.util.Contracts;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.util.ResourceUtils;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 
-public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
+public interface ParentIntegrationTestSupport {
 
     String[] file = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
@@ -67,16 +67,22 @@ public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    static void setSourceData(String... files) throws Exception {
-        System.setProperty("parent.file.name", files[0]);
-        System.setProperty("child1.file.name", files[1]);
-        System.setProperty("child2.file.name", files[2]);
-        setSourcePath(files[0],
-                "parent.file.path");
-        setSourcePath(files[1],
-                "child1.file.path");
-        setSourcePath(files[2],
-                "child2.file.path");
+    static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
+                            boolean isParent, String... files) throws Exception {
+        int i = isParent ? 0 : 3;
+        for (String absoluteFileName: files) {
+            jrdBlobSupport.uploadFile(
+                    archivalFileNames.get(i),
+                    new FileInputStream(getFile(absoluteFileName))
+            );
+            i++;
+        }
+    }
+
+    static void deleteBlobs(JrdBlobSupport jrdBlobSupport, List<String> fileNames) throws Exception {
+        for (String fileName: fileNames) {
+            jrdBlobSupport.deleteBlob(fileName);
+        }
     }
 
     static void validateDbRecordCountFor(JdbcTemplate jdbcTemplate, String queryName, int expectedCount) {
