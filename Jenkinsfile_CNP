@@ -34,11 +34,9 @@ withPipeline(type, product, component) {
     overrideVaultEnvironments(vaultOverrides)
 
     onMaster {
-        enableSlackNotifications('#rd-location-ref-data-load-builds')
         env.execution_environment = "aat"
     }
     onPR {
-        enableSlackNotifications('#rd-location-ref-data-load-builds')
         env.execution_environment = "preview"
     }
 
