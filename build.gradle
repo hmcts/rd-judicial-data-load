@@ -114,7 +114,7 @@ check.dependsOn jacocoTestCoverageVerification
 pmd {
     toolVersion = '6.12.0'
     ignoreFailures = true
-    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.integrationTest, sourceSets.functionalTest, sourceSets.smokeTest]
+    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.smokeTest]
     reportsDir = file("$project.buildDir/reports/pmd")
     ruleSets = [
             'category/java/errorprone.xml',
@@ -152,7 +152,7 @@ jacoco {
 }
 
 jacocoTestReport {
-    executionData(test, integration)
+    executionData(test)
     reports {
         xml.enabled = true
         csv.enabled = false
@@ -163,7 +163,7 @@ jacocoTestReport {
 
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
-    testSourceSets = [sourceSets.integrationTest, sourceSets.test]
+    testSourceSets = [sourceSets.test, sourceSets.functionalTest]
     excludedClasses = [
             'uk.gov.hmcts.reform.juddata.configuration.*',
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
@@ -188,7 +188,6 @@ sonarqube {
         property "sonar.projectName", "RD :: Judicial Reference Data load"
         property "sonar.projectKey", "JUDDATA"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
-        property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/integration.exec"
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
@@ -197,7 +196,7 @@ sonarqube {
     }
 }
 
-project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
+project.tasks['sonarqube'].dependsOn test, jacocoTestReport
 project.tasks['sonarqube'].group = "Verification"
 
 repositories {
@@ -259,8 +258,8 @@ dependencies {
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
-    integrationTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
-    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    //integrationTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    //integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     functionalTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     functionalTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     smokeTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -308,26 +307,26 @@ dependencies {
     testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 
-    integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: versions.camel
-    integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: versions.camel
-    integrationTestCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
-    integrationTestCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+    //integrationTestCompile group: 'org.apache.camel', name: 'camel-test-spring', version: versions.camel
+    //integrationTestCompile group: 'org.apache.camel', name: 'camel-test', version: versions.camel
+    //integrationTestCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
+    //integrationTestCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 
 
     testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
         force = true
     }
 
-    integrationTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
-        force = true
-    }
+    //integrationTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
+       // force = true
+    //}
 
     functionalTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
         force = true
     }
 
-    integrationTestCompile sourceSets.main.runtimeClasspath
-    integrationTestCompile sourceSets.test.runtimeClasspath
+    //integrationTestCompile sourceSets.main.runtimeClasspath
+    //integrationTestCompile sourceSets.test.runtimeClasspath
 
     functionalTestCompile sourceSets.main.runtimeClasspath
     functionalTestCompile sourceSets.test.runtimeClasspath
