@@ -50,8 +50,6 @@ withNightlyPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
-    enableSlackNotifications('#rd-location-ref-data-load-builds')
-    env.execution_environment = "aat"
     enableMutationTest()
 
 
