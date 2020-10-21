@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.listener;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -22,18 +21,17 @@ public class JobResultListenerTest {
     JobResultListener jobResultListener;
 
     @Mock
-    JobExecution jobExecutionMock =  mock(JobExecution.class);
+    JobExecution jobExecutionMock;
 
     @Mock
-    ArchivalRoute archivalRouteMock = mock(ArchivalRoute.class);
+    ArchivalRoute archivalRouteMock;
 
     @Mock
-    ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
+    ProducerTemplate producerTemplate;
 
     @Test
     public void beforeJobTest() {
-        //jobResultListener.beforeJob(jobExecution);
-        //verify(jobResultListener, times(1)).beforeJob(jobExecution);
+        jobResultListener.beforeJob(jobExecutionMock);
     }
 
     @Test
