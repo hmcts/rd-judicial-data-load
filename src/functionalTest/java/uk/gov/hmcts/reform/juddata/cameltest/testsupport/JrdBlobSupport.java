@@ -6,9 +6,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageCredentialsAccountAndKey;
+import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.stereotype.Component;
@@ -16,10 +18,12 @@ import org.springframework.test.context.ContextConfiguration;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.StorageCredentials;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
+@Slf4j
 @ContextConfiguration(classes = {
         AzureBlobConfig.class, StorageCredentials.class}, initializers = ConfigFileApplicationContextInitializer.class)
 public class JrdBlobSupport {
@@ -51,13 +55,17 @@ public class JrdBlobSupport {
         cloudBlockBlob.upload(sourceFile, 8 * 1024 * 1024);
     }
 
-    public void deleteBlob(String blob) throws Exception {
-        CloudBlockBlob cloudBlockBlob = cloudBlobContainer.getBlockBlobReference(blob);
-        cloudBlockBlob.delete(INCLUDE_SNAPSHOTS, null, null, null);
+    public void deleteBlob(String blob) {
+        try {
+            CloudBlockBlob cloudBlockBlob = cloudBlobContainer.getBlockBlobReference(blob);
+            cloudBlockBlob.delete(INCLUDE_SNAPSHOTS, null, null, null);
 
-        String date = new SimpleDateFormat(archivalDateFormat).format(new Date());
-        cloudBlockBlob = cloudBlobArchContainer.getBlockBlobReference(blob.concat(date));
-        cloudBlockBlob.delete(INCLUDE_SNAPSHOTS, null, null, null);
+            String date = new SimpleDateFormat(archivalDateFormat).format(new Date());
+            cloudBlockBlob = cloudBlobArchContainer.getBlockBlobReference(blob.concat(date));
+            cloudBlockBlob.delete(INCLUDE_SNAPSHOTS, null, null, null);
+        } catch (StorageException | URISyntaxException storageException) {
+            log.error("Error while deleting blob");
+        }
     }
 }
 
