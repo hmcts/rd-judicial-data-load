@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
+import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 
 import static java.lang.Boolean.TRUE;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ERROR_MESSAGE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
 @RunWith(SpringRunner.class)
@@ -34,18 +36,22 @@ public class JrdExecuterTest {
 
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
 
+    DataLoadUtil dataLoadUtil = mock(DataLoadUtil.class);
+
     @Before
     public void init() {
         setField(jrdExecutorSpy, "judicialAuditServiceImpl", auditService);
         camelContext.getGlobalOptions().put(ERROR_MESSAGE,ERROR_MESSAGE);
-        camelContext.getGlobalOptions().put(IS_PARENT,String.valueOf(TRUE));
     }
 
     @Test
     public void testExecute() {
+        camelContext.getGlobalOptions().put(IS_PARENT,String.valueOf(TRUE));
+        setField(jrdExecutorSpy, "dataLoadUtil", dataLoadUtil);
+        setField(jrdExecutorSpy, "producerTemplate", producerTemplate);
         doNothing().when(producerTemplate).sendBody(any());
         doNothing().when(auditService).auditSchedulerStatus(camelContext);
-        jrdExecutorSpy.execute(camelContext, "test", "test");
+        assertEquals(jrdExecutorSpy.execute(camelContext, "test", "test"), SUCCESS);
         verify(jrdExecutorSpy, times(1))
                 .execute(camelContext, "test", "test");
         verify(auditService, times(1))
@@ -54,6 +60,7 @@ public class JrdExecuterTest {
 
     @Test
     public void testExecuteException() {
+        camelContext.getGlobalOptions().put(IS_PARENT,String.valueOf(TRUE));
         doNothing().when(auditService).auditSchedulerStatus(camelContext);
         assertEquals(MappingConstants.FAILURE,
                 jrdExecutorSpy.execute(camelContext, "test", "test"));
@@ -63,6 +70,14 @@ public class JrdExecuterTest {
                 .auditSchedulerStatus(camelContext);
         verify(auditService, times(1))
                 .auditException(camelContext, ERROR_MESSAGE);
+    }
 
+    @Test
+    public void testExecuteExceptionWithLeaf() {
+        doNothing().when(auditService).auditSchedulerStatus(camelContext);
+        assertEquals(MappingConstants.FAILURE,
+            jrdExecutorSpy.execute(camelContext, "test", "test"));
+        verify(jrdExecutorSpy, times(1))
+            .execute(camelContext, "test", "test");
     }
 }

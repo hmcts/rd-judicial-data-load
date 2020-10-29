@@ -29,9 +29,6 @@ public class JrdExecutor extends RouteExecutor {
     @Autowired
     ApplicationContext chunkContext;
 
-    @Autowired
-    CamelContext camelContext;
-
     @Override
     public String execute(CamelContext camelContext, String schedulerName, String route) {
         try {
