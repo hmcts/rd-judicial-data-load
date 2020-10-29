@@ -41,35 +41,35 @@ public class JrdExecuterTest {
     @Before
     public void init() {
         setField(jrdExecutorSpy, "judicialAuditServiceImpl", auditService);
-        camelContext.getGlobalOptions().put(ERROR_MESSAGE,ERROR_MESSAGE);
+        camelContext.getGlobalOptions().put(ERROR_MESSAGE, ERROR_MESSAGE);
     }
 
     @Test
     public void testExecute() {
-        camelContext.getGlobalOptions().put(IS_PARENT,String.valueOf(TRUE));
+        camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
         setField(jrdExecutorSpy, "dataLoadUtil", dataLoadUtil);
         setField(jrdExecutorSpy, "producerTemplate", producerTemplate);
         doNothing().when(producerTemplate).sendBody(any());
         doNothing().when(auditService).auditSchedulerStatus(camelContext);
-        assertEquals(jrdExecutorSpy.execute(camelContext, "test", "test"), SUCCESS);
+        assertEquals(SUCCESS, jrdExecutorSpy.execute(camelContext, "test", "test"));
         verify(jrdExecutorSpy, times(1))
-                .execute(camelContext, "test", "test");
+            .execute(camelContext, "test", "test");
         verify(auditService, times(1))
-                .auditSchedulerStatus(camelContext);
+            .auditSchedulerStatus(camelContext);
     }
 
     @Test
     public void testExecuteException() {
-        camelContext.getGlobalOptions().put(IS_PARENT,String.valueOf(TRUE));
+        camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
         doNothing().when(auditService).auditSchedulerStatus(camelContext);
         assertEquals(MappingConstants.FAILURE,
-                jrdExecutorSpy.execute(camelContext, "test", "test"));
+            jrdExecutorSpy.execute(camelContext, "test", "test"));
         verify(jrdExecutorSpy, times(1))
-                .execute(camelContext, "test", "test");
+            .execute(camelContext, "test", "test");
         verify(auditService, times(1))
-                .auditSchedulerStatus(camelContext);
+            .auditSchedulerStatus(camelContext);
         verify(auditService, times(1))
-                .auditException(camelContext, ERROR_MESSAGE);
+            .auditException(camelContext, ERROR_MESSAGE);
     }
 
     @Test
