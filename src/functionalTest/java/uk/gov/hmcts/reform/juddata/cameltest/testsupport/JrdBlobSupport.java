@@ -1,9 +1,5 @@
 package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
-import static com.microsoft.azure.storage.blob.DeleteSnapshotsOption.INCLUDE_SNAPSHOTS;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageCredentialsAccountAndKey;
 import com.microsoft.azure.storage.StorageException;
@@ -16,16 +12,22 @@ import org.springframework.boot.test.context.ConfigFileApplicationContextInitial
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
-import uk.gov.hmcts.reform.data.ingestion.configuration.StorageCredentials;
+import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
+
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+import static com.microsoft.azure.storage.blob.DeleteSnapshotsOption.INCLUDE_SNAPSHOTS;
+
 @Component
 @Slf4j
 @ContextConfiguration(classes = {
-        AzureBlobConfig.class, StorageCredentials.class}, initializers = ConfigFileApplicationContextInitializer.class)
+    AzureBlobConfig.class, BlobStorageCredentials.class}, initializers = ConfigFileApplicationContextInitializer.class)
 public class JrdBlobSupport {
 
     CloudStorageAccount acc;

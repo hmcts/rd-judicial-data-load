@@ -10,6 +10,7 @@ job:
     ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
     ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
     ENV_NAME: preview
+    CONTAINER_NAME: jud-ref-data
   keyVaults:
     rd:
       secrets:

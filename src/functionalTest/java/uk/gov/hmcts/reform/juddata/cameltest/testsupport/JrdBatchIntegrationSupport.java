@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.junit.After;
@@ -12,15 +10,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
+
 import java.util.List;
+
+import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.isNotTrue;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
 public abstract class JrdBatchIntegrationSupport {
 
 
-    public static final String DB_SCHEDULER_STATUS = "scheduler_status";
+    public static final String FILE_STATUS = "status";
+
+    protected boolean notDeletionFlag = false;
 
     @Autowired
     protected CamelContext camelContext;
@@ -77,7 +81,7 @@ public abstract class JrdBatchIntegrationSupport {
     protected IEmailService emailService;
 
     @Autowired
-    protected JudicialAuditServiceImpl judicialAuditServiceImpl;
+    protected AuditServiceImpl judicialAuditServiceImpl;
 
     @Value("${base-location-select-jrd-sql}")
     protected String baseLocationSql;
@@ -120,10 +124,13 @@ public abstract class JrdBatchIntegrationSupport {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
         }
+        System.setProperty("azure.storage.container-name", "jud-ref-data");
     }
 
     @After
     public void cleanUp() throws Exception {
-        deleteBlobs(jrdBlobSupport, archivalFileNames);
+        if (isNotTrue(notDeletionFlag)) {
+            deleteBlobs(jrdBlobSupport, archivalFileNames);
+        }
     }
 }

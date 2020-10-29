@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.juddata.camel.listener.JobResultListener;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 
@@ -21,13 +20,7 @@ import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 public class BatchConfig {
 
     @Autowired
-    private JobBuilderFactory jobs;
-
-    @Autowired
     private StepBuilderFactory steps;
-
-    @Autowired
-    JudicialAuditServiceImpl schedulerJudicialAuditServiceImpl;
 
     @Value("${leaf-route-task}")
     String taskLeaf;

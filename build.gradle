@@ -236,7 +236,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.3.7'
+    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.0'
 
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
@@ -281,6 +281,7 @@ dependencies {
     testCompile group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.4.RELEASE'
 
     testCompile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    testCompile group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
     testCompile(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
         exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'

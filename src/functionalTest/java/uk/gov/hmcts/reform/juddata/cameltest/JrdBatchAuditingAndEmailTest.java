@@ -1,19 +1,5 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHESTRATED_ROUTE;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
-import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
-
 import org.apache.camel.test.spring.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.MockEndpoints;
 import org.junit.Before;
@@ -31,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
-import uk.gov.hmcts.reform.data.ingestion.configuration.StorageCredentials;
+import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.RestartingSpringJUnit4ClassRunner;
@@ -39,15 +25,32 @@ import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringRestarter;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHESTRATED_ROUTE;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
         + "classpath:application-leaf-integration.yml"})
 @RunWith(RestartingSpringJUnit4ClassRunner.class)
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class,
-        JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, StorageCredentials.class},
+        JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
@@ -64,6 +67,8 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
+        camelContext.getGlobalOptions()
+            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
     }
 
     @Test
@@ -74,12 +79,13 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
 
         jobLauncherTestUtils.launchJob();
 
-        judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure);
-        assertEquals(dataLoadSchedulerAudit.get(0).get(DB_SCHEDULER_STATUS), FAILURE);
+        assertEquals(dataLoadSchedulerAudit.get(0).get(FILE_STATUS), FAILURE);
     }
 
     @Test
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
+        "/testData/default-leaf-load.sql"})
     public void testParentOrchestrationSchedulerSuccess() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
@@ -87,10 +93,8 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
 
         jobLauncherTestUtils.launchJob();
 
-        judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
-
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlSuccess);
-        assertEquals(SUCCESS, dataLoadSchedulerAudit.get(0).get(DB_SCHEDULER_STATUS));
+        assertEquals(SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
     }
 
     @Test

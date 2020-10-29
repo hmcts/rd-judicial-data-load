@@ -10,6 +10,7 @@ job:
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
     FLYWAY_ENABLED: false
     ENV_NAME: "{{ .Values.global.environment }}"
+    CONTAINER_NAME: jud-ref-data
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'

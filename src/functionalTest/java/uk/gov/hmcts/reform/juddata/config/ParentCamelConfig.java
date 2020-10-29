@@ -1,8 +1,5 @@
 package uk.gov.hmcts.reform.juddata.config;
 
-import static org.mockito.Mockito.mock;
-
-import javax.sql.DataSource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
@@ -17,12 +14,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
+import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileResponseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.HeaderValidationProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.ArchivalBlobServiceImpl;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
@@ -34,18 +35,17 @@ import uk.gov.hmcts.reform.juddata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAppointmentRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialOfficeAuthorisationRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
-
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAuthorisationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
-
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
-
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
-
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
+
+import javax.sql.DataSource;
+
+import static org.mockito.Mockito.mock;
 
 
 @Configuration
@@ -134,8 +134,8 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    public JudicialAuditServiceImpl schedulerAuditProcessor() {
-        return new JudicialAuditServiceImpl();
+    public AuditServiceImpl schedulerAuditProcessor() {
+        return new AuditServiceImpl();
     }
 
     @Bean
@@ -271,5 +271,21 @@ public class ParentCamelConfig {
     JobResultListener jobResultListener() {
         return new JobResultListener();
     }
+
+    @Bean
+    FileResponseProcessor fileResponseProcessor() {
+        return new FileResponseProcessor();
+    }
+
+    @Bean
+    ArchivalBlobServiceImpl archivalBlobService() {
+        return new ArchivalBlobServiceImpl();
+    }
+
+    @Bean
+    DataIngestionLibraryRunner dataIngestionLibraryRunner() {
+        return new DataIngestionLibraryRunner();
+    }
+    // miscellaneous configuration ends
     // miscellaneous configuration ends
 }

@@ -12,9 +12,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
-
-import static java.lang.Boolean.FALSE;
+import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
@@ -33,7 +32,10 @@ public class JudicialApplication implements ApplicationRunner {
     private static String logComponentName;
 
     @Autowired
-    JudicialAuditServiceImpl judicialAuditServiceImpl;
+    DataIngestionLibraryRunner dataIngestionLibraryRunner;
+
+    @Autowired
+    AuditServiceImpl judicialAuditServiceImpl;
 
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
@@ -49,14 +51,7 @@ public class JudicialApplication implements ApplicationRunner {
         JobParameters params = new JobParametersBuilder()
             .addString(jobName, String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
-
-        if (FALSE.equals(judicialAuditServiceImpl.isAuditingCompleted())) {
-            log.info("{}:: Judicial Application running first time for a day::", logComponentName);
-            jobLauncher.run(job, params);
-            log.info("{}:: Judicial Application job run completed::", logComponentName);
-        } else {
-            log.info("{}:: no run of Judicial Application as it has ran for the day::", logComponentName);
-        }
+        dataIngestionLibraryRunner.run(job, params);
     }
 
     @Value("${logging-component-name}")

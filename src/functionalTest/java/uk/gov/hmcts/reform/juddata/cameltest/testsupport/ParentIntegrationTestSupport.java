@@ -1,16 +1,13 @@
 package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.util.ResourceUtils.getFile;
-
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.hibernate.validator.internal.util.Contracts;
+import org.javatuples.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.util.ResourceUtils.getFile;
 
 public interface ParentIntegrationTestSupport {
 
@@ -70,17 +74,17 @@ public interface ParentIntegrationTestSupport {
     static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
                             boolean isParent, String... files) throws Exception {
         int i = isParent ? 0 : 3;
-        for (String absoluteFileName: files) {
+        for (String absoluteFileName : files) {
             jrdBlobSupport.uploadFile(
-                    archivalFileNames.get(i),
-                    new FileInputStream(getFile(absoluteFileName))
+                archivalFileNames.get(i),
+                new FileInputStream(getFile(absoluteFileName))
             );
             i++;
         }
     }
 
     static void deleteBlobs(JrdBlobSupport jrdBlobSupport, List<String> fileNames) throws Exception {
-        for (String fileName: fileNames) {
+        for (String fileName : fileNames) {
             jrdBlobSupport.deleteBlob(fileName);
         }
     }
@@ -108,6 +112,20 @@ public interface ParentIntegrationTestSupport {
         assertEquals(expectedCount, exceptionList.size());
     }
 
+    static void validateLrdServiceFileException(JdbcTemplate jdbcTemplate,
+                                                String exceptionQuery,
+                                                List<Pair<String, String>> pair) {
+        var result = jdbcTemplate.queryForList(exceptionQuery);
+        int i = 0;
+        for (Map res : result) {
+            assertThat(
+                (String) res.get("error_description"),
+                containsString(pair.get(i).getValue1())
+            );
+            i++;
+        }
+    }
+
     static void validateUserProfileFile(JdbcTemplate jdbcTemplate, String userProfileSql) {
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
         assertEquals(judicialUserProfileList.size(), 2);
@@ -133,37 +151,37 @@ public interface ParentIntegrationTestSupport {
     static void validateAuthorisationFile(JdbcTemplate jdbcTemplate, String sqlChild2) {
         List<Map<String, Object>> judicialAuthorisationList = jdbcTemplate.queryForList(sqlChild2);
         List<JudicialOfficeAuthorisation> actualAuthorisations =
-                judicialAuthorisationList.stream().map(authorisationMap -> {
-                    JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
-                    judicialOfficeAuthorisation.setElinksId((String)authorisationMap.get("elinks_id"));
-                    judicialOfficeAuthorisation.setJurisdiction((String)authorisationMap.get("jurisdiction"));
-                    judicialOfficeAuthorisation.setTicketId((Long)authorisationMap.get("ticket_id"));
-                    judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp)authorisationMap.get("start_date")));
-                    judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp)authorisationMap.get("end_date")));
-                    judicialOfficeAuthorisation.setCreatedDate(handleNull((Timestamp)authorisationMap
-                            .get("created_date")));
-                    judicialOfficeAuthorisation.setLastUpdated(handleNull((Timestamp)authorisationMap
-                            .get("last_updated")));
-                    judicialOfficeAuthorisation.setLowerLevel((String)authorisationMap.get("lower_level"));
-                    return judicialOfficeAuthorisation;
-                }).collect(Collectors.toList());
+            judicialAuthorisationList.stream().map(authorisationMap -> {
+                JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
+                judicialOfficeAuthorisation.setElinksId((String) authorisationMap.get("elinks_id"));
+                judicialOfficeAuthorisation.setJurisdiction((String) authorisationMap.get("jurisdiction"));
+                judicialOfficeAuthorisation.setTicketId((Long) authorisationMap.get("ticket_id"));
+                judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
+                judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp) authorisationMap.get("end_date")));
+                judicialOfficeAuthorisation.setCreatedDate(handleNull((Timestamp) authorisationMap
+                    .get("created_date")));
+                judicialOfficeAuthorisation.setLastUpdated(handleNull((Timestamp) authorisationMap
+                    .get("last_updated")));
+                judicialOfficeAuthorisation.setLowerLevel((String) authorisationMap.get("lower_level"));
+                return judicialOfficeAuthorisation;
+            }).collect(Collectors.toList());
 
         //size check
         List<JudicialOfficeAuthorisation> expectedAuthorisations = getFileAuthorisationObjectsFromCsv(file[2]);
         assertEquals(judicialAuthorisationList.size(), expectedAuthorisations.size());
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
-                .containsAll(expectedAuthorisations);
+            .containsAll(expectedAuthorisations);
     }
 
-    static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath)  {
+    static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath) {
         List<JudicialOfficeAuthorisation> authorisations = new LinkedList<>();
         try {
             File file = ResourceUtils.getFile(inputFilePath);
             InputStream inputStream = new FileInputStream(file);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             authorisations = bufferedReader.lines().skip(1).map(line -> mapJudicialOfficeAuthorisation(line))
-                    .collect(Collectors.toList());
+                .collect(Collectors.toList());
             bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();

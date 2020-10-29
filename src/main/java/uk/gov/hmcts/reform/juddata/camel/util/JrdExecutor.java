@@ -1,16 +1,19 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ERROR_MESSAGE;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.RouteExecutor;
-import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
+
+import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ERROR_MESSAGE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
 @Slf4j
 @Component
@@ -18,10 +21,16 @@ import uk.gov.hmcts.reform.juddata.camel.service.JudicialAuditServiceImpl;
 public class JrdExecutor extends RouteExecutor {
 
     @Autowired
-    JudicialAuditServiceImpl judicialAuditServiceImpl;
+    AuditServiceImpl judicialAuditServiceImpl;
 
     @Value("${logging-component-name}")
     private String logComponentName;
+
+    @Autowired
+    ApplicationContext chunkContext;
+
+    @Autowired
+    CamelContext camelContext;
 
     @Override
     public String execute(CamelContext camelContext, String schedulerName, String route) {
@@ -34,8 +43,10 @@ public class JrdExecutor extends RouteExecutor {
             log.error("{}:: {} failed:: {}", logComponentName, schedulerName, errorMessage);
             return FAILURE;
         } finally {
-            //runs Job Auditing
-            judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
+            if (nonNull(camelContext.getGlobalOption(IS_PARENT))) {
+                //runs Job Auditing
+                judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
+            }
         }
     }
 }
