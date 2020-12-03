@@ -40,6 +40,8 @@ leaf-route-task: leafRouteTask
 parent-route-task: parentRouteOrchestrationTask
 batchjob-name: JudicialDataLoad
 audit-enable: true
+parent-files: Personal-Test,Appointments-Test,Authorisations-Test
+leaf-files: Roles-Test-Test,Contracts-Test,Locations-Test,BaseLocations-Test
 
 routes-to-execute-orchestration: judicial-user-profile-orchestration, judicial-office-appointment, judicial-office-authorisation
 route:

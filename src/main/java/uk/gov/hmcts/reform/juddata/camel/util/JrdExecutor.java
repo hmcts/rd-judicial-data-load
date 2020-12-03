@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.RouteExecutor;
 
+import java.util.List;
+
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
@@ -29,6 +31,12 @@ public class JrdExecutor extends RouteExecutor {
     @Autowired
     ApplicationContext chunkContext;
 
+    @Value("${parent-files}")
+    private List<String> parentFiles;
+
+    @Value("${leaf-files}")
+    private List<String> leafFiles;
+
     @Override
     public String execute(CamelContext camelContext, String schedulerName, String route) {
         try {
@@ -42,7 +50,9 @@ public class JrdExecutor extends RouteExecutor {
         } finally {
             if (nonNull(camelContext.getGlobalOption(IS_PARENT))) {
                 //runs Job Auditing
-                judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
+                judicialAuditServiceImpl.auditSchedulerStatus(camelContext, parentFiles.toArray(String[]::new));
+            } else {
+                judicialAuditServiceImpl.auditSchedulerStatus(camelContext, leafFiles.toArray(String[]::new));
             }
         }
     }

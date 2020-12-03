@@ -7,9 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
+
+import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
@@ -26,6 +29,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
 @RunWith(SpringRunner.class)
 public class JrdExecuterTest {
+
     JrdExecutor jrdExecutor = new JrdExecutor();
 
     JrdExecutor jrdExecutorSpy = spy(jrdExecutor);
@@ -41,33 +45,36 @@ public class JrdExecuterTest {
     @Before
     public void init() {
         setField(jrdExecutorSpy, "judicialAuditServiceImpl", auditService);
+        List<String> parent = ImmutableList.of("parent");
+        List<String> leaf = ImmutableList.of("leaf");
+        setField(jrdExecutorSpy, "parentFiles", parent);
+        setField(jrdExecutorSpy, "leafFiles", leaf);
         camelContext.getGlobalOptions().put(ERROR_MESSAGE, ERROR_MESSAGE);
     }
 
     @Test
     public void testExecute() {
-        camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
         setField(jrdExecutorSpy, "dataLoadUtil", dataLoadUtil);
         setField(jrdExecutorSpy, "producerTemplate", producerTemplate);
         doNothing().when(producerTemplate).sendBody(any());
-        doNothing().when(auditService).auditSchedulerStatus(camelContext);
+        doNothing().when(auditService).auditSchedulerStatus(camelContext, "leaf");
         assertEquals(SUCCESS, jrdExecutorSpy.execute(camelContext, "test", "test"));
         verify(jrdExecutorSpy, times(1))
             .execute(camelContext, "test", "test");
         verify(auditService, times(1))
-            .auditSchedulerStatus(camelContext);
+            .auditSchedulerStatus(camelContext, "leaf");
     }
 
     @Test
     public void testExecuteException() {
         camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
-        doNothing().when(auditService).auditSchedulerStatus(camelContext);
+        doNothing().when(auditService).auditSchedulerStatus(camelContext, "parent");
         assertEquals(MappingConstants.FAILURE,
             jrdExecutorSpy.execute(camelContext, "test", "test"));
         verify(jrdExecutorSpy, times(1))
             .execute(camelContext, "test", "test");
         verify(auditService, times(1))
-            .auditSchedulerStatus(camelContext);
+            .auditSchedulerStatus(camelContext, "parent");
         verify(auditService, times(1))
             .auditException(camelContext, ERROR_MESSAGE);
     }
