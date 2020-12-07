@@ -248,7 +248,7 @@ dependencies {
 
     compile group: 'org.apache.commons', name: 'commons-vfs2', version: '2.4.1'
     compile group: 'com.jcraft', name: 'jsch', version: '0.1.55'
-
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
     compile group: 'com.opencsv', name: 'opencsv', version: '3.7'
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
