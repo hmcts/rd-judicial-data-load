@@ -1,15 +1,15 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getCurrentTimeStamp;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.mapper.IMapper;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getCurrentTimeStamp;
 
 @Slf4j
 @Component
@@ -19,20 +19,20 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
 
     public Map<String, Object> getMap(Object officeAppoinemntObject) {
 
-        JudicialOfficeAppointment officeAppoinemnt = (JudicialOfficeAppointment) officeAppoinemntObject;
+        JudicialOfficeAppointment officeAppointment = (JudicialOfficeAppointment) officeAppoinemntObject;
         Map<String, Object> judOfficeAppointmentRow = new HashMap<>();
 
         judOfficeAppointmentRow.put("judicial_office_appointment_id", generateId());
-        judOfficeAppointmentRow.put("elinks_id", officeAppoinemnt.getElinksId());
-        judOfficeAppointmentRow.put("role_id",officeAppoinemnt.getRoleId());
-        judOfficeAppointmentRow.put("contract_type_id", returnNullIfBlank(officeAppoinemnt.getContractType()));
-        judOfficeAppointmentRow.put("base_location_id", returnNullIfBlank(officeAppoinemnt.getBaseLocationId()));
-        judOfficeAppointmentRow.put("region_id", returnNullIfBlank(officeAppoinemnt.getRegionId()));
-        judOfficeAppointmentRow.put("is_prinicple_appointment", officeAppoinemnt.getIsPrincipalAppointment());
-        judOfficeAppointmentRow.put("start_date", officeAppoinemnt.getStartDate());
-        judOfficeAppointmentRow.put("end_date", officeAppoinemnt.getEndDate());
-        judOfficeAppointmentRow.put("active_flag", officeAppoinemnt.isActiveFlag());
-        judOfficeAppointmentRow.put("extracted_date", officeAppoinemnt.getExtractedDate());
+        judOfficeAppointmentRow.put("elinks_id", officeAppointment.getElinksId());
+        judOfficeAppointmentRow.put("role_id",officeAppointment.getRoleId());
+        judOfficeAppointmentRow.put("contract_type_id", returnNullIfBlank(officeAppointment.getContractType()));
+        judOfficeAppointmentRow.put("base_location_id", returnNullIfBlank(officeAppointment.getBaseLocationId()));
+        judOfficeAppointmentRow.put("region_id", returnNullIfBlank(officeAppointment.getRegionId()));
+        judOfficeAppointmentRow.put("is_prinicple_appointment", officeAppointment.getIsPrincipalAppointment());
+        judOfficeAppointmentRow.put("start_date", officeAppointment.getStartDate());
+        judOfficeAppointmentRow.put("end_date", officeAppointment.getEndDate());
+        judOfficeAppointmentRow.put("active_flag", officeAppointment.isActiveFlag());
+        judOfficeAppointmentRow.put("extracted_date", officeAppointment.getExtractedDate());
         judOfficeAppointmentRow.put("created_date", getCurrentTimeStamp());
         judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
         return  judOfficeAppointmentRow;

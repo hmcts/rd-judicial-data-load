@@ -1,5 +1,31 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.spi.Registry;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -12,30 +38,6 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMockMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultMessage;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
-import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 public class JudicialOfficeAppointmentProcessorTest {
 
@@ -60,6 +62,12 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     JudicialUserProfileProcessor judicialUserProfileProcessor = new JudicialUserProfileProcessor();
 
+    Exchange exchangeMock;
+    Message messageMock;
+    Registry registryMock;
+    ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
+    ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
+
     @Before
     public void setup() {
 
@@ -74,6 +82,20 @@ public class JudicialOfficeAppointmentProcessorTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
+
+        messageMock = mock(Message.class);
+        RouteProperties routeProperties = new RouteProperties();
+        routeProperties.setFileName("test");
+        exchangeMock = mock(Exchange.class);
+        registryMock = mock(Registry.class);
+        when(exchangeMock.getIn()).thenReturn(messageMock);
+        when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
+        when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
+        when(exchangeMock.getMessage()).thenReturn(messageMock);
+        setField(judicialOfficeAppointmentProcessor, "applicationContext", applicationContext);
+        setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
     }
 
     @Test
@@ -84,10 +106,6 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
 
-        Exchange exchangeMock = mock(Exchange.class);
-        Message messageMock = mock(Message.class);
-        when(exchangeMock.getIn()).thenReturn(messageMock);
-        when(exchangeMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
@@ -99,10 +117,6 @@ public class JudicialOfficeAppointmentProcessorTest {
     @Test
     public void should_return_JudicialOfficeAppointmentRow_with_single_record_response() {
 
-        Exchange exchangeMock = mock(Exchange.class);
-        Message messageMock = mock(Message.class);
-        when(exchangeMock.getIn()).thenReturn(messageMock);
-        when(exchangeMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
 
         judicialOfficeAppointmentProcessor.process(exchangeMock);
@@ -114,17 +128,14 @@ public class JudicialOfficeAppointmentProcessorTest {
     public void should_return_JudicialOfficeAppointmentRow_with_single_record_with_elinks_id_nullresponse() {
 
         judicialOfficeAppointmentMock1.setElinksId(null);
-        Exchange exchangeMock = mock(Exchange.class);
-        Message messageMock = mock(Message.class);
+
         final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
         final TransactionStatus transactionStatus = mock(TransactionStatus.class);
 
-        when(exchangeMock.getIn()).thenReturn(messageMock);
-        when(exchangeMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
         RouteProperties routeProperties = new RouteProperties();
-        routeProperties.setTableName("test");
+        routeProperties.setFileName("test");
 
         setField(judicialOfficeAppointmentProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
@@ -151,15 +162,11 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
 
-        Exchange exchangeMock = mock(Exchange.class);
-        Message messageMock = mock(Message.class);
-        when(exchangeMock.getIn()).thenReturn(messageMock);
-        when(exchangeMock.getMessage()).thenReturn(new DefaultMessage(camelContext));
         final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
         final TransactionStatus transactionStatus = mock(TransactionStatus.class);
         RouteProperties routeProperties = new RouteProperties();
-        routeProperties.setTableName("test");
+        routeProperties.setFileName("test");
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = mock(JudicialUserProfileProcessor.class);
@@ -188,7 +195,7 @@ public class JudicialOfficeAppointmentProcessorTest {
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
 
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(1);
+        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))

@@ -192,7 +192,8 @@ sonarqube {
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java"
+                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/camel/utiljrdExecutor"
     }
 }
 
@@ -236,8 +237,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.0.1-beta'
-
+    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.0.2-beta'
 
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
