@@ -28,6 +28,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ERR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
+//ignored this test for now it mostly for emailing exceptions which we disabled in prod
 @RunWith(SpringRunner.class)
 @Ignore
 public class JrdExecuterTest {
