@@ -171,7 +171,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(judicialAppointmentList.size(), 2);
 
         validateDbRecordCountFor(jdbcTemplate, sqlChild2, 2);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 6, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 5, true);
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
                 .queryForList(schedulerInsertJrdSqlPartialSuccess);
