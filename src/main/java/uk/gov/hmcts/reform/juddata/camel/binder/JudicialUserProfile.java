@@ -34,7 +34,6 @@ public class JudicialUserProfile implements Serializable {
     String title;
 
     @DataField(pos = 4, columnName = "known_As")
-    @NotEmpty
     String knownAs;
 
     @DataField(pos = 5)
