@@ -6,7 +6,7 @@ route:
     table-name: judicial_role_type
     insert-sql:
       sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
-      on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource
+      on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource&batch=true
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Roles?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
@@ -19,7 +19,7 @@ route:
     table-name: contract_type
     insert-sql:
       sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)
-      on conflict (contract_type_id) do update set contract_type_desc_en = :#contract_type_desc_en,contract_type_desc_cy = :#contract_type_desc_cy?dataSource=dataSource
+      on conflict (contract_type_id) do update set contract_type_desc_en = :#contract_type_desc_en,contract_type_desc_cy = :#contract_type_desc_cy?dataSource=dataSource&batch=true
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Contracts?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialContractTypeProcessor
@@ -32,7 +32,7 @@ route:
     table-name: region_type
     insert-sql:
       sql:insert into region_type (region_id,region_desc_en,region_desc_cy) values(:#region_id,:#region_desc_en,:#region_desc_cy)
-      on conflict (region_id) do update set region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy?dataSource=dataSource
+      on conflict (region_id) do update set region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy?dataSource=dataSource&batch=true
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Locations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialRegionTypeProcessor
@@ -45,7 +45,7 @@ route:
     table-name: base_location_type
     insert-sql:
       sql:insert into base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) values(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)
-      on conflict (base_location_id) do update set court_name = :#court_name,court_type = :#court_type,circuit = :#circuit,area_of_expertise = :#area_of_expertise?dataSource=dataSource
+      on conflict (base_location_id) do update set court_name = :#court_name,court_type = :#court_type,circuit = :#circuit,area_of_expertise = :#area_of_expertise?dataSource=dataSource&batch=true
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/BaseLocations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialBaseLocationProcessor

@@ -84,7 +84,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 0);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
     }
 
@@ -97,19 +97,19 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 0);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
     }
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
             "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationInvalidHeaderRollback() throws Exception {
+    public void testParentOrchestrationInvalidHeaderAppointmentsRollbackAppointments() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidHeader);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 0);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, sqlChild1, 0);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
     }
@@ -117,13 +117,14 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
             "/testData/default-leaf-load.sql"})
-    public void testAuthorisationInvalidHeaderRollback() throws Exception {
+    public void testAuthorisationInvalidHeaderAuthorizationRollback() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthorisationInvalidHeader);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 0);
-        validateDbRecordCountFor(jdbcTemplate, sqlChild1, 0);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
+        //testAuthorisationInvalidHeaderRollback only Authorization
+        validateDbRecordCountFor(jdbcTemplate, sqlChild1, 2);
         validateDbRecordCountFor(jdbcTemplate, sqlChild2, 0);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
     }
@@ -197,7 +198,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql",
             "/testData/default-leaf-load.sql"})
-    public void testLeafFailuresInvalidHeader() throws Exception {
+    public void testLeafFailuresInvalidHeaderContractsRollback() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
 
@@ -205,16 +206,17 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
-        assertEquals(judicialUserRoleType.size(), 1); //default leaf
+        assertEquals(judicialUserRoleType.size(), 6);
 
+        //Roll backed as having invalid header
         List<Map<String, Object>> judicialContractType = jdbcTemplate.queryForList(contractSql);
-        assertEquals(judicialContractType.size(), 1);
+        assertEquals(judicialContractType.size(), 1); // 1 as default contract leaf rest not inserted
 
         List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
-        assertEquals(judicialBaseLocationType.size(), 1);
+        assertEquals(judicialBaseLocationType.size(), 6);
 
         List<Map<String, Object>> judicialRegionType = jdbcTemplate.queryForList(regionSql);
-        assertEquals(judicialRegionType.size(), 1);
+        assertEquals(judicialRegionType.size(), 6);
 
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
         assertNotNull(exceptionList.get(0).get("table_name"));

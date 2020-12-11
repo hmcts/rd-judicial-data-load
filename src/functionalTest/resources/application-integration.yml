@@ -67,11 +67,11 @@ route:
     file-name: Appointments-Test
     table-name: judicial-office-appointment
     truncate-sql:
-      sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
+      sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
       sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
       values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource&batch=true
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
@@ -85,7 +85,7 @@ route:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:
       sql:insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level)
-      values(:#judicial_office_auth_id,:#elinks_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,:#created_date,:#last_updated,:#lower_level)?dataSource=dataSource
+      values(:#judicial_office_auth_id,:#elinks_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,:#created_date,:#last_updated,:#lower_level)?dataSource=dataSource&batch=true
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper

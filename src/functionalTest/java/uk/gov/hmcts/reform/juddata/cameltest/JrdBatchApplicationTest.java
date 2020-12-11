@@ -125,16 +125,16 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationFailure() throws Exception {
+    public void testAppointmentFailureRollbacksAppointment() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
-        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 0);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, sqlChild1, 0);
-        validateDbRecordCountFor(jdbcTemplate, sqlChild2, 0);
+        validateDbRecordCountFor(jdbcTemplate, sqlChild2, 8);
     }
 
     @Test

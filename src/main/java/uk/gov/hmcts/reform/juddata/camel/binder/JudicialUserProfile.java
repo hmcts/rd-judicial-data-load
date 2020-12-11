@@ -1,20 +1,19 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
-
-import java.io.Serializable;
-
-import javax.validation.constraints.NotEmpty;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
+
+import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
+
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 @Setter
 @Getter
@@ -75,4 +74,6 @@ public class JudicialUserProfile implements Serializable {
     @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
             message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
     String extractedDate;
+
+
 }
