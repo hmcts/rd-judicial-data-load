@@ -23,12 +23,15 @@ def vaultOverrides = [
 ]
 
 def secrets = [
-        'rd-${env}': [
-                secret('ACCOUNT-KEY-PREVIEW', 'ACCOUNT_KEY_PREVIEW'),
-                secret('ACCOUNT-NAME', 'ACCOUNT_NAME'),
-                secret('ACCOUNT-KEY', 'ACCOUNT_KEY')
-        ]
+    'rd-${env}': [
+        secret('ACCOUNT-KEY-PREVIEW', 'ACCOUNT_KEY_PREVIEW'),
+        secret('ACCOUNT-NAME', 'ACCOUNT_NAME'),
+        secret('ACCOUNT-KEY', 'ACCOUNT_KEY')
+    ]
 ]
+
+// Configure branches to sync with master branch
+def branchesToSync = ['demo', 'ithc', 'perftest']
 
 GradleBuilder builder = new GradleBuilder(this, product)
 withPipeline(type, product, component) {
@@ -46,6 +49,9 @@ withPipeline(type, product, component) {
     enableAksStagingDeployment()
 
     nonServiceApp()
+
+    // Sync demo and perftest with master branch
+    syncBranchesWithMaster(branchesToSync)
 
    after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
@@ -65,5 +71,4 @@ withPipeline(type, product, component) {
             junit '**/test-results/**/*.xml'
         }
     }
-
 }
