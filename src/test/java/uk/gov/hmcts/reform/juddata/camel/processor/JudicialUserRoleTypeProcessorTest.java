@@ -21,7 +21,10 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
@@ -87,5 +90,6 @@ public class JudicialUserRoleTypeProcessorTest {
 
         assertThat(((List)exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         assertThat(((List<JudicialContractType>)exchangeMock.getMessage().getBody())).isSameAs(judicialUserRoleTypes);
+        verify(exchangeMock, times(3)).getMessage();
     }
 } 
