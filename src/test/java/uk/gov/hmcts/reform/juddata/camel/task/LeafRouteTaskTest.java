@@ -38,5 +38,6 @@ public class LeafRouteTaskTest {
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         assertEquals(RepeatStatus.FINISHED, leafRouteTask.execute(any(), any()));
         verify(leafRouteTask, times(1)).execute(any(), any());
+        verify(dataLoadRoute, times(1)).startRoute(any(), any());
     }
 }

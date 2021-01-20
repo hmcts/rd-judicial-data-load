@@ -39,7 +39,7 @@ public class JudicialOfficeAuthorisationRowMapper {
         }
     }
 
-    private int generateId() {
+    public int generateId() {
         seqNumber = seqNumber + 1;
         return seqNumber;
     }
