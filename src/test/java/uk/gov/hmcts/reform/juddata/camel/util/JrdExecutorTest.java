@@ -31,7 +31,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 //ignored this test for now it mostly for emailing exceptions which we disabled in prod
 @RunWith(SpringRunner.class)
 @Ignore
-public class JrdExecuterTest {
+public class JrdExecutorTest {
     JrdExecutor jrdExecutor = new JrdExecutor();
 
     JrdExecutor jrdExecutorSpy = spy(jrdExecutor);

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
@@ -11,13 +12,15 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 
 public class JudicialOfficeAuthorisationRowMapperTest {
 
+    JudicialOfficeAuthorisationRowMapper judicialOfficeAuthorisationRowMapper =
+            new JudicialOfficeAuthorisationRowMapper();
+
     @Test
     public void should_return_JudicialOfficeAuthorizationtRowMapper_response() {
 
         JudicialOfficeAuthorisation judicialOfficeAuthorisation =
                 createJudicialOfficeAuthorisation("2017-10-01 00:00:00.000");
-        JudicialOfficeAuthorisationRowMapper judicialOfficeAuthorisationRowMapper =
-                new JudicialOfficeAuthorisationRowMapper();
+
         Map<String, Object> authMap = judicialOfficeAuthorisationRowMapper.getMap(judicialOfficeAuthorisation);
 
         assertNotNull(authMap.get("judicial_office_auth_id"));
@@ -29,5 +32,12 @@ public class JudicialOfficeAuthorisationRowMapperTest {
         assertEquals(Timestamp.valueOf((judicialOfficeAuthorisation.getLastUpdated())), authMap.get("last_updated"));
         assertEquals(Long.valueOf("12345"), authMap.get("ticket_id"));
         assertEquals("lowerLevel", authMap.get("lower_level"));
+    }
+
+    @Test
+    public void should_generate_id() {
+        int id = judicialOfficeAuthorisationRowMapper.generateId();
+
+        assertThat(id).isEqualTo(1);
     }
 }

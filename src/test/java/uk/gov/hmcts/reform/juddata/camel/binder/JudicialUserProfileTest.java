@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
@@ -32,7 +34,10 @@ public class JudicialUserProfileTest {
         assertEquals("some@hmcts.net", judicialUserProfile.getEmailId());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getJoiningDate());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getLastWorkingDate());
-        assertEquals(true, judicialUserProfile.isActiveFlag());
         assertEquals(getDateTimeWithFormat(dateTime), judicialUserProfile.getExtractedDate());
+        assertTrue(judicialUserProfile.isActiveFlag());
+
+        judicialUserProfile.setActiveFlag(false);
+        assertFalse(judicialUserProfile.isActiveFlag());
     }
 }

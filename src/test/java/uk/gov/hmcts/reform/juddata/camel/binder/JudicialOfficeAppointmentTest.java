@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMockMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
@@ -24,10 +26,16 @@ public class JudicialOfficeAppointmentTest {
         assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());
         assertEquals("regionId_1", judicialOfficeAppointment.getRegionId());
-        assertEquals(true, judicialOfficeAppointment.getIsPrincipalAppointment());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialOfficeAppointment.getStartDate());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialOfficeAppointment.getEndDate());
-        assertEquals(true, judicialOfficeAppointment.isActiveFlag());
         assertEquals(getDateTimeWithFormat(dateTime), judicialOfficeAppointment.getExtractedDate());
+        assertTrue(judicialOfficeAppointment.getIsPrincipalAppointment());
+        assertTrue(judicialOfficeAppointment.isActiveFlag());
+
+        judicialOfficeAppointment.setActiveFlag(false);
+        judicialOfficeAppointment.setIsPrincipalAppointment(false);
+        assertFalse(judicialOfficeAppointment.isActiveFlag());
+        assertFalse(judicialOfficeAppointment.getIsPrincipalAppointment());
+
     }
 }
