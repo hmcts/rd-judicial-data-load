@@ -316,7 +316,7 @@ dependencies {
 
     testCompile group: 'org.apache.camel', name: 'camel-test-spring', version: versions.camel
     testCompile group: 'org.apache.camel', name: 'camel-test', version: versions.camel
-    testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.12.5'
+    testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 
     testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
