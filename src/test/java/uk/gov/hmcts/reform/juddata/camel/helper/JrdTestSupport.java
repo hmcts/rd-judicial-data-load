@@ -39,6 +39,7 @@ public class JrdTestSupport {
         judicialUserProfileMock.setLastWorkingDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialUserProfileMock.setActiveFlag(true);
         judicialUserProfileMock.setExtractedDate(getDateTimeWithFormat(dateTime));
+        judicialUserProfileMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         return judicialUserProfileMock;
     }
 

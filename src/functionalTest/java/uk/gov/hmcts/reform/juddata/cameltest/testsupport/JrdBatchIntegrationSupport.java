@@ -117,13 +117,9 @@ public abstract class JrdBatchIntegrationSupport {
 
     @BeforeClass
     public static void setupBlobProperties() throws Exception {
-        if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
-            System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY_PREVIEW"));
-            System.setProperty("azure.storage.account-name", "rdpreview");
-        } else {
-            System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
-            System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
-        }
+        System.setProperty("azure.storage.account-key",
+                "61Sb95N8fFF5PNn/Gn5FjJFUg6wKJ/j6IWa0URdnAWnmjtluRPpJDk8uA3Zrx+u9gzUA8nF56rVJm1jl5dgTnQ==");
+        System.setProperty("azure.storage.account-name", "rdpreview");
         System.setProperty("azure.storage.container-name", "jud-ref-data");
     }
 
