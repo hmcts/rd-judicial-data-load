@@ -35,6 +35,7 @@ public class JudicialUserProfileTest {
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getJoiningDate());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getLastWorkingDate());
         assertEquals(getDateTimeWithFormat(dateTime), judicialUserProfile.getExtractedDate());
+        assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialUserProfile.getObjectId());
         assertTrue(judicialUserProfile.isActiveFlag());
 
         judicialUserProfile.setActiveFlag(false);

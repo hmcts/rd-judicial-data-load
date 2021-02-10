@@ -39,6 +39,7 @@ public class JudicialUserProfileRowMapperTest {
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("last_working_date"));
         assertEquals(true, response.get("active_flag"));
         assertEquals(getDateTimeWithFormat(dateTime), response.get("extracted_date"));
+        assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", response.get("object_id"));
     }
 
     @Test
@@ -66,6 +67,7 @@ public class JudicialUserProfileRowMapperTest {
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("last_working_date"));
         assertEquals(true, response.get("active_flag"));
         assertEquals(getDateTimeWithFormat(dateTime), response.get("extracted_date"));
+        assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", response.get("object_id"));
     }
 }
          
