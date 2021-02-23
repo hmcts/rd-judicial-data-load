@@ -1,17 +1,22 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Collections.singletonList;
-
-import java.util.List;
-
+import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+
+import java.util.List;
+import java.util.Set;
+
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Component
@@ -22,6 +27,15 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
     @Value("${logging-component-name}")
     private String logComponentName;
+
+    private Set<String> validElinksInUserProfile;
+
+    @Autowired
+    @Qualifier("springJdbcTemplate")
+    protected JdbcTemplate jdbcTemplate;
+
+    @Value("${fetch-personal-elinks-id}")
+    String loadElinksId;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -44,6 +58,21 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
+        //Get Elinks from db loads
+        validElinksInUserProfile = ImmutableSet.copyOf(loadElinksId());
+
+        filteredJudicialUserProfiles.stream()
+            .map(userProfile -> userProfile.getElinksId()).collect(toSet());
+
         exchange.getMessage().setBody(filteredJudicialUserProfiles);
+    }
+
+    public Set<String> getValidElinksInUserProfile() {
+        return validElinksInUserProfile;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> loadElinksId() {
+        return jdbcTemplate.queryForList(loadElinksId, String.class);
     }
 }

@@ -120,3 +120,4 @@ mail:
   enabled: true
 
 idempotent-flag-ingestion: true
+fetch-personal-elinks-id: select elinks_id from judicial_user_profile
