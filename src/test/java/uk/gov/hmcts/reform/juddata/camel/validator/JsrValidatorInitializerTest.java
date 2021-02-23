@@ -1,5 +1,25 @@
 package uk.gov.hmcts.reform.juddata.camel.validator;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -13,27 +33,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
-import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 public class JsrValidatorInitializerTest {
 
@@ -50,7 +51,8 @@ public class JsrValidatorInitializerTest {
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime);
+        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate,
+            dateTime, ELINKSID_1);
         judicialUserProfiles.add(profile);
         JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
                 = spy(judicialUserProfileJsrValidatorInitializer);
@@ -86,7 +88,7 @@ public class JsrValidatorInitializerTest {
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime);
+        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
         profile.setSurName(null);
         judicialUserProfiles.add(profile);
         judicialUserProfileJsrValidatorInitializerSpy.validate(judicialUserProfiles);

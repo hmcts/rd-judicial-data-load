@@ -13,6 +13,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
@@ -36,6 +37,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
 public class JudicialUserProfileProcessorTest {
@@ -54,6 +57,8 @@ public class JudicialUserProfileProcessorTest {
 
     private Validator validator;
 
+    private JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+
     CamelContext camelContext = new DefaultCamelContext();
     Exchange exchangeMock;
     Message messageMock;
@@ -64,15 +69,17 @@ public class JudicialUserProfileProcessorTest {
 
     @Before
     public void setup() {
-
-        judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime);
-        judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime);
-
+        judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
+        judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_2);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialUserProfileJsrValidatorInitializer
                 = new JsrValidatorInitializer<>();
         setField(judicialUserProfileProcessor,
-                "judicialUserProfileJsrValidatorInitializer", judicialUserProfileJsrValidatorInitializer);
+            "judicialUserProfileJsrValidatorInitializer", judicialUserProfileJsrValidatorInitializer);
+
+        setField(judicialUserProfileProcessor,"jdbcTemplate", jdbcTemplate);
+        setField(judicialUserProfileProcessor,
+            "loadElinksId", "dummysql");
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialUserProfileJsrValidatorInitializer, "validator", validator);
@@ -88,6 +95,9 @@ public class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+        when(jdbcTemplate.queryForList("dummysql", String.class))
+            .thenReturn(ImmutableList.of(ELINKSID_1,ELINKSID_2));
+
     }
 
     @Test

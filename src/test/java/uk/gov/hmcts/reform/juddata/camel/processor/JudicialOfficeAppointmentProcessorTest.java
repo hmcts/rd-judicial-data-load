@@ -38,6 +38,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_3;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMockMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
@@ -74,7 +77,7 @@ public class JudicialOfficeAppointmentProcessorTest {
     public void setup() {
 
         judicialOfficeAppointmentProcessor = new JudicialOfficeAppointmentProcessor();
-        judicialOfficeAppointmentMock2.setElinksId("elinks_2");
+        judicialOfficeAppointmentMock2.setElinksId(ELINKSID_2);
         judicialOfficeAppointmentJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
         setField(judicialOfficeAppointmentProcessor,
@@ -176,9 +179,9 @@ public class JudicialOfficeAppointmentProcessorTest {
 
         setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",
             judicialUserProfileProcessor);
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime);
-        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime);
-        judicialUserProfileMock2.setElinksId("elinks_3");
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_3);
+
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock);
         judicialUserProfiles.add(judicialUserProfileMock2);

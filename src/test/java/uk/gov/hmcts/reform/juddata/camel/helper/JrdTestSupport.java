@@ -1,12 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.helper;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
@@ -16,16 +9,28 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
+
 public class JrdTestSupport {
+
+    public static final String ELINKSID_1 = "elinksid_1";
+    public static final String ELINKSID_2 = "elinksid_2";
+    public static final String ELINKSID_3 = "elinksid_3";
 
     private JrdTestSupport() {
 
     }
 
-    public static JudicialUserProfile createJudicialUserProfileMock(Date currentDate, LocalDateTime dateTime) {
+    public static JudicialUserProfile createJudicialUserProfileMock(Date currentDate, LocalDateTime dateTime,
+                                                                    String elinksId) {
 
         JudicialUserProfile judicialUserProfileMock = new JudicialUserProfile();
-        judicialUserProfileMock.setElinksId("elinksid_1");
+        judicialUserProfileMock.setElinksId(elinksId); //"elinksid_1");
         judicialUserProfileMock.setPersonalCode("personalCode_1");
         judicialUserProfileMock.setTitle("title");
         judicialUserProfileMock.setKnownAs("knownAs");

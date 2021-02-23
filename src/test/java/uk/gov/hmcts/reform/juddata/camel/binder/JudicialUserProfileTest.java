@@ -1,17 +1,18 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
+import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
 public class JudicialUserProfileTest {
 
@@ -20,9 +21,9 @@ public class JudicialUserProfileTest {
 
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialUserProfile judicialUserProfile = createJudicialUserProfileMock(currentDate, dateTime);
+        JudicialUserProfile judicialUserProfile = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
 
-        assertEquals("elinksid_1", judicialUserProfile.getElinksId());
+        assertEquals(ELINKSID_1, judicialUserProfile.getElinksId());
         assertEquals("personalCode_1", judicialUserProfile.getPersonalCode());
         assertEquals("title", judicialUserProfile.getTitle());
         assertEquals("knownAs", judicialUserProfile.getKnownAs());

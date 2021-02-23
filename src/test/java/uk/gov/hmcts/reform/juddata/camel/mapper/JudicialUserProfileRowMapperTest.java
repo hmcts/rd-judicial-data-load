@@ -1,17 +1,18 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
+import org.junit.Test;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
-import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import static org.junit.Assert.assertEquals;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
 public class JudicialUserProfileRowMapperTest {
     @Test
@@ -20,12 +21,12 @@ public class JudicialUserProfileRowMapperTest {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime,ELINKSID_1);
 
         JudicialUserProfileRowMapper judicialUserProfileRowMapper = new JudicialUserProfileRowMapper();
         Map<String, Object> response = judicialUserProfileRowMapper.getMap(judicialUserProfileMock);
 
-        assertEquals("elinksid_1", response.get("elinks_id"));
+        assertEquals(ELINKSID_1, response.get("elinks_id"));
         assertEquals("personalCode_1", response.get("personal_code"));
         assertEquals("title", response.get("title"));
         assertEquals("knownAs", response.get("known_as"));
@@ -48,12 +49,12 @@ public class JudicialUserProfileRowMapperTest {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
         judicialUserProfileMock.setKnownAs(null);
         JudicialUserProfileRowMapper judicialUserProfileRowMapper = new JudicialUserProfileRowMapper();
         Map<String, Object> response = judicialUserProfileRowMapper.getMap(judicialUserProfileMock);
 
-        assertEquals("elinksid_1", response.get("elinks_id"));
+        assertEquals(ELINKSID_1, response.get("elinks_id"));
         assertEquals("personalCode_1", response.get("personal_code"));
         assertEquals("title", response.get("title"));
         assertEquals("fullName", response.get("known_as"));
