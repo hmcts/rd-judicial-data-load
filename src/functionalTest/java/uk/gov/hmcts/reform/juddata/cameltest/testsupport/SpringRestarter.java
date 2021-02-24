@@ -24,7 +24,6 @@ public class SpringRestarter {
 
     public void restart() {
         testContextManager.getTestContext().markApplicationContextDirty(DirtiesContext.HierarchyMode.EXHAUSTIVE);
-        testContextManager.getTestContext().getApplicationContext();
         reInjectDependencies();
     }
 

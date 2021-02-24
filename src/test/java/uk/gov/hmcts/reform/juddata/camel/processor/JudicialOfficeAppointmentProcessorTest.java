@@ -13,6 +13,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
@@ -28,6 +30,7 @@ import javax.validation.ValidatorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,6 +39,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
@@ -53,7 +57,11 @@ public class JudicialOfficeAppointmentProcessorTest {
     JudicialOfficeAppointment judicialOfficeAppointmentMock1 = createJudicialOfficeAppointmentMockMock(currentDate,
         dateTime);
 
+
     JudicialOfficeAppointment judicialOfficeAppointmentMock2 = createJudicialOfficeAppointmentMockMock(currentDate,
+        dateTime);
+
+    JudicialOfficeAppointment judicialOfficeAppointmentMock3 = createJudicialOfficeAppointmentMockMock(currentDate,
         dateTime);
 
     JudicialOfficeAppointmentProcessor judicialOfficeAppointmentProcessor;
@@ -65,19 +73,34 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     CamelContext camelContext = new DefaultCamelContext();
 
-    JudicialUserProfileProcessor judicialUserProfileProcessor = new JudicialUserProfileProcessor();
+    JudicialUserProfileProcessor judicialUserProfileProcessor = spy(new JudicialUserProfileProcessor());
 
     Exchange exchangeMock;
+
     Message messageMock;
+
     Registry registryMock;
+
     ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
+
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
+
+    final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+
+    final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
+
+    final TransactionStatus transactionStatus = mock(TransactionStatus.class);
 
     @Before
     public void setup() {
 
         judicialOfficeAppointmentProcessor = new JudicialOfficeAppointmentProcessor();
         judicialOfficeAppointmentMock2.setElinksId(ELINKSID_2);
+        judicialOfficeAppointmentMock3.setElinksId(ELINKSID_3);
+        judicialOfficeAppointmentMock3.setRegionId("0");
+        judicialOfficeAppointmentMock3.setRoleId("0");
+        judicialOfficeAppointmentMock3.setBaseLocationId("0");
+        judicialOfficeAppointmentMock3.setContractType("0");
         judicialOfficeAppointmentJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
         setField(judicialOfficeAppointmentProcessor,
@@ -87,6 +110,10 @@ public class JudicialOfficeAppointmentProcessorTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
+        setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
+        setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
+        setField(judicialOfficeAppointmentJsrValidatorInitializer, "platformTransactionManager",
+            platformTransactionManager);
 
         messageMock = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();
@@ -101,6 +128,16 @@ public class JudicialOfficeAppointmentProcessorTest {
         setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+        when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(ImmutableSet.of(ELINKSID_1,
+            ELINKSID_2, "invalid"));
+        int[][] intArray = new int[1][];
+        when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
+        setField(judicialOfficeAppointmentProcessor,   "fetchRoles", "dummysql");
+        setField(judicialOfficeAppointmentProcessor, "jdbcTemplate", jdbcTemplate);
+
+        when(jdbcTemplate.queryForList("dummysql", String.class)).thenReturn(ImmutableList.of("elm1","elm2"));
+        when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
+        doNothing().when(platformTransactionManager).commit(transactionStatus);
     }
 
     @Test
@@ -110,11 +147,12 @@ public class JudicialOfficeAppointmentProcessorTest {
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock3);
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(3);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(exchangeMock, times(3)).getMessage();
@@ -135,10 +173,6 @@ public class JudicialOfficeAppointmentProcessorTest {
 
         judicialOfficeAppointmentMock1.setElinksId(null);
 
-        final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
-        final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
-        final TransactionStatus transactionStatus = mock(TransactionStatus.class);
-
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
@@ -150,7 +184,7 @@ public class JudicialOfficeAppointmentProcessorTest {
             "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
-        when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
+        when(jdbcTemplate.batchUpdate(anyString(), anyCollection(), anyInt(), any())).thenReturn(intArray);
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
         doNothing().when(platformTransactionManager).commit(transactionStatus);
@@ -168,9 +202,6 @@ public class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
 
-        final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
-        final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
-        final TransactionStatus transactionStatus = mock(TransactionStatus.class);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
 

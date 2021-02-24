@@ -20,11 +20,11 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static org.springframework.util.CollectionUtils.isEmpty;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
 
 
 public interface ICustomValidationProcessor<T> {
-
 
     @Slf4j
     final class LogHolder {
@@ -40,22 +40,25 @@ public interface ICustomValidationProcessor<T> {
 
             invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
                 //Remove invalid appointment for user profile and add to invalidElinks List
+                boolean filteredRecord;
                 if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                     .class.getCanonicalName())) {
-                    filteredChildren.removeIf(filterInvalidUserProfAppointment ->
+                    filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAppointment ->
                         ((JudicialOfficeAppointment) filterInvalidUserProfAppointment).getElinksId()
                             .equalsIgnoreCase(invalidRecords.getElinksId()));
                 } else {
-                    filteredChildren.removeIf(filterInvalidUserProfAppointment ->
+                    filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAppointment ->
                         ((JudicialOfficeAuthorisation) filterInvalidUserProfAppointment).getElinksId()
                             .equalsIgnoreCase(invalidRecords.getElinksId()));
                 }
-                invalidElinks.add(invalidRecords.getElinksId());
+                if (filteredRecord) {
+                    invalidElinks.add(invalidRecords.getElinksId());
+                }
             });
 
             if (isFalse(isEmpty(invalidElinks))) {
                 //Auditing JSR skipped rows of user profile for Appointment/Authorization
-                jsrValidatorInitializer.auditJsrExceptions(invalidElinks, ELINKS_ID, exchange);
+                jsrValidatorInitializer.auditJsrExceptions(invalidElinks, ELINKS_ID, INVALID_JSR_PARENT_ROW, exchange);
                 LogHolder.log.info("{}:: Skipped invalid user profile elinks in {} {} & total skipped count {}",
                     logComponentName,
                     mySuperclass.getTypeName(),
@@ -68,31 +71,30 @@ public interface ICustomValidationProcessor<T> {
 
     default void removeForeignKeyElements(List<T> filteredJudicialAppointments,
                                           Predicate<T> predicate, String fieldInError, Exchange exchange,
-                                          JsrValidatorInitializer<T> jsrValidatorInitializer) {
+                                          JsrValidatorInitializer<T> jsrValidatorInitializer, String errorMessage) {
 
-        Set<T> missingFkRecords =
+        Set<T> missingForeignKeyRecords =
             filteredJudicialAppointments.stream().filter(predicate).collect(toSet());
-        filteredJudicialAppointments.removeAll(missingFkRecords);
+        filteredJudicialAppointments.removeAll(missingForeignKeyRecords);
         Type mySuperclass = getType();
 
-        if (isFalse(isEmpty(missingFkRecords))) {
+        if (isFalse(isEmpty(missingForeignKeyRecords))) {
             if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                 .class.getCanonicalName())) {
                 //Auditing JSR skipped rows of user profile for Appointment
-                jsrValidatorInitializer.auditJsrExceptions(missingFkRecords.stream()
+                jsrValidatorInitializer.auditJsrExceptions(missingForeignKeyRecords.stream()
                         .map(s -> ((JudicialOfficeAppointment) s).getElinksId()).collect(toList()),
-                    fieldInError, exchange);
+                    fieldInError, errorMessage, exchange);
             } else {
-                jsrValidatorInitializer.auditJsrExceptions(missingFkRecords.stream()
+                jsrValidatorInitializer.auditJsrExceptions(missingForeignKeyRecords.stream()
                         .map(s -> ((JudicialOfficeAuthorisation) s).getElinksId()).collect(toList()),
-                    fieldInError, exchange);
+                    fieldInError, errorMessage, exchange);
             }
         }
     }
 
     private Type getType() {
         ParameterizedType p = (ParameterizedType) getClass().getGenericSuperclass();
-        Type mySuperclass = p.getActualTypeArguments()[0];
-        return mySuperclass;
+        return p.getActualTypeArguments()[0];
     }
 }

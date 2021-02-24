@@ -119,8 +119,8 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         validateUserProfileFile(jdbcTemplate, userProfileSql);
-        validateAppointmentFile(jdbcTemplate, sqlChild1);
-        validateAuthorisationFile(jdbcTemplate, sqlChild2);
+        validateAppointmentFile(jdbcTemplate, appointmentSql);
+        validateAuthorisationFile(jdbcTemplate, authorizationSql);
     }
 
     @Test
@@ -133,8 +133,8 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
-        validateDbRecordCountFor(jdbcTemplate, sqlChild1, 0);
-        validateDbRecordCountFor(jdbcTemplate, sqlChild2, 8);
+        validateDbRecordCountFor(jdbcTemplate, appointmentSql, 0);
+        validateDbRecordCountFor(jdbcTemplate, authorizationSql, 8);
     }
 
     @Test
@@ -146,8 +146,8 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
-        validateDbRecordCountFor(jdbcTemplate, sqlChild1, 1);
-        validateDbRecordCountFor(jdbcTemplate, sqlChild2, 1);
+        validateDbRecordCountFor(jdbcTemplate, appointmentSql, 1);
+        validateDbRecordCountFor(jdbcTemplate, authorizationSql, 1);
     }
 
 

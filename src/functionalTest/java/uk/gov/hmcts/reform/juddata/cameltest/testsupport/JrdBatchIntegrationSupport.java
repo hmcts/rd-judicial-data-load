@@ -45,10 +45,10 @@ public abstract class JrdBatchIntegrationSupport {
     protected String userProfileSql;
 
     @Value("${child-select-child1-sql}")
-    protected String sqlChild1;
+    protected String appointmentSql;
 
     @Value("${child-select-child2-sql}")
-    protected String sqlChild2;
+    protected String authorizationSql;
 
     @Value("${archival-cred}")
     protected String archivalCred;

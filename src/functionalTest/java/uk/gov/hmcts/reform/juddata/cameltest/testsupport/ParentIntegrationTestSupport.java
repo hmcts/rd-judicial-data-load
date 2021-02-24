@@ -71,6 +71,10 @@ public interface ParentIntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
+    String[] fileWithForeignKeyViolations = {"classpath:sourceFiles/parent/judicial_userprofile_multiple_rows.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_with_foreignkey_violations.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation_with_foreignkey_violations.csv"};
+
     static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
                             boolean isParent, String... files) throws Exception {
         int i = isParent ? 0 : 3;

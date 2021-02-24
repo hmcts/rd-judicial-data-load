@@ -96,7 +96,7 @@ public class JudicialUserProfileProcessorTest {
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
         when(jdbcTemplate.queryForList("dummysql", String.class))
-            .thenReturn(ImmutableList.of(ELINKSID_1,ELINKSID_2));
+            .thenReturn(ImmutableList.of(ELINKSID_1,ELINKSID_2,"0"));
 
     }
 

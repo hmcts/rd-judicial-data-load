@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +57,12 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
-        //Get Elinks from db loads
-        validElinksInUserProfile = ImmutableSet.copyOf(loadElinksId());
+        //Get Elink ids from current load
+        validElinksInUserProfile = filteredJudicialUserProfiles.stream()
+            .map(userProfile -> userProfile.getElinksId()).collect(toSet());
+
+        //Get Elinks from previous loads
+        validElinksInUserProfile.addAll(loadElinksId());
 
         filteredJudicialUserProfiles.stream()
             .map(userProfile -> userProfile.getElinksId()).collect(toSet());

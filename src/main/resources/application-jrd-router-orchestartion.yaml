@@ -1,6 +1,5 @@
 jdbc-batch-size: 10
 routes-to-execute-orchestration: judicial-user-profile-orchestration,judicial-office-appointment,judicial-office-authorisation
-fetch-personal-elinks-id: select elinks_id from judicial_user_profile
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
