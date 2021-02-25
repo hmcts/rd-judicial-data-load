@@ -16,5 +16,5 @@ dependencies:
     condition: blobstorage.enabled
   - name: postgresql
     version: ~8.9.8
-    repository: https://hmctspublic.azurecr.io/helm/v1/repo/
+    repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
