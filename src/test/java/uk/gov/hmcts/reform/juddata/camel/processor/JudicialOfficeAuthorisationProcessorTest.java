@@ -118,7 +118,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAppointmentRow_response() {
+    public void should_return_JudicialOfficeAuthorizationRow_response() {
 
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);
@@ -136,7 +136,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAppointmentRow_with_single_record_response() {
+    public void should_return_JudicialOfficeAuthorizationRow_with_single_record_response() {
 
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
@@ -176,7 +176,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAppointmentRow_response_skip_invalidProfiles() {
+    public void should_return_JudicialOfficeAuthorizationRow_response_skip_invalidProfiles() {
 
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);
