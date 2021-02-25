@@ -6,11 +6,10 @@ public interface JrdConstants {
     public static final String IS_PARENT = "isParent";
     public static final String INVALID_JSR_PARENT_ROW = "Record skipped due to jsr violation in the record"
         .concat(" in the parent load");
-    public static final String MISSING_ELINKS = "Record skipped due to user profile has not elinks id";
-    public static final String MISSING_ROLES = "Record skipped due to no role id is present in role type";
-    public static final String MISSING_LOCATION = "Record skipped due to no region id is present in region type";
-    public static final String MISSING_BASE_LOCATION = "Record skipped due to no base location id is present in "
-        .concat("base location type");
-    public static final String MISSING_CONTRACT = "Record skipped due to no contract id is present in contract type";
+    public static final String MISSING_ELINKS = "elinks id is missing from parent Personal file";
+    public static final String MISSING_ROLES = "role id is missing from Roles file";
+    public static final String MISSING_LOCATION = "region_id id is missing from Locations file";
+    public static final String MISSING_BASE_LOCATION = "base location id is missing from BaseLocations file";
+    public static final String MISSING_CONTRACT = "contract id is missing from Contract file";
 
 }
