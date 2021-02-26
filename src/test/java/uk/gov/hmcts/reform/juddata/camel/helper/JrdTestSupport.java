@@ -30,7 +30,7 @@ public class JrdTestSupport {
                                                                     String elinksId) {
 
         JudicialUserProfile judicialUserProfileMock = new JudicialUserProfile();
-        judicialUserProfileMock.setElinksId(elinksId); //"elinksid_1");
+        judicialUserProfileMock.setElinksId(elinksId);
         judicialUserProfileMock.setPersonalCode("personalCode_1");
         judicialUserProfileMock.setTitle("title");
         judicialUserProfileMock.setKnownAs("knownAs");
