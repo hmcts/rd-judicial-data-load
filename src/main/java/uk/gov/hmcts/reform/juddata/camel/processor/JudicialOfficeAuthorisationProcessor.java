@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
@@ -34,8 +33,6 @@ public class JudicialOfficeAuthorisationProcessor
     @Value("${logging-component-name}")
     private String logComponentName;
 
-    @Autowired
-    ApplicationContext applicationContext;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -56,7 +53,6 @@ public class JudicialOfficeAuthorisationProcessor
 
         List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileProcessor.getInvalidRecords();
 
-        //filterInvalidUserProfileRecords(filteredJudicialAuthorisations, invalidJudicialUserProfileRecords, exchange);
         filterInvalidUserProfileRecords(filteredJudicialAuthorisations,
             invalidJudicialUserProfileRecords, judicialOfficeAuthorisationJsrValidatorInitializer, exchange,
             logComponentName);
