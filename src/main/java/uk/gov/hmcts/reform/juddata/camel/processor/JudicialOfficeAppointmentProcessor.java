@@ -5,6 +5,7 @@ import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
@@ -62,6 +63,9 @@ public class JudicialOfficeAppointmentProcessor
     @Value("${fetch-personal-elinks-id}")
     String loadElinksId;
 
+    @Autowired
+    ApplicationContext applicationContext;
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -92,6 +96,10 @@ public class JudicialOfficeAppointmentProcessor
         filterAppointmentsRecordsForForeignKeyViolation(filteredJudicialAppointments, exchange);
 
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
+
+        if (judicialOfficeAppointments.size() != filteredJudicialAppointments.size()) {
+            setFileStatus(exchange, applicationContext);
+        }
 
         exchange.getMessage().setBody(filteredJudicialAppointments);
     }
