@@ -241,7 +241,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.2'
+    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.2.1'
 
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 

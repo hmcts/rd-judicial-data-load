@@ -171,11 +171,7 @@ public class JudicialOfficeAppointmentProcessorTest {
     @Test
     public void should_return_JudicialOfficeAppointmentRow_with_single_record_with_elinks_id_nullresponse() {
 
-        judicialOfficeAppointmentMock1.setElinksId(null);
-
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
-        RouteProperties routeProperties = new RouteProperties();
-        routeProperties.setFileName("test");
 
         setField(judicialOfficeAppointmentProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
@@ -188,7 +184,6 @@ public class JudicialOfficeAppointmentProcessorTest {
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
         doNothing().when(platformTransactionManager).commit(transactionStatus);
-        when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
         judicialOfficeAppointmentProcessor.process(exchangeMock);
         assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointmentMock1);

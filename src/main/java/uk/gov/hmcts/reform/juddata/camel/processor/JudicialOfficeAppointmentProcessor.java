@@ -62,7 +62,6 @@ public class JudicialOfficeAppointmentProcessor
     @Value("${fetch-personal-elinks-id}")
     String loadElinksId;
 
-
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
@@ -92,6 +91,10 @@ public class JudicialOfficeAppointmentProcessor
         filterAppointmentsRecordsForForeignKeyViolation(filteredJudicialAppointments, exchange);
 
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
+
+        if (judicialOfficeAppointments.size() != filteredJudicialAppointments.size()) {
+            setFileStatus(exchange, applicationContext);
+        }
 
         exchange.getMessage().setBody(filteredJudicialAppointments);
     }

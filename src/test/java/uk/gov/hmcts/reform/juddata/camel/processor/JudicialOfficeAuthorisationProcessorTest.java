@@ -80,12 +80,12 @@ public class JudicialOfficeAuthorisationProcessorTest {
         judicialOfficeAuthorisationProcessor = new JudicialOfficeAuthorisationProcessor();
         judicialOfficeAuthorisation1.setElinksId("elinks_2");
         judicialOfficeAuthorisationJsrValidatorInitializer
-                = new JsrValidatorInitializer<>();
+            = new JsrValidatorInitializer<>();
         setField(judicialOfficeAuthorisationProcessor,
-                "judicialOfficeAuthorisationJsrValidatorInitializer",
-                judicialOfficeAuthorisationJsrValidatorInitializer);
+            "judicialOfficeAuthorisationJsrValidatorInitializer",
+            judicialOfficeAuthorisationJsrValidatorInitializer);
         setField(judicialOfficeAuthorisationProcessor, "judicialUserProfileProcessor",
-                judicialUserProfileProcessor);
+            judicialUserProfileProcessor);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "validator", validator);
@@ -100,13 +100,14 @@ public class JudicialOfficeAuthorisationProcessorTest {
         exchangeMock = mock(Exchange.class);
         registryMock = mock(Registry.class);
         when(exchangeMock.getIn()).thenReturn(messageMock);
+
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
         when(exchangeMock.getContext()).thenReturn(camelContext);
         when(exchangeMock.getMessage()).thenReturn(messageMock);
         setField(judicialOfficeAuthorisationProcessor, "applicationContext", applicationContext);
         setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
         when(((ConfigurableApplicationContext)
-                applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
         when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(ImmutableSet.of(ELINKSID_1,
             ELINKSID_2, "invalid"));
 
@@ -128,9 +129,9 @@ public class JudicialOfficeAuthorisationProcessorTest {
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
-                .isSameAs(judicialOfficeAuthorisations);
+            .isSameAs(judicialOfficeAuthorisations);
 
-        verify(exchangeMock, times(5)).getIn();
+        verify(exchangeMock, times(6)).getIn();
         verify(exchangeMock, times(3)).getMessage();
         verify(messageMock, times(4)).getBody();
     }
@@ -143,32 +144,25 @@ public class JudicialOfficeAuthorisationProcessorTest {
 
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
         assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody()))
-                .isSameAs(judicialOfficeAuthorisation1);
-        verify(exchangeMock, times(5)).getIn();
+            .isSameAs(judicialOfficeAuthorisation1);
+        verify(exchangeMock, times(6)).getIn();
         verify(exchangeMock, times(2)).getMessage();
         verify(messageMock, times(3)).getBody();
     }
 
     @Test
     public void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_elinks_id_null_response() {
-
-        judicialOfficeAuthorisation1.setElinksId(null);
-
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
-        RouteProperties routeProperties = new RouteProperties();
-        routeProperties.setFileName("test");
-
         setField(judicialOfficeAuthorisationProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
-        //when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
         assertThat(((JudicialOfficeAuthorisation) exchangeMock.getMessage().getBody()))
-                .isSameAs(judicialOfficeAuthorisation1);
-        verify(exchangeMock, times(5)).getIn();
+            .isSameAs(judicialOfficeAuthorisation1);
+        verify(exchangeMock, times(6)).getIn();
         verify(exchangeMock, times(2)).getMessage();
         verify(messageMock, times(3)).getBody();
         verify(platformTransactionManager, times(1)).getTransaction(any());
@@ -183,17 +177,16 @@ public class JudicialOfficeAuthorisationProcessorTest {
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation2);
 
 
-
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
         final TransactionStatus transactionStatus = mock(TransactionStatus.class);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
 
-        when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisations);//
+        when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisations);
 
 
         setField(judicialOfficeAuthorisationProcessor, "judicialUserProfileProcessor",
-                judicialUserProfileProcessor);
+            judicialUserProfileProcessor);
         JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
         JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime,
             "elinks_3");
@@ -206,11 +199,11 @@ public class JudicialOfficeAuthorisationProcessorTest {
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(any(String.class), any(List.class), any(Integer.class),
-                any(ParameterizedPreparedStatementSetter.class))).thenReturn(intArray);
+            any(ParameterizedPreparedStatementSetter.class))).thenReturn(intArray);
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);//done
         doNothing().when(platformTransactionManager).commit(transactionStatus);//done
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);//done
@@ -220,14 +213,14 @@ public class JudicialOfficeAuthorisationProcessorTest {
         judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation2);
         assertThat(((List<JudicialOfficeAuthorisation>) exchangeMock.getMessage().getBody()))
-                .containsAll(judicialOfficeAuthorisations);
+            .containsAll(judicialOfficeAuthorisations);
 
         verify(judicialUserProfileProcessor, times(1)).getInvalidRecords();
         verify(platformTransactionManager, times(1)).getTransaction(any());
         verify(platformTransactionManager, times(1)).commit(transactionStatus);
         verify(exchangeMock, times(3)).getMessage();
-        verify(exchangeMock, times(6)).getIn();
-        verify(exchangeMock.getIn(), times(2)).getHeader(ROUTE_DETAILS);
+        verify(exchangeMock, times(7)).getIn();
+        verify(exchangeMock.getIn(), times(3)).getHeader(ROUTE_DETAILS);
         verify(messageMock, times(4)).getBody();
     }
 }

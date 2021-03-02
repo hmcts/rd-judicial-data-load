@@ -33,6 +33,7 @@ public class JudicialOfficeAuthorisationProcessor
     @Value("${logging-component-name}")
     private String logComponentName;
 
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
@@ -52,7 +53,6 @@ public class JudicialOfficeAuthorisationProcessor
 
         List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileProcessor.getInvalidRecords();
 
-        //filterInvalidUserProfileRecords(filteredJudicialAuthorisations, invalidJudicialUserProfileRecords, exchange);
         filterInvalidUserProfileRecords(filteredJudicialAuthorisations,
             invalidJudicialUserProfileRecords, judicialOfficeAuthorisationJsrValidatorInitializer, exchange,
             logComponentName);
@@ -64,11 +64,15 @@ public class JudicialOfficeAuthorisationProcessor
 
         filterAuthorizationsRecordsForForeignKeyViolation(filteredJudicialAuthorisations, exchange);
 
+        if (judicialOfficeAuthorisations.size() != filteredJudicialAuthorisations.size()) {
+            setFileStatus(exchange, applicationContext);
+        }
+
         exchange.getMessage().setBody(filteredJudicialAuthorisations);
     }
 
     private void filterAuthorizationsRecordsForForeignKeyViolation(List<JudicialOfficeAuthorisation>
-                                                                     filteredJudicialAuthorisations,
+                                                                       filteredJudicialAuthorisations,
                                                                    Exchange exchange) {
 
         Predicate<JudicialOfficeAuthorisation> elinksViolations = c ->

@@ -2,6 +2,9 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
+import org.springframework.context.ApplicationContext;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
@@ -19,6 +22,10 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.camel.util.ObjectHelper.isNotEmpty;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registerFileStatusBean;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
 
@@ -98,5 +105,13 @@ public interface ICustomValidationProcessor<T> {
     private Type getType() {
         ParameterizedType p = (ParameterizedType) getClass().getGenericSuperclass();
         return p.getActualTypeArguments()[0];
+    }
+
+    default void setFileStatus(Exchange exchange, ApplicationContext applicationContext) {
+        RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+        FileStatus fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
+        fileStatus.setAuditStatus(PARTIAL_SUCCESS);
+        registerFileStatusBean(applicationContext, routeProperties.getFileName(), fileStatus,
+            exchange.getContext());
     }
 }
