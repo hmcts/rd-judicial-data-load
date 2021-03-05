@@ -5,7 +5,6 @@ import org.apache.camel.component.bean.validator.HibernateValidationProviderReso
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -163,7 +162,6 @@ public class ParentCamelConfig {
         return dataSourceBuilder.build();
     }
 
-    @NotNull
     public DataSourceBuilder getDataSourceBuilder() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
