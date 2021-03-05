@@ -289,7 +289,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("error_description"));
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
-        assertEquals(9, exceptionList.size());
+        assertEquals(10, exceptionList.size());
     }
 
     private void validateLeafRoleJsr(List<Map<String, Object>> judicialUserRoleType) {

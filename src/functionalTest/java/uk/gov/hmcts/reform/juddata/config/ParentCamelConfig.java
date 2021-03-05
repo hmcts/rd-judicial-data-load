@@ -5,7 +5,7 @@ import org.apache.camel.component.bean.validator.HibernateValidationProviderReso
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -50,9 +50,6 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 public class ParentCamelConfig {
-
-    @Autowired
-    ApplicationContext applicationContext;
 
     @Bean
     JudicialUserProfileProcessor judicialUserProfileProcessor() {
@@ -123,6 +120,7 @@ public class ParentCamelConfig {
         return new FileReadProcessor();
     }
 
+
     @Bean
     ArchiveFileProcessor azureFileProcessor() {
         return new ArchiveFileProcessor();
@@ -147,7 +145,7 @@ public class ParentCamelConfig {
 
     // db configuration starts
     private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
-            .withDatabaseName("dbjuddata_test");
+        .withDatabaseName("dbjuddata_test");
 
     static {
         testPostgres.start();
@@ -155,22 +153,24 @@ public class ParentCamelConfig {
 
     @Bean
     public DataSource dataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.postgresql.Driver");
-        dataSourceBuilder.url(testPostgres.getJdbcUrl());
-        dataSourceBuilder.username(testPostgres.getUsername());
-        dataSourceBuilder.password(testPostgres.getPassword());
+        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
         return dataSourceBuilder.build();
     }
 
     @Bean("springJdbcDataSource")
     public DataSource springJdbcDataSource() {
+        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
+        return dataSourceBuilder.build();
+    }
+
+    @NotNull
+    public DataSourceBuilder getDataSourceBuilder() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
         dataSourceBuilder.url(testPostgres.getJdbcUrl());
         dataSourceBuilder.username(testPostgres.getUsername());
         dataSourceBuilder.password(testPostgres.getPassword());
-        return dataSourceBuilder.build();
+        return dataSourceBuilder;
     }
 
     @Bean("springJdbcTemplate")
@@ -243,9 +243,8 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    public CamelContext camelContext() {
-        CamelContext camelContext = new SpringCamelContext(applicationContext);
-        return camelContext;
+    public CamelContext camelContext(ApplicationContext applicationContext) {
+        return new SpringCamelContext(applicationContext);
     }
 
     @Bean

@@ -6,7 +6,12 @@ import org.javatuples.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
@@ -17,8 +22,11 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
+import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.RestartingSpringJUnit4ClassRunner;
@@ -29,9 +37,14 @@ import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import javax.sql.DataSource;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateExceptionDbRecordCount;
@@ -52,6 +65,28 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
+    @Autowired
+    JrdExecutor jrdExecutor;
+
+    @Autowired
+    DataIngestionLibraryRunner dataIngestionLibraryRunner;
+
+    @Value("${truncate-exception}")
+    protected String truncateException;
+
+    @Autowired
+    @Qualifier("springJdbcDataSource")
+    DataSource dataSource;
+
+    @Autowired
+    DataLoadRoute dataLoadRoute;
+
+    @Value("${routes-to-execute-leaf}")
+    List<String> routesToExecuteLeaf;
+
+    @Value("${routes-to-execute-orchestration}")
+    List<String> routesToExecute;
+
     @Before
     public void init() {
         jdbcTemplate.execute(truncateAudit);
@@ -62,16 +97,27 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
         "/testData/truncate-exception.sql"})
-    public void testTaskletStaleFileError() throws Exception {
+    public void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
 
-        camelContext.getGlobalOptions()
-            .put(SCHEDULER_START_TIME, String.valueOf(
-                new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000).getTime()));
+        //Day 1 happy path
+        uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        JobParameters params = new JobParametersBuilder()
+            .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        deleteBlobs(jrdBlobSupport, archivalFileNames);
+        deleteAuditAndExceptionDataOfDay1();
 
-        jobLauncherTestUtils.launchJob();
+        //Day 2 stale files
+        uploadFiles(String.valueOf(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000).getTime()));
+
+        //not ran with dataIngestionLibraryRunner to set stale file via
+        // camelContext.getGlobalOptions().remove(SCHEDULER_START_TIME);
+        params = new JobParametersBuilder()
+            .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .toJobParameters();
+        jobLauncherTestUtils.launchJob(params);
         List<Pair<String, String>> results = ImmutableList.of(new Pair<>(
             "Roles-Test",
             "not loaded due to file stale error"
@@ -84,29 +130,53 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         ), new Pair<>(
             "BaseLocations-Test",
             "not loaded due to file stale error"
-        ),new Pair<>(
+        ), new Pair<>(
             "Personal-Test",
             "not loaded due to file stale error"
-        ),new Pair<>(
+        ), new Pair<>(
             "Appointments-Test",
             "not loaded due to file stale error"
-        ),new Pair<>(
+        ), new Pair<>(
             "Authorisations-Test",
             "not loaded due to file stale error"
         ));
-       
+
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 7, false);
+        assertEquals(7, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+        List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
+        assertTrue(judicialUserRoleType.size() > 0);
+
+        //validate old day 1 data not gets truncated after day 2 stale file ran
+        List<Map<String, Object>> appointmentList = jdbcTemplate.queryForList(appointmentSql);
+        assertTrue(appointmentList.size() > 0);
+        List<Map<String, Object>> authList = jdbcTemplate.queryForList(authorizationSql);
+        assertTrue(authList.size() > 0);
     }
 
-    @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql",
-        "/testData/truncate-exception.sql"})
-    public void testTaskletNoFileError() throws Exception {
-        camelContext.getGlobalOptions()
-            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
 
-        jobLauncherTestUtils.launchJob();
+    @Test
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
+        "/testData/truncate-exception.sql"})
+    public void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
+
+        //Day 1 happy path
+        uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+
+        JobParameters params = new JobParametersBuilder()
+            .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        deleteBlobs(jrdBlobSupport, archivalFileNames);
+        deleteAuditAndExceptionDataOfDay1();
+
+        //Day 2 no upload file
+        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME,
+            String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+        params = new JobParametersBuilder()
+            .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .toJobParameters();
+        jobLauncherTestUtils.launchJob(params);
         notDeletionFlag = true;
         List<Pair<String, String>> results = ImmutableList.of(new Pair<>(
             "Roles-Test",
@@ -120,19 +190,36 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         ), new Pair<>(
             "BaseLocations-Test",
             "BaseLocations-Test file is not exists in container"
-        ),new Pair<>(
+        ), new Pair<>(
             "Personal-Test",
             "Personal-Test file is not exists in container"
-        ),new Pair<>(
+        ), new Pair<>(
             "Appointments-Test",
             "Appointments-Test file is not exists in container"
-        ),new Pair<>(
+        ), new Pair<>(
             "Authorisations-Test",
             "Authorisations-Test file is not exists in container"
         ));
 
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
-        var result = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
-        assertEquals(0, result.size());
+        assertEquals(7, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+
+        //validate old day 1 data not gets truncated after day 2  file not exist ran
+        List<Map<String, Object>> appointmentList = jdbcTemplate.queryForList(appointmentSql);
+        assertTrue(appointmentList.size() > 0);
+        List<Map<String, Object>> authList = jdbcTemplate.queryForList(authorizationSql);
+        assertTrue(authList.size() > 0);
+    }
+
+    private void deleteAuditAndExceptionDataOfDay1() throws Exception {
+        jdbcTemplate.execute(truncateAudit);
+        jdbcTemplate.execute(truncateException);
+        SpringRestarter.getInstance().restart();
+    }
+
+    private void uploadFiles(String time) throws Exception {
+        camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, time);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
     }
 }

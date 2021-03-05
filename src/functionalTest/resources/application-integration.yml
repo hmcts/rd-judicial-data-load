@@ -111,6 +111,8 @@ start-leaf-route: direct:leaf
 
 truncate-audit: truncate dataload_schedular_audit
 
+truncate-exception: truncate dataload_exception_records
+
 jdbc-batch-size: 10
 
 logging-component-name: RD_Judicial_Ref_Data

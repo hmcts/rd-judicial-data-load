@@ -78,4 +78,5 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
     private List<String> loadElinksId() {
         return jdbcTemplate.queryForList(loadElinksId, String.class);
     }
+
 }
