@@ -216,7 +216,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
         //Jsr exception exceeds threshold limit in
 
-        assertThat(exceptionList.get(exceptionList.size() - 1).get("error_description").toString(),
+        assertThat(exceptionList.get(exceptionList.size() - 2).get("error_description").toString(),
             containsString("Jsr exception exceeds threshold limit"));
     }
 
@@ -289,7 +289,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("error_description"));
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
-        assertEquals(10, exceptionList.size());
+        assertEquals(11, exceptionList.size());
     }
 
     private void validateLeafRoleJsr(List<Map<String, Object>> judicialUserRoleType) {

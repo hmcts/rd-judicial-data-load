@@ -180,25 +180,25 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         notDeletionFlag = true;
         List<Pair<String, String>> results = ImmutableList.of(new Pair<>(
             "Roles-Test",
-            "Roles-Test file is not exists in container"
+            "Roles-Test file does not exist in azure storage account"
         ), new Pair<>(
             "Contracts-Test",
-            "Contracts-Test file is not exists in container"
+            "Contracts-Test file does not exist in azure storage account"
         ), new Pair<>(
             "Locations-Test",
-            "Locations-Test file is not exists in container"
+            "Locations-Test file does not exist in azure storage account"
         ), new Pair<>(
             "BaseLocations-Test",
-            "BaseLocations-Test file is not exists in container"
+            "BaseLocations-Test file does not exist in azure storage account"
         ), new Pair<>(
             "Personal-Test",
-            "Personal-Test file is not exists in container"
+            "Personal-Test file does not exist in azure storage account"
         ), new Pair<>(
             "Appointments-Test",
-            "Appointments-Test file is not exists in container"
+            "Appointments-Test file does not exist in azure storage account"
         ), new Pair<>(
             "Authorisations-Test",
-            "Authorisations-Test file is not exists in container"
+            "Authorisations-Test file does not exist in azure storage account"
         ));
 
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
