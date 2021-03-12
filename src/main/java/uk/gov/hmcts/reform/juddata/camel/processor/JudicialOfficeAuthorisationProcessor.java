@@ -57,8 +57,6 @@ public class JudicialOfficeAuthorisationProcessor
             invalidJudicialUserProfileRecords, judicialOfficeAuthorisationJsrValidatorInitializer, exchange,
             logComponentName);
 
-        log.info("{}:: Judicial Authorisation Records count after Validation {}:: ", logComponentName,
-            filteredJudicialAuthorisations.size());
 
         audit(judicialOfficeAuthorisationJsrValidatorInitializer, exchange);
 
@@ -67,6 +65,9 @@ public class JudicialOfficeAuthorisationProcessor
         if (judicialOfficeAuthorisations.size() != filteredJudicialAuthorisations.size()) {
             setFileStatus(exchange, applicationContext);
         }
+
+        log.info("{}:: Judicial Authorisation Records count after Validation {}:: ", logComponentName,
+            filteredJudicialAuthorisations.size());
 
         exchange.getMessage().setBody(filteredJudicialAuthorisations);
     }

@@ -52,6 +52,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
+@CamelSpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
@@ -62,7 +63,7 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @Before
     public void init() throws Exception {
         jdbcTemplate.execute(truncateAudit);
-        SpringRestarter.getInstance().restart();
+        SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);

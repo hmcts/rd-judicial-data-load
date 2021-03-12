@@ -171,6 +171,7 @@ public class ParentCamelConfig {
         return dataSourceBuilder;
     }
 
+
     @Bean("springJdbcTemplate")
     public JdbcTemplate springJdbcTemplate() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();

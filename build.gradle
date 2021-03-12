@@ -208,7 +208,6 @@ repositories {
     maven {
         url "https://dl.bintray.com/hmcts/hmcts-maven"
     }
-
     jcenter()
 }
 
@@ -241,7 +240,9 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.2.2'
+    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.3.0'
+    implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
+    implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
     compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 

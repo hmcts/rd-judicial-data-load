@@ -67,7 +67,7 @@ public class JudicialUserProfileProcessorTest {
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
 
-    @Before
+    @BeforeEach
     public void setup() {
         judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
         judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_2);

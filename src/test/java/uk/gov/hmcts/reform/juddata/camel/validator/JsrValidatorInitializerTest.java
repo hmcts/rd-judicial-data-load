@@ -4,8 +4,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -41,7 +41,7 @@ public class JsrValidatorInitializerTest {
     static JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeAll() throws Exception {
         judicialUserProfileJsrValidatorInitializer.initializeFactory();
     }

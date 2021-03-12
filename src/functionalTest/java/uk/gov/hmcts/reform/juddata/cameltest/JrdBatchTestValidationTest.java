@@ -2,11 +2,11 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.test.spring.CamelTestContextBootstrapper;
-import org.apache.camel.test.spring.MockEndpoints;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
+import org.apache.camel.test.spring.junit5.MockEndpoints;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
@@ -75,6 +75,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @EnableTransactionManagement
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
+@CamelSpringBootTest
 public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
 
@@ -90,7 +91,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Before
     public void init() {
         jdbcTemplate.execute(truncateAudit);
-        SpringRestarter.getInstance().restart();
+        SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
@@ -332,7 +333,7 @@ public class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         "/testData/default-leaf-load.sql"})
     public void testParentOrchestrationJsrSkipChildRecordsForeignKeyViolations() throws Exception {
 
-        SpringRestarter.getInstance().restart();
+        SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithForeignKeyViolations);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 

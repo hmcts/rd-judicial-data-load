@@ -5,8 +5,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -91,7 +91,7 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         judicialOfficeAppointmentProcessor = new JudicialOfficeAppointmentProcessor();

@@ -2,13 +2,17 @@ package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.junit.After;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestContextManager;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
@@ -116,6 +120,9 @@ public abstract class JrdBatchIntegrationSupport {
 
     @Value("${archival-file-names}")
     protected List<String> archivalFileNames;
+
+    private TestContextManager testContextManager;
+
 
     @BeforeClass
     public static void setupBlobProperties() throws Exception {

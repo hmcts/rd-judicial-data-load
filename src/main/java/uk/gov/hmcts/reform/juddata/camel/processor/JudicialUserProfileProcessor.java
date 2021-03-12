@@ -52,9 +52,6 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
             judicialUserProfiles);
 
-        log.info("{}:: Judicial User Profile Records count after Validation {}::", logComponentName,
-            filteredJudicialUserProfiles.size());
-
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
         //Get Elink ids from current load
@@ -66,6 +63,9 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
         filteredJudicialUserProfiles.stream()
             .map(userProfile -> userProfile.getElinksId()).collect(toSet());
+
+        log.info("{}:: Judicial User Profile Records count after Validation {}::", logComponentName,
+            filteredJudicialUserProfiles.size());
 
         exchange.getMessage().setBody(filteredJudicialUserProfiles);
     }
