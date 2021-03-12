@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @ExtendWith(MockitoExtension.class)
-public class ParentRouteTaskTest {
+class ParentRouteTaskTest {
 
     @InjectMocks
     ParentRouteTask parentRouteTask;
@@ -41,7 +41,7 @@ public class ParentRouteTaskTest {
     ChunkContext chunkContext = mock(ChunkContext.class);
 
     @Test
-    public void testParentExecute() throws Exception {
+    void testParentExecute() throws Exception {
         setField(parentRouteTask, "logComponentName", "testlogger");
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         when(camelContext.getGlobalOptions()).thenReturn(globalOptions);

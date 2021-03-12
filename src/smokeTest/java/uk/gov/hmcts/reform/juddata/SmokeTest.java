@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SmokeTest {
+class SmokeTest {
 
     private final String targetInstance =
         StringUtils.defaultIfBlank(
@@ -17,7 +17,7 @@ public class SmokeTest {
         );
 
     @Test
-    public void should_prove_app_is_running_and_healthy() {
+    void should_prove_app_is_running_and_healthy() {
 
         RestAssured.baseURI = targetInstance;
         RestAssured.useRelaxedHTTPSValidation();

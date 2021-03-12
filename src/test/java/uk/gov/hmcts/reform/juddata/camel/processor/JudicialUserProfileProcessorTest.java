@@ -42,7 +42,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
-public class JudicialUserProfileProcessorTest {
+class JudicialUserProfileProcessorTest {
 
     Date currentDate = new Date();
 
@@ -74,11 +74,11 @@ public class JudicialUserProfileProcessorTest {
         judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_2);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialUserProfileJsrValidatorInitializer
-                = new JsrValidatorInitializer<>();
+            = new JsrValidatorInitializer<>();
         setField(judicialUserProfileProcessor,
             "judicialUserProfileJsrValidatorInitializer", judicialUserProfileJsrValidatorInitializer);
 
-        setField(judicialUserProfileProcessor,"jdbcTemplate", jdbcTemplate);
+        setField(judicialUserProfileProcessor, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileProcessor,
             "loadElinksId", "dummysql");
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -97,12 +97,12 @@ public class JudicialUserProfileProcessorTest {
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
         when(jdbcTemplate.queryForList("dummysql", String.class))
-            .thenReturn(ImmutableList.of(ELINKSID_1,ELINKSID_2,"0"));
+            .thenReturn(ImmutableList.of(ELINKSID_1, ELINKSID_2, "0"));
 
     }
 
     @Test
-    public void should_return_JudicialUserProfileRow_response() {
+    void should_return_JudicialUserProfileRow_response() {
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
@@ -115,7 +115,7 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialUserProfileRow_with_single_record_response() {
+    void should_return_JudicialUserProfileRow_with_single_record_response() {
 
         when(messageMock.getBody()).thenReturn(judicialUserProfileMock1);
 
@@ -128,7 +128,7 @@ public class JudicialUserProfileProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_nullresponse() {
+    void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_nullresponse() {
 
         judicialUserProfileMock1.setElinksId(null);
 
@@ -144,7 +144,7 @@ public class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
@@ -158,7 +158,7 @@ public class JudicialUserProfileProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
+    void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
         judicialUserProfileMock1.setElinksId(null);
         judicialUserProfileMock1.setFullName(null);
         Exchange exchangeMock = mock(Exchange.class);
@@ -179,7 +179,7 @@ public class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);

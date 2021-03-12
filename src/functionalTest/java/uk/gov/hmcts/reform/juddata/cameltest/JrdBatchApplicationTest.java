@@ -55,7 +55,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SpringBootTest
-public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
+class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Autowired
     DataIngestionLibraryRunner dataIngestionLibraryRunner;
@@ -70,7 +70,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
-    public void testTasklet() throws Exception {
+    void testTasklet() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -86,7 +86,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
         "/testData/truncate-exception.sql"})
-    public void testTaskletIdempotent() throws Exception {
+    void testTaskletIdempotent() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
@@ -109,7 +109,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
-    public void testParentOrchestration() throws Exception {
+    void testParentOrchestration() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -123,7 +123,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
-    public void testAppointmentFailureRollbacksAppointment() throws Exception {
+    void testAppointmentFailureRollbacksAppointment() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -137,7 +137,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationSingleRecord() throws Exception {
+    void testParentOrchestrationSingleRecord() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithSingleRecord);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -151,7 +151,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     @Sql(scripts = {"/testData/truncate-leaf.sql"})
-    public void testAllLeafs() throws Exception {
+    void testAllLeafs() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);

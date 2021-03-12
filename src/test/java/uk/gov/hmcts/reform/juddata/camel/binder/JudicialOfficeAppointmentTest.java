@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,19 +13,14 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
-import org.junit.jupiter.api.Test;
-
-public class JudicialOfficeAppointmentTest {
+class JudicialOfficeAppointmentTest {
 
     @Test
-    public void test_objects_JudicialOfficeAppointment_correctly() {
+    void test_objects_JudicialOfficeAppointment_correctly() {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
         JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMockMock(currentDate,
-                dateTime);
+            dateTime);
         assertEquals("elinksid_1", judicialOfficeAppointment.getElinksId());
         assertEquals("roleId_1", judicialOfficeAppointment.getRoleId());
         assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());

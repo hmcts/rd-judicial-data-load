@@ -1,5 +1,12 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
+import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
@@ -7,19 +14,12 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Map;
-
-import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
-
-public class JudicialOfficeAppointmentRowMapperTest {
+class JudicialOfficeAppointmentRowMapperTest {
 
     JudicialOfficeAppointmentRowMapper judicialOfficeAppointmentRowMapper = new JudicialOfficeAppointmentRowMapper();
 
     @Test
-    public void should_return_JudicialOfficeAppointmentRowMapper_response() {
+    void should_return_JudicialOfficeAppointmentRowMapper_response() {
 
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
@@ -43,13 +43,13 @@ public class JudicialOfficeAppointmentRowMapperTest {
     }
 
     @Test
-    public void test_returnNullIfBlank_with_param_non_null() {
+    void test_returnNullIfBlank_with_param_non_null() {
         String returnString = judicialOfficeAppointmentRowMapper.returnNullIfBlank("testString");
         assertThat(returnString).isNotBlank();
     }
 
     @Test
-    public void test_returnNullIfBlank_with_param_null() {
+    void test_returnNullIfBlank_with_param_null() {
         String returnString = judicialOfficeAppointmentRowMapper.returnNullIfBlank(null);
         assertThat(returnString).isNull();
     }

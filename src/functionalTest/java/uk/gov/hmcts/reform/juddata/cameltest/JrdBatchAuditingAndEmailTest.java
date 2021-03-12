@@ -56,10 +56,10 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
+class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
 
     @BeforeEach
-    public void init() throws Exception {
+    void init() throws Exception {
         jdbcTemplate.execute(truncateAudit);
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
@@ -72,7 +72,7 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
         "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationSchedulerSuccess() throws Exception {
+    void testParentOrchestrationSchedulerSuccess() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -86,7 +86,7 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
         "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationFailureEmail() throws Exception {
+    void testParentOrchestrationFailureEmail() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -101,7 +101,7 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
         "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationSuccessEmail() throws Exception {
+    void testParentOrchestrationSuccessEmail() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 

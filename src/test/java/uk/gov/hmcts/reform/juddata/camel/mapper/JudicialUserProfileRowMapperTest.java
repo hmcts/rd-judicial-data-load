@@ -14,14 +14,14 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
-public class JudicialUserProfileRowMapperTest {
+class JudicialUserProfileRowMapperTest {
     @Test
-    public void should_return_JudicialUserProfileRow_response() {
+    void should_return_JudicialUserProfileRow_response() {
 
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime,ELINKSID_1);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
 
         JudicialUserProfileRowMapper judicialUserProfileRowMapper = new JudicialUserProfileRowMapper();
         Map<String, Object> response = judicialUserProfileRowMapper.getMap(judicialUserProfileMock);
@@ -44,7 +44,7 @@ public class JudicialUserProfileRowMapperTest {
     }
 
     @Test
-    public void should_return_JudicialUserProfileRow_response_withKnown_as_filed_populated() {
+    void should_return_JudicialUserProfileRow_response_withKnown_as_filed_populated() {
 
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();

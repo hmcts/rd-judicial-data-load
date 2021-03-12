@@ -60,7 +60,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @CamelSpringBootTest
-public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
+class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
     @Autowired
     JrdExecutor jrdExecutor;
@@ -94,7 +94,7 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
         "/testData/truncate-exception.sql"})
-    public void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
+    void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path
         uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));
@@ -155,7 +155,7 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
         "/testData/truncate-exception.sql"})
-    public void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
+    void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path
         uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));

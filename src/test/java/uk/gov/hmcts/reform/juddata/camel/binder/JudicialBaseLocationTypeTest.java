@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createCurrentLocalDate;
 
-public class JudicialBaseLocationTypeTest {
+class JudicialBaseLocationTypeTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public  void  test_objects_JudicialBaseLocationType_correctly() {
+    void  test_objects_JudicialBaseLocationType_correctly() {
 
         String currentDateInString = createCurrentLocalDate();
         JudicialBaseLocationType judicialBaseLocationType = createJudicialOfficeAppointmentMock();
