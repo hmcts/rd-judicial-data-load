@@ -26,7 +26,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialContractType;
 
-public class JudicialContractTypeProcessorTest {
+class JudicialContractTypeProcessorTest {
 
     JudicialContractTypeProcessor judicialContractTypeProcessor = new JudicialContractTypeProcessor();
 
@@ -80,7 +80,7 @@ public class JudicialContractTypeProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testProcess() throws Exception {
+    void testProcess() throws Exception {
 
         judicialContractTypes.add(judicialContractTypeMock1);
         judicialContractTypes.add(judicialContractTypeMock2);

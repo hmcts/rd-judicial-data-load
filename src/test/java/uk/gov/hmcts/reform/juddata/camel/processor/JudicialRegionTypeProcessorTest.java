@@ -27,7 +27,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialRegionType;
 
-public class JudicialRegionTypeProcessorTest {
+class JudicialRegionTypeProcessorTest {
 
     JudicialRegionTypeProcessor judicialRegionTypeProcessor = new JudicialRegionTypeProcessor();
 
@@ -56,10 +56,10 @@ public class JudicialRegionTypeProcessorTest {
     public void setup() {
 
         judicialRegionTypeJsrValidatorInitializer
-                = new JsrValidatorInitializer<>();
+            = new JsrValidatorInitializer<>();
 
         setField(judicialRegionTypeProcessor,
-                "judicialRegionTypeJsrValidatorInitializer", judicialRegionTypeJsrValidatorInitializer);
+            "judicialRegionTypeJsrValidatorInitializer", judicialRegionTypeJsrValidatorInitializer);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
@@ -81,7 +81,7 @@ public class JudicialRegionTypeProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testProcess() throws Exception {
+    void testProcess() throws Exception {
 
         judicialRegionTypes.add(judicialRegionType1);
         judicialRegionTypes.add(judicialRegionType2);

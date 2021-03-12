@@ -27,7 +27,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUC
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
 @ExtendWith(SpringExtension.class)
-public class JrdExecutorTest {
+class JrdExecutorTest {
     JrdExecutor jrdExecutor = new JrdExecutor();
 
     JrdExecutor jrdExecutorSpy = spy(jrdExecutor);
@@ -50,7 +50,7 @@ public class JrdExecutorTest {
     }
 
     @Test
-    public void testExecute() {
+    void testExecute() {
         camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
         setField(jrdExecutorSpy, "dataLoadUtil", dataLoadUtil);
         setField(jrdExecutorSpy, "producerTemplate", producerTemplate);

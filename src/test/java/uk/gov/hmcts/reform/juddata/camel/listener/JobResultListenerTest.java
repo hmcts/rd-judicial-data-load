@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
-public class JobResultListenerTest {
+class JobResultListenerTest {
 
     @InjectMocks
     JobResultListener jobResultListener;
@@ -30,16 +30,16 @@ public class JobResultListenerTest {
     ProducerTemplate producerTemplate;
 
     @Test
-    public void beforeJobTest() {
+    void beforeJobTest() {
         jobResultListener.beforeJob(jobExecutionMock);
     }
 
     @Test
-    public void afterJobTest() {
+    void afterJobTest() {
         ReflectionTestUtils.setField(jobResultListener, "archivalRouteName", "archivalRouteName");
         jobResultListener.afterJob(jobExecutionMock);
         verify(archivalRouteMock, times(1)).archivalRoute(any());
         verify(producerTemplate, times(1)).sendBody("archivalRouteName",
-                "starting Archival");
+            "starting Archival");
     }
 }

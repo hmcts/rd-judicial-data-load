@@ -48,7 +48,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_3
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMockMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
-public class JudicialOfficeAppointmentProcessorTest {
+class JudicialOfficeAppointmentProcessorTest {
 
     Date currentDate = new Date();
 
@@ -132,17 +132,17 @@ public class JudicialOfficeAppointmentProcessorTest {
             ELINKSID_2, "invalid"));
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
-        setField(judicialOfficeAppointmentProcessor,   "fetchRoles", "dummysql");
+        setField(judicialOfficeAppointmentProcessor, "fetchRoles", "dummysql");
         setField(judicialOfficeAppointmentProcessor, "jdbcTemplate", jdbcTemplate);
 
-        when(jdbcTemplate.queryForList("dummysql", String.class)).thenReturn(ImmutableList.of("elm1","elm2"));
+        when(jdbcTemplate.queryForList("dummysql", String.class)).thenReturn(ImmutableList.of("elm1", "elm2"));
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         doNothing().when(platformTransactionManager).commit(transactionStatus);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAppointmentRow_response() {
+    void should_return_JudicialOfficeAppointmentRow_response() {
 
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
@@ -159,7 +159,7 @@ public class JudicialOfficeAppointmentProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAppointmentRow_with_single_record_response() {
+    void should_return_JudicialOfficeAppointmentRow_with_single_record_response() {
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
 
@@ -169,7 +169,7 @@ public class JudicialOfficeAppointmentProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAppointmentRow_with_single_record_with_elinks_id_nullresponse() {
+    void should_return_JudicialOfficeAppointmentRow_with_single_record_with_elinks_id_nullresponse() {
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
 
@@ -191,7 +191,7 @@ public class JudicialOfficeAppointmentProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAppointmentRow_response_skip_invalidProfiles() {
+    void should_return_JudicialOfficeAppointmentRow_response_skip_invalidProfiles() {
 
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);

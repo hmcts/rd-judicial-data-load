@@ -47,7 +47,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
-public class JudicialOfficeAuthorisationProcessorTest {
+class JudicialOfficeAuthorisationProcessorTest {
 
     private Validator validator;
     String date = "2017-10-01 00:00:00.000";
@@ -119,7 +119,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAuthorizationRow_response() {
+    void should_return_JudicialOfficeAuthorizationRow_response() {
 
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);
@@ -137,7 +137,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAuthorizationRow_with_single_record_response() {
+    void should_return_JudicialOfficeAuthorizationRow_with_single_record_response() {
 
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
@@ -151,7 +151,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_elinks_id_null_response() {
+    void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_elinks_id_null_response() {
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
         setField(judicialOfficeAuthorisationProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "camelContext", camelContext);
@@ -170,7 +170,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAuthorizationRow_response_skip_invalidProfiles() {
+    void should_return_JudicialOfficeAuthorizationRow_response_skip_invalidProfiles() {
 
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);

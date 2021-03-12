@@ -36,10 +36,10 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
-public class JsrValidatorInitializerTest {
+class JsrValidatorInitializerTest {
 
     static JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer
-            = new JsrValidatorInitializer<>();
+        = new JsrValidatorInitializer<>();
 
     @BeforeAll
     public static void beforeAll() throws Exception {
@@ -47,7 +47,7 @@ public class JsrValidatorInitializerTest {
     }
 
     @Test
-    public void testValidate() {
+    void testValidate() {
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
@@ -55,13 +55,13 @@ public class JsrValidatorInitializerTest {
             dateTime, ELINKSID_1);
         judicialUserProfiles.add(profile);
         JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
-                = spy(judicialUserProfileJsrValidatorInitializer);
+            = spy(judicialUserProfileJsrValidatorInitializer);
         judicialUserProfileJsrValidatorInitializerSpy.validate(judicialUserProfiles);
         verify(judicialUserProfileJsrValidatorInitializerSpy, times(1)).validate(any());
     }
 
     @Test
-    public void testAuditJsrExceptions() {
+    void testAuditJsrExceptions() {
         Exchange exchange = mock(Exchange.class);
         Message message = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();
@@ -77,13 +77,13 @@ public class JsrValidatorInitializerTest {
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
         final TransactionStatus transactionStatus = mock(TransactionStatus.class);
         setField(judicialUserProfileJsrValidatorInitializer, "platformTransactionManager",
-                platformTransactionManager);
+            platformTransactionManager);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jsrThresholdLimit", 5);
 
         JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
-                = spy(judicialUserProfileJsrValidatorInitializer);
+            = spy(judicialUserProfileJsrValidatorInitializer);
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();

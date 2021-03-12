@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-public class LeafRouteTaskTest {
+class LeafRouteTaskTest {
     LeafRouteTask leafRouteTask = spy(new LeafRouteTask());
 
     DataLoadRoute dataLoadRoute = mock(DataLoadRoute.class);
@@ -33,7 +33,7 @@ public class LeafRouteTaskTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
+    void testExecute() throws Exception {
         doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         assertEquals(RepeatStatus.FINISHED, leafRouteTask.execute(any(), any()));

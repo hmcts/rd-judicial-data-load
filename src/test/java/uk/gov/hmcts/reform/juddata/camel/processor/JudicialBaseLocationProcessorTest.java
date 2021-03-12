@@ -29,7 +29,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 
-public class JudicialBaseLocationProcessorTest {
+class JudicialBaseLocationProcessorTest {
 
     JudicialBaseLocationProcessor judicialBaseLocationProcessor = new JudicialBaseLocationProcessor();
 
@@ -79,7 +79,7 @@ public class JudicialBaseLocationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testProcess() throws Exception {
+    void testProcess() throws Exception {
 
         judicialBaseLocationTypes.add(judicialBaseLocationType1);
         judicialBaseLocationTypes.add(judicialBaseLocationType2);
