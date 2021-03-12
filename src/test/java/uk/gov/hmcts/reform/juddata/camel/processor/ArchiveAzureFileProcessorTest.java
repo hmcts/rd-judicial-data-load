@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
 
-public class ArchiveAzureFileProcessorTest {
+class ArchiveAzureFileProcessorTest {
 
     ArchiveFileProcessor archiveFileProcessor = new ArchiveFileProcessor();
 
@@ -34,7 +34,7 @@ public class ArchiveAzureFileProcessorTest {
     private final ConsumerTemplate consumerTemplateMock = mock(ConsumerTemplate.class);
 
     @Test
-    public void test_process() throws Exception {
+    void test_process() throws Exception {
 
         List<String> archivalFileNames = new ArrayList<>();
         File file = new File("src/test/resources/sourceFiles/test.csv");
@@ -54,15 +54,15 @@ public class ArchiveAzureFileProcessorTest {
         when(messageMock.getHeader(LEAF_ROUTE)).thenReturn(LEAF_ROUTE);
 
         FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-                .getClass().getDeclaredField("archivalFileNames"), archivalFileNames);
+            .getClass().getDeclaredField("archivalFileNames"), archivalFileNames);
         FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-                .getClass().getDeclaredField("activeBlobs"), "file:");
+            .getClass().getDeclaredField("activeBlobs"), "file:");
         FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-                .getClass().getDeclaredField("archivalCred"), "");
+            .getClass().getDeclaredField("archivalCred"), "");
         FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-                .getClass().getDeclaredField("archivalDateFormat"), "dd-MM-yyyy--HH-mm");
+            .getClass().getDeclaredField("archivalDateFormat"), "dd-MM-yyyy--HH-mm");
         FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-                .getClass().getDeclaredField("fileReadTimeOut"), 1000);
+            .getClass().getDeclaredField("fileReadTimeOut"), 1000);
 
         archiveFileProcessor.process(exchangeMock);
         Assert.assertNotNull(exchangeMock);
