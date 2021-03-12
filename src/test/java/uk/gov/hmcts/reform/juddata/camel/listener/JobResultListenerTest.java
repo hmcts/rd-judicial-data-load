@@ -11,14 +11,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 class JobResultListenerTest {
 
     @InjectMocks
-    JobResultListener jobResultListener;
+    JobResultListener jobResultListener = spy(JobResultListener.class);
 
     @Mock
     JobExecution jobExecutionMock;
@@ -32,14 +32,15 @@ class JobResultListenerTest {
     @Test
     void beforeJobTest() {
         jobResultListener.beforeJob(jobExecutionMock);
+        verify(jobResultListener).beforeJob(any());
     }
 
     @Test
     void afterJobTest() {
         ReflectionTestUtils.setField(jobResultListener, "archivalRouteName", "archivalRouteName");
         jobResultListener.afterJob(jobExecutionMock);
-        verify(archivalRouteMock, times(1)).archivalRoute(any());
-        verify(producerTemplate, times(1)).sendBody("archivalRouteName",
+        verify(archivalRouteMock).archivalRoute(any());
+        verify(producerTemplate).sendBody("archivalRouteName",
             "starting Archival");
     }
 }
