@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createCurrentLocalDate;
-
-import org.junit.Test;
 
 public class JudicialBaseLocationTypeTest {
 

@@ -11,7 +11,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWit
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JudicialOfficeAppointmentTest {
 

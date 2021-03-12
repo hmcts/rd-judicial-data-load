@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.Date;

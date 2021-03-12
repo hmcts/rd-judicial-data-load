@@ -24,6 +24,7 @@ import java.util.List;
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
+@ExtendWith(SpringExtension.class)
 public abstract class JrdBatchIntegrationSupport {
 
 
@@ -124,7 +125,15 @@ public abstract class JrdBatchIntegrationSupport {
     private TestContextManager testContextManager;
 
 
-    @BeforeClass
+    @BeforeEach
+    public void setUpStringContext() throws Exception {
+        new TestContextManager(getClass()).prepareTestInstance(this);
+        testContextManager = new TestContextManager(getClass());
+        testContextManager.prepareTestInstance(this);
+        SpringStarter.getInstance().init(testContextManager);
+    }
+
+    @BeforeAll
     public static void setupBlobProperties() throws Exception {
         if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY_PREVIEW"));
@@ -136,7 +145,7 @@ public abstract class JrdBatchIntegrationSupport {
         System.setProperty("azure.storage.container-name", "jud-ref-data");
     }
 
-    @After
+    @AfterEach
     public void cleanUp() throws Exception {
         if (isNotTrue(notDeletionFlag)) {
             deleteBlobs(jrdBlobSupport, archivalFileNames);

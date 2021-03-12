@@ -45,7 +45,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
     + "classpath:application-leaf-integration.yml"})
-@RunWith(RestartingSpringJUnit4ClassRunner.class)
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
@@ -61,7 +60,7 @@ public class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Autowired
     DataIngestionLibraryRunner dataIngestionLibraryRunner;
 
-    @Before
+    @BeforeEach
     public void init() {
         jdbcTemplate.execute(truncateAudit);
         SpringStarter.getInstance().restart();

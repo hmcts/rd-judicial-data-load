@@ -7,7 +7,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 
 import java.sql.Timestamp;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 
 public class JudicialOfficeAuthorisationRowMapperTest {

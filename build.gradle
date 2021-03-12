@@ -42,8 +42,8 @@ def versions = [
         springBoot         : '2.3.9.RELEASE',
         springHystrix      : '2.1.1.RELEASE',
         springfoxSwagger   : '2.9.2',
-        camel              : '2.25.2',
-        jackson            : '2.11.4'
+        jackson            : '2.11.4',
+        camel              : '3.8.0'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
@@ -213,6 +213,7 @@ repositories {
 
 dependencies {
 
+
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
@@ -260,56 +261,6 @@ dependencies {
 
     compile group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
 
-    implementation('io.netty:netty-buffer:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-codec:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-codec-http:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-common:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-handler:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-resolver:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-transport:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-transport-native-epoll:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-transport-native-kqueue:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-transport-native-unix-common:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-handler-proxy:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-    implementation('io.netty:netty-codec-socks:4.1.59.Final') {
-        because 'In Netty before version 4.1.59.Final there is a vulnerability on Unix-like systems involving an insecure ' +
-                'temp file'
-    }
-
-
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -328,13 +279,12 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }
     testCompile group: 'com.h2database', name: 'h2'
-    testCompile "com.github.tomakehurst:wiremock:2.19.0"
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
     testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.1.0'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.4'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
-    testCompile group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.4.RELEASE'
+    testCompile group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.1'
 
     testCompile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
     testCompile group: 'org.javatuples', name: 'javatuples', version: '1.2'
@@ -357,11 +307,8 @@ dependencies {
         exclude group: 'javax.websocket', module: 'javax.websocket-api'
     }
 
-
-
-
-    testCompile group: 'org.apache.camel', name: 'camel-test-spring', version: versions.camel
-    testCompile group: 'org.apache.camel', name: 'camel-test', version: versions.camel
+    testCompile group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
+    testCompile group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
     testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
     testCompile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 
@@ -397,7 +344,6 @@ dependencyUpdates.resolutionStrategy = {
     }
 }
 
-
 gradle.startParameter.continueOnFailure = true
 
 bootJar {
@@ -412,3 +358,12 @@ bootJar {
 // this setting only applies when running via gradle bootRun -- see web.config for the
 // java flag that configures the deployed applications
 applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
+
+test {
+    useJUnitPlatform()
+}
+
+functional {
+    useJUnitPlatform()
+}
+

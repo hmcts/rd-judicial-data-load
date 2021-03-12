@@ -5,8 +5,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -155,7 +156,7 @@ public class JudicialUserProfileProcessorTest {
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
     }
 
-    @Test(expected = RouteFailedException.class)
+    @Test
     @SuppressWarnings("unchecked")
     public void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
         judicialUserProfileMock1.setElinksId(null);
@@ -186,7 +187,9 @@ public class JudicialUserProfileProcessorTest {
         doNothing().when(platformTransactionManager).commit(transactionStatus);
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
 
-        judicialUserProfileProcessor.process(exchangeMock);
+        Assertions.assertThrows(RouteFailedException.class, () -> {
+            judicialUserProfileProcessor.process(exchangeMock);
+        });
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
     }
 }
