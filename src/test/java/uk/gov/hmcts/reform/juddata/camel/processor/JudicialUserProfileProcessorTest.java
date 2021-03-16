@@ -207,7 +207,6 @@ class JudicialUserProfileProcessorTest {
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
         assertThat(judicialUserProfileProcessor.getValidElinksInUserProfile()).isSameAs(emptySet());
-        ;
     }
 
     @Test
