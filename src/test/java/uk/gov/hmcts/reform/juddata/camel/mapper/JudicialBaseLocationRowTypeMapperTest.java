@@ -1,16 +1,17 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
+import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
+
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 
-import java.util.Map;
-import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
-
-public class JudicialBaseLocationRowTypeMapperTest {
+class JudicialBaseLocationRowTypeMapperTest {
 
     @Test
-    public void should_return_JudicialBaseLocationType_response() {
+    void should_return_JudicialBaseLocationType_response() {
 
         JudicialBaseLocationRowTypeMapper judicialBaseLocationRowTypeMapper = new JudicialBaseLocationRowTypeMapper();
 

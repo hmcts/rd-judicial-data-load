@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
-import org.apache.camel.test.spring.CamelTestContextBootstrapper;
-import org.apache.camel.test.spring.MockEndpoints;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
+import org.apache.camel.test.spring.junit5.MockEndpoints;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -20,8 +20,7 @@ import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
-import uk.gov.hmcts.reform.juddata.cameltest.testsupport.RestartingSpringJUnit4ClassRunner;
-import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringRestarter;
+import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
@@ -46,23 +45,23 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
     + "classpath:application-leaf-integration.yml"})
-@RunWith(RestartingSpringJUnit4ClassRunner.class)
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
+@CamelSpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
+class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
 
-    @Before
-    public void init() throws Exception {
+    @BeforeEach
+    void init() throws Exception {
         jdbcTemplate.execute(truncateAudit);
-        SpringRestarter.getInstance().restart();
+        SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
@@ -73,7 +72,7 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
         "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationSchedulerSuccess() throws Exception {
+    void testParentOrchestrationSchedulerSuccess() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -87,7 +86,7 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
         "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationFailureEmail() throws Exception {
+    void testParentOrchestrationFailureEmail() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -102,7 +101,7 @@ public class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
         "/testData/default-leaf-load.sql"})
-    public void testParentOrchestrationSuccessEmail() throws Exception {
+    void testParentOrchestrationSuccessEmail() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 

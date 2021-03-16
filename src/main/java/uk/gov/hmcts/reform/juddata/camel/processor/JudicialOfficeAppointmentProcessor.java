@@ -85,7 +85,7 @@ public class JudicialOfficeAppointmentProcessor
             invalidJudicialUserProfileRecords, judicialOfficeAppointmentJsrValidatorInitializer, exchange,
             logComponentName);
 
-        log.info("{}:: Judicial Appointment Records count after Validation {}:: ", logComponentName,
+        log.info("{}:: Judicial Appointment Records count after JSR Validation {}:: ", logComponentName,
             filteredJudicialAppointments.size());
 
         filterAppointmentsRecordsForForeignKeyViolation(filteredJudicialAppointments, exchange);
@@ -95,6 +95,9 @@ public class JudicialOfficeAppointmentProcessor
         if (judicialOfficeAppointments.size() != filteredJudicialAppointments.size()) {
             setFileStatus(exchange, applicationContext);
         }
+
+        log.info("{}:: Judicial Appointment Records count  after JSR and foreign key Validation {}:: ",
+            logComponentName, filteredJudicialAppointments.size());
 
         exchange.getMessage().setBody(filteredJudicialAppointments);
     }

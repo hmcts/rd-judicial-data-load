@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.juddata.camel.task;
 
 import org.apache.camel.CamelContext;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -23,8 +23,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ParentRouteTaskTest {
+@ExtendWith(MockitoExtension.class)
+class ParentRouteTaskTest {
 
     @InjectMocks
     ParentRouteTask parentRouteTask;
@@ -41,7 +41,7 @@ public class ParentRouteTaskTest {
     ChunkContext chunkContext = mock(ChunkContext.class);
 
     @Test
-    public void testParentExecute() throws Exception {
+    void testParentExecute() throws Exception {
         setField(parentRouteTask, "logComponentName", "testlogger");
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         when(camelContext.getGlobalOptions()).thenReturn(globalOptions);

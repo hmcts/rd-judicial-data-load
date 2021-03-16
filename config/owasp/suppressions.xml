@@ -14,12 +14,4 @@
         <cpe>cpe:/a:pivotal_software:spring_security</cpe>
         <cve>CVE-2018-1258</cve>
 </suppress>
-
-<suppress>
-<notes><![CDATA[
-   file name: camel-**.jar
-   ]]></notes>
-<filePath regex="true">.*\**</filePath>
-<cve>CVE-2020-11971</cve>
-</suppress>
 </suppressions>

@@ -1,24 +1,24 @@
 package uk.gov.hmcts.reform.juddata.camel.listener;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
-
 import org.apache.camel.ProducerTemplate;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 
-@RunWith(MockitoJUnitRunner.class)
-public class JobResultListenerTest {
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+class JobResultListenerTest {
 
     @InjectMocks
-    JobResultListener jobResultListener;
+    JobResultListener jobResultListener = spy(JobResultListener.class);
 
     @Mock
     JobExecution jobExecutionMock;
@@ -30,16 +30,17 @@ public class JobResultListenerTest {
     ProducerTemplate producerTemplate;
 
     @Test
-    public void beforeJobTest() {
+    void beforeJobTest() {
         jobResultListener.beforeJob(jobExecutionMock);
+        verify(jobResultListener).beforeJob(any());
     }
 
     @Test
-    public void afterJobTest() {
+    void afterJobTest() {
         ReflectionTestUtils.setField(jobResultListener, "archivalRouteName", "archivalRouteName");
         jobResultListener.afterJob(jobExecutionMock);
-        verify(archivalRouteMock, times(1)).archivalRoute(any());
-        verify(producerTemplate, times(1)).sendBody("archivalRouteName",
-                "starting Archival");
+        verify(archivalRouteMock).archivalRoute(any());
+        verify(producerTemplate).sendBody("archivalRouteName",
+            "starting Archival");
     }
 }

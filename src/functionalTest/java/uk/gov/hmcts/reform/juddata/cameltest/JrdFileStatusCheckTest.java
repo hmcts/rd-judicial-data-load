@@ -1,11 +1,10 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
-import org.apache.camel.test.spring.CamelTestContextBootstrapper;
-import org.apache.camel.test.spring.MockEndpoints;
+import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
@@ -29,8 +28,7 @@ import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
-import uk.gov.hmcts.reform.juddata.cameltest.testsupport.RestartingSpringJUnit4ClassRunner;
-import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringRestarter;
+import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
@@ -50,12 +48,10 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateExceptionDbRecordCount;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateLrdServiceFileException;
 
-
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
     + "classpath:application-leaf-integration.yml"})
-@RunWith(RestartingSpringJUnit4ClassRunner.class)
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class,
+@ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
@@ -63,7 +59,8 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @EnableTransactionManagement
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
-public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
+@CamelSpringBootTest
+class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
     @Autowired
     JrdExecutor jrdExecutor;
@@ -87,17 +84,17 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @Value("${routes-to-execute-orchestration}")
     List<String> routesToExecute;
 
-    @Before
+    @BeforeEach
     public void init() {
         jdbcTemplate.execute(truncateAudit);
-        SpringRestarter.getInstance().restart();
+        SpringStarter.getInstance().restart();
     }
 
 
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
         "/testData/truncate-exception.sql"})
-    public void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
+    void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path
         uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));
@@ -158,7 +155,7 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
         "/testData/truncate-exception.sql"})
-    public void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
+    void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path
         uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));
@@ -214,7 +211,7 @@ public class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     private void deleteAuditAndExceptionDataOfDay1() throws Exception {
         jdbcTemplate.execute(truncateAudit);
         jdbcTemplate.execute(truncateException);
-        SpringRestarter.getInstance().restart();
+        SpringStarter.getInstance().restart();
     }
 
     private void uploadFiles(String time) throws Exception {

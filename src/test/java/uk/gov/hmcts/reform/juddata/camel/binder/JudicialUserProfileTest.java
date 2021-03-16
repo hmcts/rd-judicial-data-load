@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -14,10 +14,10 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
-public class JudicialUserProfileTest {
+class JudicialUserProfileTest {
 
     @Test
-    public void  test_objects_JudicialUserProfile_correctly() {
+    void test_objects_JudicialUserProfile_correctly() {
 
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();

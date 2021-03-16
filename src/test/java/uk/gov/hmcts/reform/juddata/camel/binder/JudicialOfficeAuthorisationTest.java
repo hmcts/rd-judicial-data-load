@@ -1,14 +1,14 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
 
-import org.junit.Test;
-
-public class JudicialOfficeAuthorisationTest {
+class JudicialOfficeAuthorisationTest {
 
     @Test
-    public void test_pojo_JudicialOfficeAuthorisationTest() {
+    void test_pojo_JudicialOfficeAuthorisationTest() {
         String date = "2017-10-01 00:00:00.000";
         JudicialOfficeAuthorisation judicialOfficeAuthorisation = createJudicialOfficeAuthorisation(date);
         assertEquals("1", judicialOfficeAuthorisation.getElinksId());
