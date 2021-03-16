@@ -253,6 +253,6 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
         invokeMethod(judicialOfficeAuthorisationProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
             judicialOfficeAuthorisations, exchangeMock);
-        assertEquals(judicialOfficeAuthorisations.size(), 1);
+        assertEquals(1, judicialOfficeAuthorisations.size());
     }
 }

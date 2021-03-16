@@ -206,11 +206,12 @@ class JudicialUserProfileProcessorTest {
         judicialUserProfileProcessor.process(exchangeMock);
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
-        assertThat(judicialUserProfileProcessor.getValidElinksInUserProfile()).isSameAs(emptySet());;
+        assertThat(judicialUserProfileProcessor.getValidElinksInUserProfile()).isSameAs(emptySet());
+        ;
     }
 
     @Test
-    public void testLoadElinksId() {
+    void testLoadElinksId() {
         when(jdbcTemplate.queryForList("dummysql", String.class))
             .thenReturn(ImmutableList.of(ELINKSID_1, ELINKSID_2, "0"));
         List<String> resultList = invokeMethod(judicialUserProfileProcessor, "loadElinksId");
