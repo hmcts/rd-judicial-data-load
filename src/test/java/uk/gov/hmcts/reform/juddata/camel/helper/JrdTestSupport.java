@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.helper;
 
+import com.google.common.collect.ImmutableMap;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Map;
 
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
 
@@ -21,6 +23,20 @@ public class JrdTestSupport {
     public static final String ELINKSID_1 = "elinksid_1";
     public static final String ELINKSID_2 = "elinksid_2";
     public static final String ELINKSID_3 = "elinksid_3";
+    public static final String ELINKSID_4 = "elinksid_4";
+
+    public static final Map<String, String> roles = ImmutableMap.of("elinksid_1", "roleId_1",
+        "elinksid_2", "roleId_2", "elinksid_3", "roleId_3");
+
+    public static final Map<String, String> contracts = ImmutableMap.of("elinksid_1", "contractTypeId_1",
+        "elinksid_2", "contractTypeId_2", "elinksid_3", "contractTypeId_3");
+
+    public static final Map<String, String> baseLocations = ImmutableMap.of("elinksid_1", "baseLocationId_1",
+        "elinksid_2", "baseLocationId_2", "elinksid_3", "baseLocationId_3");
+
+    public static final Map<String, String> regions = ImmutableMap.of("elinksid_1", "regionId_1",
+        "elinksid_2", "regionId_2", "elinksid_3", "regionId_3");
+
 
     private JrdTestSupport() {
 
@@ -48,15 +64,27 @@ public class JrdTestSupport {
         return judicialUserProfileMock;
     }
 
-    public static JudicialOfficeAppointment createJudicialOfficeAppointmentMockMock(Date currentDate,
-                                                                                    LocalDateTime dateTime) {
+    public static JudicialBaseLocationType createJudicialOfficeAppointmentMock() {
+        JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
+
+        judicialBaseLocationType.setArea("area");
+        judicialBaseLocationType.setBaseLocationId("baseLocationId");
+        judicialBaseLocationType.setCircuit("circuit");
+        judicialBaseLocationType.setCourtName("courtName");
+        judicialBaseLocationType.setCourtType("courtType");
+        return judicialBaseLocationType;
+    }
+
+    public static JudicialOfficeAppointment createJudicialOfficeAppointmentMock(Date currentDate,
+                                                                                LocalDateTime dateTime,
+                                                                                String elinksId) {
 
         JudicialOfficeAppointment judicialOfficeAppointmentMock = new JudicialOfficeAppointment();
-        judicialOfficeAppointmentMock.setElinksId("elinksid_1");
-        judicialOfficeAppointmentMock.setRoleId("roleId_1");
-        judicialOfficeAppointmentMock.setContractType("contractTypeId_1");
-        judicialOfficeAppointmentMock.setBaseLocationId("baseLocationId_1");
-        judicialOfficeAppointmentMock.setRegionId("regionId_1");
+        judicialOfficeAppointmentMock.setElinksId(elinksId);
+        judicialOfficeAppointmentMock.setRoleId(roles.get(elinksId));
+        judicialOfficeAppointmentMock.setContractType(contracts.get(elinksId));
+        judicialOfficeAppointmentMock.setBaseLocationId(baseLocations.get(elinksId));
+        judicialOfficeAppointmentMock.setRegionId(regions.get(elinksId));
         judicialOfficeAppointmentMock.setIsPrincipalAppointment(true);
         judicialOfficeAppointmentMock.setStartDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialOfficeAppointmentMock.setEndDate(getDateWithFormat(currentDate, DATE_FORMAT));
@@ -121,16 +149,7 @@ public class JrdTestSupport {
         return judicialRegionType;
     }
 
-    public static JudicialBaseLocationType createJudicialOfficeAppointmentMock() {
-        JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
 
-        judicialBaseLocationType.setArea("area");
-        judicialBaseLocationType.setBaseLocationId("baseLocationId");
-        judicialBaseLocationType.setCircuit("circuit");
-        judicialBaseLocationType.setCourtName("courtName");
-        judicialBaseLocationType.setCourtType("courtType");
-        return judicialBaseLocationType;
-    }
 
     public static JudicialContractType createJudicialContractType() {
         JudicialContractType contractType = new JudicialContractType();

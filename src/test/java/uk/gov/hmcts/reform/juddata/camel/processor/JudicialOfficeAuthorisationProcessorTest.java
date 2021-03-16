@@ -5,8 +5,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -23,6 +23,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.validation.Validation;
@@ -30,6 +31,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -40,14 +42,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_3;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
-public class JudicialOfficeAuthorisationProcessorTest {
+class JudicialOfficeAuthorisationProcessorTest  {
 
     private Validator validator;
     String date = "2017-10-01 00:00:00.000";
@@ -74,10 +78,10 @@ public class JudicialOfficeAuthorisationProcessorTest {
     final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
 
-    @Before
+    @BeforeEach
     public void setup() {
 
-        judicialOfficeAuthorisationProcessor = new JudicialOfficeAuthorisationProcessor();
+        judicialOfficeAuthorisationProcessor = spy(new JudicialOfficeAuthorisationProcessor());
         judicialOfficeAuthorisation1.setElinksId("elinks_2");
         judicialOfficeAuthorisationJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
@@ -119,7 +123,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAuthorizationRow_response() {
+    void should_return_JudicialOfficeAuthorizationRow_response() {
 
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);
@@ -134,10 +138,12 @@ public class JudicialOfficeAuthorisationProcessorTest {
         verify(exchangeMock, times(6)).getIn();
         verify(exchangeMock, times(3)).getMessage();
         verify(messageMock, times(4)).getBody();
+        verify(judicialOfficeAuthorisationProcessor).audit(any(), any());
+        verify(messageMock).setBody(any());
     }
 
     @Test
-    public void should_return_JudicialOfficeAuthorizationRow_with_single_record_response() {
+    void should_return_JudicialOfficeAuthorizationRow_with_single_record_response() {
 
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
@@ -151,7 +157,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_elinks_id_null_response() {
+    void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_elinks_id_null_response() {
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
         setField(judicialOfficeAuthorisationProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "camelContext", camelContext);
@@ -170,7 +176,7 @@ public class JudicialOfficeAuthorisationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialOfficeAuthorizationRow_response_skip_invalidProfiles() {
+    void should_return_JudicialOfficeAuthorizationRow_response_skip_invalidProfiles() {
 
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);
@@ -222,5 +228,31 @@ public class JudicialOfficeAuthorisationProcessorTest {
         verify(exchangeMock, times(7)).getIn();
         verify(exchangeMock.getIn(), times(3)).getHeader(ROUTE_DETAILS);
         verify(messageMock, times(4)).getBody();
+    }
+
+    @Test
+    void testFilterAuthorizationRecordsForForeignKeyViolation() {
+
+        List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
+        JudicialOfficeAuthorisation judicialOfficeAuthorisation1 = createJudicialOfficeAuthorisation(date);
+        judicialOfficeAuthorisation1.setElinksId(ELINKSID_1);
+        JudicialOfficeAuthorisation judicialOfficeAuthorisation2 = createJudicialOfficeAuthorisation(date);
+        judicialOfficeAuthorisation2.setElinksId(ELINKSID_2);
+        judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);
+        judicialOfficeAuthorisations.add(judicialOfficeAuthorisation2);
+
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_3);
+
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock);
+        judicialUserProfiles.add(judicialUserProfileMock2);
+
+        when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
+        when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(Collections.singleton(ELINKSID_2));
+
+        invokeMethod(judicialOfficeAuthorisationProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
+            judicialOfficeAuthorisations, exchangeMock);
+        assertEquals(judicialOfficeAuthorisations.size(), 1);
     }
 }

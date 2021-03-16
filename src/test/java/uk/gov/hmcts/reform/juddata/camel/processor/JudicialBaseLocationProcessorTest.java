@@ -4,8 +4,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,7 +21,9 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,9 +31,9 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 
-public class JudicialBaseLocationProcessorTest {
+class JudicialBaseLocationProcessorTest {
 
-    JudicialBaseLocationProcessor judicialBaseLocationProcessor = new JudicialBaseLocationProcessor();
+    JudicialBaseLocationProcessor judicialBaseLocationProcessor = spy(new JudicialBaseLocationProcessor());
 
     List<JudicialBaseLocationType> judicialBaseLocationTypes = new ArrayList<>();
 
@@ -50,7 +52,7 @@ public class JudicialBaseLocationProcessorTest {
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         judicialBaseLocationTypeJsrValidatorInitializer
@@ -79,7 +81,7 @@ public class JudicialBaseLocationProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testProcess() throws Exception {
+    void testProcess() throws Exception {
 
         judicialBaseLocationTypes.add(judicialBaseLocationType1);
         judicialBaseLocationTypes.add(judicialBaseLocationType2);
@@ -90,6 +92,8 @@ public class JudicialBaseLocationProcessorTest {
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         assertThat(((List<JudicialContractType>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialBaseLocationTypes);
+        verify(judicialBaseLocationProcessor).audit(judicialBaseLocationTypeJsrValidatorInitializer,exchangeMock);
+        verify(messageMock).setBody(any());
         verify(exchangeMock, times(3)).getMessage();
     }
 } 

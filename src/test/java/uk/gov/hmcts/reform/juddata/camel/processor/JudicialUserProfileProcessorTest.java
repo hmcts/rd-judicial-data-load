@@ -5,8 +5,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -27,6 +28,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -34,14 +36,17 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
-public class JudicialUserProfileProcessorTest {
+class JudicialUserProfileProcessorTest {
 
     Date currentDate = new Date();
 
@@ -67,17 +72,17 @@ public class JudicialUserProfileProcessorTest {
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
 
-    @Before
+    @BeforeEach
     public void setup() {
         judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
         judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_2);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialUserProfileJsrValidatorInitializer
-                = new JsrValidatorInitializer<>();
+            = new JsrValidatorInitializer<>();
         setField(judicialUserProfileProcessor,
             "judicialUserProfileJsrValidatorInitializer", judicialUserProfileJsrValidatorInitializer);
 
-        setField(judicialUserProfileProcessor,"jdbcTemplate", jdbcTemplate);
+        setField(judicialUserProfileProcessor, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileProcessor,
             "loadElinksId", "dummysql");
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -96,12 +101,12 @@ public class JudicialUserProfileProcessorTest {
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
         when(jdbcTemplate.queryForList("dummysql", String.class))
-            .thenReturn(ImmutableList.of(ELINKSID_1,ELINKSID_2,"0"));
+            .thenReturn(ImmutableList.of(ELINKSID_1, ELINKSID_2, "0"));
 
     }
 
     @Test
-    public void should_return_JudicialUserProfileRow_response() {
+    void should_return_JudicialUserProfileRow_response() {
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
@@ -114,7 +119,7 @@ public class JudicialUserProfileProcessorTest {
     }
 
     @Test
-    public void should_return_JudicialUserProfileRow_with_single_record_response() {
+    void should_return_JudicialUserProfileRow_with_single_record_response() {
 
         when(messageMock.getBody()).thenReturn(judicialUserProfileMock1);
 
@@ -127,7 +132,7 @@ public class JudicialUserProfileProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_nullresponse() {
+    void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_nullresponse() {
 
         judicialUserProfileMock1.setElinksId(null);
 
@@ -143,7 +148,7 @@ public class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
@@ -152,12 +157,13 @@ public class JudicialUserProfileProcessorTest {
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
 
         judicialUserProfileProcessor.process(exchangeMock);
+        verify(messageMock, times(1)).setBody(any());
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
     }
 
-    @Test(expected = RouteFailedException.class)
+    @Test
     @SuppressWarnings("unchecked")
-    public void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
+    void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
         judicialUserProfileMock1.setElinksId(null);
         judicialUserProfileMock1.setFullName(null);
         Exchange exchangeMock = mock(Exchange.class);
@@ -178,7 +184,7 @@ public class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer,
-                "platformTransactionManager", platformTransactionManager);
+            "platformTransactionManager", platformTransactionManager);
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
@@ -186,7 +192,28 @@ public class JudicialUserProfileProcessorTest {
         doNothing().when(platformTransactionManager).commit(transactionStatus);
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
 
-        judicialUserProfileProcessor.process(exchangeMock);
+        Assertions.assertThrows(RouteFailedException.class, () -> {
+            judicialUserProfileProcessor.process(exchangeMock);
+        });
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
+    }
+
+    @Test
+    void should_return_JudicialUserProfileRow_with_empty_response() {
+        when(jdbcTemplate.queryForList("dummysql", String.class))
+            .thenReturn(new ArrayList<>());
+        when(messageMock.getBody()).thenReturn(new ArrayList<>());
+        judicialUserProfileProcessor.process(exchangeMock);
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock1);
+        assertThat(judicialUserProfileProcessor.getValidElinksInUserProfile()).isSameAs(emptySet());;
+    }
+
+    @Test
+    public void testLoadElinksId() {
+        when(jdbcTemplate.queryForList("dummysql", String.class))
+            .thenReturn(ImmutableList.of(ELINKSID_1, ELINKSID_2, "0"));
+        List<String> resultList = invokeMethod(judicialUserProfileProcessor, "loadElinksId");
+        assertThat(resultList.size()).isEqualTo(3);
     }
 }
