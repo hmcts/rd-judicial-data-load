@@ -262,6 +262,35 @@ dependencies {
 
     compile group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
 
+    // Fix for CVE-2021-21295
+    implementation('io.netty:netty-buffer:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-codec:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-codec-http:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-common:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-handler:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-resolver:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-transport:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-codec-socks:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+    implementation('io.netty:netty-handler-proxy:4.1.60.Final') {
+        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
+    }
+
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
