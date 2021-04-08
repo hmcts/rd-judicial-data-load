@@ -361,6 +361,15 @@ bootJar {
 // java flag that configures the deployed applications
 applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 
+// Fix for CVE-2021-21295 & need to be removed with new Azure blob version
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'io.netty') {
+            details.useVersion "4.1.63.Final"
+        }
+    }
+}
+
 test {
     useJUnitPlatform()
 }
