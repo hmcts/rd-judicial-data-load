@@ -3,14 +3,12 @@ package uk.gov.hmcts.reform.juddata.camel.util;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
-import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +26,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ERR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
-//ignored this test for now it mostly for emailing exceptions which we disabled in prod
-@RunWith(SpringRunner.class)
-@Ignore
-public class JrdExecutorTest {
+@ExtendWith(SpringExtension.class)
+class JrdExecutorTest {
     JrdExecutor jrdExecutor = new JrdExecutor();
 
     JrdExecutor jrdExecutorSpy = spy(jrdExecutor);
@@ -44,17 +40,17 @@ public class JrdExecutorTest {
 
     DataLoadUtil dataLoadUtil = mock(DataLoadUtil.class);
 
-    @Before
+    @BeforeEach
     public void init() {
         setField(jrdExecutorSpy, "judicialAuditServiceImpl", auditService);
         camelContext.getGlobalOptions().put(ERROR_MESSAGE, ERROR_MESSAGE);
         List<String> archivalFileNames = new ArrayList<>();
         archivalFileNames.add("test");
-        setField(jrdExecutorSpy, "archivalFileNames", producerTemplate);
+        setField(jrdExecutorSpy, "archivalFileNames", archivalFileNames);
     }
 
     @Test
-    public void testExecute() {
+    void testExecute() {
         camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
         setField(jrdExecutorSpy, "dataLoadUtil", dataLoadUtil);
         setField(jrdExecutorSpy, "producerTemplate", producerTemplate);
@@ -66,28 +62,5 @@ public class JrdExecutorTest {
             .execute(camelContext, "test", "test");
         verify(auditService, times(1))
             .auditSchedulerStatus(camelContext);
-    }
-
-    @Test
-    public void testExecuteException() {
-        camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
-        doNothing().when(auditService).auditSchedulerStatus(camelContext);
-        assertEquals(MappingConstants.FAILURE,
-            jrdExecutorSpy.execute(camelContext, "test", "test"));
-        verify(jrdExecutorSpy, times(1))
-            .execute(camelContext, "test", "test");
-        verify(auditService, times(1))
-            .auditSchedulerStatus(camelContext);
-        verify(auditService, times(1))
-            .auditException(camelContext, ERROR_MESSAGE);
-    }
-
-    @Test
-    public void testExecuteExceptionWithLeaf() {
-        doNothing().when(auditService).auditSchedulerStatus(camelContext);
-        assertEquals(MappingConstants.FAILURE,
-            jrdExecutorSpy.execute(camelContext, "test", "test"));
-        verify(jrdExecutorSpy, times(1))
-            .execute(camelContext, "test", "test");
     }
 }

@@ -1,14 +1,14 @@
 package uk.gov.hmcts.reform.juddata;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.restassured.RestAssured;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-public class SmokeTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+class SmokeTest {
 
     private final String targetInstance =
         StringUtils.defaultIfBlank(
@@ -17,7 +17,7 @@ public class SmokeTest {
         );
 
     @Test
-    public void should_prove_app_is_running_and_healthy() {
+    void should_prove_app_is_running_and_healthy() {
 
         RestAssured.baseURI = targetInstance;
         RestAssured.useRelaxedHTTPSValidation();

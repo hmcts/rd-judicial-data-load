@@ -1,17 +1,24 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Collections.singletonList;
-
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+
+import java.util.List;
+import java.util.Set;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Slf4j
 @Component
@@ -22,6 +29,15 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
     @Value("${logging-component-name}")
     private String logComponentName;
+
+    private Set<String> validElinksInUserProfile;
+
+    @Autowired
+    @Qualifier("springJdbcTemplate")
+    protected JdbcTemplate jdbcTemplate;
+
+    @Value("${fetch-personal-elinks-id}")
+    String loadElinksId;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -44,6 +60,26 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
+        //Get Elink ids from current load
+        validElinksInUserProfile = filteredJudicialUserProfiles.stream()
+            .map(JudicialUserProfile::getElinksId).collect(toSet());
+
+        //Get Elinks from previous loads
+        validElinksInUserProfile.addAll(loadElinksId());
+
+        filteredJudicialUserProfiles.stream()
+            .map(JudicialUserProfile::getElinksId).collect(toSet());
+
         exchange.getMessage().setBody(filteredJudicialUserProfiles);
+    }
+
+    public Set<String> getValidElinksInUserProfile() {
+        return isNotEmpty(validElinksInUserProfile) ? validElinksInUserProfile : emptySet();
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> loadElinksId() {
+        List<String> elinkList = jdbcTemplate.queryForList(loadElinksId, String.class);
+        return isNotEmpty(elinkList) ? elinkList : emptyList();
     }
 }

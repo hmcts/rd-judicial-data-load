@@ -16,6 +16,7 @@ job:
       secrets:
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
+        - ApplicationInsightsInstrumentationKey
   secrets:
     BLOB_ACCOUNT_NAME:
       secretRef: storage-secret-{{ .Release.Name }}

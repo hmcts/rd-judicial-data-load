@@ -1,12 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.processor;
 
-import static java.util.Collections.singletonList;
-import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.joining;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
-
-import java.util.ArrayList;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +10,19 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
+import java.util.List;
+import java.util.function.Predicate;
+
+import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.BooleanUtils.isFalse;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ELINKS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
+
 @Slf4j
 @Component
-public class JudicialOfficeAuthorisationProcessor extends JsrValidationBaseProcessor<JudicialOfficeAuthorisation> {
+public class JudicialOfficeAuthorisationProcessor
+    extends JsrValidationBaseProcessor<JudicialOfficeAuthorisation>
+    implements ICustomValidationProcessor<JudicialOfficeAuthorisation> {
 
     @Autowired
     JsrValidatorInitializer<JudicialOfficeAuthorisation> judicialOfficeAuthorisationJsrValidatorInitializer;
@@ -30,6 +33,7 @@ public class JudicialOfficeAuthorisationProcessor extends JsrValidationBaseProce
     @Value("${logging-component-name}")
     private String logComponentName;
 
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
@@ -37,52 +41,49 @@ public class JudicialOfficeAuthorisationProcessor extends JsrValidationBaseProce
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations;
 
         judicialOfficeAuthorisations = (exchange.getIn().getBody() instanceof List)
-                ? (List<JudicialOfficeAuthorisation>) exchange.getIn().getBody()
-                : singletonList((JudicialOfficeAuthorisation) exchange.getIn().getBody());
+            ? (List<JudicialOfficeAuthorisation>) exchange.getIn().getBody()
+            : singletonList((JudicialOfficeAuthorisation) exchange.getIn().getBody());
 
         log.info("{}:: Judicial Authorisation Records count before Validation:: {}", logComponentName,
-                judicialOfficeAuthorisations.size());
+            judicialOfficeAuthorisations.size());
 
         List<JudicialOfficeAuthorisation> filteredJudicialAuthorisations =
-                validate(judicialOfficeAuthorisationJsrValidatorInitializer,
+            validate(judicialOfficeAuthorisationJsrValidatorInitializer,
                 judicialOfficeAuthorisations);
 
         List<JudicialUserProfile> invalidJudicialUserProfileRecords = judicialUserProfileProcessor.getInvalidRecords();
 
-        filterInvalidUserProfileRecords(filteredJudicialAuthorisations, invalidJudicialUserProfileRecords, exchange);
+        filterInvalidUserProfileRecords(filteredJudicialAuthorisations,
+            invalidJudicialUserProfileRecords, judicialOfficeAuthorisationJsrValidatorInitializer, exchange,
+            logComponentName);
 
-        log.info("{}:: Judicial Authorisation Records count after Validation {}:: ", logComponentName,
-                filteredJudicialAuthorisations.size());
+        log.info("{}:: Judicial Authorisation Records count after JSR Validation {}:: ", logComponentName,
+            filteredJudicialAuthorisations.size());
 
         audit(judicialOfficeAuthorisationJsrValidatorInitializer, exchange);
+
+        filterAuthorizationsRecordsForForeignKeyViolation(filteredJudicialAuthorisations, exchange);
+
+        if (judicialOfficeAuthorisations.size() != filteredJudicialAuthorisations.size()) {
+            setFileStatus(exchange, applicationContext);
+        }
+
+        log.info("{}:: Judicial Authorisation Records count after JSR and foreign key Validation {}:: ",
+            logComponentName, filteredJudicialAuthorisations.size());
 
         exchange.getMessage().setBody(filteredJudicialAuthorisations);
     }
 
-    private void filterInvalidUserProfileRecords(List<JudicialOfficeAuthorisation> filteredJudicialOfficeAuthorisations,
-                                                 List<JudicialUserProfile> invalidJudicialUserProfileRecords,
-                                                 Exchange exchange) {
-        if (nonNull(invalidJudicialUserProfileRecords)) {
+    private void filterAuthorizationsRecordsForForeignKeyViolation(List<JudicialOfficeAuthorisation>
+                                                                       filteredJudicialAuthorisations,
+                                                                   Exchange exchange) {
 
-            List<String> invalidElinks = new ArrayList<>();
+        Predicate<JudicialOfficeAuthorisation> elinksViolations = c ->
+            isFalse(judicialUserProfileProcessor.getValidElinksInUserProfile().contains(c.getElinksId()));
 
-            invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
-                //Remove invalid Authorisations for user profile and add to invalidElinks List
-                if (filteredJudicialOfficeAuthorisations.removeIf(filterInvalidUserProfAuthorisations ->
-                        filterInvalidUserProfAuthorisations.getElinksId()
-                                .equalsIgnoreCase(invalidRecords.getElinksId()))) {
-                    invalidElinks.add(invalidRecords.getElinksId());
-                }
-            });
-
-            //Auditing JSR skipped rows of user profile for Authorisation
-            judicialOfficeAuthorisationJsrValidatorInitializer.auditJsrExceptions(invalidElinks, ELINKS_ID, exchange);
-
-            log.info("{}:: Skipped invalid user profile elinks in Authorisation {} & total skipped count {}",
-                    logComponentName,
-                    invalidElinks.stream().collect(joining(",")),
-                    invalidElinks.size());
-        }
+        //remove & audit missing personal e-links id
+        removeForeignKeyElements(filteredJudicialAuthorisations, elinksViolations, ELINKS_ID, exchange,
+            judicialOfficeAuthorisationJsrValidatorInitializer, MISSING_ELINKS);
     }
-}
 
+}

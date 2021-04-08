@@ -2,12 +2,17 @@ package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.junit.After;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestContextManager;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
@@ -19,6 +24,7 @@ import java.util.List;
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
+@ExtendWith(SpringExtension.class)
 public abstract class JrdBatchIntegrationSupport {
 
 
@@ -30,6 +36,7 @@ public abstract class JrdBatchIntegrationSupport {
     protected CamelContext camelContext;
 
     @Autowired
+    @Qualifier("springJdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -45,10 +52,10 @@ public abstract class JrdBatchIntegrationSupport {
     protected String userProfileSql;
 
     @Value("${child-select-child1-sql}")
-    protected String sqlChild1;
+    protected String appointmentSql;
 
     @Value("${child-select-child2-sql}")
-    protected String sqlChild2;
+    protected String authorizationSql;
 
     @Value("${archival-cred}")
     protected String archivalCred;
@@ -115,7 +122,18 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${archival-file-names}")
     protected List<String> archivalFileNames;
 
-    @BeforeClass
+    private TestContextManager testContextManager;
+
+
+    @BeforeEach
+    public void setUpStringContext() throws Exception {
+        new TestContextManager(getClass()).prepareTestInstance(this);
+        testContextManager = new TestContextManager(getClass());
+        testContextManager.prepareTestInstance(this);
+        SpringStarter.getInstance().init(testContextManager);
+    }
+
+    @BeforeAll
     public static void setupBlobProperties() throws Exception {
         if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY_PREVIEW"));
@@ -127,7 +145,7 @@ public abstract class JrdBatchIntegrationSupport {
         System.setProperty("azure.storage.container-name", "jud-ref-data");
     }
 
-    @After
+    @AfterEach
     public void cleanUp() throws Exception {
         if (isNotTrue(notDeletionFlag)) {
             deleteBlobs(jrdBlobSupport, archivalFileNames);

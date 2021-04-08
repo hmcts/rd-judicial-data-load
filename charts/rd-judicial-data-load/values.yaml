@@ -23,7 +23,7 @@ job:
       resourceGroup: rd
       secrets:
         - judicial-api-POSTGRES-PASS
-        - AppInsightsInstrumentationKey
+        - ApplicationInsightsInstrumentationKey
         - ACCOUNT-NAME
         - ACCOUNT-KEY
         - CONTAINER-NAME

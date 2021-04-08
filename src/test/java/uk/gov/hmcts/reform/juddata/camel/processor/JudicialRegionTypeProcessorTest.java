@@ -4,8 +4,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,15 +21,18 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialRegionType;
 
-public class JudicialRegionTypeProcessorTest {
+class JudicialRegionTypeProcessorTest {
 
-    JudicialRegionTypeProcessor judicialRegionTypeProcessor = new JudicialRegionTypeProcessor();
+    JudicialRegionTypeProcessor judicialRegionTypeProcessor = spy(new JudicialRegionTypeProcessor());
 
     List<JudicialRegionType> judicialRegionTypes = new ArrayList<>();
 
@@ -52,14 +55,13 @@ public class JudicialRegionTypeProcessorTest {
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
 
-    @Before
+    @BeforeEach
     public void setup() {
 
-        judicialRegionTypeJsrValidatorInitializer
-                = new JsrValidatorInitializer<>();
+        judicialRegionTypeJsrValidatorInitializer = new JsrValidatorInitializer<>();
 
         setField(judicialRegionTypeProcessor,
-                "judicialRegionTypeJsrValidatorInitializer", judicialRegionTypeJsrValidatorInitializer);
+            "judicialRegionTypeJsrValidatorInitializer", judicialRegionTypeJsrValidatorInitializer);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
@@ -81,7 +83,7 @@ public class JudicialRegionTypeProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testProcess() throws Exception {
+    void testProcess() throws Exception {
 
         judicialRegionTypes.add(judicialRegionType1);
         judicialRegionTypes.add(judicialRegionType2);
@@ -89,6 +91,9 @@ public class JudicialRegionTypeProcessorTest {
 
         when(messageMock.getBody()).thenReturn(judicialRegionTypes);
         judicialRegionTypeProcessor.process(exchangeMock);
+
+        verify(judicialRegionTypeProcessor).audit(judicialRegionTypeJsrValidatorInitializer, exchangeMock);
+        verify(messageMock).setBody(any());
 
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
         assertThat(((List<JudicialContractType>) exchangeMock.getMessage().getBody())).isSameAs(judicialRegionTypes);

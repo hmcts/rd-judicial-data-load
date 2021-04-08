@@ -23,3 +23,9 @@ audit-enable: true
 logging-component-name: RD_Judicial_Ref_Data
 component:
   name: Judicial Reference Data
+
+fetch-personal-elinks-id: select elinks_id from judicial_user_profile
+fetch-base-location-id: SELECT base_location_id FROM base_location_type
+fetch-region-id: SELECT region_id FROM region_type
+fetch-contract-id: SELECT contract_type_id FROM contract_type
+fetch-role-id: SELECT role_id FROM judicial_role_type

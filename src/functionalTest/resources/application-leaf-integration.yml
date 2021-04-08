@@ -59,6 +59,11 @@ contract-select-jrd-sql: SELECT * FROM contract_type
 
 role-select-jrd-sql: SELECT * FROM judicial_role_type
 
+fetch-base-location-id: SELECT base_location_id FROM base_location_type
+fetch-region-id: SELECT region_id FROM region_type
+fetch-contract-id: SELECT contract_type_id FROM contract_type
+fetch-role-id: SELECT role_id FROM judicial_role_type
+
 
 
 

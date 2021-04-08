@@ -1,5 +1,25 @@
 package uk.gov.hmcts.reform.juddata.camel.validator;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -13,53 +33,35 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
-import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
-
-public class JsrValidatorInitializerTest {
+class JsrValidatorInitializerTest {
 
     static JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer
-            = new JsrValidatorInitializer<>();
+        = new JsrValidatorInitializer<>();
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeAll() throws Exception {
         judicialUserProfileJsrValidatorInitializer.initializeFactory();
     }
 
     @Test
-    public void testValidate() {
+    void testValidate() {
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime);
+        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate,
+            dateTime, ELINKSID_1);
         judicialUserProfiles.add(profile);
         JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
-                = spy(judicialUserProfileJsrValidatorInitializer);
+            = spy(judicialUserProfileJsrValidatorInitializer);
         judicialUserProfileJsrValidatorInitializerSpy.validate(judicialUserProfiles);
         verify(judicialUserProfileJsrValidatorInitializerSpy, times(1)).validate(any());
     }
 
     @Test
-    public void testAuditJsrExceptions() {
+    void testAuditJsrExceptions() {
         Exchange exchange = mock(Exchange.class);
         Message message = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();
@@ -75,18 +77,18 @@ public class JsrValidatorInitializerTest {
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
         final TransactionStatus transactionStatus = mock(TransactionStatus.class);
         setField(judicialUserProfileJsrValidatorInitializer, "platformTransactionManager",
-                platformTransactionManager);
+            platformTransactionManager);
         setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserProfileJsrValidatorInitializer, "jsrThresholdLimit", 5);
 
         JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
-                = spy(judicialUserProfileJsrValidatorInitializer);
+            = spy(judicialUserProfileJsrValidatorInitializer);
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime);
+        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
         profile.setSurName(null);
         judicialUserProfiles.add(profile);
         judicialUserProfileJsrValidatorInitializerSpy.validate(judicialUserProfiles);

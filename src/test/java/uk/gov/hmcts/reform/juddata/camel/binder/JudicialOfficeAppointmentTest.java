@@ -1,27 +1,28 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMockMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
-public class JudicialOfficeAppointmentTest {
+class JudicialOfficeAppointmentTest {
 
     @Test
-    public void test_objects_JudicialOfficeAppointment_correctly() {
+    void test_objects_JudicialOfficeAppointment_correctly() {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMockMock(currentDate,
-                dateTime);
-        assertEquals("elinksid_1", judicialOfficeAppointment.getElinksId());
+        JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMock(currentDate,
+            dateTime, ELINKSID_1);
+        assertEquals(ELINKSID_1, judicialOfficeAppointment.getElinksId());
         assertEquals("roleId_1", judicialOfficeAppointment.getRoleId());
         assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());

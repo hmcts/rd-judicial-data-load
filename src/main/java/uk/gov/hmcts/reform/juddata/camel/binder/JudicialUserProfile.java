@@ -74,5 +74,7 @@ public class JudicialUserProfile implements Serializable {
             message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
     String extractedDate;
 
+    @DataField(pos = 15, columnName = "object_id")
+    String objectId;
 
 }

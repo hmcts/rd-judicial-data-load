@@ -1,25 +1,26 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
+import org.junit.jupiter.api.Test;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
+
+import java.sql.Timestamp;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
 
-import java.sql.Timestamp;
-import java.util.Map;
-import org.junit.Test;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
-
-public class JudicialOfficeAuthorisationRowMapperTest {
+class JudicialOfficeAuthorisationRowMapperTest {
 
     JudicialOfficeAuthorisationRowMapper judicialOfficeAuthorisationRowMapper =
-            new JudicialOfficeAuthorisationRowMapper();
+        new JudicialOfficeAuthorisationRowMapper();
 
     @Test
-    public void should_return_JudicialOfficeAuthorizationtRowMapper_response() {
+    void should_return_JudicialOfficeAuthorizationtRowMapper_response() {
 
         JudicialOfficeAuthorisation judicialOfficeAuthorisation =
-                createJudicialOfficeAuthorisation("2017-10-01 00:00:00.000");
+            createJudicialOfficeAuthorisation("2017-10-01 00:00:00.000");
 
         Map<String, Object> authMap = judicialOfficeAuthorisationRowMapper.getMap(judicialOfficeAuthorisation);
 
@@ -35,7 +36,7 @@ public class JudicialOfficeAuthorisationRowMapperTest {
     }
 
     @Test
-    public void should_generate_id() {
+    void should_generate_id() {
         int id = judicialOfficeAuthorisationRowMapper.generateId();
 
         assertThat(id).isEqualTo(1);
