@@ -207,7 +207,7 @@ project.tasks['sonarqube'].group = "Verification"
 repositories {
 
     maven {
-        url "https://dl.bintray.com/hmcts/hmcts-maven"
+        url 'https://jitpack.io'
     }
     jcenter()
 }
@@ -242,11 +242,11 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.4.3.0'
+    implementation 'com.github.hmcts:data-ingestion-lib:0.4.4.0'
     compile group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     compile group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
-    compile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
+    testCompile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
@@ -261,35 +261,6 @@ dependencies {
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
     compile group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
-
-    // Fix for CVE-2021-21295
-    implementation('io.netty:netty-buffer:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-codec:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-codec-http:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-common:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-handler:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-resolver:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-transport:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-codec-socks:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
-    implementation('io.netty:netty-handler-proxy:4.1.63.Final') {
-        because 'In Netty before version 4.1.60.Final there is a vulnerability that enables request smuggling.'
-    }
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
