@@ -243,6 +243,8 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
     implementation 'com.github.hmcts:data-ingestion-lib:0.4.4.0'
+    //Fix for CVE-2021-29425
+    implementation 'commons-io:commons-io:2.8.0'
     compile group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     compile group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
