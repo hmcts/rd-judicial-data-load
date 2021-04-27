@@ -39,7 +39,6 @@ class JobResultListenerTest {
 
     @Test
     void beforeJobTest() {
-        //when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
         jobResultListener.beforeJob(jobExecutionMock);
         verify(jobResultListener).beforeJob(any());
     }

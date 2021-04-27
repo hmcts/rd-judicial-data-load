@@ -35,7 +35,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ROW_MAPPER;
 
 @ExtendWith(MockitoExtension.class)
-public class JrdDataIngestionLibraryRunnerTest {
+class JrdDataIngestionLibraryRunnerTest {
 
     TopicPublisher topicPublisher = mock(TopicPublisher.class);
 
@@ -71,24 +71,24 @@ public class JrdDataIngestionLibraryRunnerTest {
 
     @SneakyThrows
     @Test
-    public void testRun() {
+    void testRun() {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(jobLauncherMock).run(any(),any());
+        verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any());
     }
 
     @SneakyThrows
     @Test
-    public void testRunRetry() {
+    void testRunRetry() {
         when(jdbcTemplate.queryForObject("dummyQuery", String.class)).thenReturn(FAILED.getStatus());
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(jobLauncherMock).run(any(),any());
+        verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any());
     }
 
     @SneakyThrows
     @Test
-    public void testRunException() {
+    void testRunException() {
         doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList());
         assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
         verify(topicPublisher, times(1)).sendMessage(any());
@@ -96,11 +96,11 @@ public class JrdDataIngestionLibraryRunnerTest {
 
     @SneakyThrows
     @Test
-    public void testRunNoMessageToPublish() {
+    void testRunNoMessageToPublish() {
         List<String> sidamIds = new ArrayList<>();
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(jobLauncherMock).run(any(),any());
+        verify(jobLauncherMock).run(any(), any());
         verify(jdbcTemplate, times(1)).queryForObject("dummyQuery", String.class);
     }
 }

@@ -51,7 +51,7 @@ public class JobResultListener implements JobExecutionListener {
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        Object[] params = new Object[]{new Timestamp(currentTimeMillis()),
+        var params = new Object[]{new Timestamp(currentTimeMillis()),
             JobStatus.IN_PROGRESS.getStatus()};
         log.info("{}:: Batch Job execution Started", logComponentName);
         //Start Auditing Job Status
