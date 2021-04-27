@@ -139,7 +139,7 @@ jrd:
           host: ${JRD_MQ_HOST:rd-servicebus-sandbox.servicebus.windows.net}
           username: ${JRD_MQ_USERNAME:SendAndListenSharedAccessKey}
           password: ${JRD_MQ_PASSWORD:AAAAAAAAAA}
-          topic: ${JRD_MQ_TOPIC_NAME:rd-caseworker-topic-sandbox}
+          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
     jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:5}

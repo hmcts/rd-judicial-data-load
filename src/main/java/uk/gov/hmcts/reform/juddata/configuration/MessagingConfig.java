@@ -33,7 +33,7 @@ public class MessagingConfig {
             .connectionString(connectionString)
             .retryOptions(new AmqpRetryOptions())
             .sender()
-            .topicName("test-jrd-functest")
+            .topicName(topic)
             .buildClient();
     }
 }
