@@ -49,8 +49,4 @@ spring:
 mail:
   enabled: false
 
-ACCOUNT_NAME: rdpreview
-ACCOUNT_KEY: 61Sb95N8fFF5PNn/Gn5FjJFUg6wKJ/j6IWa0URdnAWnmjtluRPpJDk8uA3Zrx+u9gzUA8nF56rVJm1jl5dgTnQ==
-CONTAINER_NAME: jud-ref-data
-
 
