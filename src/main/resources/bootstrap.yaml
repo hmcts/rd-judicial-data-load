@@ -10,5 +10,7 @@ spring:
         ACCOUNT-KEY: azure.storage.account-key
         CONTAINER-NAME: azure.storage.container-name
         BLOB-URL-SUFFIX: azure.storage.blob-url-suffix
+        judicial-topic-primary-send-listen-shared-access-key: JRD_MQ_PASSWORD
+
 
 

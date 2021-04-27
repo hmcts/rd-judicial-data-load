@@ -12,8 +12,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
@@ -32,10 +32,11 @@ public class JudicialApplication implements ApplicationRunner {
     private static String logComponentName;
 
     @Autowired
-    DataIngestionLibraryRunner dataIngestionLibraryRunner;
+    JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
 
     @Autowired
     AuditServiceImpl judicialAuditServiceImpl;
+
 
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
@@ -51,7 +52,7 @@ public class JudicialApplication implements ApplicationRunner {
         JobParameters params = new JobParametersBuilder()
             .addString(jobName, String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
-        dataIngestionLibraryRunner.run(job, params);
+        jrdDataIngestionLibraryRunner.run(job, params);
     }
 
     @Value("${logging-component-name}")

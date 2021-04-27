@@ -37,8 +37,10 @@ import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAuthorisationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 
@@ -289,8 +291,13 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    DataIngestionLibraryRunner dataIngestionLibraryRunner() {
-        return new DataIngestionLibraryRunner();
+    DataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
+        return new JrdDataIngestionLibraryRunner();
+    }
+
+    @Bean
+    TopicPublisher topicPublisher() {
+        return mock(TopicPublisher.class);
     }
     // miscellaneous configuration ends
     // miscellaneous configuration ends

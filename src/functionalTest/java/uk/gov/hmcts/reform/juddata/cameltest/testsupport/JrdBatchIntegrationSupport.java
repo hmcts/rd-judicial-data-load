@@ -18,10 +18,14 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
+import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 
 import java.util.List;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.isNotTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
 @ExtendWith(SpringExtension.class)
@@ -124,6 +128,12 @@ public abstract class JrdBatchIntegrationSupport {
 
     private TestContextManager testContextManager;
 
+    @Autowired
+    TopicPublisher topicPublisher;
+
+    @Autowired
+    protected JrdDataIngestionLibraryRunner dataIngestionLibraryRunner;
+
 
     @BeforeEach
     public void setUpStringContext() throws Exception {
@@ -131,6 +141,8 @@ public abstract class JrdBatchIntegrationSupport {
         testContextManager = new TestContextManager(getClass());
         testContextManager.prepareTestInstance(this);
         SpringStarter.getInstance().init(testContextManager);
+
+        doNothing().when(topicPublisher).sendMessage(anyList());
     }
 
     @BeforeAll
