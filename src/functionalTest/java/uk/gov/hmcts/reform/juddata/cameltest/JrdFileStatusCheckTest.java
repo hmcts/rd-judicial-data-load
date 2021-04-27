@@ -87,6 +87,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @BeforeEach
     public void init() {
         jdbcTemplate.execute(truncateAudit);
+        jdbcTemplate.execute(truncateJob);
         SpringStarter.getInstance().restart();
     }
 
@@ -100,15 +101,14 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));
 
         JobParameters params = new JobParametersBuilder()
-            .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .addString(job.getName(), UUID.randomUUID().toString())
             .toJobParameters();
-        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        dataIngestionLibraryRunner.run(job, params);
         deleteBlobs(jrdBlobSupport, archivalFileNames);
         deleteAuditAndExceptionDataOfDay1();
 
         //Day 2 stale files
         uploadFiles(String.valueOf(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000).getTime()));
-
         //not ran with dataIngestionLibraryRunner to set stale file via
         // camelContext.getGlobalOptions().remove(SCHEDULER_START_TIME);
         params = new JobParametersBuilder()
@@ -161,9 +161,9 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime()));
 
         JobParameters params = new JobParametersBuilder()
-            .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .addString(job.getName(), UUID.randomUUID().toString())
             .toJobParameters();
-        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        dataIngestionLibraryRunner.run(job, params);
         deleteBlobs(jrdBlobSupport, archivalFileNames);
         deleteAuditAndExceptionDataOfDay1();
 
@@ -171,7 +171,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME,
             String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         params = new JobParametersBuilder()
-            .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .addString(job.getName(), UUID.randomUUID().toString())
             .toJobParameters();
         jobLauncherTestUtils.launchJob(params);
         notDeletionFlag = true;

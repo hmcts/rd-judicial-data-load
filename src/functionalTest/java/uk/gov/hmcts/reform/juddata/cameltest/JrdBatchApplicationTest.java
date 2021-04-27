@@ -30,6 +30,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
@@ -58,10 +59,10 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
 
-
     @BeforeEach
     public void init() {
         jdbcTemplate.execute(truncateAudit);
+        jdbcTemplate.execute(truncateJob);
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
@@ -74,10 +75,12 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
+        jobLauncherTestUtils = new JobLauncherTestUtils();
+        jobLauncherTestUtils.setJob(job);
         JobParameters params = new JobParametersBuilder()
-            .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+            .addString(job.getName(), UUID.randomUUID().toString())
             .toJobParameters();
-        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        dataIngestionLibraryRunner.run(job, params);
 
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
@@ -90,16 +93,18 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     void testTaskletIdempotent() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        jobLauncherTestUtils = new JobLauncherTestUtils();
+        jobLauncherTestUtils.setJob(job);
         JobParameters params = new JobParametersBuilder()
-            .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+            .addString(job.getName(), UUID.randomUUID().toString())
             .toJobParameters();
-        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        dataIngestionLibraryRunner.run(job, params);
         List<Map<String, Object>> auditDetails = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         final Timestamp timestamp = (Timestamp) auditDetails.get(0).get("scheduler_end_time");
         SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
-        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        dataIngestionLibraryRunner.run(job, params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
         validateDbRecordCountFor(jdbcTemplate, selectDataLoadSchedulerAudit, 7);

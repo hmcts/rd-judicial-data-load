@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.JobStatus;
 
@@ -48,6 +49,10 @@ public class JobResultListener implements JobExecutionListener {
 
     @Autowired
     CamelContext camelContext;
+
+    @Autowired
+    @Qualifier("springJdbcTransactionManager")
+    protected PlatformTransactionManager transactionManager;
 
     @Override
     public void beforeJob(JobExecution jobExecution) {

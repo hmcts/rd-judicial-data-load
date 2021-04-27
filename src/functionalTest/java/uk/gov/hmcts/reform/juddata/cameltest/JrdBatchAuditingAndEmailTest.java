@@ -58,6 +58,7 @@ class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
     @BeforeEach
     void init() throws Exception {
         jdbcTemplate.execute(truncateAudit);
+        jdbcTemplate.execute(truncateJob);
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);

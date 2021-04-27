@@ -6,12 +6,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestContextManager;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
@@ -120,6 +122,9 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${truncate-audit}")
     protected String truncateAudit;
 
+    @Value("${truncate-job}")
+    protected String truncateJob;
+
     @Autowired
     protected JrdBlobSupport jrdBlobSupport;
 
@@ -134,14 +139,16 @@ public abstract class JrdBatchIntegrationSupport {
     @Autowired
     protected JrdDataIngestionLibraryRunner dataIngestionLibraryRunner;
 
+    @Autowired
+    protected Job job;
 
     @BeforeEach
+    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-leaf.sql", "/testData/truncate-job.sql"})
     public void setUpStringContext() throws Exception {
         new TestContextManager(getClass()).prepareTestInstance(this);
         testContextManager = new TestContextManager(getClass());
         testContextManager.prepareTestInstance(this);
         SpringStarter.getInstance().init(testContextManager);
-
         doNothing().when(topicPublisher).sendMessage(anyList());
     }
 
@@ -163,4 +170,5 @@ public abstract class JrdBatchIntegrationSupport {
             deleteBlobs(jrdBlobSupport, archivalFileNames);
         }
     }
+
 }

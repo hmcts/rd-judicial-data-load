@@ -34,6 +34,7 @@ import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
@@ -86,9 +87,11 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Autowired
     CamelContext camelContext;
 
+
     @BeforeEach
     public void init() {
         jdbcTemplate.execute(truncateAudit);
+        jdbcTemplate.execute(truncateJob);
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
@@ -331,14 +334,14 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         "/testData/default-leaf-load.sql"})
     void testParentOrchestrationJsrSkipChildRecordsForeignKeyViolations() throws Exception {
 
-        SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithForeignKeyViolations);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
-
+        jobLauncherTestUtils = new JobLauncherTestUtils();
+        jobLauncherTestUtils.setJob(job);
         JobParameters params = new JobParametersBuilder()
-            .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+            .addString(job.getName(), UUID.randomUUID().toString())
             .toJobParameters();
-        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        dataIngestionLibraryRunner.run(job, params);
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
         assertEquals(7, judicialUserProfileList.size());
 
