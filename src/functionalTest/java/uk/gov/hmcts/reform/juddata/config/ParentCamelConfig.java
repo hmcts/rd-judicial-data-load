@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.config;
 
+import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
@@ -298,6 +299,11 @@ public class ParentCamelConfig {
     @Bean
     TopicPublisher topicPublisher() {
         return mock(TopicPublisher.class);
+    }
+
+    @Bean
+    ServiceBusSenderClient serviceBusSenderClient() {
+        return mock(ServiceBusSenderClient.class);
     }
     // miscellaneous configuration ends
     // miscellaneous configuration ends
