@@ -13,10 +13,12 @@ import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
@@ -53,11 +55,11 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     public void run(Job job, JobParameters params) throws Exception {
         super.run(job, params);
         //To do add sidam calls to get Sidam id for Object id once Sidam elastic APi ready
-        Pair<String, String> pair = jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
-            Pair.of(rs.getString(1), rs.getString(2)));
+        Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
+            Pair.of(rs.getString(1), rs.getString(2))));
 
-        String jobId = pair.getLeft();
-        String jobStatus = pair.getRight();
+        String jobId = pair.map(val -> val.getLeft()).orElse(EMPTY);
+        String jobStatus = pair.map(val -> val.getRight()).orElse(EMPTY);
 
         List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
 
