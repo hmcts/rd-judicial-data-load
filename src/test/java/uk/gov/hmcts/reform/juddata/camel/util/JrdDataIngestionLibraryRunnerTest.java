@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.util;
 
 import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ROW_MAPPER;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("unchecked")
 class JrdDataIngestionLibraryRunnerTest {
 
     TopicPublisher topicPublisher = mock(TopicPublisher.class);
@@ -58,11 +61,13 @@ class JrdDataIngestionLibraryRunnerTest {
         options.put(JOB_ID, "1");
         List<String> sidamIds = new ArrayList<>();
         sidamIds.add(UUID.randomUUID().toString());
-        jrdDataIngestionLibraryRunner.selectJobStatus = "dummyQuery";
+        jrdDataIngestionLibraryRunner.selectJobStatus = "dummyjobstatus";
         jrdDataIngestionLibraryRunner.getSidamIds = "dummyQuery";
         jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
 
-        when(jdbcTemplate.queryForObject("dummyQuery", String.class)).thenReturn(IN_PROGRESS.getStatus());
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+            .thenReturn(Pair.of("1", IN_PROGRESS.getStatus()));
+
         jrdDataIngestionLibraryRunner.logComponentName = "loggingComponent";
         when(camelContext.getGlobalOptions()).thenReturn(options);
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
@@ -80,7 +85,8 @@ class JrdDataIngestionLibraryRunnerTest {
     @SneakyThrows
     @Test
     void testRunRetry() {
-        when(jdbcTemplate.queryForObject("dummyQuery", String.class)).thenReturn(FAILED.getStatus());
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+            .thenReturn(Pair.of("1", FAILED.getStatus()));
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any());
@@ -101,6 +107,6 @@ class JrdDataIngestionLibraryRunnerTest {
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
-        verify(jdbcTemplate, times(1)).queryForObject("dummyQuery", String.class);
+        verify(jdbcTemplate, times(1)).queryForObject(anyString(), any(RowMapper.class));
     }
 }

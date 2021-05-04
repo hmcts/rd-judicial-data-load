@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 
 @Component
 @Slf4j
@@ -53,8 +53,11 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     public void run(Job job, JobParameters params) throws Exception {
         super.run(job, params);
         //To do add sidam calls to get Sidam id for Object id once Sidam elastic APi ready
-        String status = jdbcTemplate.queryForObject(selectJobStatus, String.class);
-        String jobId = camelContext.getGlobalOptions().get(JOB_ID);
+        Pair<String, String> pair = jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
+            Pair.of(rs.getString(1), rs.getString(2)));
+
+        String jobId = pair.getLeft();
+        String jobStatus = pair.getRight();
 
         List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
 
@@ -62,16 +65,21 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             return;
         }
         //After Job completes Publish message in ASB
-        publishMessage(status, sidamIds, jobId);
-        jdbcTemplate.update(updateJobStatus, SUCCESS.getStatus(),
-            Integer.valueOf(jobId));
+        publishMessage(jobStatus, sidamIds, jobId);
+        updateJobCompletion(SUCCESS, jobId);
         log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName, jobId);
+    }
+
+    private void updateJobCompletion(JobStatus success, String jobId) {
+        jdbcTemplate.update(updateJobStatus, success.getStatus(),
+            Integer.valueOf(jobId));
     }
 
     private boolean validateSidamIdsExists(String jobId, List<String> sidamIds) {
         var returnFlag = true;
         if (isEmpty(sidamIds)) {
             log.warn("{}:: No Sidam id exists in JRD  for publishing in ASB for JOB id {}", logComponentName, jobId);
+            updateJobCompletion(SUCCESS, jobId);
             returnFlag = false;
         }
         return returnFlag;
@@ -87,9 +95,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             }
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
-            jdbcTemplate.update(updateJobStatus, FAILED.getStatus(),
-                Integer.valueOf(jobId));
+            updateJobCompletion(FAILED, jobId);
             throw ex;
         }
     }
+
 }

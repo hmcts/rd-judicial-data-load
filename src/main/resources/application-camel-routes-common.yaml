@@ -32,7 +32,7 @@ fetch-role-id: SELECT role_id FROM judicial_role_type
 
 insert-job-sql: insert into dataload_schedular_job(job_start_time, publishing_status) values(?, ?)
 update-job-sql: update dataload_schedular_job set job_end_time = now() at time zone 'utc', publishing_status = ? where id =?
-select-job-status-sql:  select publishing_status from dataload_schedular_job where date(job_start_time) = current_date
+select-job-status-sql:  select id, publishing_status from dataload_schedular_job where date(job_start_time) = current_date
 get-sidam-ids: select sidam_id from judicial_user_profile where sidam_id is not null
 
 jrd:
