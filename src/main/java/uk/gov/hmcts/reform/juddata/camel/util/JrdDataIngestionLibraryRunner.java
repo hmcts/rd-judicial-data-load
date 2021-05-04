@@ -58,8 +58,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
             Pair.of(rs.getString(1), rs.getString(2))));
 
-        String jobId = pair.map(val -> val.getLeft()).orElse(EMPTY);
-        String jobStatus = pair.map(val -> val.getRight()).orElse(EMPTY);
+        String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
+        String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
 
         List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
 
