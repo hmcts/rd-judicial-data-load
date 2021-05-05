@@ -11,6 +11,11 @@ job:
     FLYWAY_ENABLED: false
     ENV_NAME: "{{ .Values.global.environment }}"
     CONTAINER_NAME: jud-ref-data
+    JRD_MQ_HOST: rd-servicebus-{{ .Values.global.environment }}.servicebus.windows.net
+    JRD_MQ_USERNAME: SendAndListenSharedAccessKey
+    JRD_MQ_TOPIC_NAME: rd-judicial-topic-{{ .Values.global.environment }}
+    JRD_MQ_TRUST_ALL_CERTS: false
+    JRD_DATA_PER_MESSAGE: 100
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
@@ -28,6 +33,7 @@ job:
         - ACCOUNT-KEY
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
+        - judicial-topic-primary-send-listen-shared-access-key
 postgresql:
   enabled: false
 
