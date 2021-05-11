@@ -12,25 +12,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MessagingConfig {
 
-    @Value("${jrd.publisher.azure.service.bus.host}")
-    String host;
-
     @Value("${jrd.publisher.azure.service.bus.topic}")
     String topic;
 
-    @Value("${jrd.publisher.azure.service.bus.username}")
-    String sharedAccessKeyName;
-
-    @Value("${jrd.publisher.azure.service.bus.password}")
-    String sharedAccessKeyValue;
+    @Value("${jrd.publisher.azure.service.bus.connection-string}")
+    String accessConnectionString;
 
     @Bean
     public ServiceBusSenderClient getServiceBusSenderClient() {
-        String connectionString = "Endpoint=sb://" + host
-            + ";SharedAccessKeyName=" + sharedAccessKeyName + ";SharedAccessKey=" + sharedAccessKeyValue;
 
         return new ServiceBusClientBuilder()
-            .connectionString(connectionString)
+            .connectionString(accessConnectionString)
             .retryOptions(new AmqpRetryOptions())
             .sender()
             .topicName(topic)
