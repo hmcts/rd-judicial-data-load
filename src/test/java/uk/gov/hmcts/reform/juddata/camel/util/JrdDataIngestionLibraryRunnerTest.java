@@ -64,9 +64,11 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.selectJobStatus = "dummyjobstatus";
         jrdDataIngestionLibraryRunner.getSidamIds = "dummyQuery";
         jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
+        jrdDataIngestionLibraryRunner.failedAuditFileCount = "failedAuditFileCount";
 
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
             .thenReturn(Pair.of("1", IN_PROGRESS.getStatus()));
+        when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(Integer.valueOf(0));
 
         jrdDataIngestionLibraryRunner.logComponentName = "loggingComponent";
         when(camelContext.getGlobalOptions()).thenReturn(options);
@@ -79,7 +81,7 @@ class JrdDataIngestionLibraryRunnerTest {
     void testRun() {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
-        verify(topicPublisher, times(1)).sendMessage(any());
+        verify(topicPublisher, times(1)).sendMessage(any(), anyString());
     }
 
     @SneakyThrows
@@ -89,15 +91,15 @@ class JrdDataIngestionLibraryRunnerTest {
             .thenReturn(Pair.of("1", FAILED.getStatus()));
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
-        verify(topicPublisher, times(1)).sendMessage(any());
+        verify(topicPublisher, times(1)).sendMessage(any(), anyString());
     }
 
     @SneakyThrows
     @Test
     void testRunException() {
-        doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList());
+        doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList(), anyString());
         assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
-        verify(topicPublisher, times(1)).sendMessage(any());
+        verify(topicPublisher, times(1)).sendMessage(any(), anyString());
     }
 
     @SneakyThrows
@@ -108,5 +110,13 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(jdbcTemplate, times(1)).queryForObject(anyString(), any(RowMapper.class));
+    }
+
+    @SneakyThrows
+    @Test
+    void testRunFailedFiles() {
+        when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(Integer.valueOf(1));
+        jrdDataIngestionLibraryRunner.run(job, jobParameters);
+        verify(jobLauncherMock).run(any(), any());
     }
 }

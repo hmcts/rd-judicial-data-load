@@ -4,7 +4,6 @@ import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusMessageBatch;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import com.azure.messaging.servicebus.ServiceBusTransactionContext;
-import com.google.common.collect.Lists;
 import com.microsoft.applicationinsights.core.dependencies.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
+import static com.google.common.collect.Lists.partition;
 
 @Slf4j
 @Service
@@ -40,13 +39,11 @@ public class TopicPublisher {
     @Autowired
     CamelContext camelContext;
 
-    public void sendMessage(@NotNull List<String> judicalIds) {
-        jobId = camelContext.getGlobalOptions().get(JOB_ID);
-
+    public void sendMessage(@NotNull List<String> judicalIds, String jobId) {
         ServiceBusTransactionContext transactionContext = null;
         try {
             transactionContext = serviceBusSenderClient.createTransaction();
-            publishMessageToTopic(judicalIds, serviceBusSenderClient, transactionContext);
+            publishMessageToTopic(judicalIds, serviceBusSenderClient, transactionContext, jobId);
         } catch (Exception exception) {
             log.error("{}:: Publishing message to service bus topic failed with exception: {}:: Job Id {}",
                 loggingComponentName, exception.getMessage(), jobId);
@@ -60,20 +57,22 @@ public class TopicPublisher {
 
     private void publishMessageToTopic(List<String> judicalIds,
                                        ServiceBusSenderClient serviceBusSenderClient,
-                                       ServiceBusTransactionContext transactionContext) {
+                                       ServiceBusTransactionContext transactionContext,
+                                       String jobId) {
 
         ServiceBusMessageBatch messageBatch = serviceBusSenderClient.createMessageBatch();
         List<ServiceBusMessage> serviceBusMessages = new ArrayList<>();
-        List<List<String>> messageList = Lists.partition(judicalIds, jrdMessageBatchSize);
 
-        messageList.forEach(s -> serviceBusMessages.add(new ServiceBusMessage(new Gson().toJson(s))));
+        partition(judicalIds, jrdMessageBatchSize)
+            .forEach(data -> serviceBusMessages.add(new ServiceBusMessage(new Gson().toJson(data))));
 
         for (ServiceBusMessage message : serviceBusMessages) {
             if (messageBatch.tryAddMessage(message)) {
                 continue;
             }
             // The batch is full, so we create a new batch and send the batch.
-            serviceBusSenderClient.sendMessages(messageBatch, transactionContext);
+            sendMessageToAsb(serviceBusSenderClient, transactionContext, messageBatch, jobId);
+
             // create a new batch
             messageBatch = serviceBusSenderClient.createMessageBatch();
             // Add that message that we couldn't before.
@@ -82,6 +81,13 @@ public class TopicPublisher {
                     loggingComponentName, messageBatch.getMaxSizeInBytes(), jobId);
             }
         }
+        sendMessageToAsb(serviceBusSenderClient, transactionContext, messageBatch, jobId);
+    }
+
+    private void sendMessageToAsb(ServiceBusSenderClient serviceBusSenderClient,
+                                  ServiceBusTransactionContext transactionContext,
+                                  ServiceBusMessageBatch messageBatch,
+                                  String jobId) {
         if (messageBatch.getCount() > 0) {
             serviceBusSenderClient.sendMessages(messageBatch, transactionContext);
             log.info("{}:: Sent a batch of messages to the topic: {} ::Job id::{}", loggingComponentName, topic, jobId);

@@ -20,6 +20,7 @@ import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
+import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
 
@@ -43,6 +44,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${get-sidam-ids}")
     String getSidamIds;
 
+    @Value("${scheduler-audit-failure}")
+    String failedAuditFileCount;
+
     @Autowired
     TopicPublisher topicPublisher;
 
@@ -62,13 +66,20 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
 
         List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
+        int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
 
+        if (failedFileCount > 0) {
+            log.warn("{}:: JRD load failed, hence no publishing sidam id's to ASB", logComponentName, jobId);
+            updateJobCompletion(FILE_LOAD_FAILED, jobId);
+            return;
+        }
+
+        //To do check audit status of Parent files
         if (isFalse(validateSidamIdsExists(jobId, sidamIds))) {
             return;
         }
         //After Job completes Publish message in ASB
         publishMessage(jobStatus, sidamIds, jobId);
-        updateJobCompletion(SUCCESS, jobId);
         log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName, jobId);
     }
 
@@ -93,7 +104,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 || (FAILED.getStatus()).equals(status) && isNotEmpty(sidamIds)) {
                 //Publish or retry Message in ASB
                 log.info("{}:: Publishing/Retrying JRD messages in ASB for Job Id ", logComponentName, jobId);
-                topicPublisher.sendMessage(sidamIds);
+                topicPublisher.sendMessage(sidamIds, jobId);
+                updateJobCompletion(SUCCESS, jobId);
             }
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);

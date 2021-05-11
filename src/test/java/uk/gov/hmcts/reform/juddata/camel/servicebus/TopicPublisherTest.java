@@ -66,7 +66,7 @@ class TopicPublisherTest {
         doReturn(1).when(messageBatch).getCount();
         doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
         when(messageBatch.getCount()).thenReturn(1);
-        topicPublisher.sendMessage(sidamIdsList);
+        topicPublisher.sendMessage(sidamIdsList, "1");
         verify(messageBatch, times(3)).tryAddMessage(any());
         verify(messageBatch).getCount();
         verify(serviceBusSenderClient).sendMessages((ServiceBusMessageBatch) any(), any());
@@ -77,7 +77,7 @@ class TopicPublisherTest {
     void shouldThrowExceptionForConnectionIssues() {
         doReturn(transactionContext).when(serviceBusSenderClient).createTransaction();
         doThrow(new RuntimeException("Some Exception")).when(serviceBusSenderClient).createMessageBatch();
-        assertThrows(Exception.class, () -> topicPublisher.sendMessage(sidamIdsList));
+        assertThrows(Exception.class, () -> topicPublisher.sendMessage(sidamIdsList, "1"));
         verify(serviceBusSenderClient, times(1)).rollbackTransaction(any());
     }
 
@@ -87,7 +87,7 @@ class TopicPublisherTest {
         doReturn(1).when(messageBatch).getCount();
         doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
         when(messageBatch.getCount()).thenReturn(1);
-        topicPublisher.sendMessage(sidamIdsList);
+        topicPublisher.sendMessage(sidamIdsList, "1");
         verify(serviceBusSenderClient, times(4))
             .sendMessages((ServiceBusMessageBatch) any(), any());
     }
@@ -99,7 +99,7 @@ class TopicPublisherTest {
         doReturn(1).when(messageBatch).getCount();
         doReturn(false).when(messageBatch).tryAddMessage(any());
         doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
-        topicPublisher.sendMessage(sidamIdsList);
+        topicPublisher.sendMessage(sidamIdsList, "1");
         verify(messageBatch, times(6)).tryAddMessage(any());
         verify(serviceBusSenderClient, times(1)).commitTransaction(any());
     }

@@ -27,6 +27,7 @@ import java.util.List;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
@@ -149,7 +150,7 @@ public abstract class JrdBatchIntegrationSupport {
         testContextManager = new TestContextManager(getClass());
         testContextManager.prepareTestInstance(this);
         SpringStarter.getInstance().init(testContextManager);
-        doNothing().when(topicPublisher).sendMessage(anyList());
+        doNothing().when(topicPublisher).sendMessage(anyList(), anyString());
     }
 
     @BeforeAll
