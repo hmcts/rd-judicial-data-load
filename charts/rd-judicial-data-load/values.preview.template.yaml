@@ -11,18 +11,15 @@ job:
     ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
     ENV_NAME: preview
     CONTAINER_NAME: jud-ref-data
-    JRD_MQ_USERNAME: SendAndListenSharedAccessKey
-    JRD_MQ_TOPIC_NAME: rd-judicial-topic-aat
     JRD_MQ_TRUST_ALL_CERTS: false
-    JRD_DATA_PER_MESSAGE: 100
-    JRD_MQ_HOST: rd-servicebus-aat.servicebus.windows.net
+    JRD_DATA_PER_MESSAGE: 500
   keyVaults:
     rd:
       secrets:
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
         - ApplicationInsightsInstrumentationKey
-        - judicial-topic-primary-send-listen-shared-access-key
+        - judicial-topic-primary-connection-string
   secrets:
     BLOB_ACCOUNT_NAME:
       secretRef: storage-secret-{{ .Release.Name }}
