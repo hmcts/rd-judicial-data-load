@@ -19,7 +19,6 @@ job:
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
         - ApplicationInsightsInstrumentationKey
-        - judicial-topic-primary-send-listen-shared-access-key
         - judicial-topic-primary-connection-string
   secrets:
     BLOB_ACCOUNT_NAME:

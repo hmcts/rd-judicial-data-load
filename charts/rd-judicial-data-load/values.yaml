@@ -31,7 +31,6 @@ job:
         - ACCOUNT-KEY
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
-        - judicial-topic-primary-send-listen-shared-access-key
         - judicial-topic-primary-connection-string
 postgresql:
   enabled: false
