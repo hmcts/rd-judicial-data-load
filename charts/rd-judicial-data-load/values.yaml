@@ -38,3 +38,6 @@ postgresql:
 blobstorage:
   enabled: false
 
+servicebus:
+  enabled: false
+

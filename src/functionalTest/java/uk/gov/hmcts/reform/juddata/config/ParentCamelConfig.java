@@ -1,11 +1,14 @@
 package uk.gov.hmcts.reform.juddata.config;
 
+import com.azure.core.amqp.AmqpRetryOptions;
+import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -52,6 +55,12 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 public class ParentCamelConfig {
+
+    @Value("${serviceBusSecret}")
+    String asbConnectionStringAks;
+
+    @Value("${execution_environment}")
+    String executionEnv;
 
     @Bean
     JudicialUserProfileProcessor judicialUserProfileProcessor() {
@@ -298,11 +307,24 @@ public class ParentCamelConfig {
 
     @Bean
     TopicPublisher topicPublisher() {
+        if ("preview".equalsIgnoreCase(executionEnv)) {
+            return new TopicPublisher();
+        }
         return mock(TopicPublisher.class);
     }
 
     @Bean
     ServiceBusSenderClient serviceBusSenderClient() {
+
+        //Use temporary ASB service bus for AKS PR
+        if ("preview".equalsIgnoreCase(executionEnv)) {
+            return new ServiceBusClientBuilder()
+                .connectionString(asbConnectionStringAks)
+                .retryOptions(new AmqpRetryOptions())
+                .sender()
+                .topicName("jrd-aks-topic")
+                .buildClient();
+        }
         return mock(ServiceBusSenderClient.class);
     }
     // miscellaneous configuration ends

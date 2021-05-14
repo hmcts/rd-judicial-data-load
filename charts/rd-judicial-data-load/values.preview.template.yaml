@@ -43,6 +43,16 @@ postgresql:
   persistence:
     enabled: false
 
+servicebus:
+  resourceGroup: rd
+  teamName: "RD"
+  location: uksouth
+  serviceplan: basic
+  setup:
+    topics:
+      - name: jrd-aks-topic
+  enabled: true
+
 blobstorage:
   resourceGroup: rd
   teamName: "RD"

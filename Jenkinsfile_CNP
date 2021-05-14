@@ -1,5 +1,4 @@
 #!groovy
-
 @Library("Infrastructure")
 import uk.gov.hmcts.contino.GradleBuilder
 
@@ -43,6 +42,11 @@ withPipeline(type, product, component) {
     }
     onPR {
         env.execution_environment = "preview"
+
+        def dockerImage = new DockerImage(product, component, null, env.BRANCH_NAME, env.GIT_COMMIT)
+        def subscription = env.SUBSCRIPTION_NAME
+        def aksServiceName = dockerImage.getAksServiceName().toLowerCase()
+        def serviceBusSecret = "servicebus-secret-topic-${aksServiceName}-servicebus-yourTopic"
     }
 
     disableLegacyDeployment()
