@@ -31,7 +31,7 @@ job:
       secretRef: storage-secret-{{ .Release.Name }}
       key: primaryBlobServiceEndPoint
     SB_TOPIC_CONN_STRING:
-      secretRef: servicebus-secret-topic-${.Release.Name }-servicebus-jrd-aks-topic
+      secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
       key: connectionString
 global:
   jobKind: CronJob
