@@ -47,14 +47,14 @@ withPipeline(type, product, component) {
         def dockerImage = new DockerImage(product, component, null, env.BRANCH_NAME, env.GIT_COMMIT)
         def subscription = env.SUBSCRIPTION_NAME
         def aksServiceName = dockerImage.getAksServiceName().toLowerCase()
-        def serviceBusSecret = "servicebus-secret-topic-${aksServiceName}-servicebus-yourTopic"
+        env.serviceBusSecret = "servicebus-secret-topic-${aksServiceName}-servicebus-yourTopic"
     }
 
     disableLegacyDeployment()
     enableAksStagingDeployment()
 
     nonServiceApp()
-
+nv
     // Sync demo and perftest with master branch
     syncBranchesWithMaster(branchesToSync)
 
