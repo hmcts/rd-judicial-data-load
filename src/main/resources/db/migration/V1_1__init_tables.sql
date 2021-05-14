@@ -131,5 +131,3 @@ ALTER TABLE judicial_office_authorisation ADD CONSTRAINT authorisation_id FOREIG
 REFERENCES authorisation_type (authorisation_id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-
-
