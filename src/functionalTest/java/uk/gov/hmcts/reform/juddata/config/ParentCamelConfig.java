@@ -56,7 +56,7 @@ import static org.mockito.Mockito.mock;
 @Configuration
 public class ParentCamelConfig {
 
-    @Value("${serviceBusSecret}")
+    @Value("${serviceBusSecret:''}")
     String asbConnectionStringAks;
 
     @Value("${execution_environment}")
