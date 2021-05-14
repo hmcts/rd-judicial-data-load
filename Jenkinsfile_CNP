@@ -44,17 +44,20 @@ withPipeline(type, product, component) {
         env.execution_environment = "aat"
     }
     onPR {
-        env.execution_environment = "preview"
+        withAksClient('nonprod', product) {
+            env.execution_environment = "preview"
 
-        def dockerImage = new DockerImage(product, component, null, env.BRANCH_NAME, env.GIT_COMMIT)
-        def subscription = env.SUBSCRIPTION_NAME
-        def aksServiceName = dockerImage.getAksServiceName().toLowerCase()
-        def serviceBusSecret = "servicebus-secret-topic-${aksServiceName}-servicebus-jrd-aks-topic"
+            def dockerImage = new DockerImage(product, component, null, env.BRANCH_NAME, env.GIT_COMMIT)
+            def subscription = env.SUBSCRIPTION_NAME
+            def aksServiceName = dockerImage.getAksServiceName().toLowerCase()
+            def serviceBusSecret = "servicebus-secret-topic-${aksServiceName}-servicebus-jrd-aks-topic"
 
-        def namespace = new TeamConfig(this).getNameSpace(product)
-        def kubectl = new Kubectl(this, subscription, namespace)
-        kubectl.login()
-        env.serviceBusSecretString = kubectl.getSecret(serviceBusSecret, namespace, "{.data.servicebusConnectionString}")
+            def namespace = new TeamConfig(this).getNameSpace(product)
+            def kubectl = new Kubectl(this, subscription, namespace)
+            kubectl.login()
+
+            env.serviceBusSecretString = kubectl.getSecret(serviceBusSecret, namespace, "{.data.connectionString}")
+        }
     }
 
     disableLegacyDeployment()
