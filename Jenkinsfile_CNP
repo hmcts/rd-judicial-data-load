@@ -1,7 +1,9 @@
 #!groovy
-
 @Library("Infrastructure")
+import uk.gov.hmcts.contino.DockerImage
 import uk.gov.hmcts.contino.GradleBuilder
+import uk.gov.hmcts.contino.Kubectl
+import uk.gov.hmcts.pipeline.TeamConfig
 
 def type = "java"
 def product = "rd"
@@ -63,24 +65,38 @@ withPipeline(type, product, component) {
     }
 
     after('akschartsinstall') {
-        def time = "120"
-        echo "Waiting ${time} seconds for deployment to complete prior starting functional testing"
-        sleep time.toInteger() // seconds
-        try {
-            builder.gradle('functional')
-        } finally {
-            junit '**/test-results/**/*.xml'
-            junit 'build/test-results/functional/**/*.xml'
-            archiveArtifacts 'build/reports/tests/functional/index.html'
 
-            publishHTML target: [
-                    allowMissing         : true,
-                    alwaysLinkToLastBuild: true,
-                    keepAll              : true,
-                    reportDir            : "build/reports/tests/functional",
-                    reportFiles          : "index.html",
-                    reportName           : "JRD Functional Test Report"
-            ]
+        if (env.BRANCH_NAME.startsWith("PR")) {
+            withAksClient('nonprod', product) {
+
+                def dockerImage = new DockerImage(product, component, null, env.BRANCH_NAME, env.GIT_COMMIT)
+                def subscription = env.SUBSCRIPTION_NAME
+                def aksServiceName = dockerImage.getAksServiceName().toLowerCase()
+                def serviceBusSecret = "servicebus-secret-topic-${aksServiceName}-servicebus-jrd-aks-topic"
+
+                def namespace = new TeamConfig(this).getNameSpace(product)
+                def kubectl = new Kubectl(this, subscription, namespace)
+                kubectl.login()
+                sh "sleep 120s"
+                env.serviceBusSecretString = kubectl.getSecret(serviceBusSecret, namespace, "{.data.connectionString}")
+            }
         }
-    }
+
+            try {
+                builder.gradle('functional')
+            } finally {
+                junit '**/test-results/**/*.xml'
+                junit 'build/test-results/functional/**/*.xml'
+                archiveArtifacts 'build/reports/tests/functional/index.html'
+
+                publishHTML target: [
+                        allowMissing         : true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll              : true,
+                        reportDir            : "build/reports/tests/functional",
+                        reportFiles          : "index.html",
+                        reportName           : "JRD Functional Test Report"
+                ]
+            }
+        }
 }

@@ -11,18 +11,15 @@ job:
     ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
     ENV_NAME: preview
     CONTAINER_NAME: jud-ref-data
-    JRD_MQ_USERNAME: SendAndListenSharedAccessKey
-    JRD_MQ_TOPIC_NAME: rd-judicial-topic-aat
     JRD_MQ_TRUST_ALL_CERTS: false
-    JRD_DATA_PER_MESSAGE: 100
-    JRD_MQ_HOST: rd-servicebus-aat.servicebus.windows.net
+    JRD_DATA_PER_MESSAGE: 500
   keyVaults:
     rd:
       secrets:
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
         - ApplicationInsightsInstrumentationKey
-        - judicial-topic-primary-send-listen-shared-access-key
+        - judicial-topic-primary-connection-string
   secrets:
     BLOB_ACCOUNT_NAME:
       secretRef: storage-secret-{{ .Release.Name }}
@@ -33,6 +30,9 @@ job:
     BLOB_SERVICE_ENDPOINT:
       secretRef: storage-secret-{{ .Release.Name }}
       key: primaryBlobServiceEndPoint
+    SB_TOPIC_CONN_STRING:
+      secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
+      key: connectionString
 global:
   jobKind: CronJob
 
@@ -46,12 +46,24 @@ postgresql:
   persistence:
     enabled: false
 
+servicebus:
+  resourceGroup: rd
+  teamName: "RD"
+  location: uksouth
+  serviceplan: standard
+  setup:
+    topics:
+      - name: jrd-aks-topic
+        subscriptionNeeded: yes
+  enabled: true
+
+
 blobstorage:
   resourceGroup: rd
   teamName: "RD"
   location: uksouth
   setup:
     containers:
-    - jud-ref-data
-    - jud-ref-data-archive
+      - jud-ref-data
+      - jud-ref-data-archive
   enabled: true

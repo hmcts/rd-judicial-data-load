@@ -3,7 +3,7 @@ appVersion: "0.1"
 description:  Data load from Judicial HR systems
 name: rd-judicial-data-load
 home: https://github.com/hmcts/rd-judicial-data-load
-version: 0.2.1
+version: 0.2.3
 maintainers:
   - name: Reference Data Team
 dependencies:
@@ -18,3 +18,7 @@ dependencies:
     version: ~8.9.8
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
+  - name: servicebus
+    version: 0.3.1
+    repository: https://hmctspublic.azurecr.io/helm/v1/repo/
+    condition: servicebus.enabled
