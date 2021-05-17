@@ -66,9 +66,7 @@ withPipeline(type, product, component) {
     }
 
     after('akschartsinstall') {
-        def time = "120"
-        echo "Waiting ${time} seconds for deployment to complete prior starting functional testing"
-        sleep time.toInteger() // seconds
+
         if (env.BRANCH_NAME.startsWith("PR")) {
             withAksClient('nonprod', product) {
 
@@ -80,7 +78,7 @@ withPipeline(type, product, component) {
                 def namespace = new TeamConfig(this).getNameSpace(product)
                 def kubectl = new Kubectl(this, subscription, namespace)
                 kubectl.login()
-
+                sh "sleep 120s"
                 env.serviceBusSecretString = kubectl.getSecret(serviceBusSecret, namespace, "{.data.connectionString}")
             }
         }
