@@ -50,11 +50,13 @@ servicebus:
   resourceGroup: rd
   teamName: "RD"
   location: uksouth
-  serviceplan: basic
+  serviceplan: standard
   setup:
     topics:
       - name: jrd-aks-topic
+        subscriptionNeeded: yes
   enabled: true
+
 
 blobstorage:
   resourceGroup: rd
@@ -62,6 +64,6 @@ blobstorage:
   location: uksouth
   setup:
     containers:
-    - jud-ref-data
-    - jud-ref-data-archive
+      - jud-ref-data
+      - jud-ref-data-archive
   enabled: true
