@@ -66,6 +66,9 @@ withPipeline(type, product, component) {
     }
 
     after('akschartsinstall') {
+        def time = "120"
+        echo "Waiting ${time} seconds for deployment to complete prior starting functional testing"
+        sleep time.toInteger() // seconds
         if (env.BRANCH_NAME.startsWith("PR")) {
             withAksClient('nonprod', product) {
 
@@ -82,9 +85,6 @@ withPipeline(type, product, component) {
             }
         }
 
-            def time = "120"
-            echo "Waiting ${time} seconds for deployment to complete prior starting functional testing"
-            sleep time.toInteger() // seconds
             try {
                 builder.gradle('functional')
             } finally {
