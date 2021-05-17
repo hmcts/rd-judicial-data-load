@@ -35,9 +35,6 @@ job:
 postgresql:
   enabled: false
 
-blobstorage:
-  enabled: false
-
 servicebus:
   enabled: false
 
