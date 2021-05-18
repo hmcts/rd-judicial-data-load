@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
+import uk.gov.hmcts.reform.juddata.configuration.MessagingConfig;
 
 import java.util.Date;
 import java.util.List;
@@ -44,7 +45,8 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
     + "classpath:application-leaf-integration.yml"})
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {ParentCamelConfig.class, LeafCamelConfig.class, CamelTestContextBootstrapper.class,
-    JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
+    JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class,
+    MessagingConfig.class},
     initializers = ConfigFileApplicationContextInitializer.class)
 @SpringBootTest
 @CamelSpringBootTest

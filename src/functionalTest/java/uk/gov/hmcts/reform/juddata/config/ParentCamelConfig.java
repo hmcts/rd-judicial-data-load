@@ -1,8 +1,5 @@
 package uk.gov.hmcts.reform.juddata.config;
 
-import com.azure.core.amqp.AmqpRetryOptions;
-import com.azure.messaging.servicebus.ServiceBusClientBuilder;
-import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
@@ -56,8 +53,6 @@ import static org.mockito.Mockito.mock;
 @Configuration
 public class ParentCamelConfig {
 
-    @Value("${serviceBusSecretString:''}")
-    String asbConnectionStringAks;
 
     @Value("${execution_environment}")
     String executionEnv;
@@ -313,20 +308,6 @@ public class ParentCamelConfig {
         return mock(TopicPublisher.class);
     }
 
-    @Bean
-    ServiceBusSenderClient serviceBusSenderClient() {
-
-        //Use temporary ASB service bus for AKS PR
-        if ("preview".equalsIgnoreCase(executionEnv)) {
-            return new ServiceBusClientBuilder()
-                .connectionString(asbConnectionStringAks)
-                .retryOptions(new AmqpRetryOptions())
-                .sender()
-                .topicName("jrd-aks-topic")
-                .buildClient();
-        }
-        return mock(ServiceBusSenderClient.class);
-    }
     // miscellaneous configuration ends
     // miscellaneous configuration ends
 }
