@@ -75,6 +75,7 @@ public class TopicPublisher {
             if (messageBatch.tryAddMessage(message)) {
                 continue;
             }
+
             // The batch is full, so we create a new batch and send the batch.
             sendMessageToAsb(serviceBusSenderClient, transactionContext, messageBatch, jobId);
 
