@@ -10,11 +10,12 @@ import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.juddata.camel.util.PublishJudicialData;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.validation.constraints.NotNull;
 
 import static com.google.common.collect.Lists.partition;
 
@@ -64,7 +65,11 @@ public class TopicPublisher {
         List<ServiceBusMessage> serviceBusMessages = new ArrayList<>();
 
         partition(judicalIds, jrdMessageBatchSize)
-            .forEach(data -> serviceBusMessages.add(new ServiceBusMessage(new Gson().toJson(data))));
+                .forEach(data -> {
+                    PublishJudicialData judicialDataChunk = new PublishJudicialData();
+                    judicialDataChunk.setUserIds(data);
+                    serviceBusMessages.add(new ServiceBusMessage(new Gson().toJson(judicialDataChunk)));
+                });
 
         for (ServiceBusMessage message : serviceBusMessages) {
             if (messageBatch.tryAddMessage(message)) {
