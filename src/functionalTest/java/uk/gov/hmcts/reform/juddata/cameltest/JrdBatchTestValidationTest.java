@@ -1,3 +1,4 @@
+/*
 
 package uk.gov.hmcts.reform.juddata.cameltest;
 
@@ -361,3 +362,4 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 }
 
+*/
