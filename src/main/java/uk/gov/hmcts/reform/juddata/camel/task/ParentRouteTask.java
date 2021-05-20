@@ -14,6 +14,8 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.valueOf;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
@@ -42,12 +44,15 @@ public class ParentRouteTask implements Tasklet {
     @Value("${logging-component-name}")
     private String logComponentName;
 
+    @PostConstruct
+    public void init() {
+        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
+        dataLoadRoute.startRoute(startRoute, routesToExecute);
+    }
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         log.info("{}:: ParentRouteTask starts::", logComponentName);
-        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
-        dataLoadRoute.startRoute(startRoute, routesToExecute);
         camelContext.getGlobalOptions().put(IS_PARENT, valueOf(TRUE));
         String status = jrdExecutor.execute(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION, startRoute);
         log.info("{}:: ParentRouteTask completes with {}::", logComponentName, status);

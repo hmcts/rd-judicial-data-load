@@ -46,8 +46,7 @@ class ParentRouteTaskTest {
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         when(camelContext.getGlobalOptions()).thenReturn(globalOptions);
         assertEquals(RepeatStatus.FINISHED, parentRouteTask.execute(stepContribution, chunkContext));
-        verify(dataLoadRoute, times(1)).startRoute(any(), any());
         verify(jrdExecutor, times(1)).execute(any(), any(), any());
-        verify(camelContext, times(2)).getGlobalOptions();
+        verify(camelContext, times(1)).getGlobalOptions();
     }
 }

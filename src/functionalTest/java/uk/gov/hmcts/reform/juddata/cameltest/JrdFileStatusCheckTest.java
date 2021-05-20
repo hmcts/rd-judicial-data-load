@@ -16,8 +16,8 @@ import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfig
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
@@ -85,15 +85,15 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     List<String> routesToExecute;
 
     @BeforeEach
-    public void init() {
-        jdbcTemplate.execute(truncateAudit);
-        SpringStarter.getInstance().restart();
+    public void init() throws Exception {
+        new TestContextManager(getClass()).prepareTestInstance(this);
+        testContextManager = new TestContextManager(getClass());
+        testContextManager.prepareTestInstance(this);
+        SpringStarter.getInstance().init(testContextManager);
     }
 
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
-        "/testData/truncate-exception.sql"})
     void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path
@@ -153,8 +153,6 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
-        "/testData/truncate-exception.sql"})
     void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path
