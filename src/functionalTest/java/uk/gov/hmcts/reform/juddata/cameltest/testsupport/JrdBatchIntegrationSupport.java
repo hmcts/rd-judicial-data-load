@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
@@ -33,6 +34,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHEST
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
 @ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public abstract class JrdBatchIntegrationSupport {
 
     public static final String FILE_STATUS = "status";
@@ -138,14 +140,6 @@ public abstract class JrdBatchIntegrationSupport {
 
     @BeforeEach
     public void setUpStringContext() throws Exception {
-
-        if (count > 0) {
-            new TestContextManager(this.getClass()).prepareTestInstance(this);
-            testContextManager = new TestContextManager(getClass());
-            testContextManager.prepareTestInstance(this);
-            SpringStarter.getInstance().init(testContextManager);
-            SpringStarter.getInstance().restart();
-        }
 
         executeScripts("testData/truncate-all.sql");
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
