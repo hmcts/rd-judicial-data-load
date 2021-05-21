@@ -378,6 +378,5 @@ test {
 
 functional {
     useJUnitPlatform()
-    maxParallelForks = 2
 }
 
