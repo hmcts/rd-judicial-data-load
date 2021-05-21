@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
+import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
@@ -66,6 +67,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testTaskletIdempotent() throws Exception {
+        //clean context
+        SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
@@ -76,7 +79,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         final Timestamp timestamp = (Timestamp) auditDetails.get(0).get("scheduler_end_time");
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
-
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 6);

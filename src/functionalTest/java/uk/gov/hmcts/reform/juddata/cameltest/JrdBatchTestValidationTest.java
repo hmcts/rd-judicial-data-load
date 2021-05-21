@@ -71,7 +71,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @CamelSpringBootTest
 class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
-
     @Autowired
     JrdExecutor jrdExecutor;
 

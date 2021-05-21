@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -16,7 +15,6 @@ import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfig
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -83,14 +81,6 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
     @Value("${routes-to-execute-orchestration}")
     List<String> routesToExecute;
-
-    @BeforeEach
-    public void init() throws Exception {
-        new TestContextManager(getClass()).prepareTestInstance(this);
-        testContextManager = new TestContextManager(getClass());
-        testContextManager.prepareTestInstance(this);
-        SpringStarter.getInstance().init(testContextManager);
-    }
 
 
     @Test

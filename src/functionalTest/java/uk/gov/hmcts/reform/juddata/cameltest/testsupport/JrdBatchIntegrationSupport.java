@@ -134,18 +134,13 @@ public abstract class JrdBatchIntegrationSupport {
     @Autowired
     DataSource dataSource;
 
-    static int count = 0;
-
     @BeforeEach
     public void setUpStringContext() throws Exception {
 
-        if (count > 0) {
-            new TestContextManager(this.getClass()).prepareTestInstance(this);
-            testContextManager = new TestContextManager(getClass());
-            testContextManager.prepareTestInstance(this);
-            SpringStarter.getInstance().init(testContextManager);
-            SpringStarter.getInstance().restart();
-        }
+        new TestContextManager(getClass()).prepareTestInstance(this);
+        testContextManager = new TestContextManager(getClass());
+        testContextManager.prepareTestInstance(this);
+        SpringStarter.getInstance().init(testContextManager);
 
         executeScripts("testData/truncate-all.sql");
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
@@ -155,8 +150,6 @@ public abstract class JrdBatchIntegrationSupport {
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         executeScripts("testData/default-leaf-load.sql");
-
-        count++;
     }
 
 
