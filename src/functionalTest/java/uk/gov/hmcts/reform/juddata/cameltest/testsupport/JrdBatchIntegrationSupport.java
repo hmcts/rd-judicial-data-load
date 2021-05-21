@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 
 @ExtendWith(SpringExtension.class)
 public abstract class JrdBatchIntegrationSupport {
-
 
     public static final String FILE_STATUS = "status";
 
@@ -134,26 +132,33 @@ public abstract class JrdBatchIntegrationSupport {
     protected TestContextManager testContextManager;
 
     @Autowired
-    Flyway flyway;
-
-    @Autowired
     DataSource dataSource;
 
+    static int count = 0;
 
     @BeforeEach
     public void setUpStringContext() throws Exception {
-        executeScripts("testData/drop-all.sql");
 
+        if (count > 0) {
+            new TestContextManager(this.getClass()).prepareTestInstance(this);
+            testContextManager = new TestContextManager(getClass());
+            testContextManager.prepareTestInstance(this);
+            SpringStarter.getInstance().init(testContextManager);
+            SpringStarter.getInstance().restart();
+        }
+
+        executeScripts("testData/truncate-all.sql");
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
         dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
 
-        flyway.baseline();
-        flyway.migrate();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         executeScripts("testData/default-leaf-load.sql");
+
+        count++;
     }
+
 
     public void executeScripts(String path) {
         var a = new FileSystemResource(getClass().getClassLoader().getResource(path)

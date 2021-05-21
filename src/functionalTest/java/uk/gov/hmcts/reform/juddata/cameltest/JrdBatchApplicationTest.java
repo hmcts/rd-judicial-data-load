@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.SqlConfig;
@@ -56,7 +55,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Autowired
     DataIngestionLibraryRunner dataIngestionLibraryRunner;
 
-
     @Test
     void testTasklet() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
@@ -67,7 +65,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void testTaskletIdempotent() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
