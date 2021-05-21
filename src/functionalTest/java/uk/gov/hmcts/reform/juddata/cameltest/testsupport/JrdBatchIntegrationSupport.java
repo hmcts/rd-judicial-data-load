@@ -172,6 +172,7 @@ public abstract class JrdBatchIntegrationSupport {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
         }
+        System.setProperty("azure.storage.container-name", "jud-ref-data");
     }
 
     @AfterEach
