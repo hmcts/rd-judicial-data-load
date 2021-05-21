@@ -108,7 +108,7 @@ idea {
 configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
-    functionalTestCompile.extendsFrom testCompile
+    functionalTestImplementation.extendsFrom testCompile
     functionalTestRuntime.extendsFrom testRuntime
 
 }
@@ -225,11 +225,15 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
-    implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson) {
-        force = true
+    implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-databind') {
+        version {
+            strictly versions.jackson
+        }
     }
-    implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson) {
-        force = true
+    implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-core') {
+        version {
+            strictly versions.jackson
+        }
     }
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
@@ -316,19 +320,23 @@ dependencies {
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 
-    testImplementation(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
-        force = true
+    testImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version {
+            strictly '1.23'
+        }
     }
 
-    functionalTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
-        force = true
+    functionalTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version {
+            strictly '1.23'
+        }
     }
 
-    functionalTestCompile sourceSets.main.runtimeClasspath
-    functionalTestCompile sourceSets.test.runtimeClasspath
+    functionalTestImplementation sourceSets.main.runtimeClasspath
+    functionalTestImplementation sourceSets.test.runtimeClasspath
 
-    smokeTestCompile sourceSets.main.runtimeClasspath
-    smokeTestCompile sourceSets.test.runtimeClasspath
+    smokeTestImplementation sourceSets.main.runtimeClasspath
+    smokeTestImplementation sourceSets.test.runtimeClasspath
 }
 
 dependencyCheck {
@@ -351,7 +359,7 @@ dependencyUpdates.resolutionStrategy = {
 gradle.startParameter.continueOnFailure = true
 
 bootJar {
-    archiveName = jarName
+    archiveFileName = jarName
     manifest {
         attributes('Implementation-Version': project.version.toString())
     }
