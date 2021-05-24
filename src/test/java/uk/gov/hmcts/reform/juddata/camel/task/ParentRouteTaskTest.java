@@ -41,6 +41,12 @@ class ParentRouteTaskTest {
     ChunkContext chunkContext = mock(ChunkContext.class);
 
     @Test
+    void testInit() throws Exception {
+        parentRouteTask.init();
+        verify(dataLoadRoute).startRoute(any(), any());
+    }
+
+    @Test
     void testParentExecute() throws Exception {
         setField(parentRouteTask, "logComponentName", "testlogger");
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");

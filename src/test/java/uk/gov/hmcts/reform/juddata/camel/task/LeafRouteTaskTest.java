@@ -30,6 +30,12 @@ class LeafRouteTaskTest {
     }
 
     @Test
+    void testInit() throws Exception {
+        leafRouteTask.init();
+        verify(dataLoadRoute).startRoute(any(), any());
+    }
+
+    @Test
     void testExecute() throws Exception {
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         assertEquals(RepeatStatus.FINISHED, leafRouteTask.execute(any(), any()));
