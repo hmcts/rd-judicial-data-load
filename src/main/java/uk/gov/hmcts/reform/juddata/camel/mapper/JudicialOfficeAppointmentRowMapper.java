@@ -23,7 +23,7 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         Map<String, Object> judOfficeAppointmentRow = new HashMap<>();
 
         judOfficeAppointmentRow.put("judicial_office_appointment_id", generateId());
-        judOfficeAppointmentRow.put("elinks_id", officeAppointment.getElinksId());
+        judOfficeAppointmentRow.put("per_id", officeAppointment.getPerId());
         judOfficeAppointmentRow.put("role_id",officeAppointment.getRoleId());
         judOfficeAppointmentRow.put("contract_type_id", returnNullIfBlank(officeAppointment.getContractType()));
         judOfficeAppointmentRow.put("base_location_id", returnNullIfBlank(officeAppointment.getBaseLocationId()));

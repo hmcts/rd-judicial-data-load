@@ -43,7 +43,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PAR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_CONTRACT;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ELINKS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ROLES;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
@@ -112,7 +112,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
         "/testData/truncate-exception.sql"})
-    void testAuthorisationElinksMissing() throws Exception {
+    void testAuthorisationPerMissing() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthElinkIdMissing);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -181,8 +181,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
-        assertEquals("1", judicialUserProfileList.get(0).get("elinks_id"));
-        assertEquals("2", judicialUserProfileList.get(1).get("elinks_id"));
+        assertEquals("1", judicialUserProfileList.get(0).get("per_id"));
+        assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
         assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("email_id"));
         assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("email_id"));
         assertEquals(2, judicialUserProfileList.size());
@@ -190,8 +190,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
         assertNotNull(judicialAppointmentList.get(1).get("judicial_office_appointment_id"));
-        assertEquals("1", judicialAppointmentList.get(0).get("elinks_id"));
-        assertEquals("2", judicialAppointmentList.get(1).get("elinks_id"));
+        assertEquals("1", judicialAppointmentList.get(0).get("per_id"));
+        assertEquals("2", judicialAppointmentList.get(1).get("per_id"));
         assertEquals(2, judicialAppointmentList.size());
 
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 2);
@@ -312,8 +312,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
-        assertEquals("1", judicialUserProfileList.get(0).get("elinks_id"));
-        assertEquals("2", judicialUserProfileList.get(1).get("elinks_id"));
+        assertEquals("1", judicialUserProfileList.get(0).get("per_id"));
+        assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
         assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("email_id"));
         assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("email_id"));
         assertEquals(2, judicialUserProfileList.size());
@@ -321,8 +321,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
-        assertEquals("1", judicialAppointmentList.get(0).get("elinks_id"));
-        assertEquals("2", judicialAppointmentList.get(1).get("elinks_id"));
+        assertEquals("1", judicialAppointmentList.get(0).get("per_id"));
+        assertEquals("2", judicialAppointmentList.get(1).get("per_id"));
         assertEquals(2, judicialAppointmentList.size());
     }
 
@@ -347,13 +347,13 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
         assertEquals(6, exceptionList.size());
-        assertEquals(MISSING_ELINKS, exceptionList.get(0).get("error_description"));
+        assertEquals(MISSING_PER, exceptionList.get(0).get("error_description"));
         assertEquals("judicial-office-appointment", exceptionList.get(0).get("table_name"));
         assertEquals(MISSING_ROLES, exceptionList.get(1).get("error_description"));
         assertEquals(MISSING_CONTRACT, exceptionList.get(2).get("error_description"));
         assertEquals(MISSING_LOCATION, exceptionList.get(3).get("error_description"));
         assertEquals(MISSING_BASE_LOCATION, exceptionList.get(4).get("error_description"));
-        assertEquals(MISSING_ELINKS, exceptionList.get(5).get("error_description"));
+        assertEquals(MISSING_PER, exceptionList.get(5).get("error_description"));
         assertEquals("judicial_office_authorisation", exceptionList.get(5).get("table_name"));
     }
 }

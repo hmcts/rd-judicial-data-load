@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
@@ -21,8 +21,8 @@ class JudicialOfficeAppointmentTest {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
         JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMock(currentDate,
-            dateTime, ELINKSID_1);
-        assertEquals(ELINKSID_1, judicialOfficeAppointment.getElinksId());
+            dateTime, PERID_1);
+        assertEquals(PERID_1, judicialOfficeAppointment.getPerId());
         assertEquals("roleId_1", judicialOfficeAppointment.getRoleId());
         assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());

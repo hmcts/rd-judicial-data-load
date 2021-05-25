@@ -20,7 +20,7 @@ public class JudicialOfficeAuthorisationRowMapper {
         Map<String, Object> judOfficeAppointmentRow = new HashMap<>();
 
         judOfficeAppointmentRow.put("judicial_office_auth_id", generateId());
-        judOfficeAppointmentRow.put("elinks_id", judicialOfficeAuthorisation.getElinksId());
+        judOfficeAppointmentRow.put("per_id", judicialOfficeAuthorisation.getPerId());
         judOfficeAppointmentRow.put("jurisdiction", judicialOfficeAuthorisation.getJurisdiction());
         judOfficeAppointmentRow.put("ticket_id", judicialOfficeAuthorisation.getTicketId());
         judOfficeAppointmentRow.put("start_date", getDateTimeStamp(judicialOfficeAuthorisation.getStartDate()));

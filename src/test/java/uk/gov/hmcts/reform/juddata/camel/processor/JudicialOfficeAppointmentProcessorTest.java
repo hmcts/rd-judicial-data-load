@@ -47,10 +47,10 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_3;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_4;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_2;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_3;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_4;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
@@ -62,18 +62,18 @@ class JudicialOfficeAppointmentProcessorTest {
     LocalDateTime dateTime = LocalDateTime.now();
 
     JudicialOfficeAppointment judicialOfficeAppointmentMock1 = createJudicialOfficeAppointmentMock(currentDate,
-        dateTime, ELINKSID_1);
+        dateTime, PERID_1);
 
 
     JudicialOfficeAppointment judicialOfficeAppointmentMock2 = createJudicialOfficeAppointmentMock(currentDate,
-        dateTime, ELINKSID_2);
+        dateTime, PERID_2);
 
 
     JudicialOfficeAppointment judicialOfficeAppointmentMock3 = createJudicialOfficeAppointmentMock(currentDate,
-        dateTime, ELINKSID_3);
+        dateTime, PERID_3);
 
     JudicialOfficeAppointment judicialOfficeAppointmentMock4 = createJudicialOfficeAppointmentMock(currentDate,
-        dateTime, ELINKSID_4);
+        dateTime, PERID_4);
 
     JudicialOfficeAppointmentProcessor judicialOfficeAppointmentProcessor;
 
@@ -136,8 +136,8 @@ class JudicialOfficeAppointmentProcessorTest {
         setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
-        when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(ImmutableSet.of(ELINKSID_1,
-            ELINKSID_2, "invalid"));
+        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(ImmutableSet.of(PERID_1,
+            PERID_2, "invalid"));
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
         setField(judicialOfficeAppointmentProcessor, "fetchRoles", "roles");
@@ -193,7 +193,7 @@ class JudicialOfficeAppointmentProcessorTest {
     }
 
     @Test
-    void should_return_JudicialOfficeAppointmentRow_with_single_record_with_elinks_id_nullresponse() {
+    void should_return_JudicialOfficeAppointmentRow_with_single_record_with_per_id_nullresponse() {
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointmentMock1);
 
@@ -217,7 +217,7 @@ class JudicialOfficeAppointmentProcessorTest {
     @SuppressWarnings("unchecked")
     void should_return_JudicialOfficeAppointmentRow_response_skip_invalidProfiles() throws Exception {
 
-        judicialOfficeAppointmentMock4.setElinksId("elinksid_4");
+        judicialOfficeAppointmentMock4.setPerId("perid_4");
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
@@ -230,15 +230,15 @@ class JudicialOfficeAppointmentProcessorTest {
 
         setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",
             judicialUserProfileProcessor);
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
-        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_3);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_3);
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock);
         judicialUserProfiles.add(judicialUserProfileMock2);
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
-        when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(Collections.singleton(ELINKSID_2));
+        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         setField(judicialOfficeAppointmentProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
@@ -270,10 +270,10 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
         JudicialOfficeAppointment judicialOfficeAppointmentMock5 = createJudicialOfficeAppointmentMock(currentDate,
-            dateTime, "ELINKSID_5");
+            dateTime, "PERID_5");
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock5);
         JudicialOfficeAppointment judicialOfficeAppointmentMock0 = createJudicialOfficeAppointmentMock(currentDate,
-            dateTime, "ELINKSID_0");
+            dateTime, "PERID_0");
         judicialOfficeAppointmentMock0.setRoleId("0");
         judicialOfficeAppointmentMock0.setContractType("0");
         judicialOfficeAppointmentMock0.setBaseLocationId("0");
@@ -281,14 +281,14 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock0);
 
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
-        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_3);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_3);
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock);
         judicialUserProfiles.add(judicialUserProfileMock2);
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
-        when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(Collections.singleton(ELINKSID_2));
+        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         invokeMethod(judicialOfficeAppointmentProcessor, "filterAppointmentsRecordsForForeignKeyViolation",
             judicialOfficeAppointments, exchangeMock);
         verify(judicialOfficeAppointmentProcessor, times(5))

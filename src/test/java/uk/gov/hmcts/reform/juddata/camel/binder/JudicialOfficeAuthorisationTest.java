@@ -11,7 +11,7 @@ class JudicialOfficeAuthorisationTest {
     void test_pojo_JudicialOfficeAuthorisationTest() {
         String date = "2017-10-01 00:00:00.000";
         JudicialOfficeAuthorisation judicialOfficeAuthorisation = createJudicialOfficeAuthorisation(date);
-        assertEquals("1", judicialOfficeAuthorisation.getElinksId());
+        assertEquals("1", judicialOfficeAuthorisation.getPerId());
         assertEquals("jurisdiction", judicialOfficeAuthorisation.getJurisdiction());
         assertEquals(date, judicialOfficeAuthorisation.getStartDate());
         assertEquals(date, judicialOfficeAuthorisation.getEndDate());

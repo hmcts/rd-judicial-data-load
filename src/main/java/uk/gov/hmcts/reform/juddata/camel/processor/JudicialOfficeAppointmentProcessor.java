@@ -19,12 +19,12 @@ import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_CONTRACT;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ELINKS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ROLES;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.CONTRACTS_ID;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATION_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ROLES_ID;
 
@@ -59,8 +59,8 @@ public class JudicialOfficeAppointmentProcessor
     @Qualifier("springJdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
 
-    @Value("${fetch-personal-elinks-id}")
-    String loadElinksId;
+    @Value("${fetch-personal-per-id}")
+    String loadPerId;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -107,12 +107,12 @@ public class JudicialOfficeAppointmentProcessor
                                                                      filteredJudicialAppointments,
                                                                  Exchange exchange) {
 
-        Predicate<JudicialOfficeAppointment> elinksViolations = c ->
-            isFalse(judicialUserProfileProcessor.getValidElinksInUserProfile().contains(c.getElinksId()));
+        Predicate<JudicialOfficeAppointment> perViolations = c ->
+            isFalse(judicialUserProfileProcessor.getValidPerInUserProfile().contains(c.getPerId()));
 
         //remove & audit missing personal e-links id
-        removeForeignKeyElements(filteredJudicialAppointments, elinksViolations, ELINKS_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_ELINKS);
+        removeForeignKeyElements(filteredJudicialAppointments, perViolations, PER_ID, exchange,
+            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_PER);
 
         //remove & audit missing roles
         List<String> roles = jdbcTemplate.queryForList(fetchRoles, String.class);

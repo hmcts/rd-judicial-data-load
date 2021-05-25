@@ -21,7 +21,7 @@ public class JudicialUserProfileRowMapper implements IMapper {
     public Map<String, Object> getMap(Object userProfile) {
         JudicialUserProfile judicialUserProfile = (JudicialUserProfile) userProfile;
         Map<String, Object> judUserProfileRow = new HashMap<>();
-        judUserProfileRow.put("elinks_id", judicialUserProfile.getElinksId());
+        judUserProfileRow.put("per_id", judicialUserProfile.getPerId());
         judUserProfileRow.put("personal_code", judicialUserProfile.getPersonalCode());
         judUserProfileRow.put("title", judicialUserProfile.getTitle());
         judUserProfileRow.put("known_as", getKnownAsValue(judicialUserProfile));
@@ -41,8 +41,8 @@ public class JudicialUserProfileRowMapper implements IMapper {
 
     public String getKnownAsValue(JudicialUserProfile judicialUserProfile) {
         if (isBlank(judicialUserProfile.getKnownAs())) {
-            log.warn("{} :: known_as field value is missing for elinks_id :: {}",
-                    logComponentName, judicialUserProfile.getElinksId());
+            log.warn("{} :: known_as field value is missing for per_id :: {}",
+                    logComponentName, judicialUserProfile.getPerId());
             return judicialUserProfile.getFullName();
         }
         return judicialUserProfile.getKnownAs();

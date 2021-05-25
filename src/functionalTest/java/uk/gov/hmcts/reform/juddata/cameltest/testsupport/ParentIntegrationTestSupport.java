@@ -60,15 +60,15 @@ public interface ParentIntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
     String[] fileWithElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
-        "classpath:sourceFiles/parent/judicial_appointments_elinks_missing.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_per_missing.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
     String[] fileWithAuthElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_elinks_missings.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation_per_missings.csv"};
 
     String[] fileWithElinkIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
-        "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_elinks.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_per.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
     String[] fileWithForeignKeyViolations = {"classpath:sourceFiles/parent/judicial_userprofile_multiple_rows.csv",
@@ -135,8 +135,8 @@ public interface ParentIntegrationTestSupport {
         assertEquals(judicialUserProfileList.size(), 2);
         Contracts.assertNotNull(judicialUserProfileList.get(0));
         Contracts.assertNotNull(judicialUserProfileList.get(1));
-        assertEquals(judicialUserProfileList.get(0).get("elinks_id"), "1");
-        assertEquals(judicialUserProfileList.get(1).get("elinks_id"), "2");
+        assertEquals(judicialUserProfileList.get(0).get("per_id"), "1");
+        assertEquals(judicialUserProfileList.get(1).get("per_id"), "2");
         assertEquals(judicialUserProfileList.get(0).get("email_id"), "joe.bloggs@ejudiciary.net");
         assertEquals(judicialUserProfileList.get(1).get("email_id"), "jo1e.bloggs@ejudiciary.net");
     }
@@ -148,8 +148,8 @@ public interface ParentIntegrationTestSupport {
         Contracts.assertNotNull(judicialAppointmentList.get(1));
         Contracts.assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
         Contracts.assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
-        assertEquals("1", judicialAppointmentList.get(0).get("elinks_id"));
-        assertEquals("2", judicialAppointmentList.get(1).get("elinks_id"));
+        assertEquals("1", judicialAppointmentList.get(0).get("per_id"));
+        assertEquals("2", judicialAppointmentList.get(1).get("per_id"));
     }
 
     static void validateAuthorisationFile(JdbcTemplate jdbcTemplate, String sqlChild2) {
@@ -157,7 +157,7 @@ public interface ParentIntegrationTestSupport {
         List<JudicialOfficeAuthorisation> actualAuthorisations =
             judicialAuthorisationList.stream().map(authorisationMap -> {
                 JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
-                judicialOfficeAuthorisation.setElinksId((String) authorisationMap.get("elinks_id"));
+                judicialOfficeAuthorisation.setPerId((String) authorisationMap.get("per_id"));
                 judicialOfficeAuthorisation.setJurisdiction((String) authorisationMap.get("jurisdiction"));
                 judicialOfficeAuthorisation.setTicketId((Long) authorisationMap.get("ticket_id"));
                 judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
@@ -196,7 +196,7 @@ public interface ParentIntegrationTestSupport {
     static JudicialOfficeAuthorisation mapJudicialOfficeAuthorisation(String line) {
         List<String> columns = Arrays.asList(line.split("\\,", -1));
         JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
-        judicialOfficeAuthorisation.setElinksId(handleNull(columns.get(0), false));
+        judicialOfficeAuthorisation.setPerId(handleNull(columns.get(0), false));
         judicialOfficeAuthorisation.setJurisdiction(handleNull(columns.get(1), false));
         judicialOfficeAuthorisation.setTicketId(isBlank(columns.get(2)) ? null : Long.parseLong(columns.get(2)));
         judicialOfficeAuthorisation.setStartDate(handleNull(columns.get(3), true));

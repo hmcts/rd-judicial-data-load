@@ -22,9 +22,9 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 @Component
 public class JudicialOfficeAppointment implements Serializable {
 
-    @DataField(pos = 1, columnName = "elinks_id")
+    @DataField(pos = 1, columnName = "per_id")
     @NotEmpty
-    String elinksId;
+    String perId;
 
     @DataField(pos = 2, columnName = "role_id", defaultValue = "0")
     String roleId;

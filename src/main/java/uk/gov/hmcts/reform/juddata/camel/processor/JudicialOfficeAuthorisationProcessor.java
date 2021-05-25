@@ -15,8 +15,8 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ELINKS;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 
 @Slf4j
 @Component
@@ -78,12 +78,12 @@ public class JudicialOfficeAuthorisationProcessor
                                                                        filteredJudicialAuthorisations,
                                                                    Exchange exchange) {
 
-        Predicate<JudicialOfficeAuthorisation> elinksViolations = c ->
-            isFalse(judicialUserProfileProcessor.getValidElinksInUserProfile().contains(c.getElinksId()));
+        Predicate<JudicialOfficeAuthorisation> perViolations = c ->
+            isFalse(judicialUserProfileProcessor.getValidPerInUserProfile().contains(c.getPerId()));
 
         //remove & audit missing personal e-links id
-        removeForeignKeyElements(filteredJudicialAuthorisations, elinksViolations, ELINKS_ID, exchange,
-            judicialOfficeAuthorisationJsrValidatorInitializer, MISSING_ELINKS);
+        removeForeignKeyElements(filteredJudicialAuthorisations, perViolations, PER_ID, exchange,
+            judicialOfficeAuthorisationJsrValidatorInitializer, MISSING_PER);
     }
 
 }

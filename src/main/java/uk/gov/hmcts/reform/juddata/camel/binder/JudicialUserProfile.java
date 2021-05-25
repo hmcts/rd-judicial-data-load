@@ -21,9 +21,9 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TI
 @Component
 public class JudicialUserProfile implements Serializable {
 
-    @DataField(pos = 1, columnName = "elinks_id")
+    @DataField(pos = 1, columnName = "per_id")
     @NotEmpty
-    String elinksId;
+    String perId;
 
     @DataField(pos = 2, columnName = "personal_Code")
     @NotEmpty
