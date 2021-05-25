@@ -18,6 +18,7 @@ job:
         - BLOB-URL-SUFFIX
         - ApplicationInsightsInstrumentationKey
         - judicial-topic-primary-connection-string
+        - LD-SDK-KEY
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
