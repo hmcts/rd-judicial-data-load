@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.3.9.RELEASE'
+        springBootVersion = '2.3.11.RELEASE'
     }
     repositories {
         jcenter()
@@ -39,7 +39,7 @@ def versions = [
         reformS2sClient    : '3.1.2',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
-        springBoot         : '2.3.9.RELEASE',
+        springBoot         : '2.3.11.RELEASE',
         springHystrix      : '2.1.1.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.11.4',
