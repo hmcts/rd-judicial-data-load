@@ -25,14 +25,14 @@ class JudicialUserProfileTest {
 
         assertEquals(PERID_1, judicialUserProfile.getPerId());
         assertEquals("personalCode_1", judicialUserProfile.getPersonalCode());
-        assertEquals("title", judicialUserProfile.getTitle());
+        assertEquals("appointment", judicialUserProfile.getAppointment());
         assertEquals("knownAs", judicialUserProfile.getKnownAs());
         assertEquals("surname", judicialUserProfile.getSurName());
         assertEquals("fullName", judicialUserProfile.getFullName());
         assertEquals("postNominals", judicialUserProfile.getPostNominals());
-        assertEquals("contractTypeId", judicialUserProfile.getContractTypeId());
+        assertEquals("appointmentTypeId", judicialUserProfile.getAppointmentTypeId());
         assertEquals("workpatterns", judicialUserProfile.getWorkPattern());
-        assertEquals("some@hmcts.net", judicialUserProfile.getEmailId());
+        assertEquals("some@hmcts.net", judicialUserProfile.getEjudiciaryEmail());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getJoiningDate());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getLastWorkingDate());
         assertEquals(getDateTimeWithFormat(dateTime), judicialUserProfile.getExtractedDate());

@@ -137,8 +137,8 @@ public interface ParentIntegrationTestSupport {
         Contracts.assertNotNull(judicialUserProfileList.get(1));
         assertEquals(judicialUserProfileList.get(0).get("per_id"), "1");
         assertEquals(judicialUserProfileList.get(1).get("per_id"), "2");
-        assertEquals(judicialUserProfileList.get(0).get("email_id"), "joe.bloggs@ejudiciary.net");
-        assertEquals(judicialUserProfileList.get(1).get("email_id"), "jo1e.bloggs@ejudiciary.net");
+        assertEquals(judicialUserProfileList.get(0).get("ejudiciary_email"), "joe.bloggs@ejudiciary.net");
+        assertEquals(judicialUserProfileList.get(1).get("ejudiciary_email"), "jo1e.bloggs@ejudiciary.net");
     }
 
     static void validateAppointmentFile(JdbcTemplate jdbcTemplate, String sqlChild1) {

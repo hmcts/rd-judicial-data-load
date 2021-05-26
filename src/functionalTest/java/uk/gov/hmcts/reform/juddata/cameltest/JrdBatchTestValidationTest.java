@@ -183,8 +183,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
         assertEquals("1", judicialUserProfileList.get(0).get("per_id"));
         assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
-        assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("email_id"));
-        assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("email_id"));
+        assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("ejudiciary_email"));
+        assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("ejudiciary_email"));
         assertEquals(2, judicialUserProfileList.size());
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);
@@ -314,8 +314,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
         assertEquals("1", judicialUserProfileList.get(0).get("per_id"));
         assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
-        assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("email_id"));
-        assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("email_id"));
+        assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("ejudiciary_email"));
+        assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("ejudiciary_email"));
         assertEquals(2, judicialUserProfileList.size());
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);

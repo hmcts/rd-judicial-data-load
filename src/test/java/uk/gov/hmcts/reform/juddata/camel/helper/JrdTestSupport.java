@@ -48,14 +48,14 @@ public class JrdTestSupport {
         JudicialUserProfile judicialUserProfileMock = new JudicialUserProfile();
         judicialUserProfileMock.setPerId(perId);
         judicialUserProfileMock.setPersonalCode("personalCode_1");
-        judicialUserProfileMock.setTitle("title");
+        judicialUserProfileMock.setAppointment("appointment");
         judicialUserProfileMock.setKnownAs("knownAs");
         judicialUserProfileMock.setSurName("surname");
         judicialUserProfileMock.setFullName("fullName");
         judicialUserProfileMock.setPostNominals("postNominals");
-        judicialUserProfileMock.setContractTypeId("contractTypeId");
+        judicialUserProfileMock.setAppointmentTypeId("appointmentTypeId");
         judicialUserProfileMock.setWorkPattern("workpatterns");
-        judicialUserProfileMock.setEmailId("some@hmcts.net");
+        judicialUserProfileMock.setEjudiciaryEmail("some@hmcts.net");
         judicialUserProfileMock.setJoiningDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialUserProfileMock.setLastWorkingDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialUserProfileMock.setActiveFlag(true);

@@ -79,7 +79,7 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
     @SuppressWarnings("unchecked")
     private List<String> loadPerId() {
-        List<String> elinkList = jdbcTemplate.queryForList(loadPerId, String.class);
-        return isNotEmpty(elinkList) ? elinkList : emptyList();
+        List<String> perIdList = jdbcTemplate.queryForList(loadPerId, String.class);
+        return isNotEmpty(perIdList) ? perIdList : emptyList();
     }
 }

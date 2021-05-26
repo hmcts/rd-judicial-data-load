@@ -23,14 +23,14 @@ public class JudicialUserProfileRowMapper implements IMapper {
         Map<String, Object> judUserProfileRow = new HashMap<>();
         judUserProfileRow.put("per_id", judicialUserProfile.getPerId());
         judUserProfileRow.put("personal_code", judicialUserProfile.getPersonalCode());
-        judUserProfileRow.put("title", judicialUserProfile.getTitle());
+        judUserProfileRow.put("appointment", judicialUserProfile.getAppointment());
         judUserProfileRow.put("known_as", getKnownAsValue(judicialUserProfile));
         judUserProfileRow.put("surname", judicialUserProfile.getSurName());
         judUserProfileRow.put("full_name", judicialUserProfile.getFullName());
         judUserProfileRow.put("post_nominals", judicialUserProfile.getPostNominals());
-        judUserProfileRow.put("contract_type", judicialUserProfile.getContractTypeId());
+        judUserProfileRow.put("appointment_type", judicialUserProfile.getAppointmentTypeId());
         judUserProfileRow.put("work_pattern", judicialUserProfile.getWorkPattern());
-        judUserProfileRow.put("email_id", judicialUserProfile.getEmailId());
+        judUserProfileRow.put("ejudiciary_email", judicialUserProfile.getEjudiciaryEmail());
         judUserProfileRow.put("joining_date", judicialUserProfile.getJoiningDate());
         judUserProfileRow.put("last_working_date", judicialUserProfile.getLastWorkingDate());
         judUserProfileRow.put("active_flag", judicialUserProfile.isActiveFlag());
