@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.config;
 
+import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
@@ -37,8 +38,10 @@ import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAuthorisationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 
@@ -289,8 +292,18 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    DataIngestionLibraryRunner dataIngestionLibraryRunner() {
-        return new DataIngestionLibraryRunner();
+    DataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
+        return new JrdDataIngestionLibraryRunner();
+    }
+
+    @Bean
+    TopicPublisher topicPublisher() {
+        return mock(TopicPublisher.class);
+    }
+
+    @Bean
+    ServiceBusSenderClient serviceBusSenderClient() {
+        return mock(ServiceBusSenderClient.class);
     }
     // miscellaneous configuration ends
     // miscellaneous configuration ends

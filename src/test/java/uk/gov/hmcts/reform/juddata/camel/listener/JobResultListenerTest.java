@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.listener;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 
@@ -28,6 +30,12 @@ class JobResultListenerTest {
 
     @Mock
     ProducerTemplate producerTemplate;
+
+    @Mock
+    JdbcTemplate jdbcTemplate;
+
+    @Mock
+    CamelContext camelContext;
 
     @Test
     void beforeJobTest() {

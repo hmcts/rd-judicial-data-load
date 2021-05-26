@@ -23,7 +23,6 @@ public class JrdExecutor extends RouteExecutor {
     @Value("${logging-component-name}")
     private String logComponentName;
 
-
     @Override
     public String execute(CamelContext camelContext, String schedulerName, String route) {
         try {

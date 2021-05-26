@@ -181,7 +181,7 @@ pitest {
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = true
-    mutationThreshold = 90
+    mutationThreshold = 88
     useClasspathFile = true
 }
 
@@ -242,15 +242,19 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    implementation 'com.github.hmcts:data-ingestion-lib:0.4.4.0'
+
+    implementation 'com.github.hmcts:data-ingestion-lib:0.4.4.1'
+
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
+
     compile group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     compile group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
+
     testCompile group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
-    compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '6.2.0'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
     compile group: 'com.google.guava', name: 'guava', version: '30.1-jre'
@@ -263,6 +267,13 @@ dependencies {
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
     compile group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
+
+    compile group: 'com.azure', name: 'azure-core', version: '1.15.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.2.0'
+    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.6'
+    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
+    implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.5'
+
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -366,7 +377,8 @@ applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 // Fix for CVE-2021-21295 & need to be removed with new Azure blob version
 configurations.all {
     resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'io.netty') {
+        if (details.requested.group == 'io.netty'
+                && details.requested.name != 'netty-tcnative-boringssl-static' ) {
             details.useVersion "4.1.63.Final"
         }
     }
