@@ -27,6 +27,7 @@ class JudicialOfficeAppointmentTest {
         assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());
         assertEquals("regionId_1", judicialOfficeAppointment.getRegionId());
+        assertEquals("111", judicialOfficeAppointment.getPersonalCode());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialOfficeAppointment.getStartDate());
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialOfficeAppointment.getEndDate());
         assertEquals(getDateTimeWithFormat(dateTime), judicialOfficeAppointment.getExtractedDate());

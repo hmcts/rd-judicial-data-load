@@ -37,6 +37,7 @@ public class JrdTestSupport {
     public static final Map<String, String> regions = ImmutableMap.of("perid_1", "regionId_1",
         "perid_2", "regionId_2", "perid_3", "regionId_3");
 
+    public static final String PERSONAL_CODE = "111";
 
     private JrdTestSupport() {
 
@@ -89,6 +90,7 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setStartDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialOfficeAppointmentMock.setEndDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialOfficeAppointmentMock.setActiveFlag(true);
+        judicialOfficeAppointmentMock.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAppointmentMock.setExtractedDate(getDateTimeWithFormat(dateTime));
         return judicialOfficeAppointmentMock;
     }
@@ -103,6 +105,7 @@ public class JrdTestSupport {
         judicialOfficeAuthorisation.setCreatedDate(date);
         judicialOfficeAuthorisation.setLastUpdated(date);
         judicialOfficeAuthorisation.setLowerLevel("lowerLevel");
+        judicialOfficeAuthorisation.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAuthorisation.setTicketId(12345L);
         return judicialOfficeAuthorisation;
     }

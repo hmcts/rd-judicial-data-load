@@ -41,6 +41,7 @@ class JudicialOfficeAppointmentRowMapperTest {
         assertEquals(getDateTimeWithFormat(dateTime), response.get("extracted_date"));
         assertThat(response.get("created_date")).isNotNull();
         assertThat(response.get("last_loaded_date")).isNotNull();
+        assertEquals("111", response.get("personal_code"));
     }
 
     @Test

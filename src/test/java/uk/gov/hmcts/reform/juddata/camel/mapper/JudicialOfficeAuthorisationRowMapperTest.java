@@ -33,6 +33,7 @@ class JudicialOfficeAuthorisationRowMapperTest {
         assertEquals(Timestamp.valueOf((judicialOfficeAuthorisation.getLastUpdated())), authMap.get("last_updated"));
         assertEquals(Long.valueOf("12345"), authMap.get("ticket_id"));
         assertEquals("lowerLevel", authMap.get("lower_level"));
+        assertEquals("111", authMap.get("personal_code"));
     }
 
     @Test

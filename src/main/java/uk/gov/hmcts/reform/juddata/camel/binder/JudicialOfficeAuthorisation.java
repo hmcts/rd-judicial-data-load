@@ -51,4 +51,7 @@ public class JudicialOfficeAuthorisation implements Serializable {
 
     @DataField(pos = 8, columnName = "lowerlevel")
     String lowerLevel;
+
+    @DataField(pos = 9, columnName = "personal_code")
+    String personalCode;
 }

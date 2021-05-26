@@ -58,4 +58,7 @@ public class JudicialOfficeAppointment implements Serializable {
     @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
             message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
     String extractedDate;
+
+    @DataField(pos = 11, columnName = "personal_code")
+    String personalCode;
 }
