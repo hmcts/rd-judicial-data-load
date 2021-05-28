@@ -1,32 +1,8 @@
 start-leaf-route: direct:leaf
 
-routes-to-execute-leaf: judicial-role-type, judicial-contract-type, judicial-region-type, judicial-base-location_type
+routes-to-execute-leaf: judicial-region-type, judicial-base-location_type
 
 route:
-  judicial-role-type:
-    id: judicial-role-type
-    file-name: Roles-Test
-    table-name: judicial_role_type
-    insert-sql:
-      sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
-      on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource&batch=true
-    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-Test?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialUserRoleTypeProcessor
-    mapper-class: JudicialRoleTypeRowMapper
-    csv-binder-object: JudicialUserRoleType
-
-  judicial-contract-type:
-    id: judicial-contract-type
-    file-name: Contracts-Test
-    table-name: contract_type
-    insert-sql:
-      sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)
-      on conflict (contract_type_id) do update set contract_type_desc_en = :#contract_type_desc_en,contract_type_desc_cy = :#contract_type_desc_cy?dataSource=dataSource&batch=true
-    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Contracts-Test?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialContractTypeProcessor
-    mapper-class: JudicialContractTypeRowMapper
-    csv-binder-object: JudicialContractType
-
   judicial-region-type:
     id: judicial-region-type
     file-name: Locations-Test
@@ -55,15 +31,8 @@ base-location-select-jrd-sql: SELECT * FROM base_location_type
 
 region-select-jrd-sql: SELECT * FROM region_type
 
-contract-select-jrd-sql: SELECT * FROM contract_type
-
-role-select-jrd-sql: SELECT * FROM judicial_role_type
-
 fetch-base-location-id: SELECT base_location_id FROM base_location_type
 fetch-region-id: SELECT region_id FROM region_type
-fetch-contract-id: SELECT contract_type_id FROM contract_type
-fetch-role-id: SELECT role_id FROM judicial_role_type
-
 
 
 

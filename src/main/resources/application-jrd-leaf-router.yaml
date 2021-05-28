@@ -1,31 +1,5 @@
-routes-to-execute-leaf: judicial-role-type, judicial-contract-type, judicial-region-type, judicial-base-location_type
+routes-to-execute-leaf: judicial-region-type, judicial-base-location_type
 route:
-  judicial-role-type:
-    id: judicial-role-type
-    file-name: Roles
-    table-name: judicial_role_type
-    insert-sql:
-      sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
-      on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource&batch=true
-    blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Roles?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialUserRoleTypeProcessor
-    mapper-class: JudicialRoleTypeRowMapper
-    csv-binder-object: JudicialUserRoleType
-
-  judicial-contract-type:
-    id: judicial-contract-type
-    file-name: Contracts
-    table-name: contract_type
-    insert-sql:
-      sql:insert into contract_type (contract_type_id,contract_type_desc_en,contract_type_desc_cy) values(:#contract_type_id,:#contract_type_desc_en,:#contract_type_desc_en)
-      on conflict (contract_type_id) do update set contract_type_desc_en = :#contract_type_desc_en,contract_type_desc_cy = :#contract_type_desc_cy?dataSource=dataSource&batch=true
-    blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Contracts?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialContractTypeProcessor
-    mapper-class: JudicialContractTypeRowMapper
-    csv-binder-object: JudicialContractType
-
   judicial-region-type:
     id: judicial-region-type
     file-name: Locations

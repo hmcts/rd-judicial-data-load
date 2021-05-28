@@ -11,7 +11,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 
 import java.util.ArrayList;
@@ -96,7 +95,6 @@ class JudicialRegionTypeProcessorTest {
         verify(messageMock).setBody(any());
 
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
-        assertThat(((List<JudicialContractType>) exchangeMock.getMessage().getBody())).isSameAs(judicialRegionTypes);
     }
 
 } 

@@ -3,12 +3,10 @@ package uk.gov.hmcts.reform.juddata.camel.helper;
 import com.google.common.collect.ImmutableMap;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -24,12 +22,6 @@ public class JrdTestSupport {
     public static final String PERID_2 = "perid_2";
     public static final String PERID_3 = "perid_3";
     public static final String PERID_4 = "perid_4";
-
-    public static final Map<String, String> roles = ImmutableMap.of("perid_1", "roleId_1",
-        "perid_2", "roleId_2", "perid_3", "roleId_3");
-
-    public static final Map<String, String> contracts = ImmutableMap.of("perid_1", "contractTypeId_1",
-        "perid_2", "contractTypeId_2", "perid_3", "contractTypeId_3");
 
     public static final Map<String, String> baseLocations = ImmutableMap.of("perid_1", "baseLocationId_1",
         "perid_2", "baseLocationId_2", "perid_3", "baseLocationId_3");
@@ -82,8 +74,6 @@ public class JrdTestSupport {
 
         JudicialOfficeAppointment judicialOfficeAppointmentMock = new JudicialOfficeAppointment();
         judicialOfficeAppointmentMock.setPerId(perId);
-        judicialOfficeAppointmentMock.setRoleId(roles.get(perId));
-        judicialOfficeAppointmentMock.setContractType(contracts.get(perId));
         judicialOfficeAppointmentMock.setBaseLocationId(baseLocations.get(perId));
         judicialOfficeAppointmentMock.setRegionId(regions.get(perId));
         judicialOfficeAppointmentMock.setIsPrincipalAppointment(true);
@@ -135,14 +125,6 @@ public class JrdTestSupport {
         return DateTimeFormatter.ofPattern(DATE_FORMAT);
     }
 
-    public static JudicialUserRoleType createJudicialUserRoleType() {
-        JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
-        judicialUserRoleType.setRoleDescCy("roleDescCy");
-        judicialUserRoleType.setRoleDescEn("roleDescEn");
-        judicialUserRoleType.setRoleId("roleId");
-        return judicialUserRoleType;
-    }
-
     public static JudicialRegionType createJudicialRegionType() {
         JudicialRegionType judicialRegionType = new JudicialRegionType();
 
@@ -150,16 +132,6 @@ public class JrdTestSupport {
         judicialRegionType.setRegionDescEn("region_desc_en");
         judicialRegionType.setRegionId("regionId");
         return judicialRegionType;
-    }
-
-
-
-    public static JudicialContractType createJudicialContractType() {
-        JudicialContractType contractType = new JudicialContractType();
-        contractType.setContractTypeDescCy("contractTypeDescCy");
-        contractType.setContractTypeDescEn("contractTypeDescEn");
-        contractType.setContractTypeId("contractTypeId");
-        return contractType;
     }
 
     public static String getDateWithFormat(Date date, String format) {

@@ -11,8 +11,18 @@ ALTER TABLE judicial_office_appointment RENAME COLUMN elinks_Id TO per_Id;
 ALTER TABLE judicial_office_appointment ADD CONSTRAINT per_Id_fk FOREIGN KEY (per_Id)
 REFERENCES judicial_user_profile (per_Id);
 ALTER TABLE judicial_office_appointment ADD COLUMN personal_code varchar(32);
+ALTER TABLE judicial_office_appointment DROP CONSTRAINT role_id_fk1;
+ALTER TABLE judicial_office_appointment DROP CONSTRAINT contract_type_Id_fk1;
+ALTER TABLE judicial_office_appointment DROP COLUMN role_id;
+ALTER TABLE judicial_office_appointment DROP COLUMN contract_type_Id;
 
 ALTER TABLE judicial_office_authorisation RENAME COLUMN elinks_Id TO per_Id;
 ALTER TABLE judicial_office_authorisation ADD CONSTRAINT per_Id_fk FOREIGN KEY (per_Id)
 REFERENCES judicial_user_profile (per_Id);
 ALTER TABLE judicial_office_authorisation ADD COLUMN personal_code varchar(32);
+
+DROP table judicial_role_type;
+DROP table contract_type;
+
+--ALTER TABLE base_location_type DROP COLUMN bench;
+--ALTER TABLE base_location_type DROP COLUMN national_court_code;

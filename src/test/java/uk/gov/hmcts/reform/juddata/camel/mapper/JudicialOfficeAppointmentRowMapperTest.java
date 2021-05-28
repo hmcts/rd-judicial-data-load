@@ -30,8 +30,6 @@ class JudicialOfficeAppointmentRowMapperTest {
 
         assertEquals(1, response.get("judicial_office_appointment_id"));
         assertEquals(PERID_1, response.get("per_id"));
-        assertEquals("roleId_1", response.get("role_id"));
-        assertEquals("contractTypeId_1", response.get("contract_type_id"));
         assertEquals("baseLocationId_1", response.get("base_location_id"));
         assertEquals("regionId_1", response.get("region_id"));
         assertEquals(true, response.get("is_prinicple_appointment"));

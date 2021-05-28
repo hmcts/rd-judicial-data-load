@@ -23,8 +23,6 @@ class JudicialOfficeAppointmentTest {
         JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMock(currentDate,
             dateTime, PERID_1);
         assertEquals(PERID_1, judicialOfficeAppointment.getPerId());
-        assertEquals("roleId_1", judicialOfficeAppointment.getRoleId());
-        assertEquals("contractTypeId_1", judicialOfficeAppointment.getContractType());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());
         assertEquals("regionId_1", judicialOfficeAppointment.getRegionId());
         assertEquals("111", judicialOfficeAppointment.getPersonalCode());

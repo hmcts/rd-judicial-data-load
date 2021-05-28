@@ -59,15 +59,15 @@ public interface ParentIntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] fileWithPerIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments_per_missing.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithAuthElinkIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] fileWithAuthPerIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation_per_missings.csv"};
 
-    String[] fileWithElinkIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+    String[] fileWithPerIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
         "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_per.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 

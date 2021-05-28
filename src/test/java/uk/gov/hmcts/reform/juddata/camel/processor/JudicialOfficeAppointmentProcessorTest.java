@@ -107,9 +107,7 @@ class JudicialOfficeAppointmentProcessorTest {
 
         judicialOfficeAppointmentProcessor = spy(new JudicialOfficeAppointmentProcessor());
         judicialOfficeAppointmentMock3.setRegionId("0");
-        judicialOfficeAppointmentMock3.setRoleId("0");
         judicialOfficeAppointmentMock3.setBaseLocationId("0");
-        judicialOfficeAppointmentMock3.setContractType("0");
         judicialOfficeAppointmentJsrValidatorInitializer = spy(new JsrValidatorInitializer<>());
 
         setField(judicialOfficeAppointmentProcessor,
@@ -140,19 +138,14 @@ class JudicialOfficeAppointmentProcessorTest {
             PERID_2, "invalid"));
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
-        setField(judicialOfficeAppointmentProcessor, "fetchRoles", "roles");
         setField(judicialOfficeAppointmentProcessor, "fetchLocations", "locations");
-        setField(judicialOfficeAppointmentProcessor, "fetchContracts", "contracts");
         setField(judicialOfficeAppointmentProcessor, "fetchBaseLocations", "baseLocations");
 
         setField(judicialOfficeAppointmentProcessor, "jdbcTemplate", jdbcTemplate);
 
-        when(jdbcTemplate.queryForList("roles", String.class)).thenReturn(ImmutableList.of("roleId_1",
-            "roleId_2"));
         when(jdbcTemplate.queryForList("locations", String.class)).thenReturn(ImmutableList.of("regionId_1",
             "regionId_2"));
-        when(jdbcTemplate.queryForList("contracts", String.class)).thenReturn(ImmutableList.of("contractTypeId_1",
-            "contractTypeId_2"));
+
         when(jdbcTemplate.queryForList("baseLocations", String.class)).thenReturn(ImmutableList.of(
             "baseLocationId_1", "baseLocationId_2"));
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
@@ -274,8 +267,6 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock5);
         JudicialOfficeAppointment judicialOfficeAppointmentMock0 = createJudicialOfficeAppointmentMock(currentDate,
             dateTime, "PERID_0");
-        judicialOfficeAppointmentMock0.setRoleId("0");
-        judicialOfficeAppointmentMock0.setContractType("0");
         judicialOfficeAppointmentMock0.setBaseLocationId("0");
         judicialOfficeAppointmentMock0.setRegionId("0");
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock0);
@@ -291,7 +282,7 @@ class JudicialOfficeAppointmentProcessorTest {
         when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         invokeMethod(judicialOfficeAppointmentProcessor, "filterAppointmentsRecordsForForeignKeyViolation",
             judicialOfficeAppointments, exchangeMock);
-        verify(judicialOfficeAppointmentProcessor, times(5))
+        verify(judicialOfficeAppointmentProcessor, times(3))
             .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
         verify(judicialOfficeAppointmentJsrValidatorInitializer, times(1))
             .auditJsrExceptions(anyList(), anyString(), anyString(), any());

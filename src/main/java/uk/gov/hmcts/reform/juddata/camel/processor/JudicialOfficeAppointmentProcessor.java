@@ -18,15 +18,11 @@ import java.util.function.Predicate;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_CONTRACT;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ROLES;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.CONTRACTS_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATION_ID;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ROLES_ID;
 
 @Slf4j
 @Component
@@ -43,14 +39,8 @@ public class JudicialOfficeAppointmentProcessor
     @Value("${logging-component-name}")
     private String logComponentName;
 
-    @Value("${fetch-role-id}")
-    String fetchRoles;
-
     @Value("${fetch-region-id}")
     String fetchLocations;
-
-    @Value("${fetch-contract-id}")
-    String fetchContracts;
 
     @Value("${fetch-base-location-id}")
     String fetchBaseLocations;
@@ -110,23 +100,9 @@ public class JudicialOfficeAppointmentProcessor
         Predicate<JudicialOfficeAppointment> perViolations = c ->
             isFalse(judicialUserProfileProcessor.getValidPerInUserProfile().contains(c.getPerId()));
 
-        //remove & audit missing personal e-links id
+        //remove & audit missing personal per id
         removeForeignKeyElements(filteredJudicialAppointments, perViolations, PER_ID, exchange,
             judicialOfficeAppointmentJsrValidatorInitializer, MISSING_PER);
-
-        //remove & audit missing roles
-        List<String> roles = jdbcTemplate.queryForList(fetchRoles, String.class);
-        Predicate<JudicialOfficeAppointment> rolesViolations = c -> isFalse(roles.contains(c.getRoleId()))
-            && isFalse(c.getRoleId().equalsIgnoreCase("0"));
-        removeForeignKeyElements(filteredJudicialAppointments, rolesViolations, ROLES_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_ROLES);
-
-        //remove & audit missing contracts
-        List<String> contracts = jdbcTemplate.queryForList(fetchContracts, String.class);
-        Predicate<JudicialOfficeAppointment> contractsViolations = c -> isFalse(contracts.contains(c.getContractType()))
-            && isFalse(c.getContractType().equalsIgnoreCase("0"));
-        removeForeignKeyElements(filteredJudicialAppointments, contractsViolations, CONTRACTS_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_CONTRACT);
 
         //remove & audit missing Locations
         List<String> locations = jdbcTemplate.queryForList(fetchLocations, String.class);
