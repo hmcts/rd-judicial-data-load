@@ -74,7 +74,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @CamelSpringBootTest
 class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
-
     @Autowired
     JrdExecutor jrdExecutor;
 
@@ -157,7 +156,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthorisationInvalidHeader);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
 
         jrdExecutor.execute(camelContext, LEAF_ROUTE, startLeafRoute);
@@ -216,29 +214,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
-    void testLeafFailuresInvalidHeaderContractsRollback() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
-
-        jobLauncherTestUtils.launchJob();
-
-        List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
-        assertEquals(6, judicialBaseLocationType.size());
-
-        List<Map<String, Object>> judicialRegionType = jdbcTemplate.queryForList(regionSql);
-        assertEquals(6, judicialRegionType.size());
-
-        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
-        assertNotNull(exceptionList.get(0).get("table_name"));
-        assertNotNull(exceptionList.get(0).get("scheduler_start_time"));
-        assertNotNull(exceptionList.get(0).get("error_description"));
-        assertNotNull(exceptionList.get(0).get("updated_timestamp"));
-        assertEquals(1, exceptionList.size());
-    }
-
-    @Test
     @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql"})
     void testLeafFailuresInvalidJsr() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
@@ -258,11 +233,11 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(3, judicialRegionType.size());
 
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
-        for (int count = 0; count < 6; count++) {
+        for (int count = 0; count < 4; count++) {
             assertNotNull(exceptionList.get(count).get("table_name"));
             assertNotNull(exceptionList.get(count).get("scheduler_start_time"));
-            //assertNotNull(exceptionList.get(count).get("key"));
-            //assertNotNull(exceptionList.get(count).get("field_in_error"));
+            assertNotNull(exceptionList.get(count).get("key"));
+            assertNotNull(exceptionList.get(count).get("field_in_error"));
             assertNotNull(exceptionList.get(count).get("error_description"));
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }

@@ -27,7 +27,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @ExtendWith(SpringExtension.class)
 public abstract class JrdBatchIntegrationSupport {
 
-
     public static final String FILE_STATUS = "status";
 
     protected boolean notDeletionFlag = false;
@@ -102,7 +101,6 @@ public abstract class JrdBatchIntegrationSupport {
     @Autowired
     protected JobLauncherTestUtils jobLauncherTestUtils;
 
-
     @Value("${exception-select-query}")
     protected String exceptionQuery;
 
@@ -116,8 +114,7 @@ public abstract class JrdBatchIntegrationSupport {
     protected List<String> archivalFileNames;
 
     private TestContextManager testContextManager;
-
-
+    
     @BeforeEach
     public void setUpStringContext() throws Exception {
         new TestContextManager(getClass()).prepareTestInstance(this);
