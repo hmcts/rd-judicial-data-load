@@ -13,7 +13,7 @@ job:
     CONTAINER_NAME: jud-ref-data
     JRD_MQ_TOPIC_NAME: rd-judicial-topic-{{ .Values.global.environment }}
     JRD_MQ_TRUST_ALL_CERTS: false
-    JRD_DATA_PER_MESSAGE: 50
+    JRD_DATA_PER_MESSAGE: 500
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
