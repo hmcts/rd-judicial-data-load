@@ -7,8 +7,6 @@ job:
     POSTGRES_USERNAME: dbjuddata
     POSTGRES_PASSWORD: dbjuddata
     FLYWAY_ENABLED: true
-    ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
-    ACCOUNT_KEY: $(BLOB_ACCESS_KEY)
     ENV_NAME: preview
     CONTAINER_NAME: jud-ref-data
     JRD_MQ_TRUST_ALL_CERTS: false
@@ -20,16 +18,11 @@ job:
         - BLOB-URL-SUFFIX
         - ApplicationInsightsInstrumentationKey
         - judicial-topic-primary-connection-string
+        - LD-SDK-KEY
   secrets:
-    BLOB_ACCOUNT_NAME:
-      secretRef: storage-secret-{{ .Release.Name }}
-      key: storageAccountName
-    BLOB_ACCESS_KEY:
-      secretRef: storage-secret-{{ .Release.Name }}
-      key: accessKey
-    BLOB_SERVICE_ENDPOINT:
-      secretRef: storage-secret-{{ .Release.Name }}
-      key: primaryBlobServiceEndPoint
+    SB_TOPIC_CONN_STRING:
+      secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
+      key: connectionString
 global:
   jobKind: CronJob
 
@@ -43,12 +36,13 @@ postgresql:
   persistence:
     enabled: false
 
-blobstorage:
+servicebus:
   resourceGroup: rd
   teamName: "RD"
   location: uksouth
+  serviceplan: standard
   setup:
-    containers:
-    - jud-ref-data
-    - jud-ref-data-archive
+    topics:
+      - name: jrd-aks-topic
+        subscriptionNeeded: yes
   enabled: true

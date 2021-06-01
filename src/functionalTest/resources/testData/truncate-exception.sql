@@ -1,2 +1,0 @@
-truncate dataload_exception_records;
-commit;

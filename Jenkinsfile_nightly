@@ -36,7 +36,8 @@ def secrets = [
         'rd-${env}': [
                 secret('ACCOUNT-KEY-PREVIEW', 'ACCOUNT_KEY_PREVIEW'),
                 secret('ACCOUNT-NAME', 'ACCOUNT_NAME'),
-                secret('ACCOUNT-KEY', 'ACCOUNT_KEY')
+                secret('ACCOUNT-KEY', 'ACCOUNT_KEY'),
+                secret('LD-SDK-KEY', 'RD_LD_SDK_KEY')
         ]
 ]
 

@@ -32,9 +32,10 @@ job:
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
         - judicial-topic-primary-connection-string
+        - LD-SDK-KEY
 postgresql:
   enabled: false
 
-blobstorage:
+servicebus:
   enabled: false
 

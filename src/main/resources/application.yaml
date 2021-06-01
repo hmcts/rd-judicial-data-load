@@ -49,4 +49,9 @@ spring:
 mail:
   enabled: false
 
+launchdarkly:
+  sdk:
+    key: ${RD_LD_SDK_KEY:}
+    environment: ${LAUNCH_DARKLY_ENV:local}
+    user: rd
 
