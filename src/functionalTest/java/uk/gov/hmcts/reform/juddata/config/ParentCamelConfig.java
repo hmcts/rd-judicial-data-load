@@ -61,11 +61,11 @@ import static org.mockito.Mockito.mock;
 @Configuration
 public class ParentCamelConfig {
 
-    @Value("${launchdarkly.sdk.environment}")
+    @Value("${launchdarkly.sdk.environment:''}")
     private String environment;
 
 
-    @Value("${jrd.publisher.azure.service.bus.topic}")
+    @Value("${jrd.publisher.azure.service.bus.topic:''}")
     String topic;
 
     @Value("${jrd.publisher.azure.service.bus.connection-string}")
