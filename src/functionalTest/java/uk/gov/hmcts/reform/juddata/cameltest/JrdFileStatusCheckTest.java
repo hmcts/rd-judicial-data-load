@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.ConfigFileApplicationContextInitial
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
@@ -84,16 +82,8 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @Value("${routes-to-execute-orchestration}")
     List<String> routesToExecute;
 
-    @BeforeEach
-    public void init() {
-        jdbcTemplate.execute(truncateAudit);
-        SpringStarter.getInstance().restart();
-    }
-
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
-        "/testData/truncate-exception.sql"})
     void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path
@@ -153,8 +143,6 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
-        "/testData/truncate-exception.sql"})
     void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
 
         //Day 1 happy path

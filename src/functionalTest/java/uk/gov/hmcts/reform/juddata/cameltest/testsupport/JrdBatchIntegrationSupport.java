@@ -10,7 +10,9 @@ import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
@@ -19,14 +21,19 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 
+import java.util.Date;
 import java.util.List;
+import javax.sql.DataSource;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.isNotTrue;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHESTRATED_ROUTE;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
 @ExtendWith(SpringExtension.class)
 public abstract class JrdBatchIntegrationSupport {
-
 
     public static final String FILE_STATUS = "status";
 
@@ -122,16 +129,38 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${archival-file-names}")
     protected List<String> archivalFileNames;
 
-    private TestContextManager testContextManager;
+    protected TestContextManager testContextManager;
 
+    @Autowired
+    DataSource dataSource;
 
     @BeforeEach
     public void setUpStringContext() throws Exception {
+
         new TestContextManager(getClass()).prepareTestInstance(this);
         testContextManager = new TestContextManager(getClass());
         testContextManager.prepareTestInstance(this);
         SpringStarter.getInstance().init(testContextManager);
+
+        executeScripts("testData/truncate-all.sql");
+        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
+        dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
+        dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
+
+        camelContext.getGlobalOptions()
+            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+        executeScripts("testData/default-leaf-load.sql");
     }
+
+
+    public void executeScripts(String path) {
+        var a = new FileSystemResource(getClass().getClassLoader().getResource(path)
+            .getPath());
+        var resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScripts(a);
+        resourceDatabasePopulator.execute(dataSource);
+    }
+
 
     @BeforeAll
     public static void setupBlobProperties() throws Exception {

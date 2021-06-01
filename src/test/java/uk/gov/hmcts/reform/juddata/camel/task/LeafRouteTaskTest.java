@@ -8,9 +8,6 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -33,11 +30,15 @@ class LeafRouteTaskTest {
     }
 
     @Test
+    void testInit() throws Exception {
+        leafRouteTask.init();
+        verify(dataLoadRoute).startRoute(any(), any());
+    }
+
+    @Test
     void testExecute() throws Exception {
-        doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         assertEquals(RepeatStatus.FINISHED, leafRouteTask.execute(any(), any()));
         verify(leafRouteTask, times(1)).execute(any(), any());
-        verify(dataLoadRoute, times(1)).startRoute(any(), any());
     }
 }

@@ -123,3 +123,9 @@ mail:
 
 idempotent-flag-ingestion: true
 fetch-personal-elinks-id: select elinks_id from judicial_user_profile
+
+launchdarkly:
+  sdk:
+    key: ${RD_LD_SDK_KEY:}
+    environment: ${LAUNCH_DARKLY_ENV:local}
+    user: rd

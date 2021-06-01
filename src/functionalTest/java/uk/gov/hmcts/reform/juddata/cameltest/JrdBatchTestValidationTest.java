@@ -5,7 +5,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.ConfigFileApplicationContextInitial
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
@@ -26,12 +24,10 @@ import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
-import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +36,6 @@ import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_CONTRACT;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ELINKS;
@@ -76,7 +71,6 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 @CamelSpringBootTest
 class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
-
     @Autowired
     JrdExecutor jrdExecutor;
 
@@ -86,20 +80,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Autowired
     CamelContext camelContext;
 
-    @BeforeEach
-    public void init() {
-        jdbcTemplate.execute(truncateAudit);
-        SpringStarter.getInstance().restart();
-        camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
-        dataLoadUtil.setGlobalConstant(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION);
-        dataLoadUtil.setGlobalConstant(camelContext, LEAF_ROUTE);
-        camelContext.getGlobalOptions()
-            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
-    }
-
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
-        "/testData/truncate-exception.sql"})
     void testTaskletException() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithElinkIdMissing);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -110,8 +91,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/default-leaf-load.sql",
-        "/testData/truncate-exception.sql"})
     void testAuthorisationElinksMissing() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthElinkIdMissing);
@@ -123,8 +102,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
     void testParentOrchestrationInvalidHeaderAppointmentsRollbackAppointments() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidHeader);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -136,8 +113,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
     void testAuthorisationInvalidHeaderAuthorizationRollback() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthorisationInvalidHeader);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -151,7 +126,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-leaf.sql"})
     void testLeafFailuresRollbackAndKeepExistingState() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -166,15 +140,13 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jrdExecutor.execute(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION, startRoute);
         //jobLauncherTestUtils.launchJob();
 
-        validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
-        validateDbRecordCountFor(jdbcTemplate, contractSql, 7);
-        validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 5);
-        validateDbRecordCountFor(jdbcTemplate, regionSql, 5);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, contractSql, 8);
+        validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
     void testParentOrchestrationJsrAuditTestAndPartialSuccess() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidJsr);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -203,8 +175,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
     void testParentOrchestrationJsrExceedsThresholdAuditTest() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidJsrExceedsThreshold);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -220,8 +190,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
     void testLeafFailuresInvalidHeaderContractsRollback() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
@@ -251,7 +219,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-leaf.sql", "/testData/truncate-exception.sql"})
     void testLeafFailuresInvalidJsr() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_jsr_error);
@@ -260,24 +227,24 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         validateLeafRoleJsr(judicialUserRoleType);
 
         List<Map<String, Object>> judicialContractType = jdbcTemplate.queryForList(contractSql);
-        assertEquals(5, judicialContractType.size());
-        assertEquals("1", judicialContractType.get(0).get("contract_type_id"));
-        assertEquals("3", judicialContractType.get(1).get("contract_type_id"));
-        assertEquals("5", judicialContractType.get(2).get("contract_type_id"));
-        assertEquals("6", judicialContractType.get(3).get("contract_type_id"));
-        assertEquals("7", judicialContractType.get(4).get("contract_type_id"));
+        assertEquals(6, judicialContractType.size());
+        assertEquals("1", judicialContractType.get(1).get("contract_type_id"));
+        assertEquals("3", judicialContractType.get(2).get("contract_type_id"));
+        assertEquals("5", judicialContractType.get(3).get("contract_type_id"));
+        assertEquals("6", judicialContractType.get(4).get("contract_type_id"));
+        assertEquals("7", judicialContractType.get(5).get("contract_type_id"));
 
         List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
-        assertEquals("1", judicialBaseLocationType.get(0).get("base_location_id"));
-        assertEquals("2", judicialBaseLocationType.get(1).get("base_location_id"));
-        assertEquals("5", judicialBaseLocationType.get(2).get("base_location_id"));
-        assertEquals(3, judicialBaseLocationType.size());
+        assertEquals("1", judicialBaseLocationType.get(1).get("base_location_id"));
+        assertEquals("2", judicialBaseLocationType.get(2).get("base_location_id"));
+        assertEquals("5", judicialBaseLocationType.get(3).get("base_location_id"));
+        assertEquals(4, judicialBaseLocationType.size());
 
         List<Map<String, Object>> judicialRegionType = jdbcTemplate.queryForList(regionSql);
-        assertEquals("1", judicialRegionType.get(0).get("region_id"));
-        assertEquals("4", judicialRegionType.get(1).get("region_id"));
-        assertEquals("5", judicialRegionType.get(2).get("region_id"));
-        assertEquals(3, judicialRegionType.size());
+        assertEquals("1", judicialRegionType.get(1).get("region_id"));
+        assertEquals("4", judicialRegionType.get(2).get("region_id"));
+        assertEquals("5", judicialRegionType.get(3).get("region_id"));
+        assertEquals(4, judicialRegionType.size());
 
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
         for (int count = 0; count < 8; count++) {
@@ -288,24 +255,22 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("error_description"));
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
-        assertEquals(11, exceptionList.size());
+        assertEquals(8, exceptionList.size());
     }
 
     private void validateLeafRoleJsr(List<Map<String, Object>> judicialUserRoleType) {
-        assertEquals(3, judicialUserRoleType.size());
-        assertEquals("1", judicialUserRoleType.get(0).get("role_id"));
-        assertEquals("3", judicialUserRoleType.get(1).get("role_id"));
-        assertEquals("7", judicialUserRoleType.get(2).get("role_id"));
+        assertEquals(4, judicialUserRoleType.size());
+        assertEquals("1", judicialUserRoleType.get(1).get("role_id"));
+        assertEquals("3", judicialUserRoleType.get(2).get("role_id"));
+        assertEquals("7", judicialUserRoleType.get(3).get("role_id"));
 
-        assertEquals("Magistrate", judicialUserRoleType.get(0).get("role_desc_en"));
+        assertEquals("Magistrate", judicialUserRoleType.get(1).get("role_desc_en"));
         assertEquals("Advisory Committee Member - Non Magistrate",
-            judicialUserRoleType.get(1).get("role_desc_en"));
-        assertEquals("MAGS - AC Admin User", judicialUserRoleType.get(2).get("role_desc_en"));
+            judicialUserRoleType.get(2).get("role_desc_en"));
+        assertEquals("MAGS - AC Admin User", judicialUserRoleType.get(3).get("role_desc_en"));
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
     void testParentOrchestrationJsrSkipChildAppointmentRecordsForInvalidUserProfile() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithElinkIdInvalidInParent);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
@@ -327,11 +292,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    @Sql(scripts = {"/testData/truncate-parent.sql", "/testData/truncate-exception.sql",
-        "/testData/default-leaf-load.sql"})
     void testParentOrchestrationJsrSkipChildRecordsForeignKeyViolations() throws Exception {
 
-        SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithForeignKeyViolations);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
