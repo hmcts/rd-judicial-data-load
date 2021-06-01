@@ -15,3 +15,5 @@ truncate table judicial_office_authorisation cascade;
 truncate table dataload_exception_records cascade ;
 
 truncate table dataload_schedular_audit cascade;
+
+truncate table dataload_schedular_job cascade;

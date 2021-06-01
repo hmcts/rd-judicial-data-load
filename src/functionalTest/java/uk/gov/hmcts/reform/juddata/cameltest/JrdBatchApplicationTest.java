@@ -60,10 +60,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     void testTasklet() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
-        JobParameters params = new JobParametersBuilder()
-            .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
-            .toJobParameters();
-        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
     }
