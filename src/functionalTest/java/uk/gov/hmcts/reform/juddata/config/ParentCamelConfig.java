@@ -68,7 +68,7 @@ public class ParentCamelConfig {
     @Value("${jrd.publisher.azure.service.bus.topic:''}")
     String topic;
 
-    @Value("${jrd.publisher.azure.service.bus.connection-string}")
+    @Value("${jrd.publisher.azure.service.bus.connection-string:''}")
     String accessConnectionString;
 
     @Bean
