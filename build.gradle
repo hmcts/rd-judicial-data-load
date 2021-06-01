@@ -43,6 +43,7 @@ def versions = [
         springHystrix      : '2.1.1.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.11.4',
+        launchDarklySdk    : "5.2.2",
         camel              : '3.8.0'
 ]
 
@@ -273,7 +274,7 @@ dependencies {
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.6'
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
     implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.5'
-
+    implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok

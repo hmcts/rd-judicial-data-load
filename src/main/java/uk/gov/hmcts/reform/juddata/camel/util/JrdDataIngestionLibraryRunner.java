@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl.JRD_ASB_FLAG;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
@@ -50,6 +52,12 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Autowired
     TopicPublisher topicPublisher;
 
+    @Autowired
+    FeatureToggleService featureToggleService;
+
+    @Value("${launchdarkly.sdk.environment}")
+    String environment;
+
     public JrdDataIngestionLibraryRunner() {
         super();
     }
@@ -74,12 +82,18 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             return;
         }
 
+
         //To do check audit status of Parent files
         if (isFalse(validateSidamIdsExists(jobId, sidamIds))) {
             return;
         }
-        //After Job completes Publish message in ASB
-        publishMessage(jobStatus, sidamIds, jobId);
+        //After Job completes Publish message in ASB and toggle off for prod
+        if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
+            && negate(environment.startsWith("prod"))) {
+            publishMessage(jobStatus, sidamIds, jobId);
+        } else {
+            log.warn("{}:: publishing message is toggled off {}", logComponentName, jobId);
+        }
         log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName, jobId);
     }
 

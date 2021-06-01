@@ -167,11 +167,14 @@ public abstract class JrdBatchIntegrationSupport {
         if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY_PREVIEW"));
             System.setProperty("azure.storage.account-name", "rdpreview");
+            //serviceBusSecretString
+            System.setProperty("JRD_ASB_CONNECTION_KEY_STR", System.getenv("serviceBusSecretString"));
+            System.setProperty("RD_LD_SDK_KEY", System.getenv("RD_LD_SDK_KEY"));
         } else {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
         }
-        System.setProperty("azure.storage.container-name", "jud-ref-data");
+        System.setProperty("ENV_NAME", System.getenv("execution_environment"));
     }
 
     @AfterEach

@@ -137,7 +137,7 @@ jrd:
     azure:
       service:
         bus:
-          connection-string: ${JRD_ASB_CONNECTION_KEY_STR:AAAAAAAAAA}
+          connection-string: ${JRD_ASB_CONNECTION_KEY_STR}
           topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
@@ -146,5 +146,5 @@ jrd:
 launchdarkly:
   sdk:
     key: ${RD_LD_SDK_KEY:}
-    environment: ${LAUNCH_DARKLY_ENV:local}
+    environment: ${ENV_NAME:local}
     user: rd

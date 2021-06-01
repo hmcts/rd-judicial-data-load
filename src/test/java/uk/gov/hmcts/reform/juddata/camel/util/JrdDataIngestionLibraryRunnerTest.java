@@ -55,6 +55,8 @@ class JrdDataIngestionLibraryRunnerTest {
 
     JobLauncher jobLauncherMock = mock(JobLauncher.class);
 
+    FeatureToggleService featureToggleService = mock(FeatureToggleService.class);
+
     @BeforeEach
     public void beforeTest() {
         Map<String, String> options = new HashMap<>();
@@ -74,6 +76,8 @@ class JrdDataIngestionLibraryRunnerTest {
         when(camelContext.getGlobalOptions()).thenReturn(options);
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
+        when(featureToggleService.isFlagEnabled(anyString())).thenReturn(true);
+        jrdDataIngestionLibraryRunner.environment = "test";
     }
 
     @SneakyThrows
