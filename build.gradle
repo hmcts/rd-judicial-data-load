@@ -109,7 +109,7 @@ idea {
 configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
-    functionalTestImplementation.extendsFrom testCompile
+    functionalTestCompile.extendsFrom testCompile
     functionalTestRuntime.extendsFrom testRuntime
 
 }
