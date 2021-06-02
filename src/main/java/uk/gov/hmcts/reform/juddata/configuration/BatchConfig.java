@@ -43,7 +43,6 @@ public class BatchConfig {
     @Autowired
     JobBuilderFactory jobBuilderFactory;
 
-
     @Bean
     public Step stepLeafRoute() {
         return steps.get(taskLeaf)
@@ -69,4 +68,5 @@ public class BatchConfig {
                 .end()
                 .build();
     }
+
 }

@@ -52,6 +52,6 @@ mail:
 launchdarkly:
   sdk:
     key: ${RD_LD_SDK_KEY:}
-    environment: ${LAUNCH_DARKLY_ENV:local}
+    environment: ${ENV_NAME:local}
     user: rd
 

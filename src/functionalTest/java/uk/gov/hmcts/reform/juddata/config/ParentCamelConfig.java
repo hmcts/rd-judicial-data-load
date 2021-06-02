@@ -1,10 +1,15 @@
 package uk.gov.hmcts.reform.juddata.config;
 
+import com.azure.core.amqp.AmqpRetryOptions;
+import com.azure.messaging.servicebus.ServiceBusClientBuilder;
+import com.azure.messaging.servicebus.ServiceBusSenderClient;
+import com.launchdarkly.sdk.server.LDClient;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -37,18 +42,34 @@ import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialUserProfileRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAuthorisationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
+import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
+import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleService;
+import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 
 import javax.sql.DataSource;
 
+import static java.lang.System.getenv;
+import static java.util.Objects.nonNull;
 import static org.mockito.Mockito.mock;
 
 
 @Configuration
 public class ParentCamelConfig {
+
+    @Value("${launchdarkly.sdk.environment:''}")
+    private String environment;
+
+
+    @Value("${jrd.publisher.azure.service.bus.topic:''}")
+    String topic;
+
+    @Value("${jrd.publisher.azure.service.bus.connection-string:''}")
+    String accessConnectionString;
 
     @Bean
     JudicialUserProfileProcessor judicialUserProfileProcessor() {
@@ -289,9 +310,42 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    DataIngestionLibraryRunner dataIngestionLibraryRunner() {
-        return new DataIngestionLibraryRunner();
+    DataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
+        return new JrdDataIngestionLibraryRunner();
     }
+
+    @Bean
+    TopicPublisher topicPublisher() {
+        if (nonNull(environment) && environment.startsWith("preview")) {
+            return new TopicPublisher();
+        }
+        return mock(TopicPublisher.class);
+    }
+
+    @Bean
+    public ServiceBusSenderClient getServiceBusSenderClient() {
+        if (nonNull(environment) && environment.startsWith("preview")) {
+            return new ServiceBusClientBuilder()
+                .connectionString(accessConnectionString)
+                .retryOptions(new AmqpRetryOptions())
+                .sender()
+                .topicName(topic)
+                .buildClient();
+        }
+
+        return mock(ServiceBusSenderClient.class);
+    }
+
+    @Bean
+    LDClient ldClient() {
+        return new LDClient((getenv("RD_LD_SDK_KEY")));
+    }
+
+    @Bean
+    FeatureToggleService featureToggleService() {
+        return new FeatureToggleServiceImpl(ldClient(), "rd");
+    }
+
     // miscellaneous configuration ends
     // miscellaneous configuration ends
 }

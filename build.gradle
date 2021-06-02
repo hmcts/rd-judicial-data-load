@@ -43,6 +43,7 @@ def versions = [
         springHystrix      : '2.1.1.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.11.4',
+        launchDarklySdk    : "5.2.2",
         camel              : '3.8.0'
 ]
 
@@ -108,7 +109,7 @@ idea {
 configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
-    functionalTestImplementation.extendsFrom testCompile
+    functionalTestCompile.extendsFrom testCompile
     functionalTestRuntime.extendsFrom testRuntime
 
 }
@@ -181,7 +182,7 @@ pitest {
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = true
-    mutationThreshold = 90
+    mutationThreshold = 85
     useClasspathFile = true
 }
 
@@ -267,6 +268,13 @@ dependencies {
     implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
     implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
+    implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
+
+    implementation group: 'com.azure', name: 'azure-core', version: '1.15.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.2.0'
+    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.6'
+    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
+    implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.5'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -332,11 +340,11 @@ dependencies {
         }
     }
 
-    functionalTestImplementation sourceSets.main.runtimeClasspath
-    functionalTestImplementation sourceSets.test.runtimeClasspath
+    functionalTestCompile sourceSets.main.runtimeClasspath
+    functionalTestCompile sourceSets.test.runtimeClasspath
 
-    smokeTestImplementation sourceSets.main.runtimeClasspath
-    smokeTestImplementation sourceSets.test.runtimeClasspath
+    smokeTestCompile sourceSets.main.runtimeClasspath
+    smokeTestCompile sourceSets.test.runtimeClasspath
 }
 
 dependencyCheck {
@@ -374,7 +382,8 @@ applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 // Fix for CVE-2021-21295 & need to be removed with new Azure blob version
 configurations.all {
     resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'io.netty') {
+        if (details.requested.group == 'io.netty'
+                && details.requested.name != 'netty-tcnative-boringssl-static' ) {
             details.useVersion "4.1.63.Final"
         }
     }
