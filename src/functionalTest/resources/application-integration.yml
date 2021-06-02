@@ -137,7 +137,7 @@ jrd:
     azure:
       service:
         bus:
-          connection-string: ${JRD_ASB_CONNECTION_KEY_STR}
+          connection-string: ${JRD_ASB_CONNECTION_KEY_STR:AAAAAAAAAA}
           topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
