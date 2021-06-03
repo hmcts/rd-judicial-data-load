@@ -98,7 +98,7 @@ public class JudicialOfficeAppointmentProcessor
                                                                  Exchange exchange) {
 
         Predicate<JudicialOfficeAppointment> perViolations = c ->
-            isFalse(judicialUserProfileProcessor.getValidPerInUserProfile().contains(c.getPerId()));
+            isFalse(judicialUserProfileProcessor.getValidPerIdInUserProfile().contains(c.getPerId()));
 
         //remove & audit missing personal per id
         removeForeignKeyElements(filteredJudicialAppointments, perViolations, PER_ID, exchange,

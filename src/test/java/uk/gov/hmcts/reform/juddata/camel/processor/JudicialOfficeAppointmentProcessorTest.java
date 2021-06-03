@@ -134,7 +134,7 @@ class JudicialOfficeAppointmentProcessorTest {
         setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
-        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(ImmutableSet.of(PERID_1,
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(ImmutableSet.of(PERID_1,
             PERID_2, "invalid"));
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
@@ -231,7 +231,7 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialUserProfiles.add(judicialUserProfileMock2);
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
-        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         setField(judicialOfficeAppointmentProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
@@ -279,7 +279,7 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialUserProfiles.add(judicialUserProfileMock2);
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
-        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         invokeMethod(judicialOfficeAppointmentProcessor, "filterAppointmentsRecordsForForeignKeyViolation",
             judicialOfficeAppointments, exchangeMock);
         verify(judicialOfficeAppointmentProcessor, times(3))

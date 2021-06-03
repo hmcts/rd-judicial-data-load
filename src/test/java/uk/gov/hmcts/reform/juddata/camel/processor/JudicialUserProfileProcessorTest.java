@@ -206,7 +206,7 @@ class JudicialUserProfileProcessorTest {
         judicialUserProfileProcessor.process(exchangeMock);
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
-        assertThat(judicialUserProfileProcessor.getValidPerInUserProfile()).isSameAs(emptySet());
+        assertThat(judicialUserProfileProcessor.getValidPerIdInUserProfile()).isSameAs(emptySet());
     }
 
     @Test

@@ -79,7 +79,7 @@ public class JudicialOfficeAuthorisationProcessor
                                                                    Exchange exchange) {
 
         Predicate<JudicialOfficeAuthorisation> perViolations = c ->
-            isFalse(judicialUserProfileProcessor.getValidPerInUserProfile().contains(c.getPerId()));
+            isFalse(judicialUserProfileProcessor.getValidPerIdInUserProfile().contains(c.getPerId()));
 
         //remove & audit missing personal e-links id
         removeForeignKeyElements(filteredJudicialAuthorisations, perViolations, PER_ID, exchange,

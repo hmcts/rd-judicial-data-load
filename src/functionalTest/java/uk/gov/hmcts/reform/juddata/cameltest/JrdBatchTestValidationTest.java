@@ -91,7 +91,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     void testAuthorisationPerMissing() throws Exception {
 
-
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthPerIdMissing);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 

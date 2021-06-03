@@ -112,7 +112,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
         setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
-        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(ImmutableSet.of(PERID_1,
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(ImmutableSet.of(PERID_1,
             PERID_2, "invalid"));
 
         int[][] intArray = new int[1][];
@@ -249,7 +249,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
         judicialUserProfiles.add(judicialUserProfileMock2);
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
-        when(judicialUserProfileProcessor.getValidPerInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
 
         invokeMethod(judicialOfficeAuthorisationProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
             judicialOfficeAuthorisations, exchangeMock);

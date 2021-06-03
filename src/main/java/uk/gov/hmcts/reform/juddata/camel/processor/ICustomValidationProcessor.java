@@ -41,11 +41,11 @@ public interface ICustomValidationProcessor<T> {
                                                  JsrValidatorInitializer<T> jsrValidatorInitializer,
                                                  Exchange exchange, String logComponentName) {
         Type mySuperclass = getType();
-        List<String> invalidPers = new ArrayList<>();
+        List<String> invalidPerIds = new ArrayList<>();
         if (nonNull(invalidJudicialUserProfileRecords)) {
 
             invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
-                //Remove invalid appointment for user profile and add to invalidPers List
+                //Remove invalid appointment for user profile and add to invalidPerIds List
                 boolean filteredRecord = false;
                 if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                     .class.getCanonicalName())) {
@@ -59,18 +59,18 @@ public interface ICustomValidationProcessor<T> {
                             .equalsIgnoreCase(invalidRecords.getPerId()));
                 }
                 if (filteredRecord) {
-                    invalidPers.add(invalidRecords.getPerId());
+                    invalidPerIds.add(invalidRecords.getPerId());
                 }
             });
 
-            if (isNotEmpty(invalidPers)) {
+            if (isNotEmpty(invalidPerIds)) {
                 //Auditing JSR skipped rows of user profile for Appointment/Authorization
-                jsrValidatorInitializer.auditJsrExceptions(invalidPers, PER_ID, INVALID_JSR_PARENT_ROW, exchange);
+                jsrValidatorInitializer.auditJsrExceptions(invalidPerIds, PER_ID, INVALID_JSR_PARENT_ROW, exchange);
                 LogHolder.log.info("{}:: Skipped invalid user profile per in {} {} & total skipped count {}",
                     logComponentName,
                     mySuperclass.getTypeName(),
-                    invalidPers.stream().collect(joining(",")),
-                    invalidPers.size());
+                    invalidPerIds.stream().collect(joining(",")),
+                    invalidPerIds.size());
             }
         }
     }

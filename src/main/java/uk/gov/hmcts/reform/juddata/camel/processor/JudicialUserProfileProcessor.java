@@ -30,7 +30,7 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
     @Value("${logging-component-name}")
     private String logComponentName;
 
-    private Set<String> validPerInUserProfile;
+    private Set<String> validPerIdInUserProfile;
 
     @Autowired
     @Qualifier("springJdbcTemplate")
@@ -60,12 +60,12 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
-        //Get Elink ids from current load
-        validPerInUserProfile = filteredJudicialUserProfiles.stream()
+        //Get Per Ids from current load
+        validPerIdInUserProfile = filteredJudicialUserProfiles.stream()
             .map(JudicialUserProfile::getPerId).collect(toSet());
 
-        //Get Per from previous loads
-        validPerInUserProfile.addAll(loadPerId());
+        //Get Per Id from previous loads
+        validPerIdInUserProfile.addAll(loadPerId());
 
         filteredJudicialUserProfiles.stream()
             .map(JudicialUserProfile::getPerId).collect(toSet());
@@ -73,8 +73,8 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         exchange.getMessage().setBody(filteredJudicialUserProfiles);
     }
 
-    public Set<String> getValidPerInUserProfile() {
-        return isNotEmpty(validPerInUserProfile) ? validPerInUserProfile : emptySet();
+    public Set<String> getValidPerIdInUserProfile() {
+        return isNotEmpty(validPerIdInUserProfile) ? validPerIdInUserProfile : emptySet();
     }
 
     @SuppressWarnings("unchecked")
