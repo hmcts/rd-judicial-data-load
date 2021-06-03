@@ -23,3 +23,6 @@ ALTER TABLE judicial_office_authorisation ADD COLUMN personal_code varchar(32);
 
 DROP table judicial_role_type;
 DROP table contract_type;
+
+ALTER TABLE base_location_type DROP COLUMN bench;
+ALTER TABLE base_location_type DROP COLUMN national_court_code;
