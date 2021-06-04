@@ -27,21 +27,21 @@ job:
     "rd":
       resourceGroup: rd
       secrets:
-        - judicial-api-POSTGRES-PASS
+        - name: judicial-api-POSTGRES-PASS
           alias: spring.datasource.password
-        - ApplicationInsightsInstrumentationKey
+        - name: ApplicationInsightsInstrumentationKey
           alias: azure.application-insights.instrumentation-key
-        - ACCOUNT-NAME
+        - name: ACCOUNT-NAME
           alias: azure.storage.account-name
-        - ACCOUNT-KEY
+        - name: ACCOUNT-KEY
           alias: azure.storage.account-key
-        - CONTAINER-NAME
+        - name: CONTAINER-NAME
           alias: azure.storage.container-name
-        - BLOB-URL-SUFFIX
+        - name: BLOB-URL-SUFFIX
           alias: azure.storage.blob-url-suffix
-        - judicial-topic-primary-connection-string
+        - name: judicial-topic-primary-connection-string
           alias: JRD_ASB_CONNECTION_KEY_STR
-        - LD-SDK-KEY
+        - name: LD-SDK-KEY
           alias: RD_LD_SDK_KEY
         - name: OAUTH2-CLIENT-SECRET
           alias: idam.api-redirect-uri

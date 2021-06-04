@@ -14,15 +14,15 @@ job:
   keyVaults:
     rd:
       secrets:
-        - CONTAINER-NAME
+        - name: CONTAINER-NAME
           alias: azure.storage.container-name
-        - BLOB-URL-SUFFIX
+        - name: BLOB-URL-SUFFIX
           alias: azure.storage.blob-url-suffix
-        - ApplicationInsightsInstrumentationKey
+        - name: ApplicationInsightsInstrumentationKey
           alias: azure.application-insights.instrumentation-key
-        - judicial-topic-primary-connection-string
+        - name: judicial-topic-primary-connection-string
           alias: JRD_ASB_CONNECTION_KEY_STR
-        - LD-SDK-KEY
+        - name: LD-SDK-KEY
           alias: RD_LD_SDK_KEY
         - name: OAUTH2-CLIENT-SECRET
           alias: idam.api-redirect-uri
