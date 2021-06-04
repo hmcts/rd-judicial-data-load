@@ -26,16 +26,33 @@ job:
       resourceGroup: rd
       secrets:
         - judicial-api-POSTGRES-PASS
+          alias: spring.datasource.password
         - ApplicationInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
         - ACCOUNT-NAME
+          alias: azure.storage.account-name
         - ACCOUNT-KEY
+          alias: azure.storage.account-key
         - CONTAINER-NAME
+          alias: azure.storage.container-name
         - BLOB-URL-SUFFIX
+          alias: azure.storage.blob-url-suffix
         - judicial-topic-primary-connection-string
+          alias: JRD_ASB_CONNECTION_KEY_STR
         - LD-SDK-KEY
+          alias: RD_LD_SDK_KEY
+        - name: OAUTH2-CLIENT-SECRET
+          alias: idam.api-redirect-uri
+        - name: OAUTH2-AUTH
+          alias: idam.api.authorization
+        - name: OAUTH2-CLIENT-AUTH
+          alias: idam.api.client-authorization
+        - name: SEARCH-QUERY-FROM
+          alias: query.duration
 postgresql:
   enabled: false
 
 servicebus:
   enabled: false
+
 

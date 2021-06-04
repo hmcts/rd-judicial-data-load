@@ -55,3 +55,16 @@ launchdarkly:
     environment: ${ENV_NAME:local}
     user: rd
 
+query:
+  duration: ${SEARCH_QUERY_FROM:72h}
+
+idam:
+  elastic-serach-query-param: "(roles:judiciary) AND lastModified:>now-"
+  recordsPerPage: 500
+  api:
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
+    client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
+    redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
+    authorization: ${OAUTH2_AUTH:AAAAAAAAAA}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:AAAAAAAAAA}
+
