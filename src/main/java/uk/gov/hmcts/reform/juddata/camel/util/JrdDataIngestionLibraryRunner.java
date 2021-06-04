@@ -71,8 +71,6 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${update-sidam-ids}")
     String updateSidamIds;
 
-
-
     public JrdDataIngestionLibraryRunner() {
         super();
     }
@@ -114,16 +112,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName, jobId);
     }
 
-
-    /***
-     * Update Sidam Id's
-     *
-     * @param sidamUsers Set<IdamClient.User>
-     *
-     */
     private void updateSidamIds(Set<IdamClient.User> sidamUsers) {
         List<Pair<String, String>> sidamObjectId = new ArrayList<>();
-        sidamUsers.stream().filter(user-> nonNull(user.getSsoId())).forEach(s -> {
+        sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s -> {
             sidamObjectId.add(Pair.of(s.getId(), s.getSsoId()));
         });
 
@@ -155,9 +146,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     }
 
     private void publishMessage(String status, List<String> sidamIds, String jobId) {
-
         try {
-
             if ((IN_PROGRESS.getStatus().equals(status))
                 || (FAILED.getStatus()).equals(status) && isNotEmpty(sidamIds)) {
                 //Publish or retry Message in ASB
@@ -172,5 +161,4 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             throw ex;
         }
     }
-
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
+import uk.gov.hmcts.reform.juddata.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.juddata.response.OpenIdAccessTokenResponse;
 
 import java.util.Base64;
@@ -23,23 +24,23 @@ import java.util.Set;
 public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
 
     @Autowired
-    protected IdamClient idamClient;
+    IdamClient idamClient;
 
     @Autowired
-    private TokenConfigProperties props;
+    TokenConfigProperties props;
 
     @Value("${logging-component-name}")
-    protected String loggingComponentName;
+    String loggingComponentName;
 
     @Value("${idam.elastic-serach-query-param}")
-    protected String searchQueryParam;
+    String searchQueryParam;
 
     @Value("${idam.recordsPerPage}")
-    protected int recordsPerPage;
+    int recordsPerPage;
 
 
     @Override
-    public String getBearerToken() throws RuntimeException {
+    public String getBearerToken() throws JudicialDataLoadException {
 
         byte[] base64UserDetails = Base64.getDecoder().decode(props.getAuthorization());
         Map<String, String> formParams = new HashMap<>();
@@ -58,13 +59,13 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
         OpenIdAccessTokenResponse openIdTokenResponse = idamClient.getOpenIdToken(formParams);
 
         if (openIdTokenResponse == null) {
-            throw new RuntimeException("Idam Service Failed while bearer token generate");
+            throw new JudicialDataLoadException("Idam Service Failed while bearer token generate");
         }
         return openIdTokenResponse.getAccessToken();
     }
 
     @SuppressWarnings("unchecked")
-    public Set<IdamClient.User> getSyncFeed() throws RuntimeException {
+    public Set<IdamClient.User> getSyncFeed() throws JudicialDataLoadException {
         Map<String, String> formParams = new HashMap<>();
         formParams.put("query", "(roles:judiciary) AND lastModified:>now-7200d");
 
@@ -74,7 +75,7 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
 
         do {
             formParams.put("page", String.valueOf(counter));
-            String bearerToken  = "Bearer ".concat(getBearerToken());
+            String bearerToken = "Bearer ".concat(getBearerToken());
             Response response = idamClient.getUserFeed(bearerToken, formParams);
             logIdamResponse(response);
 
@@ -99,10 +100,12 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
                 } catch (Exception ex) {
                     //There is No header.
                     log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
+                    throw new JudicialDataLoadException("Idam search query failure");
                 }
             } else {
                 log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
-                //throw new UserProfileSyncException(HttpStatus.valueOf(response.status()), "Idam search query failure");
+                throw new JudicialDataLoadException("Idam search query failure with response status "
+                    + response.status());
             }
             counter++;
 

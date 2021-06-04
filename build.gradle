@@ -174,15 +174,18 @@ pitest {
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
             'uk.gov.hmcts.reform.juddata.camel.service.EmailData',
             'uk.gov.hmcts.reform.juddata.camel.service.EmailService',
-            'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor'
+            'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
+            'uk.gov.hmcts.reform.juddata.client.*',
+            'uk.gov.hmcts.reform.juddata.response.*'
     ]
+
     threads = 10
     enableDefaultIncrementalAnalysis = true
     historyInputLocation = 'build/reports/pitest/fastermutationtesting'
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = true
-    mutationThreshold = 85
+    mutationThreshold = 82
     useClasspathFile = true
 }
 
@@ -198,7 +201,9 @@ sonarqube {
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java"
+                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/client," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/response"
     }
 }
 
@@ -258,7 +263,6 @@ dependencies {
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
-    testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
@@ -290,6 +294,7 @@ dependencies {
     smokeTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     smokeTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
+    testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
     testImplementation("org.hamcrest:hamcrest-junit:2.0.0.0") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
         exclude group: "org.hamcrest", module: "hamcrest-library"

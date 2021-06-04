@@ -88,6 +88,9 @@ class JrdDataIngestionLibraryRunnerTest {
         user.setId(UUID.randomUUID().toString());
         Set<IdamClient.User> sidamUsers = ImmutableSet.of(user);
         when(jrdSidamTokenService.getSyncFeed()).thenReturn(sidamUsers);
+        jrdDataIngestionLibraryRunner.updateSidamIds = "updateSidamIds";
+        int[][] intArray = new int[1][];
+        when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
     }
 
     @SneakyThrows
@@ -96,6 +99,7 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
+        verify(jdbcTemplate).batchUpdate(anyString(), anyList(), anyInt(), any());
     }
 
     @SneakyThrows
