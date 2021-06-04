@@ -50,7 +50,7 @@ job:
         - name: OAUTH2-CLIENT-AUTH
           alias: idam.api.client-authorization
         - name: SEARCH-QUERY-FROM
-          alias: query.duration
+          alias: elastic.search.query
 postgresql:
   enabled: false
 

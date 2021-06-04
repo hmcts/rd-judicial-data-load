@@ -31,7 +31,7 @@ job:
         - name: OAUTH2-CLIENT-AUTH
           alias: idam.api.client-authorization
         - name: SEARCH-QUERY-FROM
-          alias: query.duration
+          alias: elastic.search.query
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
