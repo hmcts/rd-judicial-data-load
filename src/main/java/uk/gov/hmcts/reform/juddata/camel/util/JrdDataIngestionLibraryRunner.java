@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Autowired
     @Qualifier("springJdbcTemplate")
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    protected IEmailService emailService;
 
     @Value("${select-job-status-sql}")
     String selectJobStatus;
@@ -124,6 +128,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             updateJobCompletion(FAILED, jobId);
+            emailService.sendEmail("", "");
             throw ex;
         }
     }
