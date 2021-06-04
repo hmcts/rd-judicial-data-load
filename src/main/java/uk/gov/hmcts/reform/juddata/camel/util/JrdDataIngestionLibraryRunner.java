@@ -8,13 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
+import uk.gov.hmcts.reform.juddata.client.IdamClient;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
@@ -58,6 +65,14 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${launchdarkly.sdk.environment}")
     String environment;
 
+    @Autowired
+    JrdSidamTokenService jrdSidamTokenService;
+
+    @Value("${update-sidam-ids}")
+    String updateSidamIds;
+
+
+
     public JrdDataIngestionLibraryRunner() {
         super();
     }
@@ -73,6 +88,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
         String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
 
+        Set<IdamClient.User> sidamUsers = jrdSidamTokenService.getSyncFeed();
+        updateSidamIds(sidamUsers);
         List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
         int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
 
@@ -97,6 +114,31 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName, jobId);
     }
 
+
+    /***
+     * Update Sidam Id's
+     *
+     * @param sidamUsers Set<IdamClient.User>
+     *
+     */
+    private void updateSidamIds(Set<IdamClient.User> sidamUsers) {
+        List<Pair<String, String>> sidamObjectId = new ArrayList<>();
+        sidamUsers.stream().filter(user-> nonNull(user.getSsoId())).forEach(s -> {
+            sidamObjectId.add(Pair.of(s.getId(), s.getSsoId()));
+        });
+
+        jdbcTemplate.batchUpdate(
+            updateSidamIds,
+            sidamObjectId,
+            10,
+            new ParameterizedPreparedStatementSetter<Pair<String, String>>() {
+                public void setValues(PreparedStatement ps, Pair<String, String> argument) throws SQLException {
+                    ps.setString(1, argument.getLeft());
+                    ps.setString(2, argument.getRight());
+                }
+            });
+    }
+
     private void updateJobCompletion(JobStatus success, String jobId) {
         jdbcTemplate.update(updateJobStatus, success.getStatus(),
             Integer.valueOf(jobId));
@@ -113,7 +155,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     }
 
     private void publishMessage(String status, List<String> sidamIds, String jobId) {
+
         try {
+
             if ((IN_PROGRESS.getStatus().equals(status))
                 || (FAILED.getStatus()).equals(status) && isNotEmpty(sidamIds)) {
                 //Publish or retry Message in ASB
@@ -124,6 +168,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             updateJobCompletion(FAILED, jobId);
+
             throw ex;
         }
     }
