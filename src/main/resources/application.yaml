@@ -59,7 +59,7 @@ launchdarkly:
 
 elastic:
   search:
-    query: ${SEARCH_QUERY_FROM:(roles:judiciary) AND lastModified:>now-72h}
+    query: ${SEARCH_QUERY_FROM:(roles:judiciary) AND lastModified:>now-7200h}
     recordsPerPage: 500
 
 idam:

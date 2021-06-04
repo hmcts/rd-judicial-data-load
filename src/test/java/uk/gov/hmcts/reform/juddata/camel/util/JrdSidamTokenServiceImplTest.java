@@ -87,7 +87,7 @@ class JrdSidamTokenServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         String body = mapper.writeValueAsString(users);
 
-        Map<String ,Collection<String>> map = new HashMap<>();
+        Map<String, Collection<String>> map = new HashMap<>();
         Collection<String> list = new ArrayList<>();
         list.add("5");
         map.put("X-Total-Count", list);
@@ -98,7 +98,7 @@ class JrdSidamTokenServiceImplTest {
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         Set<IdamClient.User> useResponses = jrdSidamTokenService.getSyncFeed();
         assertThat(response).isNotNull();
-        useResponses.forEach(useResponse ->  {
+        useResponses.forEach(useResponse -> {
             assertThat(useResponse.getEmail()).isEqualTo("some@some.com");
         });
         verify(idamClientMock, times(5)).getUserFeed(anyString(), any());
@@ -131,7 +131,7 @@ class JrdSidamTokenServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         String body = mapper.writeValueAsString(users);
 
-        Map<String ,Collection<String>> map = new HashMap<>();
+        Map<String, Collection<String>> map = new HashMap<>();
         Collection<String> list = new ArrayList<>();
         list.add("dummy");
         map.put("X-Total-Count", list);

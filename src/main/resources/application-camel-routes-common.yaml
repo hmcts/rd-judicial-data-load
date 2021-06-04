@@ -19,6 +19,7 @@ invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_sta
 scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,file_name, scheduler_start_time,scheduler_end_time,status) values(?,?,?,?,?)
 start-leaf-route: direct:leaf
 audit-enable: true
+update-sidam-ids: update judicial_user_profile set sidam_id = ? where object_id = ? and sidam_id is null
 
 logging-component-name: RD_Judicial_Ref_Data
 component:

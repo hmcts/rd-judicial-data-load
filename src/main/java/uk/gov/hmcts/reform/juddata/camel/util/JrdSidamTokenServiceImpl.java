@@ -32,10 +32,10 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
     @Value("${logging-component-name}")
     String loggingComponentName;
 
-    @Value("${idam.elastic-serach-query-param}")
-    String searchQueryParam;
+    @Value("${elastic.search.query}")
+    String searchQuery;
 
-    @Value("${idam.recordsPerPage}")
+    @Value("${elastic.search.recordsPerPage}")
     int recordsPerPage;
 
 
@@ -67,7 +67,7 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
     @SuppressWarnings("unchecked")
     public Set<IdamClient.User> getSyncFeed() throws JudicialDataLoadException {
         Map<String, String> formParams = new HashMap<>();
-        formParams.put("query", "(roles:judiciary) AND lastModified:>now-7200d");
+        formParams.put("query",searchQuery);
 
         Set<IdamClient.User> judicialUsers = new HashSet<>();
         int totalCount = 0;
