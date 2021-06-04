@@ -25,6 +25,8 @@ spring:
     enabled: ${FLYWAY_ENABLED:true}
     locations: classpath:db/migration,classpath:db/postgres
     schemas: dbjuddata
+  config:
+    import: "optional:configtree:/mnt/secrets/rd/"
 
   ### database configuration
   datasource:
@@ -54,4 +56,17 @@ launchdarkly:
     key: ${RD_LD_SDK_KEY:}
     environment: ${ENV_NAME:local}
     user: rd
+
+elastic:
+  search:
+    query: ${SEARCH_QUERY_FROM:(roles:judiciary) AND lastModified:>now-72h}
+    recordsPerPage: 500
+
+idam:
+  api:
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
+    client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
+    redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
+    authorization: ${OAUTH2_AUTH:AAAAAAAAAA}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:AAAAAAAAAA}
 
