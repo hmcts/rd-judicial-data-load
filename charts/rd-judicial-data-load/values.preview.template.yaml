@@ -14,11 +14,24 @@ job:
   keyVaults:
     rd:
       secrets:
-        - CONTAINER-NAME
-        - BLOB-URL-SUFFIX
-        - ApplicationInsightsInstrumentationKey
-        - judicial-topic-primary-connection-string
-        - LD-SDK-KEY
+        - name: CONTAINER-NAME
+          alias: azure.storage.container-name
+        - name: BLOB-URL-SUFFIX
+          alias: azure.storage.blob-url-suffix
+        - name: ApplicationInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
+        - name: judicial-topic-primary-connection-string
+          alias: JRD_ASB_CONNECTION_KEY_STR
+        - name: LD-SDK-KEY
+          alias: RD_LD_SDK_KEY
+        - name: OAUTH2-CLIENT-SECRET
+          alias: idam.api-redirect-uri
+        - name: OAUTH2-AUTH
+          alias: idam.api.authorization
+        - name: OAUTH2-CLIENT-AUTH
+          alias: idam.api.client-authorization
+        - name: SEARCH-QUERY-FROM
+          alias: elastic.search.query
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
