@@ -1,7 +1,7 @@
 spring:
   mail:
     from: no-reply@reform.hmcts.net
-    to: sushant.choudhari@hmcts.net,abhijit.diwan@hmcts.net,mallikarjun.puttana@hmcts.net
+    to: abhijit.diwan@hmcts.net,praveen.saxena@hmcts.net
     subject: JRD - Exception in processing -
     host: mta.reform.hmcts.net
     port: 25
