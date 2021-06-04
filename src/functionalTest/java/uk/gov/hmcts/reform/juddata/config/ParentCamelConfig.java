@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
@@ -49,7 +50,10 @@ import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleService;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
+import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 
 import javax.sql.DataSource;
 
@@ -338,12 +342,27 @@ public class ParentCamelConfig {
 
     @Bean
     LDClient ldClient() {
-        return new LDClient((getenv("RD_LD_SDK_KEY")));
+        return new LDClient(getenv("RD_LD_SDK_KEY"));
     }
 
     @Bean
     FeatureToggleService featureToggleService() {
         return new FeatureToggleServiceImpl(ldClient(), "rd");
+    }
+
+    @Bean
+    JrdSidamTokenService jrdSidamTokenService() {
+        return new JrdSidamTokenServiceImpl();
+    }
+
+    @Bean
+    TokenConfigProperties tokenConfigProperties() {
+        return new TokenConfigProperties();
+    }
+
+    @Bean
+    RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     // miscellaneous configuration ends

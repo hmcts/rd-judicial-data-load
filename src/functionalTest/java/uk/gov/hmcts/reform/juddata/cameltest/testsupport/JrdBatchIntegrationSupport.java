@@ -176,6 +176,8 @@ public abstract class JrdBatchIntegrationSupport {
         }
         System.setProperty("ENV_NAME", System.getenv("execution_environment"));
         System.setProperty("azure.storage.container-name", "jud-ref-data");
+        System.setProperty("OAUTH2_CLIENT_AUTH", System.getenv("OAUTH2_CLIENT_AUTH"));
+        System.setProperty("OAUTH2_AUTH", System.getenv("OAUTH2_AUTH"));
     }
 
     @AfterEach
