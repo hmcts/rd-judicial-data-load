@@ -43,11 +43,12 @@ spring:
       minimum-idle: 1
 
   profiles:
-    include:
+    active:
       - jrd-router-orchestartion
       - jrd-leaf-router
-      - lib
       - camel-routes-common
+      - lib
+
 mail:
   enabled: false
 
