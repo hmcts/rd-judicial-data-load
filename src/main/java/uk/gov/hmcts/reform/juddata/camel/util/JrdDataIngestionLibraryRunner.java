@@ -128,6 +128,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             updateJobCompletion(FAILED, jobId);
+            emailService.setEsbMailEnabled(true);
             emailService.sendEmail("", "");
             throw ex;
         }
