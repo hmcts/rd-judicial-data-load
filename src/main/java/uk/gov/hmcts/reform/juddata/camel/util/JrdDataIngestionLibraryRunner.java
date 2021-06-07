@@ -160,6 +160,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 topicPublisher.sendMessage(sidamIds, jobId);
                 updateJobCompletion(SUCCESS, jobId);
             }
+            throw new RuntimeException("test service bus exception");
+
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             updateJobCompletion(FAILED, jobId);
