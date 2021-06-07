@@ -15,4 +15,5 @@ spring:
         OAUTH2-CLIENT-SECRET: idam.api-redirect-uri
         OAUTH2-AUTH: idam.api.authorization
         OAUTH2-CLIENT-AUTH: idam.api.client-authorization
-        SEARCH-QUERY-FROM: elastic.search.query
+        JRD-SIDAM-SEARCH-QUERY: elastic.search.query
+

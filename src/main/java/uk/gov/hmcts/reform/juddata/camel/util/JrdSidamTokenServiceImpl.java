@@ -68,7 +68,7 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
     public Set<IdamClient.User> getSyncFeed() throws JudicialDataLoadException {
         Map<String, String> formParams = new HashMap<>();
         formParams.put("query",searchQuery);
-
+        log.info("{}:: search elk query {}", loggingComponentName, searchQuery);
         Set<IdamClient.User> judicialUsers = new HashSet<>();
         int totalCount = 0;
         int counter = 0;

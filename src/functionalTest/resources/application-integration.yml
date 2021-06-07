@@ -152,7 +152,7 @@ launchdarkly:
 
 elastic:
   search:
-    query: ${SEARCH_QUERY_FROM:(roles:judiciary) AND lastModified:>now-7200h}
+    query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-7200h}
     recordsPerPage: 500
 
 idam:
