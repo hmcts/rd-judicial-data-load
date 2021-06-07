@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.3.11.RELEASE'
+        springBootVersion = '2.4.5'
     }
     repositories {
         jcenter()
@@ -19,7 +19,7 @@ plugins {
     id 'pmd'
     id "com.github.ben-manes.versions" version "0.28.0"
     id 'info.solidsoft.pitest' version '1.6.0'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '2.8'
     id "org.flywaydb.flyway" version "6.2.0"
     id 'uk.gov.hmcts.java' version '0.12.0'
@@ -39,8 +39,8 @@ def versions = [
         reformS2sClient    : '3.1.2',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
-        springBoot         : '2.3.11.RELEASE',
-        springHystrix      : '2.1.1.RELEASE',
+        springBoot         : '2.4.5',
+        springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.11.4',
         launchDarklySdk    : "5.2.2",
@@ -174,7 +174,9 @@ pitest {
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
             'uk.gov.hmcts.reform.juddata.camel.service.EmailData',
             'uk.gov.hmcts.reform.juddata.camel.service.EmailService',
-            'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor'
+            'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
+            'uk.gov.hmcts.reform.juddata.client.*',
+            'uk.gov.hmcts.reform.juddata.response.*'
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -182,7 +184,7 @@ pitest {
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = true
-    mutationThreshold = 85
+    mutationThreshold = 82
     useClasspathFile = true
 }
 
@@ -198,7 +200,9 @@ sonarqube {
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java"
+                "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/response/**"
     }
 }
 
@@ -224,6 +228,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: versions.springBoot
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
     implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-databind') {
@@ -236,6 +241,11 @@ dependencies {
             strictly versions.jackson
         }
     }
+    implementation (group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0')
+
+    implementation('org.springframework.boot:spring-boot-starter-web')
+
+    implementation "io.github.openfeign:feign-httpclient:11.0"
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
