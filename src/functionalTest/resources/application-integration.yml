@@ -21,6 +21,9 @@ spring:
     # eg. dynamic properties ${parent.file.name}
     job:
       enabled: false
+  esb:
+    mail:
+      enabled: false
 
 
 start-route: direct:JRD
