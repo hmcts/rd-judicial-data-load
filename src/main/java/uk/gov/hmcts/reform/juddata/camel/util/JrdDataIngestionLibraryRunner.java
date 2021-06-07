@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 
@@ -71,9 +72,14 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${update-sidam-ids}")
     String updateSidamIds;
 
+    @Autowired
+    EmailServiceImpl emailService;
+
+
     public JrdDataIngestionLibraryRunner() {
         super();
     }
+
 
     @Override
     @SuppressWarnings("unchecked")
@@ -157,7 +163,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             updateJobCompletion(FAILED, jobId);
-
+            emailService.setEsbMailEnabled(true);
+            emailService.sendEmail("", "");
             throw ex;
         }
     }

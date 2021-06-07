@@ -30,6 +30,10 @@ spring:
     bootstrap:
       enabled: true
 
+  esb:
+    mail:
+      enabled: false
+
   ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
