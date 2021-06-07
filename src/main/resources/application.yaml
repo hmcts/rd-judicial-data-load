@@ -33,6 +33,8 @@ spring:
   esb:
     mail:
       enabled: false
+      to: abhijit.diwan@hmcts.net,sourav.roy@hmcts.net
+      subject: Judicial Data Load ASB Message Publishing Failed
 
   ### database configuration
   datasource:
