@@ -52,6 +52,7 @@ withNightlyPipeline(type, product, component) {
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
     enableMutationTest()
+    enableSecurityScan()
 
 
     after('securityScan') {
@@ -62,6 +63,17 @@ withNightlyPipeline(type, product, component) {
             builder.gradle('functional')
         } finally {
             junit '**/test-results/**/*.xml'
+            junit 'build/test-results/functional/**/*.xml'
+            archiveArtifacts 'build/reports/tests/functional/index.html'
+
+            publishHTML target: [
+                    allowMissing         : true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll              : true,
+                    reportDir            : "build/reports/tests/functional",
+                    reportFiles          : "index.html",
+                    reportName           : "JRD Functional Test Report"
+            ]
         }
     }
 
