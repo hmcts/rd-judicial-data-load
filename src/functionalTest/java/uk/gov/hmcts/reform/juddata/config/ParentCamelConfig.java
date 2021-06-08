@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.juddata.config;
 
-import com.azure.core.amqp.AmqpRetryOptions;
-import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import com.launchdarkly.sdk.server.LDClient;
 import org.apache.camel.CamelContext;
@@ -58,7 +56,6 @@ import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 import javax.sql.DataSource;
 
 import static java.lang.System.getenv;
-import static java.util.Objects.nonNull;
 import static org.mockito.Mockito.mock;
 
 
@@ -318,24 +315,25 @@ public class ParentCamelConfig {
         return new JrdDataIngestionLibraryRunner();
     }
 
+    //TO do AKS infra issue helm chart hence mocking topicPublisher & ServiceBusSenderClient temporarily
     @Bean
     TopicPublisher topicPublisher() {
-        if (nonNull(environment) && environment.startsWith("preview")) {
-            return new TopicPublisher();
-        }
+        //        if (nonNull(environment) && environment.startsWith("preview")) {
+        //            return new TopicPublisher();
+        //        }
         return mock(TopicPublisher.class);
     }
 
     @Bean
     public ServiceBusSenderClient getServiceBusSenderClient() {
-        if (nonNull(environment) && environment.startsWith("preview")) {
-            return new ServiceBusClientBuilder()
-                .connectionString(accessConnectionString)
-                .retryOptions(new AmqpRetryOptions())
-                .sender()
-                .topicName(topic)
-                .buildClient();
-        }
+        //        if (nonNull(environment) && environment.startsWith("preview")) {
+        //            return new ServiceBusClientBuilder()
+        //                .connectionString(accessConnectionString)
+        //                .retryOptions(new AmqpRetryOptions())
+        //                .sender()
+        //                .topicName(topic)
+        //                .buildClient();
+        //        }
 
         return mock(ServiceBusSenderClient.class);
     }
