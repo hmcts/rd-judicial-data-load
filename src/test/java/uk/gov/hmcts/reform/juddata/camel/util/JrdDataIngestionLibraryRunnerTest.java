@@ -13,12 +13,15 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
+import uk.gov.hmcts.reform.juddata.client.IdamClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertThrows;
@@ -57,6 +60,8 @@ class JrdDataIngestionLibraryRunnerTest {
 
     FeatureToggleService featureToggleService = mock(FeatureToggleService.class);
 
+    JrdSidamTokenService jrdSidamTokenService = mock(JrdSidamTokenServiceImpl.class);
+
     @BeforeEach
     public void beforeTest() {
         Map<String, String> options = new HashMap<>();
@@ -78,6 +83,14 @@ class JrdDataIngestionLibraryRunnerTest {
         when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
         when(featureToggleService.isFlagEnabled(anyString())).thenReturn(true);
         jrdDataIngestionLibraryRunner.environment = "test";
+        IdamClient.User user = new IdamClient.User();
+        user.setSsoId(UUID.randomUUID().toString());
+        user.setId(UUID.randomUUID().toString());
+        Set<IdamClient.User> sidamUsers = ImmutableSet.of(user);
+        when(jrdSidamTokenService.getSyncFeed()).thenReturn(sidamUsers);
+        jrdDataIngestionLibraryRunner.updateSidamIds = "updateSidamIds";
+        int[][] intArray = new int[1][];
+        when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
     }
 
     @SneakyThrows
@@ -86,6 +99,7 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
+        verify(jdbcTemplate).batchUpdate(anyString(), anyList(), anyInt(), any());
     }
 
     @SneakyThrows

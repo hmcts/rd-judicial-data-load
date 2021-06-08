@@ -1,8 +1,8 @@
 spring:
   mail:
     from: no-reply@reform.hmcts.net
-    to:  sushant.choudhari@hmcts.net,abhijit.diwan@hmcts.net,mallikarjun.puttana@hmcts.net
-    subject:  JRD - Exception in processing -
+    to: abhijit.diwan@hmcts.net,praveen.saxena@hmcts.net
+    subject: JRD - Exception in processing -
     host: mta.reform.hmcts.net
     port: 25
     enabled: true
@@ -128,9 +128,10 @@ fetch-personal-per-id: select per_id from judicial_user_profile
 
 insert-job-sql: insert into dataload_schedular_job(job_start_time, publishing_status) values(?, ?)
 update-job-sql: update dataload_schedular_job set job_end_time = now() at time zone 'utc', publishing_status = ? where id =?
-select-job-status-sql:  select id, publishing_status from dataload_schedular_job where date(job_start_time) = current_date
+select-job-status-sql: select id, publishing_status from dataload_schedular_job where date(job_start_time) = current_date
 get-sidam-ids: select sidam_id from judicial_user_profile where sidam_id is not null
 scheduler-audit-failure: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date and status = 'Failure'
+update-sidam-ids: update judicial_user_profile set sidam_id = ? where object_id = ? and sidam_id is null
 
 jrd:
   publisher:
@@ -138,7 +139,7 @@ jrd:
       service:
         bus:
           connection-string: ${JRD_ASB_CONNECTION_KEY_STR:AAAAAAAAAA}
-          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
+          topic: jrd-aks-topic
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
     jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:5}
@@ -148,3 +149,17 @@ launchdarkly:
     key: ${RD_LD_SDK_KEY:}
     environment: ${ENV_NAME:local}
     user: rd
+
+elastic:
+  search:
+    query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-7200h}
+    recordsPerPage: 500
+
+idam:
+  api:
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
+    client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
+    redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
+    authorization: ${OAUTH2_AUTH:AAAAAAAAAA}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:AAAAAAAAAA}
+

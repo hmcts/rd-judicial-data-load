@@ -14,11 +14,17 @@ job:
   keyVaults:
     rd:
       secrets:
+        - judicial-api-POSTGRES-PASS
+        - ApplicationInsightsInstrumentationKey
+        - ACCOUNT-NAME
+        - ACCOUNT-KEY
         - CONTAINER-NAME
         - BLOB-URL-SUFFIX
-        - ApplicationInsightsInstrumentationKey
         - judicial-topic-primary-connection-string
         - LD-SDK-KEY
+        - OAUTH2-CLIENT-SECRET
+        - OAUTH2-AUTH
+        - OAUTH2-CLIENT-AUTH
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
