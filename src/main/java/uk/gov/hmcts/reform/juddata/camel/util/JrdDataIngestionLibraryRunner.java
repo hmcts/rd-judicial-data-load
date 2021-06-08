@@ -79,32 +79,31 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @SuppressWarnings("unchecked")
     public void run(Job job, JobParameters params) throws Exception {
         super.run(job, params);
-        //To do add sidam calls to get Sidam id for Object id once Sidam elastic APi ready
         Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
             Pair.of(rs.getString(1), rs.getString(2))));
-
         String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
         String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
 
-        Set<IdamClient.User> sidamUsers = jrdSidamTokenService.getSyncFeed();
-        updateSidamIds(sidamUsers);
-        List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
-        int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
-
-        if (failedFileCount > 0) {
-            log.warn("{}:: JRD load failed, hence no publishing sidam id's to ASB", logComponentName, jobId);
-            updateJobCompletion(FILE_LOAD_FAILED, jobId);
-            return;
-        }
-
-
-        //To do check audit status of Parent files
-        if (isFalse(validateSidamIdsExists(jobId, sidamIds))) {
-            return;
-        }
-        //After Job completes Publish message in ASB and toggle off for prod
         if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
             && negate(environment.startsWith("prod"))) {
+
+            int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
+            //audit status of Parent files
+            if (failedFileCount > 0) {
+                log.warn("{}:: JRD load failed, hence no publishing sidam id's to ASB", logComponentName, jobId);
+                updateJobCompletion(FILE_LOAD_FAILED, jobId);
+                return;
+            }
+
+            List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
+            //Validate if Sidam id's exists
+            if (isFalse(validateSidamIdsExists(jobId, sidamIds))) {
+                return;
+            }
+            //To do add sidam calls to get Sidam id for Object id once Sidam elastic APi ready
+            Set<IdamClient.User> sidamUsers = jrdSidamTokenService.getSyncFeed();
+            updateSidamIds(sidamUsers);
+            //After Job completes Publish message in ASB and toggle off for prod
             publishMessage(jobStatus, sidamIds, jobId);
         } else {
             log.warn("{}:: publishing message is toggled off {}", logComponentName, jobId);
