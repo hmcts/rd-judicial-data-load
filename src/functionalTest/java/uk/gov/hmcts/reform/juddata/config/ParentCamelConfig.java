@@ -48,7 +48,6 @@ import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleService;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
@@ -315,7 +314,7 @@ public class ParentCamelConfig {
 
     @Bean
     DataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
-        return new JrdDataIngestionLibraryRunner();
+        return new DataIngestionLibraryRunner();
     }
 
     @Bean

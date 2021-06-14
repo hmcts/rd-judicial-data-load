@@ -14,5 +14,6 @@ public interface JrdConstants {
     String MISSING_BASE_LOCATION = "base location id is missing from BaseLocations file";
     String MISSING_CONTRACT = "contract id is missing from Contract file";
     String JOB_ID = "JOB_ID";
+    String ASB_PUBLISHING_STATUS = "ASB_PUBLISHING_STATUS";
     RowMapper<String> ROW_MAPPER = (rs, i) -> rs.getString(1);
 }

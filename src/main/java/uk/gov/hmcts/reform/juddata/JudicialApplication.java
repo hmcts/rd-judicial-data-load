@@ -13,9 +13,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
+import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
@@ -36,7 +36,7 @@ public class JudicialApplication implements ApplicationRunner {
     private static String logComponentName;
 
     @Autowired
-    JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
+    DataIngestionLibraryRunner dataIngestionLibraryRunner;
 
     @Autowired
     AuditServiceImpl judicialAuditServiceImpl;
@@ -56,7 +56,7 @@ public class JudicialApplication implements ApplicationRunner {
         JobParameters params = new JobParametersBuilder()
             .addString(jobName, String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
-        jrdDataIngestionLibraryRunner.run(job, params);
+        dataIngestionLibraryRunner.run(job, params);
     }
 
     @Value("${logging-component-name}")

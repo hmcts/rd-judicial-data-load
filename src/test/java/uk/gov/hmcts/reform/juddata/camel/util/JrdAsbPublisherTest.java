@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
@@ -41,22 +38,16 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ROW_MAPPER;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
-class JrdDataIngestionLibraryRunnerTest {
+class JrdAsbPublisherTest {
 
     TopicPublisher topicPublisher = mock(TopicPublisher.class);
 
     @InjectMocks
-    private JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
+    private JrdAsbPublisher jrdAsbPublisher;
 
     CamelContext camelContext = mock(CamelContext.class);
 
     JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
-
-    Job job = mock(Job.class);
-
-    JobParameters jobParameters = mock(JobParameters.class);
-
-    JobLauncher jobLauncherMock = mock(JobLauncher.class);
 
     FeatureToggleService featureToggleService = mock(FeatureToggleService.class);
 
@@ -68,27 +59,26 @@ class JrdDataIngestionLibraryRunnerTest {
         options.put(JOB_ID, "1");
         List<String> sidamIds = new ArrayList<>();
         sidamIds.add(UUID.randomUUID().toString());
-        jrdDataIngestionLibraryRunner.selectJobStatus = "dummyjobstatus";
-        jrdDataIngestionLibraryRunner.getSidamIds = "dummyQuery";
-        jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
-        jrdDataIngestionLibraryRunner.failedAuditFileCount = "failedAuditFileCount";
+        jrdAsbPublisher.selectJobStatus = "dummyjobstatus";
+        jrdAsbPublisher.getSidamIds = "dummyQuery";
+        jrdAsbPublisher.failedAuditFileCount = "failedAuditFileCount";
 
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
             .thenReturn(Pair.of("1", IN_PROGRESS.getStatus()));
         when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(Integer.valueOf(0));
 
-        jrdDataIngestionLibraryRunner.logComponentName = "loggingComponent";
+        jrdAsbPublisher.logComponentName = "loggingComponent";
         when(camelContext.getGlobalOptions()).thenReturn(options);
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
         when(featureToggleService.isFlagEnabled(anyString())).thenReturn(true);
-        jrdDataIngestionLibraryRunner.environment = "test";
+        jrdAsbPublisher.environment = "test";
         IdamClient.User user = new IdamClient.User();
         user.setSsoId(UUID.randomUUID().toString());
         user.setId(UUID.randomUUID().toString());
         Set<IdamClient.User> sidamUsers = ImmutableSet.of(user);
         when(jrdSidamTokenService.getSyncFeed()).thenReturn(sidamUsers);
-        jrdDataIngestionLibraryRunner.updateSidamIds = "updateSidamIds";
+        jrdAsbPublisher.updateSidamIds = "updateSidamIds";
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
     }
@@ -96,8 +86,7 @@ class JrdDataIngestionLibraryRunnerTest {
     @SneakyThrows
     @Test
     void testRun() {
-        jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(jobLauncherMock).run(any(), any());
+        jrdAsbPublisher.executeAsbPublishing();
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
         verify(jdbcTemplate).batchUpdate(anyString(), anyList(), anyInt(), any());
     }
@@ -107,8 +96,7 @@ class JrdDataIngestionLibraryRunnerTest {
     void testRunRetry() {
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
             .thenReturn(Pair.of("1", FAILED.getStatus()));
-        jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(jobLauncherMock).run(any(), any());
+        jrdAsbPublisher.executeAsbPublishing();
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
     }
 
@@ -116,7 +104,7 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     void testRunException() {
         doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList(), anyString());
-        assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
+        assertThrows(Exception.class, () -> jrdAsbPublisher.executeAsbPublishing());
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
     }
 
@@ -125,8 +113,7 @@ class JrdDataIngestionLibraryRunnerTest {
     void testRunNoMessageToPublish() {
         List<String> sidamIds = new ArrayList<>();
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
-        jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(jobLauncherMock).run(any(), any());
+        jrdAsbPublisher.executeAsbPublishing();
         verify(jdbcTemplate, times(1)).queryForObject(anyString(), any(RowMapper.class));
     }
 
@@ -134,7 +121,6 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     void testRunFailedFiles() {
         when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(Integer.valueOf(1));
-        jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(jobLauncherMock).run(any(), any());
+        jrdAsbPublisher.executeAsbPublishing();
     }
 }

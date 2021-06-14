@@ -1,16 +1,14 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.CamelContext;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 
@@ -22,7 +20,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
@@ -31,11 +28,11 @@ import static uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl.JR
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
-import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_STATUS;
 
 @Component
 @Slf4j
-public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
+public class JrdAsbPublisher {
 
     @Autowired
     @Qualifier("springJdbcTemplate")
@@ -46,9 +43,6 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
 
     @Value("${logging-component-name}")
     String logComponentName;
-
-    @Value("${update-job-sql}")
-    String updateJobStatus;
 
     @Value("${get-sidam-ids}")
     String getSidamIds;
@@ -71,45 +65,48 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${update-sidam-ids}")
     String updateSidamIds;
 
-    public JrdDataIngestionLibraryRunner() {
+    public JrdAsbPublisher() {
         super();
     }
 
-    @Override
+    @Autowired
+    CamelContext camelContext;
+
+
     @SuppressWarnings("unchecked")
-    public void run(Job job, JobParameters params) throws Exception {
-        super.run(job, params);
-        //To do add sidam calls to get Sidam id for Object id once Sidam elastic APi ready
+    public void executeAsbPublishing() {
+
         Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
             Pair.of(rs.getString(1), rs.getString(2))));
+        final String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
+        final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
 
-        String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
-        String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
-
-        Set<IdamClient.User> sidamUsers = jrdSidamTokenService.getSyncFeed();
-        updateSidamIds(sidamUsers);
-        List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
-        int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
-
-        if (failedFileCount > 0) {
-            log.warn("{}:: JRD load failed, hence no publishing sidam id's to ASB", logComponentName, jobId);
-            updateJobCompletion(FILE_LOAD_FAILED, jobId);
-            return;
-        }
-
-
-        //To do check audit status of Parent files
-        if (isFalse(validateSidamIdsExists(jobId, sidamIds))) {
-            return;
-        }
-        //After Job completes Publish message in ASB and toggle off for prod
+        //After Job completes Publish message in ASB and toggle off for prod with launch Darkly & one
+        //more explicit check to  avoid executing in prod Should be removed in prod release
         if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
             && negate(environment.startsWith("prod"))) {
+
+            Set<IdamClient.User> sidamUsers = jrdSidamTokenService.getSyncFeed();
+            updateSidamIds(sidamUsers);
+            List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
+            int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
+
+            if (failedFileCount > 0) {
+                log.warn("{}:: JRD load failed, hence no publishing sidam id's to ASB", logComponentName, jobId);
+                camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FILE_LOAD_FAILED.getStatus());
+                return;
+            }
+
+            //In case on NO sidam id's matched for object id's nothing to publish in ASB
+            if (isEmpty(sidamIds)) {
+                log.warn("{}:: No Sidam id exists in JRD  for publishing in ASB for JOB id {}",
+                    logComponentName, jobId);
+                return;
+            }
             publishMessage(jobStatus, sidamIds, jobId);
-        } else {
-            log.warn("{}:: publishing message is toggled off {}", logComponentName, jobId);
+            log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}",
+                logComponentName, jobId);
         }
-        log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName, jobId);
     }
 
     private void updateSidamIds(Set<IdamClient.User> sidamUsers) {
@@ -130,21 +127,6 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             });
     }
 
-    private void updateJobCompletion(JobStatus success, String jobId) {
-        jdbcTemplate.update(updateJobStatus, success.getStatus(),
-            Integer.valueOf(jobId));
-    }
-
-    private boolean validateSidamIdsExists(String jobId, List<String> sidamIds) {
-        var returnFlag = true;
-        if (isEmpty(sidamIds)) {
-            log.warn("{}:: No Sidam id exists in JRD  for publishing in ASB for JOB id {}", logComponentName, jobId);
-            updateJobCompletion(SUCCESS, jobId);
-            returnFlag = false;
-        }
-        return returnFlag;
-    }
-
     private void publishMessage(String status, List<String> sidamIds, String jobId) {
         try {
             if ((IN_PROGRESS.getStatus().equals(status))
@@ -152,12 +134,10 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 //Publish or retry Message in ASB
                 log.info("{}:: Publishing/Retrying JRD messages in ASB for Job Id ", logComponentName, jobId);
                 topicPublisher.sendMessage(sidamIds, jobId);
-                updateJobCompletion(SUCCESS, jobId);
             }
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
-            updateJobCompletion(FAILED, jobId);
-
+            camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FAILED.getStatus());
             throw ex;
         }
     }
