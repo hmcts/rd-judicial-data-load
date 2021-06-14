@@ -11,15 +11,19 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
+import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdAsbPublisher;
 
 import java.util.Map;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,7 +39,7 @@ class JobResultListenerTest {
     JobExecution jobExecutionMock;
 
     @Mock
-    ArchivalRoute archivalRouteMock;
+    ArchivalRoute archivalRouteMock = spy(ArchivalRoute.class);
 
     @Mock
     ProducerTemplate producerTemplate;
@@ -68,6 +72,18 @@ class JobResultListenerTest {
         verify(producerTemplate).sendBody("archivalRouteName",
             "starting Archival");
         verify(jrdAsbPublisher).executeAsbPublishing();
+        verify(jdbcTemplate).update(anyString(), any(), anyInt());
+    }
+
+    @Test
+    void afterJobTestWithException() {
+        doNothing().when(jrdAsbPublisher).executeAsbPublishing();
+        Map<String, String> camelGlobalOptions = ImmutableMap.of(JOB_ID,"1");
+        jobResultListener.updateJobStatus = "duummyQuery";
+        when(camelContext.getGlobalOptions()).thenReturn(camelGlobalOptions);
+        when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
+        doThrow(new RuntimeException()).when(archivalRouteMock).archivalRoute(anyList());
+        assertThrows(RouteFailedException.class, () -> jobResultListener.afterJob(jobExecutionMock));
         verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 }

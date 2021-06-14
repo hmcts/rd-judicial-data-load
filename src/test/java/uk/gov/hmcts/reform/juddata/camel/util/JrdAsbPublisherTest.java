@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,7 +44,7 @@ class JrdAsbPublisherTest {
     TopicPublisher topicPublisher = mock(TopicPublisher.class);
 
     @InjectMocks
-    private JrdAsbPublisher jrdAsbPublisher;
+    private JrdAsbPublisher jrdAsbPublisher = spy(new JrdAsbPublisher());
 
     CamelContext camelContext = mock(CamelContext.class);
 
@@ -123,4 +124,5 @@ class JrdAsbPublisherTest {
         when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(Integer.valueOf(1));
         jrdAsbPublisher.executeAsbPublishing();
     }
+
 }

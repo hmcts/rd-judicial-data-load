@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.listener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +12,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
+import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.JobStatus;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdConstants;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdAsbPublisher;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_STATUS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
-
 
 @Component
 @Slf4j
@@ -76,21 +76,26 @@ public class JobResultListener implements JobExecutionListener {
 
     @Override
     public void afterJob(JobExecution jobExecution) {
+        try {
+            //Archival of Files
+            archivalRoute.archivalRoute(archivalFileNames);
+            producerTemplate.sendBody(archivalRouteName, "starting Archival");
+        } catch (Exception ex) {
+            log.error(" {} Archival route Failed {}::", logComponentName);
+            throw new RouteFailedException("Archival route Failed");
+        } finally {
+            //Publish ASB Messages & Update ASB status
+            publishAsbStatus();
+        }
+    }
+
+    private void publishAsbStatus() {
         //Publishing Message to ASB
         jrdAsbPublisher.executeAsbPublishing();
         //Update JRD DB with Publishing Status
-        updateAsbStatusInJrd();
-
-        //Archival of Files
-        archivalRoute.archivalRoute(archivalFileNames);
-        producerTemplate.sendBody(archivalRouteName, "starting Archival");
-    }
-
-    private void updateAsbStatusInJrd() {
-        //Update JOB completion status
         String jobId = camelContext.getGlobalOptions().get(JOB_ID);
-        String publishingStatus = camelContext.getGlobalOptions().get(JrdConstants.ASB_PUBLISHING_STATUS);
-        publishingStatus = isEmpty(publishingStatus) ? SUCCESS.getStatus() : publishingStatus;
+        String publishingStatus = camelContext.getGlobalOptions().get(ASB_PUBLISHING_STATUS);
+        publishingStatus = StringUtils.isEmpty(publishingStatus) ? SUCCESS.getStatus() : publishingStatus;
         jdbcTemplate.update(updateJobStatus, publishingStatus, Integer.valueOf(jobId));
     }
 }

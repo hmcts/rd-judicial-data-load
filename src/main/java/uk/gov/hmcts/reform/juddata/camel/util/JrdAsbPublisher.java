@@ -75,7 +75,6 @@ public class JrdAsbPublisher {
 
     @SuppressWarnings("unchecked")
     public void executeAsbPublishing() {
-
         Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
             Pair.of(rs.getString(1), rs.getString(2))));
         final String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
