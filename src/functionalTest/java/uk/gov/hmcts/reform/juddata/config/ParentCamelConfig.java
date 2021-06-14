@@ -48,6 +48,7 @@ import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleService;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdAsbPublisher;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
@@ -342,6 +343,11 @@ public class ParentCamelConfig {
     @Bean
     LDClient ldClient() {
         return new LDClient(getenv("RD_LD_SDK_KEY"));
+    }
+
+    @Bean
+    JrdAsbPublisher jrdAsbPublisher() {
+        return new JrdAsbPublisher();
     }
 
     @Bean
