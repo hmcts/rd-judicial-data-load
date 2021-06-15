@@ -44,3 +44,6 @@ postgresql:
 servicebus:
   enabled: false
 
+blobstorage:
+  enabled: false
+

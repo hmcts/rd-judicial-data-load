@@ -11,6 +11,9 @@ job:
     CONTAINER_NAME: jud-ref-data
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 500
+    BLOB_ACCOUNT_NAME: $(BLOB_ACCOUNT_NAME)
+    BLOB_ACCESS_KEY: $(BLOB_ACCESS_KEY)
+
   keyVaults:
     rd:
       secrets:
@@ -29,6 +32,15 @@ job:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
       key: connectionString
+    BLOB_ACCOUNT_NAME:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: storageAccountName
+    BLOB_ACCESS_KEY:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: accessKey
+    BLOB_SERVICE_ENDPOINT:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: primaryBlobServiceEndPoint
 global:
   jobKind: CronJob
 
@@ -51,4 +63,14 @@ servicebus:
     topics:
       - name: jrd-aks-topic
         subscriptionNeeded: yes
+  enabled: true
+
+blobstorage:
+  resourceGroup: rd
+  teamName: "RD"
+  location: uksouth
+  setup:
+    containers:
+      - jud-ref-data
+      - jud-ref-data-archive
   enabled: true
