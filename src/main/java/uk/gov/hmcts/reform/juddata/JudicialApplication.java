@@ -13,9 +13,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
-import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
@@ -36,10 +36,12 @@ public class JudicialApplication implements ApplicationRunner {
     private static String logComponentName;
 
     @Autowired
-    DataIngestionLibraryRunner dataIngestionLibraryRunner;
+    JrdDataIngestionLibraryRunner dataIngestionLibraryRunner;
 
     @Autowired
     AuditServiceImpl judicialAuditServiceImpl;
+
+
 
 
     public static void main(final String[] args) throws Exception {

@@ -19,7 +19,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
-import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
@@ -48,7 +47,7 @@ import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleService;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdAsbPublisher;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
@@ -314,11 +313,6 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    DataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
-        return new DataIngestionLibraryRunner();
-    }
-
-    @Bean
     TopicPublisher topicPublisher() {
         if (nonNull(environment) && environment.startsWith("preview")) {
             return new TopicPublisher();
@@ -346,8 +340,8 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    JrdAsbPublisher jrdAsbPublisher() {
-        return new JrdAsbPublisher();
+    JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
+        return new JrdDataIngestionLibraryRunner();
     }
 
     @Bean
