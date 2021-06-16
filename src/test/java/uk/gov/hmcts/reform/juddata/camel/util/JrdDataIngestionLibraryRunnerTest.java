@@ -91,6 +91,12 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.updateSidamIds = "updateSidamIds";
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
+
+        Map<String, String> camelGlobalOptions = new HashMap<>();
+        camelGlobalOptions.put(JOB_ID, "1");
+        jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
+        when(camelContext.getGlobalOptions()).thenReturn(camelGlobalOptions);
+        when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
     }
 
     @SneakyThrows
@@ -99,7 +105,15 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
-        verify(jdbcTemplate).batchUpdate(anyString(), anyList(), anyInt(), any());
+
+    }
+
+    @SneakyThrows
+    @Test
+    void testRunWithException() {
+        when(featureToggleService.isFlagEnabled(anyString())).thenThrow(new RuntimeException("exception"));
+        assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
+        verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 
     @SneakyThrows
@@ -118,6 +132,7 @@ class JrdDataIngestionLibraryRunnerTest {
         doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList(), anyString());
         assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
+        verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 
     @SneakyThrows
