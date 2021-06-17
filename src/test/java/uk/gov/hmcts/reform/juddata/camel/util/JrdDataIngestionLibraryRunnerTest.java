@@ -105,7 +105,7 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
-
+        verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 
     @SneakyThrows
