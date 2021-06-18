@@ -25,8 +25,6 @@ public class JudicialOfficeAuthorisationRowMapper {
         judOfficeAppointmentRow.put("ticket_id", judicialOfficeAuthorisation.getTicketId());
         judOfficeAppointmentRow.put("start_date", getDateTimeStamp(judicialOfficeAuthorisation.getStartDate()));
         judOfficeAppointmentRow.put("end_date", getDateTimeStamp(judicialOfficeAuthorisation.getEndDate()));
-        judOfficeAppointmentRow.put("created_date", getDateTimeStamp(judicialOfficeAuthorisation.getCreatedDate()));
-        judOfficeAppointmentRow.put("last_updated", getDateTimeStamp(judicialOfficeAuthorisation.getLastUpdated()));
         judOfficeAppointmentRow.put("lower_level", judicialOfficeAuthorisation.getLowerLevel());
         judOfficeAppointmentRow.put("personal_code", judicialOfficeAuthorisation.getPersonalCode());
         return  judOfficeAppointmentRow;

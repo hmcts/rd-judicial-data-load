@@ -92,8 +92,6 @@ public class JrdTestSupport {
         judicialOfficeAuthorisation.setJurisdiction("jurisdiction");
         judicialOfficeAuthorisation.setStartDate(date);
         judicialOfficeAuthorisation.setEndDate(date);
-        judicialOfficeAuthorisation.setCreatedDate(date);
-        judicialOfficeAuthorisation.setLastUpdated(date);
         judicialOfficeAuthorisation.setLowerLevel("lowerLevel");
         judicialOfficeAuthorisation.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAuthorisation.setTicketId(12345L);
