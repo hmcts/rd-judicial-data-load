@@ -168,9 +168,9 @@ public abstract class JrdBatchIntegrationSupport {
     public static void setupBlobProperties() throws Exception {
         if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             log.info("account-name..." + System.getenv("BLOB_ACCOUNT_NAME"));
-            log.info("account-key..." + System.getenv("BLOB_ACCESS_KEY"));
-            System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCESS_KEY"));
-            System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCESS_NAME"));
+            log.info("account-key..." + System.getenv("BLOB_ACCOUNT_KEY"));
+            System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCOUNT_NAME"));
+            System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_KEY"));
             //serviceBusSecretString
             System.setProperty("JRD_ASB_CONNECTION_KEY_STR", System.getenv("serviceBusSecretString"));
             System.setProperty("RD_LD_SDK_KEY", System.getenv("RD_LD_SDK_KEY"));

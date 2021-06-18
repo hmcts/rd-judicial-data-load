@@ -85,7 +85,7 @@ withPipeline(type, product, component) {
                 kubectl.login()
                 env.serviceBusSecretString = kubectl.getSecret(serviceBusSecret, namespace, "{.data.connectionString}")
                 env.BLOB_ACCOUNT_NAME = kubectl.getSecret(blobSecret, namespace, "{.data.storageAccountName}")
-                env.BLOB_ACCESS_KEY = kubectl.getSecret(blobSecret, namespace, "{.data.accessKey}")
+                env.BLOB_ACCOUNT_KEY = kubectl.getSecret(blobSecret, namespace, "{.data.accessKey}")
             }
         }
 
