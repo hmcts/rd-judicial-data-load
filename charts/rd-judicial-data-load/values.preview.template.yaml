@@ -57,7 +57,7 @@ postgresql:
 servicebus:
   resourceGroup: rd
   teamName: "RD"
-  location: uksouth
+  location: ukwest
   serviceplan: standard
   setup:
     topics:
@@ -68,7 +68,7 @@ servicebus:
 blobstorage:
   resourceGroup: rd
   teamName: "RD"
-  location: uksouth
+  location: ukwest
   setup:
     containers:
       - jud-ref-data
