@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.juddata.cameltest.testsupport;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +33,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHEST
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 
 @ExtendWith(SpringExtension.class)
-@Slf4j
 public abstract class JrdBatchIntegrationSupport {
 
     public static final String FILE_STATUS = "status";
