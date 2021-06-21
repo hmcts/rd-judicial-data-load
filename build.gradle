@@ -3,6 +3,7 @@ buildscript {
         springBootVersion = '2.4.6'
     }
     repositories {
+        mavenLocal()
         jcenter()
         mavenCentral()
     }
@@ -210,7 +211,7 @@ project.tasks['sonarqube'].dependsOn test, jacocoTestReport
 project.tasks['sonarqube'].group = "Verification"
 
 repositories {
-
+    mavenLocal()
     maven {
         url 'https://jitpack.io'
     }

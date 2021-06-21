@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 
@@ -41,6 +42,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Autowired
     @Qualifier("springJdbcTemplate")
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    protected IEmailService emailService;
 
     @Value("${select-job-status-sql}")
     String selectJobStatus;
@@ -84,11 +88,11 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             //After Job completes Publish message in ASB and toggle off for prod with launch Darkly & one
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
-                && negate(environment.startsWith("prod"))) {
+                    && negate(environment.startsWith("prod"))) {
 
                 mapAndPublishSidamIds(getJobDetails().getLeft(), getJobDetails().getRight());
                 log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}",
-                    logComponentName, getJobDetails().getLeft());
+                        logComponentName, getJobDetails().getLeft());
                 //Update JRD DB with ASB Status
                 updateAsbStatus();
             }
@@ -101,7 +105,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
 
     public Pair<String, String> getJobDetails() {
         Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
-            Pair.of(rs.getString(1), rs.getString(2))));
+                Pair.of(rs.getString(1), rs.getString(2))));
         final String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
         final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
         return Pair.of(jobId, jobStatus);
@@ -120,7 +124,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         //In case on NO sidam id's matched for object id's nothing to publish in ASB
         if (isEmpty(sidamIds)) {
             log.warn("{}:: No Sidam id exists in JRD  for publishing in ASB for JOB id {}",
-                logComponentName, jobId);
+                    logComponentName, jobId);
         }
         publishMessage(jobStatus, sidamIds, jobId);
     }
@@ -140,21 +144,21 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         });
 
         jdbcTemplate.batchUpdate(
-            updateSidamIds,
-            sidamObjectId,
-            10,
-            new ParameterizedPreparedStatementSetter<Pair<String, String>>() {
-                public void setValues(PreparedStatement ps, Pair<String, String> argument) throws SQLException {
-                    ps.setString(1, argument.getLeft());
-                    ps.setString(2, argument.getRight());
-                }
-            });
+                updateSidamIds,
+                sidamObjectId,
+                10,
+                new ParameterizedPreparedStatementSetter<Pair<String, String>>() {
+                    public void setValues(PreparedStatement ps, Pair<String, String> argument) throws SQLException {
+                        ps.setString(1, argument.getLeft());
+                        ps.setString(2, argument.getRight());
+                    }
+                });
     }
 
     private void publishMessage(String status, List<String> sidamIds, String jobId) {
         try {
             if ((IN_PROGRESS.getStatus().equals(status))
-                || (FAILED.getStatus()).equals(status) && isNotEmpty(sidamIds)) {
+                    || (FAILED.getStatus()).equals(status) && isNotEmpty(sidamIds)) {
                 //Publish or retry Message in ASB
                 log.info("{}:: Publishing/Retrying JRD messages in ASB for Job Id ", logComponentName, jobId);
                 topicPublisher.sendMessage(sidamIds, jobId);
@@ -162,6 +166,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FAILED.getStatus());
+            emailService.setEsbMailEnabled(true);
+            emailService.sendEmail("", "");
             throw ex;
         }
     }
