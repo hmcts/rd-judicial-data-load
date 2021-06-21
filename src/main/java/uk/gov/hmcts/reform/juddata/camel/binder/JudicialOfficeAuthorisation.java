@@ -39,19 +39,9 @@ public class JudicialOfficeAuthorisation implements Serializable {
             message = DATE_FORMAT_ERROR_MESSAGE)
     String endDate;
 
-    @DataField(pos = 6, columnName = "createddate")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
-    String createdDate;
-
-    @DataField(pos = 7, columnName = "lastupdated")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
-    String lastUpdated;
-
-    @DataField(pos = 8, columnName = "lowerlevel")
+    @DataField(pos = 6, columnName = "lowerlevel")
     String lowerLevel;
 
-    @DataField(pos = 9, columnName = "personal_code")
+    @DataField(pos = 7, columnName = "personal_code")
     String personalCode;
 }

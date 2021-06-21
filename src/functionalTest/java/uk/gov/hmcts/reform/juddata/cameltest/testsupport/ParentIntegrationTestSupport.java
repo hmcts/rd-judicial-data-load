@@ -162,10 +162,6 @@ public interface ParentIntegrationTestSupport {
                 judicialOfficeAuthorisation.setTicketId((Long) authorisationMap.get("ticket_id"));
                 judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
                 judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp) authorisationMap.get("end_date")));
-                judicialOfficeAuthorisation.setCreatedDate(handleNull((Timestamp) authorisationMap
-                    .get("created_date")));
-                judicialOfficeAuthorisation.setLastUpdated(handleNull((Timestamp) authorisationMap
-                    .get("last_updated")));
                 judicialOfficeAuthorisation.setLowerLevel((String) authorisationMap.get("lower_level"));
                 return judicialOfficeAuthorisation;
             }).collect(Collectors.toList());
@@ -201,9 +197,7 @@ public interface ParentIntegrationTestSupport {
         judicialOfficeAuthorisation.setTicketId(isBlank(columns.get(2)) ? null : Long.parseLong(columns.get(2)));
         judicialOfficeAuthorisation.setStartDate(handleNull(columns.get(3), true));
         judicialOfficeAuthorisation.setEndDate(handleNull(columns.get(4), true));
-        judicialOfficeAuthorisation.setCreatedDate(handleNull(columns.get(5), true));
-        judicialOfficeAuthorisation.setLastUpdated(handleNull(columns.get(6), true));
-        judicialOfficeAuthorisation.setLowerLevel(handleNull(columns.get(7), false));
+        judicialOfficeAuthorisation.setLowerLevel(handleNull(columns.get(5), false));
         return judicialOfficeAuthorisation;
     }
 
