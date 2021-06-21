@@ -33,7 +33,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_STATUS;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 
 @Component
 @Slf4j
@@ -82,19 +81,14 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     public void run(Job job, JobParameters params) throws Exception {
         try {
             super.run(job, params);
-            Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
-                Pair.of(rs.getString(1), rs.getString(2))));
-            final String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
-            final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
-
             //After Job completes Publish message in ASB and toggle off for prod with launch Darkly & one
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
                 && negate(environment.startsWith("prod"))) {
 
-                mapAndPublishSidamIds(jobId, jobStatus);
+                mapAndPublishSidamIds(getJobDetails().getLeft(), getJobDetails().getRight());
                 log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}",
-                    logComponentName, jobId);
+                    logComponentName, getJobDetails().getLeft());
                 //Update JRD DB with ASB Status
                 updateAsbStatus();
             }
@@ -105,12 +99,19 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         }
     }
 
+    public Pair<String, String> getJobDetails() {
+        Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
+            Pair.of(rs.getString(1), rs.getString(2))));
+        final String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
+        final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
+        return Pair.of(jobId, jobStatus);
+    }
+
     private void mapAndPublishSidamIds(String jobId, String jobStatus) {
         Set<IdamClient.User> sidamUsers = jrdSidamTokenService.getSyncFeed();
         updateSidamIds(sidamUsers);
         List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
         int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
-
         if (failedFileCount > 0) {
             log.warn("{}:: JRD load failed, hence no publishing sidam id's to ASB", logComponentName, jobId);
             camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FILE_LOAD_FAILED.getStatus());
@@ -126,8 +127,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
 
     private void updateAsbStatus() {
         //Update JRD DB with Publishing Status
-        String jobId = camelContext.getGlobalOptions().get(JOB_ID);
-        String publishingStatus = camelContext.getGlobalOptions().get(ASB_PUBLISHING_STATUS);
+        String jobId = getJobDetails().getLeft();
+        String publishingStatus = getJobDetails().getRight();
         publishingStatus = StringUtils.isEmpty(publishingStatus) ? SUCCESS.getStatus() : publishingStatus;
         jdbcTemplate.update(updateJobStatus, publishingStatus, Integer.valueOf(jobId));
     }

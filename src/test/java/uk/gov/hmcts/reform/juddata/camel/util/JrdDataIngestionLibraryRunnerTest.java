@@ -142,7 +142,7 @@ class JrdDataIngestionLibraryRunnerTest {
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
-        verify(jdbcTemplate, times(1)).queryForObject(anyString(), any(RowMapper.class));
+        verify(jdbcTemplate, times(5)).queryForObject(anyString(), any(RowMapper.class));
     }
 
     @SneakyThrows
