@@ -201,7 +201,7 @@ sonarqube {
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/camel/util/JrdDataIngestionLibraryRunnerTest.java," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/response/**"
     }
