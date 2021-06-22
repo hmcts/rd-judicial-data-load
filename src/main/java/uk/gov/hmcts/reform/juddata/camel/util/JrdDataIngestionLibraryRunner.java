@@ -163,6 +163,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 log.info("{}:: Publishing/Retrying JRD messages in ASB for Job Id ", logComponentName, jobId);
                 topicPublisher.sendMessage(sidamIds, jobId);
             }
+            throw new RuntimeException("Test Exception for ASB Failure Email");
+
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FAILED.getStatus());

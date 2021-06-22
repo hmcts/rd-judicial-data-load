@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,6 +40,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ROW_MAPPER;
 
+@Disabled
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
 class JrdDataIngestionLibraryRunnerTest {
