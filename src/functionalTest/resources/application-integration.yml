@@ -91,11 +91,11 @@ route:
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
 
-parent-select-jrd-sql: SELECT * FROM judicial_user_profile
+parent-select-jrd-sql: SELECT * FROM judicial_user_profile order by elinks_id
 
-child-select-child1-sql: SELECT * FROM judicial_office_appointment
+child-select-child1-sql: SELECT * FROM judicial_office_appointment order by elinks_id
 
-child-select-child2-sql: SELECT * FROM judicial_office_authorisation
+child-select-child2-sql: SELECT * FROM judicial_office_authorisation order by elinks_id
 
 exception-select-query: select * from  dataload_exception_records
 

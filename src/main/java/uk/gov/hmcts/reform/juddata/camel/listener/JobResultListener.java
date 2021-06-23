@@ -20,7 +20,6 @@ import java.util.List;
 import static java.lang.System.currentTimeMillis;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 
-
 @Component
 @Slf4j
 public class JobResultListener implements JobExecutionListener {

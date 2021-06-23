@@ -19,7 +19,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
-import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
@@ -314,11 +313,6 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    DataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
-        return new JrdDataIngestionLibraryRunner();
-    }
-
-    @Bean
     TopicPublisher topicPublisher() {
         if (nonNull(environment) && environment.startsWith("preview")) {
             return new TopicPublisher();
@@ -343,6 +337,11 @@ public class ParentCamelConfig {
     @Bean
     LDClient ldClient() {
         return new LDClient(getenv("RD_LD_SDK_KEY"));
+    }
+
+    @Bean
+    JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner() {
+        return new JrdDataIngestionLibraryRunner();
     }
 
     @Bean

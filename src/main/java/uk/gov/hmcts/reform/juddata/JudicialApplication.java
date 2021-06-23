@@ -36,10 +36,12 @@ public class JudicialApplication implements ApplicationRunner {
     private static String logComponentName;
 
     @Autowired
-    JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
+    JrdDataIngestionLibraryRunner dataIngestionLibraryRunner;
 
     @Autowired
     AuditServiceImpl judicialAuditServiceImpl;
+
+
 
 
     public static void main(final String[] args) throws Exception {
@@ -56,7 +58,7 @@ public class JudicialApplication implements ApplicationRunner {
         JobParameters params = new JobParametersBuilder()
             .addString(jobName, String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
-        jrdDataIngestionLibraryRunner.run(job, params);
+        dataIngestionLibraryRunner.run(job, params);
     }
 
     @Value("${logging-component-name}")
