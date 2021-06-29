@@ -38,7 +38,7 @@ job:
         - OAUTH2-CLIENT-SECRET
         - OAUTH2-AUTH
         - OAUTH2-CLIENT-AUTH
-        - SENDGRID-API-KEY
+        - rd-sendgrid-api-key
 postgresql:
   enabled: false
 

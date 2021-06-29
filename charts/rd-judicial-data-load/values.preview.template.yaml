@@ -25,7 +25,7 @@ job:
         - OAUTH2-CLIENT-SECRET
         - OAUTH2-AUTH
         - OAUTH2-CLIENT-AUTH
-        - SENDGRID-API-KEY
+        - rd-sendgrid-api-key
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
