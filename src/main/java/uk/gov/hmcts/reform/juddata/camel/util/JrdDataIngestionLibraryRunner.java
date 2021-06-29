@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.negate;
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl.JRD_ASB_FLAG;
@@ -118,7 +118,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         }
 
         //In case on NO sidam id's matched for object id's nothing to publish in ASB
-        if (isEmpty(sidamIds)) {
+        if (isNull(sidamIds) || sidamIds.isEmpty())  {
             log.warn("{}:: No Sidam id exists in JRD  for publishing in ASB for JOB id {}",
                 logComponentName, jobId);
         }

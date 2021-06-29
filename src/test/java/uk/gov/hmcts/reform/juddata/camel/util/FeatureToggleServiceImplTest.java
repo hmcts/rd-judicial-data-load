@@ -6,26 +6,42 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl.JRD_ASB_FLAG;
 
 @ExtendWith(MockitoExtension.class)
 public class FeatureToggleServiceImplTest {
 
-    LDClient ldClient = mock(LDClient.class);
+    LDClient ldClient =  spy(new LDClient("dummkey"));
+
     @InjectMocks
     FeatureToggleServiceImpl flaFeatureToggleService;
 
     @Test
     public void testIsFlagEnabled() {
+
         assertFalse(flaFeatureToggleService.isFlagEnabled("test"));
         verify(ldClient).boolVariation(anyString(),any(),anyBoolean());
+        assertEquals(ldClient.boolVariation(anyString(),any(),anyBoolean()), FALSE);
+    }
+
+    @Test
+    public void testIsFlagEnabledTrue() {
+        flaFeatureToggleService = spy(new FeatureToggleServiceImpl(ldClient, "rd"));
+        flaFeatureToggleService.mapServiceToFlag();
+        when(ldClient.boolVariation(anyString(),any(),anyBoolean())).thenReturn(true);
+        assertTrue(flaFeatureToggleService.isFlagEnabled(JRD_ASB_FLAG));
+        assertEquals(ldClient.boolVariation(anyString(),any(),anyBoolean()), TRUE);
     }
 
     @Test

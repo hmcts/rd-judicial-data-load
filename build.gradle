@@ -176,7 +176,9 @@ pitest {
             'uk.gov.hmcts.reform.juddata.camel.service.EmailService',
             'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
             'uk.gov.hmcts.reform.juddata.client.*',
-            'uk.gov.hmcts.reform.juddata.response.*'
+            'uk.gov.hmcts.reform.juddata.response.*',
+            'uk.gov.hmcts.reform.juddata.camel.util.JobStatus',
+            'uk.gov.hmcts.reform.juddata.camel.util.JrdConstants'
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -202,7 +204,7 @@ sonarqube {
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/response/**"
+                "src/main/java/uk/gov/hmcts/reform/juddata/response/**,"
     }
 }
 
@@ -304,10 +306,13 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }
     testImplementation group: 'com.h2database', name: 'h2'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.1.0'
+    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.11.2'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.2'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.4'
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
+
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.1'
