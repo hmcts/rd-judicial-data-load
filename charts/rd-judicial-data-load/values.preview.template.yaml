@@ -11,6 +11,7 @@ job:
     CONTAINER_NAME: jud-ref-data
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 500
+    MAIL_FROM: no-reply@mail-rd-nonprod.platform.hmcts.net
   keyVaults:
     rd:
       secrets:
@@ -19,16 +20,25 @@ job:
         - ACCOUNT-NAME
         - ACCOUNT-KEY
         - CONTAINER-NAME
-        - BLOB-URL-SUFFIX
         - judicial-topic-primary-connection-string
         - LD-SDK-KEY
         - OAUTH2-CLIENT-SECRET
         - OAUTH2-AUTH
         - OAUTH2-CLIENT-AUTH
+        - SENDGRID-API-KEY
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
       key: connectionString
+    BLOB_ACCOUNT_NAME:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: storageAccountName
+    BLOB_ACCESS_KEY:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: accessKey
+    BLOB_SERVICE_ENDPOINT:
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: primaryBlobServiceEndPoint
 global:
   jobKind: CronJob
 
@@ -43,12 +53,22 @@ postgresql:
     enabled: false
 
 servicebus:
-  resourceGroup: rd
+  resourceGroup: rd-aks-pr-test
   teamName: "RD"
-  location: uksouth
+  location: ukwest
   serviceplan: standard
   setup:
     topics:
       - name: jrd-aks-topic
         subscriptionNeeded: yes
+  enabled: true
+
+blobstorage:
+  resourceGroup: rd-aks-pr-test
+  teamName: "RD"
+  location: ukwest
+  setup:
+    containers:
+      - jud-ref-data
+      - jud-ref-data-archive
   enabled: true

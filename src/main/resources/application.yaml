@@ -59,6 +59,11 @@ spring:
       subject: JRD User profiles failed to Publish
       to: abhijit.diwan@hmcts.net,praveen.saxena@hmcts.net,kavitha.gade@hmcts.net,shreedhar.lomte@hmcts.net,sourav.roy@hmcts.net
 
+sendgrid:
+  key: ${SENDGRID_API_KEY}
+  mail:
+    from: ${MAIL_FROM}
+
 launchdarkly:
   sdk:
     key: ${RD_LD_SDK_KEY:}
