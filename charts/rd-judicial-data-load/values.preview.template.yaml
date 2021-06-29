@@ -20,7 +20,6 @@ job:
         - ACCOUNT-NAME
         - ACCOUNT-KEY
         - CONTAINER-NAME
-        - BLOB-URL-SUFFIX
         - judicial-topic-primary-connection-string
         - LD-SDK-KEY
         - OAUTH2-CLIENT-SECRET
