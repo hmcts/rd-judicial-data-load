@@ -52,12 +52,11 @@ spring:
       - camel-routes-common
 mail:
   enabled: false
-  from: ${MAIL_FORM}
 
 sendgrid:
   key: ${SENDGRID_API_KEY}
   mail:
-    from: ${MAIL_FORM}
+    from: ${MAIL_FROM}
 
 launchdarkly:
   sdk:

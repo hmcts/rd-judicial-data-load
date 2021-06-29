@@ -16,7 +16,7 @@ job:
     JRD_DATA_PER_MESSAGE: 500
     IDAM_URL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net
     OAUTH2_REDIRECT_URI: https://rd-professional-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/oauth2redirect
-    MAIL_FORM: no-reply@mail-rd-nonprod.platform.hmcts.net
+    MAIL_FROM: no-reply@mail-rd-nonprod.platform.hmcts.net
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
