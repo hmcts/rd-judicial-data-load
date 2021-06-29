@@ -5,8 +5,6 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 
@@ -26,7 +24,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ERR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
-@ExtendWith(SpringExtension.class)
 class JrdExecutorTest {
     JrdExecutor jrdExecutor = new JrdExecutor();
 

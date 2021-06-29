@@ -33,6 +33,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_STATUS;
 
 @Component
@@ -169,7 +170,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FAILED.getStatus());
             emailService.setEsbMailEnabled(true);
-            emailService.sendEmail("", "");
+            emailService.sendEmail(ASB_PUBLISHING_FAILED, "");
             throw ex;
         }
     }

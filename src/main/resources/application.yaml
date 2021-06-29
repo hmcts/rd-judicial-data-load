@@ -62,7 +62,7 @@ spring:
 sendgrid:
   key: ${SENDGRID_API_KEY}
   mail:
-    from: ${MAIL_FROM}
+    from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
 
 launchdarkly:
   sdk:
