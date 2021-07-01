@@ -53,6 +53,11 @@ spring:
 mail:
   enabled: false
 
+sendgrid:
+  key: ${SENDGRID_API_KEY}
+  mail:
+    from: ${MAIL_FROM}
+
 launchdarkly:
   sdk:
     key: ${RD_LD_SDK_KEY:}
