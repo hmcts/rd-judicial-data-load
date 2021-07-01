@@ -132,7 +132,7 @@ class JrdDataIngestionLibraryRunnerTest {
         doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList(), anyString());
         assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
-        verify(jdbcTemplate).update(anyString(), any(), anyInt());
+        verify(jdbcTemplate, times(2)).update(anyString(), any(), anyInt());
     }
 
     @SneakyThrows
@@ -142,7 +142,7 @@ class JrdDataIngestionLibraryRunnerTest {
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
-        verify(jdbcTemplate, times(5)).queryForObject(anyString(), any(RowMapper.class));
+        verify(jdbcTemplate, times(2)).queryForObject(anyString(), any(RowMapper.class));
     }
 
     @SneakyThrows
