@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 
@@ -32,6 +33,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_STATUS;
 
 @Component
@@ -41,6 +43,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Autowired
     @Qualifier("springJdbcTemplate")
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    protected IEmailService emailService;
 
     @Value("${select-job-status-sql}")
     String selectJobStatus;
@@ -159,9 +164,12 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 log.info("{}:: Publishing/Retrying JRD messages in ASB for Job Id ", logComponentName, jobId);
                 topicPublisher.sendMessage(sidamIds, jobId);
             }
+
         } catch (Exception ex) {
             log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
             camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FAILED.getStatus());
+            emailService.setEsbMailEnabled(true);
+            emailService.sendEmail(ASB_PUBLISHING_FAILED, "");
             throw ex;
         }
     }
