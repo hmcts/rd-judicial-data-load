@@ -11,6 +11,7 @@ job:
     CONTAINER_NAME: jud-ref-data
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 500
+    MAIL_FROM: no-reply@mail-rd-nonprod.platform.hmcts.net
   keyVaults:
     rd:
       secrets:
@@ -19,12 +20,12 @@ job:
         - ACCOUNT-NAME
         - ACCOUNT-KEY
         - CONTAINER-NAME
-        - BLOB-URL-SUFFIX
         - judicial-topic-primary-connection-string
         - LD-SDK-KEY
         - OAUTH2-CLIENT-SECRET
         - OAUTH2-AUTH
         - OAUTH2-CLIENT-AUTH
+        - rd-sendgrid-api-key
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
