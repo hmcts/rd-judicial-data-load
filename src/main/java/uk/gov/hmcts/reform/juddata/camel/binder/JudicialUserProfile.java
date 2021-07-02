@@ -6,6 +6,7 @@ import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
+import uk.gov.hmcts.reform.juddata.validators.Appointment;
 
 import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
@@ -31,6 +32,7 @@ public class JudicialUserProfile implements Serializable {
 
     @DataField(pos = 3)
     @NotEmpty
+    @Appointment
     String appointment;
 
     @DataField(pos = 4, columnName = "known_As")

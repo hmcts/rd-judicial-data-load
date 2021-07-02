@@ -54,6 +54,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidHeader;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsr;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsrExceedsThreshold;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidAppointments;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordCountFor;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateExceptionDbRecordCount;
@@ -263,6 +264,16 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(MISSING_BASE_LOCATION, exceptionList.get(2).get("error_description"));
         assertEquals(MISSING_PER, exceptionList.get(3).get("error_description"));
         assertEquals("judicial_office_authorisation", exceptionList.get(3).get("table_name"));
+    }
+
+    @Test
+    void testUserProfileWithInvalidAppointmentValue() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidAppointments);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+
+        jobLauncherTestUtils.launchJob();
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
     }
 }
 
