@@ -17,10 +17,6 @@ public class AppointmentValidator implements ConstraintValidator<Appointment, St
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        boolean valid = true;
-        if (StringUtils.isNotBlank(value)) {
-            valid = !notAllowedValues.contains(value.trim());
-        }
-        return valid;
+        return StringUtils.isBlank(value) || !notAllowedValues.contains(value.trim());
     }
 }
