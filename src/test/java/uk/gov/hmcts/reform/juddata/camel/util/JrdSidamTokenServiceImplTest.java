@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 
 @ExtendWith(MockitoExtension.class)
 class JrdSidamTokenServiceImplTest {
@@ -152,6 +154,47 @@ class JrdSidamTokenServiceImplTest {
         profile.setId(UUID.randomUUID().toString());
         profile.setActive(true);
         return profile;
+    }
+
+    @Test
+    @SneakyThrows
+    void testLogResponse() {
+        List<IdamClient.User> users = new ArrayList<>();
+        users.add(createUser("some@some.com"));
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+        Map<String, Collection<String>> map = new HashMap<>();
+        Collection<String> list = new ArrayList<>();
+        list.add("5");
+        map.put("X-Total-Count", list);
+        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+            Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
+            .status(200).build();
+        invokeMethod(jrdSidamTokenService, "logIdamResponse", response);
+    }
+
+    @Test
+    @SneakyThrows
+    void testLogEmptyResponse() {
+        Response nullResponse = null;
+        invokeMethod(jrdSidamTokenService, "logIdamResponse", nullResponse);
+    }
+
+    @Test
+    @SneakyThrows
+    void testErrorStatus() {
+        List<IdamClient.User> users = new ArrayList<>();
+        users.add(createUser("some@some.com"));
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+        Map<String, Collection<String>> map = new HashMap<>();
+        Collection<String> list = new ArrayList<>();
+        list.add("5");
+        map.put("X-Total-Count", list);
+        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+            Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
+            .status(500).build();
+        invokeMethod(jrdSidamTokenService, "logIdamResponse", response);
     }
 
 }

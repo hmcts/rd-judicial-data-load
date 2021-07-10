@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-
 import uk.gov.hmcts.reform.juddata.exception.JudicialDataLoadException;
 
 import java.io.IOException;
@@ -20,14 +21,12 @@ import java.util.Map;
 import java.util.Optional;
 
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","HideUtilityClassConstructor"})
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonFeignResponseUtil {
     private static final ObjectMapper json = new ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-    private JsonFeignResponseUtil() {
-    }
 
     public static ResponseEntity<Object> toResponseEntity(Response response, TypeReference<?> reference) {
         Optional<Object> payload = Optional.empty();

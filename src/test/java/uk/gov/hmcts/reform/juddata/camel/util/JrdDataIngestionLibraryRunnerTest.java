@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -111,6 +112,7 @@ class JrdDataIngestionLibraryRunnerTest {
         verify(jdbcTemplate).update(anyString(), any(), anyInt());
         verify(jdbcTemplate).queryForObject(anyString(), (Class<Object>) any());
         verify(jdbcTemplate).queryForObject("failedAuditFileCount", Integer.class);
+        verify(jdbcTemplate).batchUpdate(anyString(), anyCollection(), anyInt(), any());
     }
 
     @SneakyThrows
@@ -148,6 +150,7 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(jdbcTemplate, times(2)).queryForObject(anyString(), any(RowMapper.class));
+        verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 
     @SneakyThrows

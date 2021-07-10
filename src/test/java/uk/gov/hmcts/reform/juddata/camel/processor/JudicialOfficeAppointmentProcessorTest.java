@@ -236,6 +236,7 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointmentProcessor.process(exchangeMock);
         assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointmentMock1);
+
     }
 
     @Test
@@ -246,6 +247,7 @@ class JudicialOfficeAppointmentProcessorTest {
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock3);
 
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
