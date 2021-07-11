@@ -174,7 +174,7 @@ pitest {
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
             'uk.gov.hmcts.reform.juddata.camel.service.EmailData',
             'uk.gov.hmcts.reform.juddata.camel.service.EmailService',
-            'uk.gov.hmcts.reform.juddata.ca, mel.util.JrdExecutor',
+            'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
             'uk.gov.hmcts.reform.juddata.client.*',
             'uk.gov.hmcts.reform.juddata.response.*',
             'uk.gov.hmcts.reform.juddata.camel.util.JobStatus',
