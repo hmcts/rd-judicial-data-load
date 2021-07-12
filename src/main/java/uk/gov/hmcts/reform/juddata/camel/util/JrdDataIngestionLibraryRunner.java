@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl.JRD_ASB_FLAG;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
@@ -130,7 +130,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         List<String> sidamIds = jdbcTemplate.query(getSidamIds, JrdConstants.ROW_MAPPER);
 
         //In case on NO sidam id's matched for object id's nothing to publish in ASB
-        if (isNull(sidamIds) || sidamIds.isEmpty())  {
+        if (isEmpty(sidamIds)) {
             log.warn("{}:: No Sidam id exists in JRD  for publishing in ASB for JOB id {}",
                 logComponentName, jobId);
             updateAsbStatus(jobId, SUCCESS.getStatus());

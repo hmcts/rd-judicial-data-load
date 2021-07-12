@@ -25,10 +25,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -167,17 +169,21 @@ class JrdSidamTokenServiceImplTest {
         Collection<String> list = new ArrayList<>();
         list.add("5");
         map.put("X-Total-Count", list);
-        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+        Response response = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
             Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
-            .status(200).build();
+            .status(200).build());
         invokeMethod(jrdSidamTokenService, "logIdamResponse", response);
+        verify(response, times(2)).status();
     }
 
     @Test
     @SneakyThrows
     void testLogEmptyResponse() {
-        Response nullResponse = null;
+        Response nullResponse = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "",
+            new HashMap<>(),
+            Request.Body.create((byte[]) null), null)).build());
         invokeMethod(jrdSidamTokenService, "logIdamResponse", nullResponse);
+        assertNull(nullResponse.body());
     }
 
     @Test
@@ -191,10 +197,11 @@ class JrdSidamTokenServiceImplTest {
         Collection<String> list = new ArrayList<>();
         list.add("5");
         map.put("X-Total-Count", list);
-        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+        Response response = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "",
+            new HashMap<>(),
             Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
-            .status(500).build();
+            .status(500).build());
         invokeMethod(jrdSidamTokenService, "logIdamResponse", response);
+        verify(response, times(3)).status();
     }
-
 }

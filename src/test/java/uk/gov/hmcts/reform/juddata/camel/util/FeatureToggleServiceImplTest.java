@@ -6,9 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,7 +29,7 @@ public class FeatureToggleServiceImplTest {
 
         assertFalse(flaFeatureToggleService.isFlagEnabled("test"));
         verify(ldClient).boolVariation(anyString(),any(),anyBoolean());
-        assertEquals(ldClient.boolVariation(anyString(),any(),anyBoolean()), FALSE);
+        assertFalse(ldClient.boolVariation(anyString(),any(),anyBoolean()));
     }
 
     @Test
@@ -41,7 +38,7 @@ public class FeatureToggleServiceImplTest {
         flaFeatureToggleService.mapServiceToFlag();
         when(ldClient.boolVariation(anyString(),any(),anyBoolean())).thenReturn(true);
         assertTrue(flaFeatureToggleService.isFlagEnabled(JRD_ASB_FLAG));
-        assertEquals(ldClient.boolVariation(anyString(),any(),anyBoolean()), TRUE);
+        assertTrue(ldClient.boolVariation(anyString(),any(),anyBoolean()));
     }
 
     @Test
