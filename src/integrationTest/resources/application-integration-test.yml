@@ -1,17 +1,10 @@
 spring:
   mail:
-    from: no-reply@reform.hmcts.net
-    to: abhijit.diwan@hmcts.net,praveen.saxena@hmcts.net
-    subject: JRD - Exception in processing -
+    to: test@hmcts.net
+    subject: ${component.name:data-ingestion} - Exception in processing -
     host: mta.reform.hmcts.net
     port: 25
-    enabled: true
-    properties:
-      mail-smtp:
-        starttls:
-          enable: false
-        ssl:
-          trust: "*"
+    enabled: ${mail.enabled:false}
   flyway:
     locations: classpath:db/testmigration
     enabled: true
@@ -22,11 +15,10 @@ spring:
     job:
       enabled: false
 
-
 start-route: direct:JRD
 archival-route: direct:JrdArchival
-archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
-archival-file-names: Personal-Test,Appointments-Test,Authorisations-Test,Locations-Test,BaseLocations-Test
+archival-path: ${archival.path}
+archival-file-names: ${archival.file.names}
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
@@ -45,57 +37,57 @@ routes-to-execute-orchestration: judicial-user-profile-orchestration, judicial-o
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
-    file-name: Personal-Test
+    file-name: ${parent.file.name:''}
     table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile (per_id,personal_code,appointment,known_as,surname,full_name,post_nominals,appointment_type,work_pattern,ejudiciary_email,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date,object_id)
-      values(:#per_id,:#personal_code,:#appointment,:#known_as,:#surname,:#full_name,:#post_nominals,
-      :#appointment_type,:#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code, appointment = :#appointment,
+      values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
+      :#contract_type,:#work_pattern, :#email_id,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
-      appointment_type = :#appointment_type, work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
+      contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc', object_id = :#object_id?batch=true&dataSource=dataSource
-    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Personal-Test?credentials=#credsreg&operation=updateBlockBlob
+    blob-path: ${parent.file.path}
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
     csv-binder-object: JudicialUserProfile
 
   judicial-office-appointment:
     id: judicial-office-appointment
-    file-name: Appointments-Test
+    file-name: ${child.file.name}
     table-name: judicial-office-appointment
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code)
-      values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code)?dataSource=dataSource&batch=true
-    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments-Test?credentials=#credsreg&operation=updateBlockBlob
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
+      values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?dataSource=dataSource&batch=true
+    blob-path: ${child.file.path}
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
     csv-binder-object: JudicialOfficeAppointment
 
   judicial-office-authorisation:
     id: judicial-office-authorisation
-    file-name: Authorisations-Test
+    file-name: ${child1.file.name}
     table-name: judicial_office_authorisation
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code)
-      values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code)?dataSource=dataSource&batch=true
-    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations-Test?credentials=#credsreg&operation=updateBlockBlob
+      sql:insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level)
+      values(:#judicial_office_auth_id,:#elinks_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,:#created_date,:#last_updated,:#lower_level)?dataSource=dataSource&batch=true
+    blob-path: ${child1.file.path}
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
 
-parent-select-jrd-sql: SELECT * FROM judicial_user_profile order by per_id
+parent-select-jrd-sql: SELECT * FROM judicial_user_profile order by elinks_id
 
-child-select-child1-sql: SELECT * FROM judicial_office_appointment order by per_id
+child-select-child1-sql: SELECT * FROM judicial_office_appointment order by elinks_id
 
-child-select-child2-sql: SELECT * FROM judicial_office_authorisation order by per_id
+child-select-child2-sql: SELECT * FROM judicial_office_authorisation order by elinks_id
 
 exception-select-query: select * from  dataload_exception_records
 
@@ -124,7 +116,7 @@ mail:
   enabled: true
 
 idempotent-flag-ingestion: true
-fetch-personal-per-id: select per_id from judicial_user_profile
+fetch-personal-elinks-id: select elinks_id from judicial_user_profile
 
 insert-job-sql: insert into dataload_schedular_job(job_start_time, publishing_status) values(?, ?)
 update-job-sql: update dataload_schedular_job set job_end_time = now() at time zone 'utc', publishing_status = ? where id =?
@@ -140,7 +132,6 @@ jrd:
         bus:
           connection-string: ${JRD_ASB_CONNECTION_KEY_STR:AAAAAAAAAA}
           topic: jrd-aks-topic
-          # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
     jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:5}
 

@@ -36,6 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -119,6 +120,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         doNothing().when(platformTransactionManager).commit(transactionStatus);
+
     }
 
     @Test
@@ -140,6 +142,10 @@ class JudicialOfficeAuthorisationProcessorTest  {
         verify(messageMock, times(4)).getBody();
         verify(judicialOfficeAuthorisationProcessor).audit(any(), any());
         verify(messageMock).setBody(any());
+        verify(judicialOfficeAuthorisationProcessor).filterInvalidUserProfileRecords(anyList(),
+            isNull(),
+            any(), any(),
+            isNull());
     }
 
     @Test

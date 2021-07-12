@@ -38,6 +38,7 @@ import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -173,6 +174,30 @@ class JudicialOfficeAppointmentProcessorTest {
         verify(judicialOfficeAppointmentProcessor).audit(any(), any());
         verify(messageMock).setBody(any());
         verify(exchangeMock, times(4)).getMessage();
+        verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(anyList(),
+            isNull(), any(), any(), isNull());
+    }
+
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void should_return_JudicialOfficeAppointmentRow_response_filter_defaults() throws Exception {
+
+        List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
+        judicialOfficeAppointmentMock2.setRegionId("0");
+        judicialOfficeAppointmentMock2.setRoleId("0");
+        judicialOfficeAppointmentMock2.setBaseLocationId("0");
+        judicialOfficeAppointmentMock2.setContractType("0");
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
+
+        when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
+        judicialUserProfileProcessor = new JudicialUserProfileProcessor();
+        judicialOfficeAppointmentProcessor.process(exchangeMock);
+        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
+            .isSameAs(judicialOfficeAppointments);
+        verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
     }
 
     @Test
@@ -204,6 +229,7 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointmentProcessor.process(exchangeMock);
         assertThat(((JudicialOfficeAppointment) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointmentMock1);
+
     }
 
     @Test
@@ -214,6 +240,7 @@ class JudicialOfficeAppointmentProcessorTest {
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock3);
 
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");

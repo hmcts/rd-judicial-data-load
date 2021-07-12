@@ -7,7 +7,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.util.reflection.FieldSetter;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 
 import java.io.File;
@@ -17,6 +16,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
 
 class ArchiveAzureFileProcessorTest {
@@ -53,16 +53,11 @@ class ArchiveAzureFileProcessorTest {
         when(consumerTemplateMock.receiveBody(any(String.class), any(Long.class))).thenReturn(file);
         when(messageMock.getHeader(LEAF_ROUTE)).thenReturn(LEAF_ROUTE);
 
-        FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-            .getClass().getDeclaredField("archivalFileNames"), archivalFileNames);
-        FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-            .getClass().getDeclaredField("activeBlobs"), "file:");
-        FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-            .getClass().getDeclaredField("archivalCred"), "");
-        FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-            .getClass().getDeclaredField("archivalDateFormat"), "dd-MM-yyyy--HH-mm");
-        FieldSetter.setField(archiveFileProcessor, archiveFileProcessor
-            .getClass().getDeclaredField("fileReadTimeOut"), 1000);
+        setField(archiveFileProcessor, "archivalFileNames", archivalFileNames);
+        setField(archiveFileProcessor, "activeBlobs", "file:");
+        setField(archiveFileProcessor, "archivalCred", "");
+        setField(archiveFileProcessor, "archivalDateFormat", "dd-MM-yyyy--HH-mm");
+        setField(archiveFileProcessor, "fileReadTimeOut", 1000);
 
         archiveFileProcessor.process(exchangeMock);
         Assert.assertNotNull(exchangeMock);

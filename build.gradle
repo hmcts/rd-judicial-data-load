@@ -82,7 +82,7 @@ sourceSets {
             runtimeClasspath += main.output + test.output
             srcDir file('src/integrationTest/java')
         }
-        resources.srcDir file('src/integrationTest/resources')
+        resources.srcDirs = [file('src/integrationTest/resources'), file ('src/functionalTest/resources')]
     }
 
     smokeTest {
@@ -118,7 +118,7 @@ check.dependsOn jacocoTestCoverageVerification
 pmd {
     toolVersion = '6.12.0'
     ignoreFailures = true
-    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.smokeTest]
+    sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.smokeTest, sourceSets.integrationTest]
     reportsDir = file("$project.buildDir/reports/pmd")
     ruleSets = [
             'category/java/errorprone.xml',
@@ -168,7 +168,7 @@ jacocoTestReport {
 pitest {
     junit5PluginVersion = '0.12'
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
-    testSourceSets = [sourceSets.test]
+    testSourceSets = [sourceSets.integrationTest, sourceSets.test]
     excludedClasses = [
             'uk.gov.hmcts.reform.juddata.configuration.*',
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
@@ -176,15 +176,19 @@ pitest {
             'uk.gov.hmcts.reform.juddata.camel.service.EmailService',
             'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
             'uk.gov.hmcts.reform.juddata.client.*',
-            'uk.gov.hmcts.reform.juddata.response.*'
+            'uk.gov.hmcts.reform.juddata.response.*',
+            'uk.gov.hmcts.reform.juddata.camel.util.JobStatus',
+            'uk.gov.hmcts.reform.juddata.camel.util.JrdConstants',
+            'uk.gov.hmcts.reform.juddata.camel.util.PublishJudicialData',
+            'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor'
     ]
-    threads = 10
+    threads = 6
     enableDefaultIncrementalAnalysis = true
     historyInputLocation = 'build/reports/pitest/fastermutationtesting'
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = true
-    mutationThreshold = 82
+    mutationThreshold = 90
     useClasspathFile = true
 }
 
@@ -202,7 +206,7 @@ sonarqube {
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/response/**"
+                "src/main/java/uk/gov/hmcts/reform/juddata/response/**,"
     }
 }
 
@@ -304,10 +308,13 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }
     testImplementation group: 'com.h2database', name: 'h2'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.1.0'
+    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.11.2'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.2'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.4'
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
+
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.1'
@@ -350,8 +357,17 @@ dependencies {
         }
     }
 
+    integrationTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version {
+            strictly '1.23'
+        }
+    }
+
     functionalTestCompile sourceSets.main.runtimeClasspath
     functionalTestCompile sourceSets.test.runtimeClasspath
+
+    integrationTestCompile sourceSets.main.runtimeClasspath
+    integrationTestCompile sourceSets.test.runtimeClasspath
 
     smokeTestCompile sourceSets.main.runtimeClasspath
     smokeTestCompile sourceSets.test.runtimeClasspath
@@ -404,6 +420,10 @@ test {
 }
 
 functional {
+    useJUnitPlatform()
+}
+
+integration {
     useJUnitPlatform()
 }
 

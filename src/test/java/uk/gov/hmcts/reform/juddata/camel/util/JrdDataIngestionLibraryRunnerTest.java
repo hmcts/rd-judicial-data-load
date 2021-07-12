@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.util;
 
 import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -80,6 +82,8 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.logComponentName = "loggingComponent";
         when(camelContext.getGlobalOptions()).thenReturn(options);
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
+        when(jdbcTemplate.queryForObject("dummyjobstatus", Pair.class))
+            .thenReturn(new MutablePair("1", "2"));
         when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
         when(featureToggleService.isFlagEnabled(anyString())).thenReturn(true);
         jrdDataIngestionLibraryRunner.environment = "test";
@@ -106,6 +110,9 @@ class JrdDataIngestionLibraryRunnerTest {
         verify(jobLauncherMock).run(any(), any());
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
         verify(jdbcTemplate).update(anyString(), any(), anyInt());
+        verify(jdbcTemplate).queryForObject(anyString(), (Class<Object>) any());
+        verify(jdbcTemplate).queryForObject("failedAuditFileCount", Integer.class);
+        verify(jdbcTemplate).batchUpdate(anyString(), anyCollection(), anyInt(), any());
     }
 
     @SneakyThrows
@@ -143,6 +150,7 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
         verify(jdbcTemplate, times(2)).queryForObject(anyString(), any(RowMapper.class));
+        verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 
     @SneakyThrows
