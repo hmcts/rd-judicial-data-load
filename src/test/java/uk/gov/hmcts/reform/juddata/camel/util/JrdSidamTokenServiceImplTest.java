@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,13 +25,16 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 
 @ExtendWith(MockitoExtension.class)
 class JrdSidamTokenServiceImplTest {
@@ -154,4 +158,50 @@ class JrdSidamTokenServiceImplTest {
         return profile;
     }
 
+    @Test
+    @SneakyThrows
+    void testLogResponse() {
+        List<IdamClient.User> users = new ArrayList<>();
+        users.add(createUser("some@some.com"));
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+        Map<String, Collection<String>> map = new HashMap<>();
+        Collection<String> list = new ArrayList<>();
+        list.add("5");
+        map.put("X-Total-Count", list);
+        Response response = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+            Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
+            .status(200).build());
+        invokeMethod(jrdSidamTokenService, "logIdamResponse", response);
+        verify(response, times(2)).status();
+    }
+
+    @Test
+    @SneakyThrows
+    void testLogEmptyResponse() {
+        Response nullResponse = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "",
+            new HashMap<>(),
+            Request.Body.create((byte[]) null), null)).build());
+        invokeMethod(jrdSidamTokenService, "logIdamResponse", nullResponse);
+        assertNull(nullResponse.body());
+    }
+
+    @Test
+    @SneakyThrows
+    void testErrorStatus() {
+        List<IdamClient.User> users = new ArrayList<>();
+        users.add(createUser("some@some.com"));
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+        Map<String, Collection<String>> map = new HashMap<>();
+        Collection<String> list = new ArrayList<>();
+        list.add("5");
+        map.put("X-Total-Count", list);
+        Response response = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "",
+            new HashMap<>(),
+            Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
+            .status(500).build());
+        invokeMethod(jrdSidamTokenService, "logIdamResponse", response);
+        verify(response, times(3)).status();
+    }
 }
