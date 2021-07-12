@@ -163,3 +163,8 @@ idam:
     authorization: ${OAUTH2_AUTH:AAAAAAAAAA}
     client-authorization: ${OAUTH2_CLIENT_AUTH:AAAAAAAAAA}
 
+sendgrid:
+  key: ${SENDGRID_API_KEY:AAAAAAAAAA}
+  mail:
+    from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
+
