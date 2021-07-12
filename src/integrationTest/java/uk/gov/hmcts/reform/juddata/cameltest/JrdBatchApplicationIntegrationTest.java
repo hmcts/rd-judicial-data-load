@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.ConfigDataApplicationContextInitial
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -44,6 +45,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -86,9 +88,9 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
     public static void beforeAll() throws Exception {
         setSourcePath("classpath:archivalFiles", "archival.path");
         setSourcePath("classpath:sourceFiles", "active.path");
-        System.setProperty("archival.file.names","classpath:sourceFiles/parent/judicial_userprofile_jsr.csv,"
-            + "classpath:sourceFiles/parent/judicial_appointments_jsr.csv,"
-            + "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv");
+        System.setProperty("archival.file.names","classpath:sourceFiles/judicial_userprofile_jsr.csv,"
+            + "classpath:sourceFiles/judicial_appointments_jsr.csv,"
+            + "classpath:sourceFiles/judicial_office_authorisation_jsr_partial_success.csv");
         setSourceData(ParentIntegrationTestSupport.fileWithInvalidJsr);
         LeafIntegrationSupport.setSourceData(LeafIntegrationSupport.file_jsr_error);
     }
@@ -113,13 +115,32 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        assertEquals(2, jdbcTemplate.queryForList(userProfileSql).size());
-        assertEquals(2, jdbcTemplate.queryForList(userProfileSql).size());
+        assertEquals(6, jdbcTemplate.queryForList(userProfileSql).size());
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
             .queryForList(selectDataLoadSchedulerAudit);
         assertEquals(PARTIAL_SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
         assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
-                "classpath:sourceFiles/parent/judicial_userprofile_jsr.csv").getAuditStatus());
+                "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 19, true);
+    }
+
+    static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate,
+                                               String queryName, int expectedCount,
+                                               boolean isPartialSuccessValidation) {
+        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(queryName);
+
+        exceptionList.forEach(exception -> {
+            assertNotNull(exception.get("scheduler_name"));
+            assertNotNull(exception.get("scheduler_start_time"));
+            assertNotNull(exception.get("error_description"));
+            assertNotNull(exception.get("updated_timestamp"));
+            if (isPartialSuccessValidation) {
+                assertNotNull(exception.get("table_name"));
+                assertNotNull(exception.get("key"));
+                assertNotNull(exception.get("field_in_error"));
+            }
+        });
+        assertEquals(expectedCount, exceptionList.size());
     }
 }
