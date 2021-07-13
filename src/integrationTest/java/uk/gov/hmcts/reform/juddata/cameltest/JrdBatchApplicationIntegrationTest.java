@@ -10,6 +10,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
@@ -28,7 +29,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
-import uk.gov.hmcts.reform.juddata.camel.processor.JudicialOfficeAppointmentProcessor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.config.LeafConfig;
@@ -44,13 +44,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ELINKS;
 import static uk.gov.hmcts.reform.juddata.support.IntegrationTestSupport.setSourcePath;
 import static uk.gov.hmcts.reform.juddata.support.ParentIntegrationTestSupport.setSourceData;
 
@@ -70,6 +74,7 @@ import static uk.gov.hmcts.reform.juddata.support.ParentIntegrationTestSupport.s
 @SpringBootTest
 @EnableFeignClients(clients = {IdamClient.class, IdamApi.class})
 @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+@SuppressWarnings("unchecked")
 class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
 
     @Autowired
@@ -81,14 +86,14 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
     @Autowired
     LDClient ldClient;
 
-    @Autowired
-    JudicialOfficeAppointmentProcessor judicialOfficeAppointmentProcessor;
+    @Value("${failed-records-exception}")
+    protected String failedRecords;
 
     @BeforeAll
     public static void beforeAll() throws Exception {
         setSourcePath("classpath:archivalFiles", "archival.path");
         setSourcePath("classpath:sourceFiles", "active.path");
-        System.setProperty("archival.file.names","classpath:sourceFiles/judicial_userprofile_jsr.csv,"
+        System.setProperty("archival.file.names", "classpath:sourceFiles/judicial_userprofile_jsr.csv,"
             + "classpath:sourceFiles/judicial_appointments_jsr.csv,"
             + "classpath:sourceFiles/judicial_office_authorisation_jsr_partial_success.csv");
         setSourceData(ParentIntegrationTestSupport.fileWithInvalidJsr);
@@ -102,7 +107,7 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         user.setId(UUID.randomUUID().toString());
         Set<IdamClient.User> sidamUsers = ImmutableSet.of(user);
         when(jrdSidamTokenService.getSyncFeed()).thenReturn(sidamUsers);
-        when(ldClient.boolVariation(anyString(),any(),anyBoolean())).thenReturn(true);
+        when(ldClient.boolVariation(anyString(), any(), anyBoolean())).thenReturn(true);
     }
 
 
@@ -122,23 +127,48 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
                 "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 18, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 20, true);
+        validateForeignKeyRecordsAndMissingParentRecords();
+    }
+
+    private void validateForeignKeyRecordsAndMissingParentRecords() {
+        String[] parameters = new String[]{INVALID_JSR_PARENT_ROW, "judicial-office-appointment"};
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+            true, parameters);
+        parameters = new String[]{INVALID_JSR_PARENT_ROW, "judicial_office_authorisation"};
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+            true, parameters);
+        parameters = new String[]{MISSING_ELINKS, "judicial-office-appointment"};
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+            true, parameters);
+        parameters = new String[]{MISSING_ELINKS, "judicial_office_authorisation"};
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+            true, parameters);
     }
 
     static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate,
                                                String queryName, int expectedCount,
-                                               boolean isPartialSuccessValidation) {
-        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(queryName);
+                                               boolean isPartialSuccessValidation, String... params) {
+        List<Map<String, Object>> exceptionList;
+        if (isNotEmpty(params)) {
+            exceptionList = jdbcTemplate.queryForList(queryName, params);
+        } else {
+            exceptionList = jdbcTemplate.queryForList(queryName);
+        }
 
         exceptionList.forEach(exception -> {
-            assertNotNull(exception.get("scheduler_name"));
-            assertNotNull(exception.get("scheduler_start_time"));
-            assertNotNull(exception.get("error_description"));
-            assertNotNull(exception.get("updated_timestamp"));
+            assertTrue(isNotEmpty(exception.get("scheduler_name")));
+            assertTrue(isNotEmpty(exception.get("scheduler_start_time")));
+            assertTrue(isNotEmpty(exception.get("error_description")));
+            assertTrue(isNotEmpty(exception.get("updated_timestamp")));
             if (isPartialSuccessValidation) {
-                assertNotNull(exception.get("table_name"));
-                assertNotNull(exception.get("key"));
-                assertNotNull(exception.get("field_in_error"));
+                assertTrue(isNotEmpty(exception.get("table_name")));
+                if (isNotEmpty(params)) {
+                    assertTrue(isNotEmpty(exception.get("key")));
+                } else {
+                    assertNotNull((exception.get("key")));
+                }
+                assertTrue(isNotEmpty(exception.get("field_in_error")));
             }
         });
         assertEquals(expectedCount, exceptionList.size());
