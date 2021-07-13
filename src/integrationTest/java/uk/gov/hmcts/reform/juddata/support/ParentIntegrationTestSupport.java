@@ -8,9 +8,9 @@ public interface ParentIntegrationTestSupport extends IntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_appointments.csv",
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
-    String[] fileWithInvalidJsr = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
-        "classpath:sourceFiles/parent/judicial_appointments_jsr.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv"};
+    String[] fileWithInvalidJsr = {"classpath:sourceFiles/judicial_userprofile_jsr.csv",
+        "classpath:sourceFiles/judicial_appointments_jsr.csv",
+        "classpath:sourceFiles/judicial_office_authorisation_jsr_partial_success.csv"};
 
 
     static void setSourceData(String... files) throws Exception {
