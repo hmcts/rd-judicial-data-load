@@ -168,7 +168,7 @@ jacocoTestReport {
 pitest {
     junit5PluginVersion = '0.12'
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
-    testSourceSets = [sourceSets.integrationTest, sourceSets.test]
+    testSourceSets = [sourceSets.integrationTest]
     excludedClasses = [
             'uk.gov.hmcts.reform.juddata.configuration.*',
             'uk.gov.hmcts.reform.juddata.JudicialApplication',
@@ -181,7 +181,7 @@ pitest {
             'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
             'uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher'
     ]
-    threads = 6
+    threads = 8
     enableDefaultIncrementalAnalysis = true
     historyInputLocation = 'build/reports/pitest/fastermutationtesting'
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
