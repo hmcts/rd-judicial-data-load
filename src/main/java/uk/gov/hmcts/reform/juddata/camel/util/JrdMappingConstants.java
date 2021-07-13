@@ -20,14 +20,10 @@ public class JrdMappingConstants {
 
     public static final String JUDICIAL_REF_DATA_ORCHESTRATION = "judicial-ref-data-orchestration";
 
-    public static final String ELINKS_ID = "elinks_id";
-
-    public static final String ROLES_ID = "role_id";
+    public static final String PER_ID = "per_id";
 
     public static final String LOCATION_ID = "region_id";
 
     public static final String BASE_LOCATION_ID = "base_location_id";
-
-    public static final String CONTRACTS_ID = "contract_type_id";
 
 }

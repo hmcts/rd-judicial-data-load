@@ -21,16 +21,16 @@ public class JudicialUserProfileRowMapper implements IMapper {
     public Map<String, Object> getMap(Object userProfile) {
         JudicialUserProfile judicialUserProfile = (JudicialUserProfile) userProfile;
         Map<String, Object> judUserProfileRow = new HashMap<>();
-        judUserProfileRow.put("elinks_id", judicialUserProfile.getElinksId());
+        judUserProfileRow.put("per_id", judicialUserProfile.getPerId());
         judUserProfileRow.put("personal_code", judicialUserProfile.getPersonalCode());
-        judUserProfileRow.put("title", judicialUserProfile.getTitle());
+        judUserProfileRow.put("appointment", judicialUserProfile.getAppointment());
         judUserProfileRow.put("known_as", getKnownAsValue(judicialUserProfile));
         judUserProfileRow.put("surname", judicialUserProfile.getSurName());
         judUserProfileRow.put("full_name", judicialUserProfile.getFullName());
         judUserProfileRow.put("post_nominals", judicialUserProfile.getPostNominals());
-        judUserProfileRow.put("contract_type", judicialUserProfile.getContractTypeId());
+        judUserProfileRow.put("appointment_type", judicialUserProfile.getAppointmentTypeId());
         judUserProfileRow.put("work_pattern", judicialUserProfile.getWorkPattern());
-        judUserProfileRow.put("email_id", judicialUserProfile.getEmailId());
+        judUserProfileRow.put("ejudiciary_email", judicialUserProfile.getEjudiciaryEmail());
         judUserProfileRow.put("joining_date", judicialUserProfile.getJoiningDate());
         judUserProfileRow.put("last_working_date", judicialUserProfile.getLastWorkingDate());
         judUserProfileRow.put("active_flag", judicialUserProfile.isActiveFlag());
@@ -41,8 +41,8 @@ public class JudicialUserProfileRowMapper implements IMapper {
 
     public String getKnownAsValue(JudicialUserProfile judicialUserProfile) {
         if (isBlank(judicialUserProfile.getKnownAs())) {
-            log.warn("{} :: known_as field value is missing for elinks_id :: {}",
-                    logComponentName, judicialUserProfile.getElinksId());
+            log.warn("{} :: known_as field value is missing for per_id :: {}",
+                    logComponentName, judicialUserProfile.getPerId());
             return judicialUserProfile.getFullName();
         }
         return judicialUserProfile.getKnownAs();

@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
 class JsrValidatorInitializerTest {
@@ -52,7 +52,7 @@ class JsrValidatorInitializerTest {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
         JudicialUserProfile profile = createJudicialUserProfileMock(currentDate,
-            dateTime, ELINKSID_1);
+            dateTime, PERID_1);
         judicialUserProfiles.add(profile);
         JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializerSpy
             = spy(judicialUserProfileJsrValidatorInitializer);
@@ -88,7 +88,7 @@ class JsrValidatorInitializerTest {
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
-        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
+        JudicialUserProfile profile = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
         profile.setSurName(null);
         judicialUserProfiles.add(profile);
         judicialUserProfileJsrValidatorInitializerSpy.validate(judicialUserProfiles);

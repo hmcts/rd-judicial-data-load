@@ -23,9 +23,7 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         Map<String, Object> judOfficeAppointmentRow = new HashMap<>();
 
         judOfficeAppointmentRow.put("judicial_office_appointment_id", generateId());
-        judOfficeAppointmentRow.put("elinks_id", officeAppointment.getElinksId());
-        judOfficeAppointmentRow.put("role_id",officeAppointment.getRoleId());
-        judOfficeAppointmentRow.put("contract_type_id", returnNullIfBlank(officeAppointment.getContractType()));
+        judOfficeAppointmentRow.put("per_id", officeAppointment.getPerId());
         judOfficeAppointmentRow.put("base_location_id", returnNullIfBlank(officeAppointment.getBaseLocationId()));
         judOfficeAppointmentRow.put("region_id", returnNullIfBlank(officeAppointment.getRegionId()));
         judOfficeAppointmentRow.put("is_prinicple_appointment", officeAppointment.getIsPrincipalAppointment());
@@ -35,6 +33,7 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         judOfficeAppointmentRow.put("extracted_date", officeAppointment.getExtractedDate());
         judOfficeAppointmentRow.put("created_date", getCurrentTimeStamp());
         judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
+        judOfficeAppointmentRow.put("personal_code", officeAppointment.getPersonalCode());
         return  judOfficeAppointmentRow;
     }
 

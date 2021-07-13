@@ -6,13 +6,13 @@ route:
     file-name: Personal
     table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile (elinks_id,personal_code,title,known_as,surname,full_name,post_nominals,contract_type,work_pattern,email_id,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (per_id,personal_code,appointment,known_as,surname,full_name,post_nominals,appointment_type,work_pattern,ejudiciary_email,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date,object_id)
-      values(:#elinks_id,:#personal_code,:#title,:#known_as,:#surname,:#full_name,:#post_nominals,
-      :#contract_type,:#work_pattern, :#email_id,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (elinks_id) do update set personal_code = :#personal_code, title = :#title,
+      values(:#per_id,:#personal_code,:#appointment,:#known_as,:#surname,:#full_name,:#post_nominals,
+      :#appointment_type,:#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code, appointment = :#appointment,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
-      contract_type = :#contract_type, work_pattern = :#work_pattern, email_id = :#email_id, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
+      appointment_type = :#appointment_type, work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc' ,object_id = :#object_id?batch=true&dataSource=dataSource
     blob-path:
@@ -28,9 +28,9 @@ route:
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,elinks_id,role_id,contract_type_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date)
-      values(:#judicial_office_appointment_id, :#elinks_id, :#role_id, :#contract_type_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc')?batch=true&dataSource=dataSource
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code)
+      values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code)?batch=true&dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAppointmentProcessor
@@ -44,8 +44,8 @@ route:
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into judicial_office_authorisation (judicial_office_auth_id,elinks_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level)
-      values(:#judicial_office_auth_id,:#elinks_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,:#created_date,:#last_updated,:#lower_level)?batch=true&dataSource=dataSource
+      sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code)
+      values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code)?batch=true&dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor

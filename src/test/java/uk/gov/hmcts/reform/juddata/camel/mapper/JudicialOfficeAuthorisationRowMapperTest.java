@@ -25,14 +25,13 @@ class JudicialOfficeAuthorisationRowMapperTest {
         Map<String, Object> authMap = judicialOfficeAuthorisationRowMapper.getMap(judicialOfficeAuthorisation);
 
         assertNotNull(authMap.get("judicial_office_auth_id"));
-        assertEquals("1", authMap.get("elinks_id"));
+        assertEquals("1", authMap.get("per_id"));
         assertEquals("jurisdiction", authMap.get("jurisdiction"));
         assertEquals(Timestamp.valueOf((judicialOfficeAuthorisation.getStartDate())), authMap.get("start_date"));
         assertEquals(Timestamp.valueOf((judicialOfficeAuthorisation.getEndDate())), authMap.get("end_date"));
-        assertEquals(Timestamp.valueOf((judicialOfficeAuthorisation.getCreatedDate())), authMap.get("created_date"));
-        assertEquals(Timestamp.valueOf((judicialOfficeAuthorisation.getLastUpdated())), authMap.get("last_updated"));
         assertEquals(Long.valueOf("12345"), authMap.get("ticket_id"));
         assertEquals("lowerLevel", authMap.get("lower_level"));
+        assertEquals("111", authMap.get("personal_code"));
     }
 
     @Test

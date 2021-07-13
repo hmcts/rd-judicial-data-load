@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
@@ -25,13 +25,11 @@ class JudicialOfficeAppointmentRowMapperTest {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
         JudicialOfficeAppointment judicialOfficeAppointmentMock = createJudicialOfficeAppointmentMock(currentDate,
-            dateTime, ELINKSID_1);
+            dateTime, PERID_1);
         Map<String, Object> response = judicialOfficeAppointmentRowMapper.getMap(judicialOfficeAppointmentMock);
 
         assertEquals(1, response.get("judicial_office_appointment_id"));
-        assertEquals(ELINKSID_1, response.get("elinks_id"));
-        assertEquals("roleId_1", response.get("role_id"));
-        assertEquals("contractTypeId_1", response.get("contract_type_id"));
+        assertEquals(PERID_1, response.get("per_id"));
         assertEquals("baseLocationId_1", response.get("base_location_id"));
         assertEquals("regionId_1", response.get("region_id"));
         assertEquals(true, response.get("is_prinicple_appointment"));
@@ -41,6 +39,7 @@ class JudicialOfficeAppointmentRowMapperTest {
         assertEquals(getDateTimeWithFormat(dateTime), response.get("extracted_date"));
         assertThat(response.get("created_date")).isNotNull();
         assertThat(response.get("last_loaded_date")).isNotNull();
+        assertEquals("111", response.get("personal_code"));
     }
 
     @Test

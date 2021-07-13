@@ -12,7 +12,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,10 +89,8 @@ class JudicialBaseLocationProcessorTest {
         judicialBaseLocationProcessor.process(exchangeMock);
 
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
-        assertThat(((List<JudicialContractType>) exchangeMock.getMessage().getBody()))
-            .isSameAs(judicialBaseLocationTypes);
         verify(judicialBaseLocationProcessor).audit(judicialBaseLocationTypeJsrValidatorInitializer,exchangeMock);
         verify(messageMock).setBody(any());
-        verify(exchangeMock, times(3)).getMessage();
+        verify(exchangeMock, times(2)).getMessage();
     }
 } 

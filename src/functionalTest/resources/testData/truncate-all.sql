@@ -2,10 +2,6 @@ truncate table base_location_type cascade;
 
 truncate table region_type cascade ;
 
-truncate table contract_type cascade;
-
-truncate table judicial_role_type cascade;
-
 truncate table judicial_office_appointment cascade;
 
 truncate table judicial_user_profile cascade;

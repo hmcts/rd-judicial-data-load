@@ -27,7 +27,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registe
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ELINKS_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 
 
 public interface ICustomValidationProcessor<T> {
@@ -41,36 +41,36 @@ public interface ICustomValidationProcessor<T> {
                                                  JsrValidatorInitializer<T> jsrValidatorInitializer,
                                                  Exchange exchange, String logComponentName) {
         Type mySuperclass = getType();
-        List<String> invalidElinks = new ArrayList<>();
+        List<String> invalidPerIds = new ArrayList<>();
         if (nonNull(invalidJudicialUserProfileRecords)) {
 
             invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
-                //Remove invalid appointment for user profile and add to invalidElinks List
+                //Remove invalid appointment for user profile and add to invalidPerIds List
                 boolean filteredRecord = false;
                 if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                     .class.getCanonicalName())) {
                     filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAppointment ->
-                        ((JudicialOfficeAppointment) filterInvalidUserProfAppointment).getElinksId()
-                            .equalsIgnoreCase(invalidRecords.getElinksId()));
+                        ((JudicialOfficeAppointment) filterInvalidUserProfAppointment).getPerId()
+                            .equalsIgnoreCase(invalidRecords.getPerId()));
                 } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                     .class.getCanonicalName())) {
                     filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
-                        ((JudicialOfficeAuthorisation) filterInvalidUserProfAuthorization).getElinksId()
-                            .equalsIgnoreCase(invalidRecords.getElinksId()));
+                        ((JudicialOfficeAuthorisation) filterInvalidUserProfAuthorization).getPerId()
+                            .equalsIgnoreCase(invalidRecords.getPerId()));
                 }
                 if (filteredRecord) {
-                    invalidElinks.add(invalidRecords.getElinksId());
+                    invalidPerIds.add(invalidRecords.getPerId());
                 }
             });
 
-            if (isNotEmpty(invalidElinks)) {
+            if (isNotEmpty(invalidPerIds)) {
                 //Auditing JSR skipped rows of user profile for Appointment/Authorization
-                jsrValidatorInitializer.auditJsrExceptions(invalidElinks, ELINKS_ID, INVALID_JSR_PARENT_ROW, exchange);
-                LogHolder.log.info("{}:: Skipped invalid user profile elinks in {} {} & total skipped count {}",
+                jsrValidatorInitializer.auditJsrExceptions(invalidPerIds, PER_ID, INVALID_JSR_PARENT_ROW, exchange);
+                LogHolder.log.info("{}:: Skipped invalid user profile per in {} {} & total skipped count {}",
                     logComponentName,
                     mySuperclass.getTypeName(),
-                    invalidElinks.stream().collect(joining(",")),
-                    invalidElinks.size());
+                    invalidPerIds.stream().collect(joining(",")),
+                    invalidPerIds.size());
             }
         }
     }
@@ -90,13 +90,13 @@ public interface ICustomValidationProcessor<T> {
                 .class.getCanonicalName())) {
                 //Auditing foreign key skipped rows of user profile for Appointment
                 jsrValidatorInitializer.auditJsrExceptions(missingForeignKeyRecords.stream()
-                        .map(s -> ((JudicialOfficeAppointment) s).getElinksId()).collect(toList()),
+                        .map(s -> ((JudicialOfficeAppointment) s).getPerId()).collect(toList()),
                     fieldInError, errorMessage, exchange);
             } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                 .class.getCanonicalName())) {
                 //Auditing foreign key skipped rows of user profile for Authorization
                 jsrValidatorInitializer.auditJsrExceptions(missingForeignKeyRecords.stream()
-                        .map(s -> ((JudicialOfficeAuthorisation) s).getElinksId()).collect(toList()),
+                        .map(s -> ((JudicialOfficeAuthorisation) s).getPerId()).collect(toList()),
                     fieldInError, errorMessage, exchange);
             }
         }

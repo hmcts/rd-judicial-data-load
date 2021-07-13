@@ -46,9 +46,9 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_3;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_2;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_3;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
@@ -83,7 +83,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
     public void setup() {
 
         judicialOfficeAuthorisationProcessor = spy(new JudicialOfficeAuthorisationProcessor());
-        judicialOfficeAuthorisation1.setElinksId("elinks_2");
+        judicialOfficeAuthorisation1.setPerId("per_2");
         judicialOfficeAuthorisationJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
         setField(judicialOfficeAuthorisationProcessor,
@@ -113,8 +113,8 @@ class JudicialOfficeAuthorisationProcessorTest  {
         setField(judicialUserProfileProcessor, "applicationContext", applicationContext);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
-        when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(ImmutableSet.of(ELINKSID_1,
-            ELINKSID_2, "invalid"));
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(ImmutableSet.of(PERID_1,
+            PERID_2, "invalid"));
 
         int[][] intArray = new int[1][];
         when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
@@ -163,7 +163,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
     }
 
     @Test
-    void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_elinks_id_null_response() {
+    void should_return_JudicialOfficeAuthorizationRow_with_single_record_with_per_id_null_response() {
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
         setField(judicialOfficeAuthorisationProcessor, "jsrThresholdLimit", 5);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "camelContext", camelContext);
@@ -199,9 +199,9 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
         setField(judicialOfficeAuthorisationProcessor, "judicialUserProfileProcessor",
             judicialUserProfileProcessor);
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
         JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime,
-            "elinks_3");
+            "per_3");
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock);
         judicialUserProfiles.add(judicialUserProfileMock2);
@@ -241,21 +241,21 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
         List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations = new ArrayList<>();
         JudicialOfficeAuthorisation judicialOfficeAuthorisation1 = createJudicialOfficeAuthorisation(date);
-        judicialOfficeAuthorisation1.setElinksId(ELINKSID_1);
+        judicialOfficeAuthorisation1.setPerId(PERID_1);
         JudicialOfficeAuthorisation judicialOfficeAuthorisation2 = createJudicialOfficeAuthorisation(date);
-        judicialOfficeAuthorisation2.setElinksId(ELINKSID_2);
+        judicialOfficeAuthorisation2.setPerId(PERID_2);
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation1);
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation2);
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
-        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_3);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_3);
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock);
         judicialUserProfiles.add(judicialUserProfileMock2);
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
-        when(judicialUserProfileProcessor.getValidElinksInUserProfile()).thenReturn(Collections.singleton(ELINKSID_2));
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
 
         invokeMethod(judicialOfficeAuthorisationProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
             judicialOfficeAuthorisations, exchangeMock);

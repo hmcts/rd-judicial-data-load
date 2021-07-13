@@ -4,7 +4,7 @@ start-route: direct:JRD
 archival-route: direct:JrdArchival
 archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
-archival-file-names: Personal,Appointments,Authorisations,Roles,Contracts,Locations,BaseLocations
+archival-file-names: Personal,Appointments,Authorisations,Locations,BaseLocations
 
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy--HH-mm
@@ -25,7 +25,7 @@ logging-component-name: RD_Judicial_Ref_Data
 component:
   name: Judicial Reference Data
 
-fetch-personal-elinks-id: select elinks_id from judicial_user_profile
+fetch-personal-per-id: select per_id from judicial_user_profile
 fetch-base-location-id: SELECT base_location_id FROM base_location_type
 fetch-region-id: SELECT region_id FROM region_type
 fetch-contract-id: SELECT contract_type_id FROM contract_type

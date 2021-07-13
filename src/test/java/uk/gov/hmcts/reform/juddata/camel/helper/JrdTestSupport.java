@@ -3,12 +3,10 @@ package uk.gov.hmcts.reform.juddata.camel.helper;
 import com.google.common.collect.ImmutableMap;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialContractType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
-import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -20,42 +18,37 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DAT
 
 public class JrdTestSupport {
 
-    public static final String ELINKSID_1 = "elinksid_1";
-    public static final String ELINKSID_2 = "elinksid_2";
-    public static final String ELINKSID_3 = "elinksid_3";
-    public static final String ELINKSID_4 = "elinksid_4";
+    public static final String PERID_1 = "perid_1";
+    public static final String PERID_2 = "perid_2";
+    public static final String PERID_3 = "perid_3";
+    public static final String PERID_4 = "perid_4";
 
-    public static final Map<String, String> roles = ImmutableMap.of("elinksid_1", "roleId_1",
-        "elinksid_2", "roleId_2", "elinksid_3", "roleId_3");
+    public static final Map<String, String> baseLocations = ImmutableMap.of("perid_1", "baseLocationId_1",
+        "perid_2", "baseLocationId_2", "perid_3", "baseLocationId_3");
 
-    public static final Map<String, String> contracts = ImmutableMap.of("elinksid_1", "contractTypeId_1",
-        "elinksid_2", "contractTypeId_2", "elinksid_3", "contractTypeId_3");
+    public static final Map<String, String> regions = ImmutableMap.of("perid_1", "regionId_1",
+        "perid_2", "regionId_2", "perid_3", "regionId_3");
 
-    public static final Map<String, String> baseLocations = ImmutableMap.of("elinksid_1", "baseLocationId_1",
-        "elinksid_2", "baseLocationId_2", "elinksid_3", "baseLocationId_3");
-
-    public static final Map<String, String> regions = ImmutableMap.of("elinksid_1", "regionId_1",
-        "elinksid_2", "regionId_2", "elinksid_3", "regionId_3");
-
+    public static final String PERSONAL_CODE = "111";
 
     private JrdTestSupport() {
 
     }
 
     public static JudicialUserProfile createJudicialUserProfileMock(Date currentDate, LocalDateTime dateTime,
-                                                                    String elinksId) {
+                                                                    String perId) {
 
         JudicialUserProfile judicialUserProfileMock = new JudicialUserProfile();
-        judicialUserProfileMock.setElinksId(elinksId);
+        judicialUserProfileMock.setPerId(perId);
         judicialUserProfileMock.setPersonalCode("personalCode_1");
-        judicialUserProfileMock.setTitle("title");
+        judicialUserProfileMock.setAppointment("appointment");
         judicialUserProfileMock.setKnownAs("knownAs");
         judicialUserProfileMock.setSurName("surname");
         judicialUserProfileMock.setFullName("fullName");
         judicialUserProfileMock.setPostNominals("postNominals");
-        judicialUserProfileMock.setContractTypeId("contractTypeId");
+        judicialUserProfileMock.setAppointmentTypeId("appointmentTypeId");
         judicialUserProfileMock.setWorkPattern("workpatterns");
-        judicialUserProfileMock.setEmailId("some@hmcts.net");
+        judicialUserProfileMock.setEjudiciaryEmail("some@hmcts.net");
         judicialUserProfileMock.setJoiningDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialUserProfileMock.setLastWorkingDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialUserProfileMock.setActiveFlag(true);
@@ -77,18 +70,17 @@ public class JrdTestSupport {
 
     public static JudicialOfficeAppointment createJudicialOfficeAppointmentMock(Date currentDate,
                                                                                 LocalDateTime dateTime,
-                                                                                String elinksId) {
+                                                                                String perId) {
 
         JudicialOfficeAppointment judicialOfficeAppointmentMock = new JudicialOfficeAppointment();
-        judicialOfficeAppointmentMock.setElinksId(elinksId);
-        judicialOfficeAppointmentMock.setRoleId(roles.get(elinksId));
-        judicialOfficeAppointmentMock.setContractType(contracts.get(elinksId));
-        judicialOfficeAppointmentMock.setBaseLocationId(baseLocations.get(elinksId));
-        judicialOfficeAppointmentMock.setRegionId(regions.get(elinksId));
+        judicialOfficeAppointmentMock.setPerId(perId);
+        judicialOfficeAppointmentMock.setBaseLocationId(baseLocations.get(perId));
+        judicialOfficeAppointmentMock.setRegionId(regions.get(perId));
         judicialOfficeAppointmentMock.setIsPrincipalAppointment(true);
         judicialOfficeAppointmentMock.setStartDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialOfficeAppointmentMock.setEndDate(getDateWithFormat(currentDate, DATE_FORMAT));
         judicialOfficeAppointmentMock.setActiveFlag(true);
+        judicialOfficeAppointmentMock.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAppointmentMock.setExtractedDate(getDateTimeWithFormat(dateTime));
         return judicialOfficeAppointmentMock;
     }
@@ -96,13 +88,12 @@ public class JrdTestSupport {
     public static JudicialOfficeAuthorisation createJudicialOfficeAuthorisation(String date) {
 
         JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
-        judicialOfficeAuthorisation.setElinksId("1");
+        judicialOfficeAuthorisation.setPerId("1");
         judicialOfficeAuthorisation.setJurisdiction("jurisdiction");
         judicialOfficeAuthorisation.setStartDate(date);
         judicialOfficeAuthorisation.setEndDate(date);
-        judicialOfficeAuthorisation.setCreatedDate(date);
-        judicialOfficeAuthorisation.setLastUpdated(date);
         judicialOfficeAuthorisation.setLowerLevel("lowerLevel");
+        judicialOfficeAuthorisation.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAuthorisation.setTicketId(12345L);
         return judicialOfficeAuthorisation;
     }
@@ -132,14 +123,6 @@ public class JrdTestSupport {
         return DateTimeFormatter.ofPattern(DATE_FORMAT);
     }
 
-    public static JudicialUserRoleType createJudicialUserRoleType() {
-        JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
-        judicialUserRoleType.setRoleDescCy("roleDescCy");
-        judicialUserRoleType.setRoleDescEn("roleDescEn");
-        judicialUserRoleType.setRoleId("roleId");
-        return judicialUserRoleType;
-    }
-
     public static JudicialRegionType createJudicialRegionType() {
         JudicialRegionType judicialRegionType = new JudicialRegionType();
 
@@ -147,16 +130,6 @@ public class JrdTestSupport {
         judicialRegionType.setRegionDescEn("region_desc_en");
         judicialRegionType.setRegionId("regionId");
         return judicialRegionType;
-    }
-
-
-
-    public static JudicialContractType createJudicialContractType() {
-        JudicialContractType contractType = new JudicialContractType();
-        contractType.setContractTypeDescCy("contractTypeDescCy");
-        contractType.setContractTypeDescEn("contractTypeDescEn");
-        contractType.setContractTypeId("contractTypeId");
-        return contractType;
     }
 
     public static String getDateWithFormat(Date date, String format) {

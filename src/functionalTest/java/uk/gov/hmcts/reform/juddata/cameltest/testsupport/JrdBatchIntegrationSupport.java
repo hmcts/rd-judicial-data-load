@@ -103,19 +103,11 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${region-select-jrd-sql}")
     protected String regionSql;
 
-    @Value("${contract-select-jrd-sql}")
-    protected String contractSql;
-
-    @Value("${role-select-jrd-sql}")
-    protected String roleSql;
-
-
     @Value("${start-leaf-route}")
     protected String startLeafRoute;
 
     @Autowired
     protected JobLauncherTestUtils jobLauncherTestUtils;
-
 
     @Value("${exception-select-query}")
     protected String exceptionQuery;

@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
@@ -21,21 +21,21 @@ class JudicialUserProfileRowMapperTest {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
 
         JudicialUserProfileRowMapper judicialUserProfileRowMapper = new JudicialUserProfileRowMapper();
         Map<String, Object> response = judicialUserProfileRowMapper.getMap(judicialUserProfileMock);
 
-        assertEquals(ELINKSID_1, response.get("elinks_id"));
+        assertEquals(PERID_1, response.get("per_id"));
         assertEquals("personalCode_1", response.get("personal_code"));
-        assertEquals("title", response.get("title"));
+        assertEquals("appointment", response.get("appointment"));
         assertEquals("knownAs", response.get("known_as"));
         assertEquals("surname", response.get("surname"));
         assertEquals("fullName", response.get("full_name"));
         assertEquals("postNominals", response.get("post_nominals"));
-        assertEquals("contractTypeId", response.get("contract_type"));
+        assertEquals("appointmentTypeId", response.get("appointment_type"));
         assertEquals("workpatterns", response.get("work_pattern"));
-        assertEquals("some@hmcts.net", response.get("email_id"));
+        assertEquals("some@hmcts.net", response.get("ejudiciary_email"));
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("joining_date"));
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("last_working_date"));
         assertEquals(true, response.get("active_flag"));
@@ -49,21 +49,21 @@ class JudicialUserProfileRowMapperTest {
         Date currentDate = new Date();
         LocalDateTime dateTime = LocalDateTime.now();
 
-        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
         judicialUserProfileMock.setKnownAs(null);
         JudicialUserProfileRowMapper judicialUserProfileRowMapper = new JudicialUserProfileRowMapper();
         Map<String, Object> response = judicialUserProfileRowMapper.getMap(judicialUserProfileMock);
 
-        assertEquals(ELINKSID_1, response.get("elinks_id"));
+        assertEquals(PERID_1, response.get("per_id"));
         assertEquals("personalCode_1", response.get("personal_code"));
-        assertEquals("title", response.get("title"));
+        assertEquals("appointment", response.get("appointment"));
         assertEquals("fullName", response.get("known_as"));
         assertEquals("surname", response.get("surname"));
         assertEquals("fullName", response.get("full_name"));
         assertEquals("postNominals", response.get("post_nominals"));
-        assertEquals("contractTypeId", response.get("contract_type"));
+        assertEquals("appointmentTypeId", response.get("appointment_type"));
         assertEquals("workpatterns", response.get("work_pattern"));
-        assertEquals("some@hmcts.net", response.get("email_id"));
+        assertEquals("some@hmcts.net", response.get("ejudiciary_email"));
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("joining_date"));
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("last_working_date"));
         assertEquals(true, response.get("active_flag"));

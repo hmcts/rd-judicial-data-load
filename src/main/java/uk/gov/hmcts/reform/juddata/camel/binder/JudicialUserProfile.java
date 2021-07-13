@@ -21,9 +21,9 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TI
 @Component
 public class JudicialUserProfile implements Serializable {
 
-    @DataField(pos = 1, columnName = "elinks_id")
+    @DataField(pos = 1, columnName = "per_id")
     @NotEmpty
-    String elinksId;
+    String perId;
 
     @DataField(pos = 2, columnName = "personal_Code")
     @NotEmpty
@@ -31,7 +31,7 @@ public class JudicialUserProfile implements Serializable {
 
     @DataField(pos = 3)
     @NotEmpty
-    String title;
+    String appointment;
 
     @DataField(pos = 4, columnName = "known_As")
     String knownAs;
@@ -47,14 +47,14 @@ public class JudicialUserProfile implements Serializable {
     @DataField(pos = 7, columnName = "post_Nominals")
     String postNominals;
 
-    @DataField(pos = 8, columnName = "contract_Type_id")
-    String contractTypeId;
+    @DataField(pos = 8, columnName = "appointment_type_id")
+    String appointmentTypeId;
 
     @DataField(pos = 9, columnName = "work_Pattern")
     String workPattern;
 
-    @DataField(pos = 10, columnName = "email_id")
-    String emailId;
+    @DataField(pos = 10, columnName = "ejudiciary_email")
+    String ejudiciaryEmail;
 
     @DataField(pos = 11, columnName = "joining_Date")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,

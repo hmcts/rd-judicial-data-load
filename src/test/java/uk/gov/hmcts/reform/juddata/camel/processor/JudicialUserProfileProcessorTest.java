@@ -42,8 +42,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_1;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.ELINKSID_2;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_2;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
 class JudicialUserProfileProcessorTest {
@@ -74,8 +74,8 @@ class JudicialUserProfileProcessorTest {
 
     @BeforeEach
     public void setup() {
-        judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_1);
-        judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, ELINKSID_2);
+        judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_2);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialUserProfileJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
@@ -84,7 +84,7 @@ class JudicialUserProfileProcessorTest {
 
         setField(judicialUserProfileProcessor, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileProcessor,
-            "loadElinksId", "dummysql");
+            "loadPerId", "dummysql");
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialUserProfileJsrValidatorInitializer, "validator", validator);
@@ -101,7 +101,7 @@ class JudicialUserProfileProcessorTest {
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
         when(jdbcTemplate.queryForList("dummysql", String.class))
-            .thenReturn(ImmutableList.of(ELINKSID_1, ELINKSID_2, "0"));
+            .thenReturn(ImmutableList.of(PERID_1, PERID_2, "0"));
 
     }
 
@@ -132,9 +132,9 @@ class JudicialUserProfileProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_nullresponse() {
+    void should_return_JudicialUserProfileRow_with_single_record_with_per_id_nullresponse() {
 
-        judicialUserProfileMock1.setElinksId(null);
+        judicialUserProfileMock1.setPerId(null);
 
         final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
         final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
@@ -163,8 +163,8 @@ class JudicialUserProfileProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void should_return_JudicialUserProfileRow_with_single_record_with_elinks_id_null_exceeds_threshold() {
-        judicialUserProfileMock1.setElinksId(null);
+    void should_return_JudicialUserProfileRow_with_single_record_with_per_id_null_exceeds_threshold() {
+        judicialUserProfileMock1.setPerId(null);
         judicialUserProfileMock1.setFullName(null);
         Exchange exchangeMock = mock(Exchange.class);
         Message messageMock = mock(Message.class);
@@ -206,14 +206,14 @@ class JudicialUserProfileProcessorTest {
         judicialUserProfileProcessor.process(exchangeMock);
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
-        assertThat(judicialUserProfileProcessor.getValidElinksInUserProfile()).isSameAs(emptySet());
+        assertThat(judicialUserProfileProcessor.getValidPerIdInUserProfile()).isSameAs(emptySet());
     }
 
     @Test
-    void testLoadElinksId() {
+    void testLoadPerId() {
         when(jdbcTemplate.queryForList("dummysql", String.class))
-            .thenReturn(ImmutableList.of(ELINKSID_1, ELINKSID_2, "0"));
-        List<String> resultList = invokeMethod(judicialUserProfileProcessor, "loadElinksId");
+            .thenReturn(ImmutableList.of(PERID_1, PERID_2, "0"));
+        List<String> resultList = invokeMethod(judicialUserProfileProcessor, "loadPerId");
         assertThat(resultList.size()).isEqualTo(3);
     }
 }

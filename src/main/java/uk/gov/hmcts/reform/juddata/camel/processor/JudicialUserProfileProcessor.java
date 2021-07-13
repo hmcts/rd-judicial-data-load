@@ -30,14 +30,14 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
     @Value("${logging-component-name}")
     private String logComponentName;
 
-    private Set<String> validElinksInUserProfile;
+    private Set<String> validPerIdInUserProfile;
 
     @Autowired
     @Qualifier("springJdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
 
-    @Value("${fetch-personal-elinks-id}")
-    String loadElinksId;
+    @Value("${fetch-personal-per-id}")
+    String loadPerId;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -60,26 +60,26 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
-        //Get Elink ids from current load
-        validElinksInUserProfile = filteredJudicialUserProfiles.stream()
-            .map(JudicialUserProfile::getElinksId).collect(toSet());
+        //Get Per Ids from current load
+        validPerIdInUserProfile = filteredJudicialUserProfiles.stream()
+            .map(JudicialUserProfile::getPerId).collect(toSet());
 
-        //Get Elinks from previous loads
-        validElinksInUserProfile.addAll(loadElinksId());
+        //Get Per Id from previous loads
+        validPerIdInUserProfile.addAll(loadPerId());
 
         filteredJudicialUserProfiles.stream()
-            .map(JudicialUserProfile::getElinksId).collect(toSet());
+            .map(JudicialUserProfile::getPerId).collect(toSet());
 
         exchange.getMessage().setBody(filteredJudicialUserProfiles);
     }
 
-    public Set<String> getValidElinksInUserProfile() {
-        return isNotEmpty(validElinksInUserProfile) ? validElinksInUserProfile : emptySet();
+    public Set<String> getValidPerIdInUserProfile() {
+        return isNotEmpty(validPerIdInUserProfile) ? validPerIdInUserProfile : emptySet();
     }
 
     @SuppressWarnings("unchecked")
-    private List<String> loadElinksId() {
-        List<String> elinkList = jdbcTemplate.queryForList(loadElinksId, String.class);
-        return isNotEmpty(elinkList) ? elinkList : emptyList();
+    private List<String> loadPerId() {
+        List<String> perIdList = jdbcTemplate.queryForList(loadPerId, String.class);
+        return isNotEmpty(perIdList) ? perIdList : emptyList();
     }
 }

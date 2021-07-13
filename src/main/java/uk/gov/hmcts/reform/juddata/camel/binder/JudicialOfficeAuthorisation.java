@@ -19,9 +19,9 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 @Component
 public class JudicialOfficeAuthorisation implements Serializable {
 
-    @DataField(pos = 1, columnName = "elinks_id")
+    @DataField(pos = 1, columnName = "per_id")
     @NotEmpty
-    String elinksId;
+    String perId;
 
     @DataField(pos = 2, columnName = "jurisdiction")
     String jurisdiction;
@@ -39,16 +39,9 @@ public class JudicialOfficeAuthorisation implements Serializable {
             message = DATE_FORMAT_ERROR_MESSAGE)
     String endDate;
 
-    @DataField(pos = 6, columnName = "createddate")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
-    String createdDate;
-
-    @DataField(pos = 7, columnName = "lastupdated")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
-    String lastUpdated;
-
-    @DataField(pos = 8, columnName = "lowerlevel")
+    @DataField(pos = 6, columnName = "lowerlevel")
     String lowerLevel;
+
+    @DataField(pos = 7, columnName = "personal_code")
+    String personalCode;
 }
