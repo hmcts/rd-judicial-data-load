@@ -186,9 +186,7 @@ class JudicialOfficeAppointmentProcessorTest {
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
         judicialOfficeAppointmentMock2.setRegionId("0");
-        judicialOfficeAppointmentMock2.setRoleId("0");
         judicialOfficeAppointmentMock2.setBaseLocationId("0");
-        judicialOfficeAppointmentMock2.setContractType("0");
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
