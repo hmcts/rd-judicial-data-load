@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_ROUTE;
@@ -258,11 +258,11 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
         assertEquals(4, exceptionList.size());
-        assertEquals(MISSING_PER, exceptionList.get(0).get("error_description"));
+        assertEquals(MISSING_PER_ID, exceptionList.get(0).get("error_description"));
         assertEquals("judicial-office-appointment", exceptionList.get(0).get("table_name"));
         assertEquals(MISSING_LOCATION, exceptionList.get(1).get("error_description"));
         assertEquals(MISSING_BASE_LOCATION, exceptionList.get(2).get("error_description"));
-        assertEquals(MISSING_PER, exceptionList.get(3).get("error_description"));
+        assertEquals(MISSING_PER_ID, exceptionList.get(3).get("error_description"));
         assertEquals("judicial_office_authorisation", exceptionList.get(3).get("table_name"));
     }
 

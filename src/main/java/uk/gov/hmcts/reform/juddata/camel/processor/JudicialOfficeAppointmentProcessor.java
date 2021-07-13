@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
@@ -102,7 +102,7 @@ public class JudicialOfficeAppointmentProcessor
 
         //remove & audit missing personal per id
         removeForeignKeyElements(filteredJudicialAppointments, perViolations, PER_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_PER);
+            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_PER_ID);
 
         //remove & audit missing Locations
         List<String> locations = jdbcTemplate.queryForList(fetchLocations, String.class);

@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 
 @Slf4j
@@ -83,7 +83,7 @@ public class JudicialOfficeAuthorisationProcessor
 
         //remove & audit missing personal e-links id
         removeForeignKeyElements(filteredJudicialAuthorisations, perViolations, PER_ID, exchange,
-            judicialOfficeAuthorisationJsrValidatorInitializer, MISSING_PER);
+            judicialOfficeAuthorisationJsrValidatorInitializer, MISSING_PER_ID);
     }
 
 }

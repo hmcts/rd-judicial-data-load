@@ -54,7 +54,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_ELINKS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.support.IntegrationTestSupport.setSourcePath;
 import static uk.gov.hmcts.reform.juddata.support.ParentIntegrationTestSupport.setSourceData;
 
@@ -138,10 +138,10 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         parameters = new String[]{INVALID_JSR_PARENT_ROW, "judicial_office_authorisation"};
         validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
             true, parameters);
-        parameters = new String[]{MISSING_ELINKS, "judicial-office-appointment"};
+        parameters = new String[]{MISSING_PER_ID, "judicial-office-appointment"};
         validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
             true, parameters);
-        parameters = new String[]{MISSING_ELINKS, "judicial_office_authorisation"};
+        parameters = new String[]{MISSING_PER_ID, "judicial_office_authorisation"};
         validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
             true, parameters);
     }
