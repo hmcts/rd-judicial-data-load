@@ -2,10 +2,6 @@ buildscript {
     ext {
         springBootVersion = '2.4.6'
     }
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -213,11 +209,14 @@ project.tasks['sonarqube'].dependsOn test, jacocoTestReport
 project.tasks['sonarqube'].group = "Verification"
 
 repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
 
     maven {
-        url 'https://jitpack.io'
+        url "https://jitpack.io"
     }
-    jcenter()
+
 }
 
 dependencies {
