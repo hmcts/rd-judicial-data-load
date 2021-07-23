@@ -1,0 +1,28 @@
+alter table judicial_service_code_mapping drop CONSTRAINT service_code;
+
+INSERT INTO judicial_service_code_mapping (jurisdiction,lower_level,service_code,service_description)
+VALUES ('Authorisation Tribunals','00 - Interlocutory','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','01 - Social Security','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','02 - Child Support','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','03 - Disability Living Allowance','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','04 - Incapacity Benefit Employment Support','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','05 - Industrial Injuries','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','07 - Vaccine Damage','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','Care Standards','BCA1','Care Standards'),
+('Authorisation Tribunals','Charity','BAA2','Charity'),
+('Authorisation Tribunals','Child Support 02','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','Consumer Credit','BAA4','Consumer Credit'),
+('Authorisation Tribunals','Criminal Injuries Compensations','BBA2','Criminal Injuries Compensation'),
+('Authorisation Tribunals','Environment','BAA5','Environment'),
+('Authorisation Tribunals','Estate Agents','BAA6','Estate Agents'),
+('Authorisation Tribunals','First Tier - Social Entitlement','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','Gambling','BAA8','Gambling Appeals'),
+('Authorisation Tribunals','Information Rights','BAB1','Information Rights'),
+('Authorisation Tribunals','Land Registration','BGA2','Land Registration'),
+('Authorisation Tribunals','Local Government Standards - England','BAB2','Local Government Standards'),
+('Authorisation Tribunals','Mental Health','BCA2','Mental Health'),
+('Authorisation Tribunals','Primary Health List','BCA3','Primary Health Lists'),
+('Authorisation Tribunals','Reserve Forces','BHA3','Reserve Forces Appeal Tribunal'),
+('Authorisation Tribunals','Residential Property','BGA3','Residential Property'),
+('Authorisation Tribunals','Social Security and Child Support','BBA3','Social Security and Child Support'),
+('Authorisation Tribunals','Transport','BAB3','Transport');

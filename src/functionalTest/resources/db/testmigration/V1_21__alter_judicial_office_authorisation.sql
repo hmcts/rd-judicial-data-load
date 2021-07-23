@@ -1,0 +1,1 @@
+ALTER TABLE judicial_office_authorisation ADD COLUMN service_code varchar(16);

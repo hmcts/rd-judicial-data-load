@@ -1,0 +1,1 @@
+ALTER TABLE judicial_user_profile ADD COLUMN object_id varchar(64);

@@ -1,0 +1,1 @@
+ALTER TABLE judicial_user_profile ADD COLUMN sidam_id varchar(64);

@@ -3,6 +3,7 @@ buildscript {
         springBootVersion = '2.4.6'
     }
     repositories {
+        mavenLocal()
         jcenter()
         mavenCentral()
     }
@@ -213,7 +214,7 @@ project.tasks['sonarqube'].dependsOn test, jacocoTestReport
 project.tasks['sonarqube'].group = "Verification"
 
 repositories {
-
+    mavenLocal()
     maven {
         url 'https://jitpack.io'
     }
@@ -260,7 +261,8 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    implementation 'com.github.hmcts:data-ingestion-lib:0.4.4.1'
+    //implementation 'com.github.hmcts:data-ingestion-lib:0.4.4.1'
+    implementation 'uk.gov.hmcts.reform:data-ingestion-lib:DEV-SNAPSHOT-SR'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
