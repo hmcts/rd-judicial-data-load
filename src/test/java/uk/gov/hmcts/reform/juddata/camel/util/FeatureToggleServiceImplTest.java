@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl.JRD_ASB_FLAG;
 
 @ExtendWith(MockitoExtension.class)
-public class FeatureToggleServiceImplTest {
+class FeatureToggleServiceImplTest {
 
     LDClient ldClient =  spy(new LDClient("dummkey"));
 
@@ -25,7 +25,7 @@ public class FeatureToggleServiceImplTest {
     FeatureToggleServiceImpl flaFeatureToggleService;
 
     @Test
-    public void testIsFlagEnabled() {
+    void testIsFlagEnabled() {
 
         assertFalse(flaFeatureToggleService.isFlagEnabled("test"));
         verify(ldClient).boolVariation(anyString(),any(),anyBoolean());
@@ -33,7 +33,7 @@ public class FeatureToggleServiceImplTest {
     }
 
     @Test
-    public void testIsFlagEnabledTrue() {
+    void testIsFlagEnabledTrue() {
         flaFeatureToggleService = spy(new FeatureToggleServiceImpl(ldClient, "rd"));
         flaFeatureToggleService.mapServiceToFlag();
         when(ldClient.boolVariation(anyString(),any(),anyBoolean())).thenReturn(true);
@@ -42,7 +42,7 @@ public class FeatureToggleServiceImplTest {
     }
 
     @Test
-    public void mapServiceToFlagTest() {
+    void mapServiceToFlagTest() {
         flaFeatureToggleService = spy(new FeatureToggleServiceImpl(ldClient, "rd"));
         flaFeatureToggleService.mapServiceToFlag();
         assertTrue(flaFeatureToggleService.getLaunchDarklyFlags().size() >= 1);
