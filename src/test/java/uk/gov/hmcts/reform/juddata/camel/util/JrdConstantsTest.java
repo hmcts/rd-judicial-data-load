@@ -6,13 +6,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class JrdConstantsTest {
 
     @Test()
-    void test_expected_exception_on_instantiation()
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException{
+    void test_expected_exception_on_instantiation() throws NoSuchMethodException {
         Constructor<JrdConstants> constructor = JrdConstants.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         //constructor.newInstance();
