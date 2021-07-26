@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
-import com.google.common.collect.ImmutableList;
 import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.server.LDClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
 
     @PostConstruct
     public void mapServiceToFlag() {
-        launchDarklyMap = ImmutableList.of(JRD_ASB_FLAG);
+        launchDarklyMap = List.of(JRD_ASB_FLAG);
     }
 
     @Override

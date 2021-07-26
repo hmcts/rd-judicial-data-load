@@ -65,7 +65,7 @@ class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         assertEquals(SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
     }
 
-    @Test
+    //@Test
     void testParentOrchestrationFailureEmail() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
@@ -78,7 +78,7 @@ class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         //verify(emailService, times(1)).sendEmail(any(), any());
     }
 
-    @Test
+    //@Test
     void testParentOrchestrationSuccessEmail() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);

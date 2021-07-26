@@ -137,18 +137,18 @@ public interface ParentIntegrationTestSupport {
 
     static void validateUserProfileFile(JdbcTemplate jdbcTemplate, String userProfileSql) {
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
-        assertEquals(judicialUserProfileList.size(), 2);
+        assertEquals(2, judicialUserProfileList.size());
         Contracts.assertNotNull(judicialUserProfileList.get(0));
         Contracts.assertNotNull(judicialUserProfileList.get(1));
-        assertEquals(judicialUserProfileList.get(0).get("per_id"), "1");
-        assertEquals(judicialUserProfileList.get(1).get("per_id"), "2");
-        assertEquals(judicialUserProfileList.get(0).get("ejudiciary_email"), "joe.bloggs@ejudiciary.net");
-        assertEquals(judicialUserProfileList.get(1).get("ejudiciary_email"), "jo1e.bloggs@ejudiciary.net");
+        assertEquals("1", judicialUserProfileList.get(0).get("per_id"));
+        assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
+        assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("ejudiciary_email"));
+        assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("ejudiciary_email"));
     }
 
     static void validateAppointmentFile(JdbcTemplate jdbcTemplate, String sqlChild1) {
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(sqlChild1);
-        assertEquals(judicialAppointmentList.size(), 2);
+        assertEquals(2, judicialAppointmentList.size());
         Contracts.assertNotNull(judicialAppointmentList.get(0));
         Contracts.assertNotNull(judicialAppointmentList.get(1));
         Contracts.assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));

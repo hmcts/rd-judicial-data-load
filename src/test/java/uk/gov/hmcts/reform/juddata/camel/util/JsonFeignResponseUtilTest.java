@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JsonFeignResponseUtilTest {
+class JsonFeignResponseUtilTest {
     private Response responseMock; //mocked as builder has private access
     private Response.Body bodyMock; //mocked as Body is an interface in Feign.Response
     private Reader readerMock; //mocked as it is an abstract class from Java.io
@@ -33,7 +33,7 @@ public class JsonFeignResponseUtilTest {
     }
 
     @Test
-    public void testToResponseEntityThrowError() throws IOException {
+    void testToResponseEntityThrowError() throws IOException {
         when(bodyMock.asReader(Charset.defaultCharset())).thenThrow(IOException.class);
         assertThrows(Exception.class, () ->  JsonFeignResponseUtil.toResponseEntity(this.responseMock,
                 new TypeReference<List<IdamClient.User>>() {}));
