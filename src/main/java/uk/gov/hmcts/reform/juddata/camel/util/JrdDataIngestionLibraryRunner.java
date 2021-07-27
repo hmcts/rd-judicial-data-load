@@ -24,7 +24,6 @@ import java.util.Set;
 
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
-import static org.apache.commons.lang3.BooleanUtils.negate;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -86,7 +85,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             //After Job completes Publish message in ASB and toggle off for prod with launch Darkly & one
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
-                && negate(environment.startsWith("prod"))) {
+                && Boolean.FALSE.equals(environment.startsWith("prod"))) {
                 if (isLoadFailed(jobDetails)) {
                     return;
                 }
@@ -147,9 +146,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
 
     private void updateSidamIds(Set<IdamClient.User> sidamUsers) {
         List<Pair<String, String>> sidamObjectId = new ArrayList<>();
-        sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s -> {
-            sidamObjectId.add(Pair.of(s.getId(), s.getSsoId()));
-        });
+        sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
+            sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
 
         jdbcTemplate.batchUpdate(
             updateSidamIds,
