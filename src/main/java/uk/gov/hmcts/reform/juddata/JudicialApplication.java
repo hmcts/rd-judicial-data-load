@@ -62,7 +62,7 @@ public class JudicialApplication implements ApplicationRunner {
     }
 
     @Value("${logging-component-name}")
-    public static void setLogComponentName(String logComponentName) {
+    public void setLogComponentName(String logComponentName) {
         JudicialApplication.logComponentName = logComponentName;
     }
 }
