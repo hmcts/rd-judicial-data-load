@@ -66,6 +66,9 @@ route:
     id: judicial-office-appointment
     file-name: Appointments-Test
     table-name: judicial-office-appointment
+    parent-failure-enabled: true
+    #Personal-Test only for testing else -Test not needed by main code
+    parent-name: Personal-Test
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
@@ -81,6 +84,9 @@ route:
     id: judicial-office-authorisation
     file-name: Authorisations-Test
     table-name: judicial_office_authorisation
+    parent-failure-enabled: true
+    #Personal-Test only for testing else -Test not needed by main code
+    parent-name: Personal-Test
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:

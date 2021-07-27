@@ -25,6 +25,8 @@ route:
     id: judicial-office-appointment
     file-name: Appointments
     table-name: judicial_office_appointment
+    parent-failure-enabled: true
+    parent-name: Personal
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:
@@ -41,6 +43,8 @@ route:
     id: judicial-office-authorisation
     file-name: Authorisations
     table-name: judicial_office_authorisation
+    parent-failure-enabled: true
+    parent-name: Personal
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:

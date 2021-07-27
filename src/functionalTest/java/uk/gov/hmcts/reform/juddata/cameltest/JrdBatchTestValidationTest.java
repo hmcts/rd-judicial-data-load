@@ -55,6 +55,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsr;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidJsrExceedsThreshold;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidAppointments;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.missingUserProfile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordCountFor;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateExceptionDbRecordCount;
@@ -275,5 +276,19 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
     }
+
+    @Test
+    void testChildSkipsOnParentFailure() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, missingUserProfile);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+
+        JobParameters params = new JobParametersBuilder()
+            .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+            .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        List<Map<String, Object>> auditList = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
+        assertEquals(3, auditList.size()); //Personal, Locations, base-locations only
+    }
+
 }
 

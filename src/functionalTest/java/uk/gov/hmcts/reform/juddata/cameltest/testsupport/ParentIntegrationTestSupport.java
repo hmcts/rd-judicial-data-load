@@ -77,8 +77,13 @@ public interface ParentIntegrationTestSupport {
 
     String[] fileWithInvalidAppointments =
         {"classpath:sourceFiles/parent/judicial_userprofile_with_invalid_appointment.csv",
-        "classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+            "classpath:sourceFiles/parent/judicial_appointments.csv",
+            "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+
+
+    String[] missingUserProfile = {"classpath:sourceFiles/parent/judicial_appointments.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"
+    };
 
     static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
                             boolean isParent, String... files) throws Exception {

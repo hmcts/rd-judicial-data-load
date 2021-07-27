@@ -58,6 +58,8 @@ route:
     id: judicial-office-appointment
     file-name: ${child.file.name}
     table-name: judicial-office-appointment
+    parent-failure-enabled: true
+    parent-name: Personal
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
@@ -73,6 +75,8 @@ route:
     id: judicial-office-authorisation
     file-name: ${child1.file.name}
     table-name: judicial_office_authorisation
+    parent-failure-enabled: true
+    parent-name: Personal
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:
