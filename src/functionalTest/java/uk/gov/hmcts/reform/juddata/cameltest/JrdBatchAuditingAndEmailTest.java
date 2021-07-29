@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -65,7 +66,7 @@ class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         assertEquals(SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
     }
 
-    @Test
+    @Disabled("To be implemented when Email functionality is fully functional")
     void testParentOrchestrationFailureEmail() throws Exception {
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
@@ -78,7 +79,7 @@ class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         //verify(emailService, times(1)).sendEmail(any(), any());
     }
 
-    @Test
+    @Disabled("To be implemented when Email functionality is fully functional")
     void testParentOrchestrationSuccessEmail() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);

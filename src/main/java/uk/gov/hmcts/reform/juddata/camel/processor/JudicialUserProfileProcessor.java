@@ -67,9 +67,6 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         //Get Per Id from previous loads
         validPerIdInUserProfile.addAll(loadPerId());
 
-        filteredJudicialUserProfiles.stream()
-            .map(JudicialUserProfile::getPerId).collect(toSet());
-
         exchange.getMessage().setBody(filteredJudicialUserProfiles);
     }
 

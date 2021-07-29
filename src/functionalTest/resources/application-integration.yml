@@ -22,10 +22,6 @@ spring:
     job:
       enabled: false
 
-  esb:
-    mail:
-      subject: JRD User profiles failed to Publish
-      to: sourav.roy@hmcts.net
 
 start-route: direct:JRD
 archival-route: direct:JrdArchival
@@ -70,6 +66,9 @@ route:
     id: judicial-office-appointment
     file-name: Appointments-Test
     table-name: judicial-office-appointment
+    parent-failure-enabled: true
+    #Personal-Test only for testing else -Test not needed by main code
+    parent-name: Personal-Test
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
@@ -84,16 +83,15 @@ route:
   judicial-office-authorisation:
     id: judicial-office-authorisation
     file-name: Authorisations-Test
-    table-name: judicial_office_authorisation1, judicial_office_authorisation2
+    table-name: judicial_office_authorisation
+    parent-failure-enabled: true
+    #Personal-Test only for testing else -Test not needed by main code
+    parent-name: Personal-Test
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:
       sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code)
       values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code)?dataSource=dataSource&batch=true
-    update-sql:
-      sql:update judicial_office_authorisation auth set service_code='BFA1'?dataSource=dataSource,
-      sql:update judicial_office_authorisation auth set service_code='BFA2' where per_id = '2'?dataSource=dataSource
-
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper

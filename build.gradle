@@ -2,11 +2,6 @@ buildscript {
     ext {
         springBootVersion = '2.4.6'
     }
-    repositories {
-        mavenLocal()
-        jcenter()
-        mavenCentral()
-    }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -215,10 +210,13 @@ project.tasks['sonarqube'].group = "Verification"
 
 repositories {
     mavenLocal()
-    maven {
-        url 'https://jitpack.io'
-    }
     jcenter()
+    mavenCentral()
+
+    maven {
+        url "https://jitpack.io"
+    }
+
 }
 
 dependencies {
@@ -261,8 +259,10 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-    //implementation 'com.github.hmcts:data-ingestion-lib:0.4.4.1'
+
+    //implementation 'com.github.hmcts:data-ingestion-lib:0.4.5.beta'
     implementation 'uk.gov.hmcts.reform:data-ingestion-lib:DEV-SNAPSHOT-SR'
+
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'

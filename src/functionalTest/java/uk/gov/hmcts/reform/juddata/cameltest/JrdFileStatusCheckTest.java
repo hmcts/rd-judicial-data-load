@@ -118,23 +118,16 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         ), new Pair<>(
             "Personal-Test",
             "not loaded due to file stale error"
-        ), new Pair<>(
-            "Appointments-Test",
-            "not loaded due to file stale error"
-        ), new Pair<>(
-            "Authorisations-Test",
-            "not loaded due to file stale error"
         ));
 
+
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 5, false);
-        assertEquals(5, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
+        assertEquals(3, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
 
         //validate old day 1 data not gets truncated after day 2 stale file ran
-        List<Map<String, Object>> appointmentList = jdbcTemplate.queryForList(appointmentSql);
-        assertTrue(appointmentList.size() > 0);
-        List<Map<String, Object>> authList = jdbcTemplate.queryForList(authorizationSql);
-        assertTrue(authList.size() > 0);
+        List<Map<String, Object>> userProfileList = jdbcTemplate.queryForList(userProfileSql);
+        assertTrue(userProfileList.size() > 0);
     }
 
 
@@ -168,22 +161,16 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         ), new Pair<>(
             "Personal-Test",
             "Personal-Test file does not exist in azure storage account"
-        ), new Pair<>(
-            "Appointments-Test",
-            "Appointments-Test file does not exist in azure storage account"
-        ), new Pair<>(
-            "Authorisations-Test",
-            "Authorisations-Test file does not exist in azure storage account"
         ));
 
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
-        assertEquals(5, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+        assertEquals(3, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
 
         //validate old day 1 data not gets truncated after day 2  file not exist ran
         List<Map<String, Object>> appointmentList = jdbcTemplate.queryForList(appointmentSql);
         assertTrue(appointmentList.size() > 0);
-        List<Map<String, Object>> authList = jdbcTemplate.queryForList(authorizationSql);
-        assertTrue(authList.size() > 0);
+        List<Map<String, Object>> profileList = jdbcTemplate.queryForList(userProfileSql);
+        assertTrue(profileList.size() > 0);
     }
 
     private void deleteAuditAndExceptionDataOfDay1() throws Exception {

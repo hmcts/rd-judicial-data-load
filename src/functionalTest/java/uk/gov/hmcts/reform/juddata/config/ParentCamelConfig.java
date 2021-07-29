@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileResponseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.HeaderValidationProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.processor.ParentStateCheckProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.ArchivalRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.ArchivalBlobServiceImpl;
@@ -300,6 +301,11 @@ public class ParentCamelConfig {
     @Bean
     JobResultListener jobResultListener() {
         return new JobResultListener();
+    }
+
+    @Bean
+    ParentStateCheckProcessor parentStateCheckProcessor() {
+        return new ParentStateCheckProcessor();
     }
 
     @Bean

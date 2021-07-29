@@ -114,8 +114,6 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
     @Test
     @RefreshScope
     void testTasklet() throws Exception {
-        setSourceData(ParentIntegrationTestSupport.file);
-        LeafIntegrationSupport.setSourceData(LeafIntegrationSupport.file);
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
@@ -127,7 +125,7 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
                 "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 20, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 18, true);
         validateForeignKeyRecordsAndMissingParentRecords();
     }
 
@@ -151,7 +149,7 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
                                                boolean isPartialSuccessValidation, String... params) {
         List<Map<String, Object>> exceptionList;
         if (isNotEmpty(params)) {
-            exceptionList = jdbcTemplate.queryForList(queryName, params);
+            exceptionList = jdbcTemplate.queryForList(queryName, (Object[]) params);
         } else {
             exceptionList = jdbcTemplate.queryForList(queryName);
         }
