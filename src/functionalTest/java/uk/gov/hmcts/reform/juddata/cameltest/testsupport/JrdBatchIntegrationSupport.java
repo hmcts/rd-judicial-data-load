@@ -64,6 +64,9 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${child-select-child2-sql}")
     protected String authorizationSql;
 
+    @Value("${service-code-sql}")
+    protected String serviceCodeSql;
+
     @Value("${archival-cred}")
     protected String archivalCred;
 

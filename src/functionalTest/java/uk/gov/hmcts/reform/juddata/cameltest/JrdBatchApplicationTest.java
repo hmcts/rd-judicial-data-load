@@ -42,6 +42,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAuthorisationFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordCountFor;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateUserProfileFile;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateServiceCodes;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
     + "classpath:application-leaf-integration.yml"})
@@ -145,5 +146,17 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 6);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
+    }
+
+    @Test
+    void testServiceCodeMappingInJudicialOfficeAuthorisationTable() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        validateDbRecordCountFor(jdbcTemplate, serviceCodeSql, 2);
+        validateServiceCodes(jdbcTemplate, serviceCodeSql);
     }
 }

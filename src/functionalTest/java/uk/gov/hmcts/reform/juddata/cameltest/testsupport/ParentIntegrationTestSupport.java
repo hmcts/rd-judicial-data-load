@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -27,6 +28,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
 
 public interface ParentIntegrationTestSupport {
@@ -229,5 +231,24 @@ public interface ParentIntegrationTestSupport {
         } else {
             return String.valueOf(timestamp);
         }
+    }
+
+    static void validateServiceCodes(JdbcTemplate jdbcTemplate, String queryName) {
+
+        final List<Optional<String>> optional_values = jdbcTemplate.queryForList(queryName).stream()
+                .map(row -> row.entrySet().stream()
+                        .filter(e -> e.getKey().startsWith("service_code"))
+                        .map(Map.Entry::getValue)
+                        .map(String::valueOf)
+                        .findFirst())
+                .collect(Collectors.toUnmodifiableList());
+
+        final List<String> serviceCodes = optional_values.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toUnmodifiableList());
+
+        assertTrue(serviceCodes.contains("BFA1"));
+        assertTrue(serviceCodes.contains("BBA3"));
     }
 }

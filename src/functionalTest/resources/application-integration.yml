@@ -92,6 +92,8 @@ route:
     insert-sql:
       sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code)
       values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code)?dataSource=dataSource&batch=true
+    update-sql:
+      sql:UPDATE judicial_office_authorisation auth SET service_code=jsm.service_code FROM (select service_code,jurisdiction,lower_level from judicial_service_code_mapping) AS jsm where jsm.jurisdiction = auth.jurisdiction and jsm.lower_level = auth.lower_level?dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
@@ -112,6 +114,8 @@ select-dataload-scheduler-audit-failure: select * from dataload_schedular_audit 
 select-dataload-scheduler-audit-partial-success: select *  from dataload_schedular_audit where status='PartialSuccess'
 
 select-dataload-scheduler-audit-success: select *  from dataload_schedular_audit where status='Success'
+
+service-code-sql: SELECT * FROM judicial_office_authorisation WHERE service_code IS NOT NULL
 
 start-leaf-route: direct:leaf
 
