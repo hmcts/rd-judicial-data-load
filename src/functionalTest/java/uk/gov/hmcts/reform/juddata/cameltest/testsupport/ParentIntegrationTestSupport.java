@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.hibernate.validator.internal.util.Contracts;
 import org.javatuples.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
@@ -28,7 +29,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
 
 public interface ParentIntegrationTestSupport {
@@ -233,22 +233,18 @@ public interface ParentIntegrationTestSupport {
         }
     }
 
-    static void validateServiceCodes(JdbcTemplate jdbcTemplate, String queryName) {
-
-        final List<Optional<String>> optional_values = jdbcTemplate.queryForList(queryName).stream()
+    @NotNull
+    static List<Object> retrieveColumnValues(JdbcTemplate jdbcTemplate, String queryName, String columnName) {
+        final List<Optional<Object>> optional_values = jdbcTemplate.queryForList(queryName).stream()
                 .map(row -> row.entrySet().stream()
-                        .filter(e -> e.getKey().startsWith("service_code"))
+                        .filter(e -> e.getKey().equals(columnName))
                         .map(Map.Entry::getValue)
-                        .map(String::valueOf)
                         .findFirst())
                 .collect(Collectors.toUnmodifiableList());
 
-        final List<String> serviceCodes = optional_values.stream()
+        return optional_values.stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toUnmodifiableList());
-
-        assertTrue(serviceCodes.contains("BFA1"));
-        assertTrue(serviceCodes.contains("BBA3"));
     }
 }
