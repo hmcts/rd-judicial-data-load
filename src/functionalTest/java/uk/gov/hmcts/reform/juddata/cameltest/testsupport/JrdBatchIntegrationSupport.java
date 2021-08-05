@@ -67,6 +67,9 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${service-code-sql}")
     protected String serviceCodeSql;
 
+    @Value("${epimms-id-sql}")
+    protected String epimmsIdSql;
+
     @Value("${archival-cred}")
     protected String archivalCred;
 

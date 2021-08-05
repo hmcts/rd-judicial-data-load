@@ -143,7 +143,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jrdExecutor.execute(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION, startRoute);
         //jobLauncherTestUtils.launchJob();
 
-        validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
     }
 
@@ -200,7 +200,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("1", judicialBaseLocationType.get(1).get("base_location_id"));
         assertEquals("2", judicialBaseLocationType.get(2).get("base_location_id"));
         assertEquals("5", judicialBaseLocationType.get(3).get("base_location_id"));
-        assertEquals(4, judicialBaseLocationType.size());
+        assertEquals(6, judicialBaseLocationType.size());
 
         List<Map<String, Object>> judicialRegionType = jdbcTemplate.queryForList(regionSql);
         assertEquals("1", judicialRegionType.get(1).get("region_id"));

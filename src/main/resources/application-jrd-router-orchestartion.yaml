@@ -33,6 +33,8 @@ route:
       sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code)
       values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
       TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code)?batch=true&dataSource=dataSource
+    update-sql:
+      sql:UPDATE judicial_office_appointment appt SET epimms_id=jlm.epimms_id FROM (select judicial_base_location_id,base_location_name,epimms_id from judicial_location_mapping) AS jlm where jlm.judicial_base_location_id = appt.base_location_id?dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAppointmentProcessor

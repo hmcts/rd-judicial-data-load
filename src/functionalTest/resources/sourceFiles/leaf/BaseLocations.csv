@@ -4,3 +4,5 @@ CourtID,Court/Bench,CourtType,Circuit,Area
 3,"Alnwick","Northumbria","Northumberland","LJA"
 4,"Ampthill","Bedfordshire","Bedfordshire","LJA"
 5,"Appleby","Cumbria","Cumbria","LJA"
+747,"Royal Courts of Justice - High Court - Chancery","High Court Chancery","London","Courts"
+1030,"Immigration and Asylum First Tier","First Tier Tribunal","First Tier Tribunal","Tribunals"
