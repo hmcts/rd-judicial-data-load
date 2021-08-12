@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.camel.util;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +57,7 @@ class JrdExecutorTest {
     @BeforeEach
     public void init() {
         setField(jrdExecutorSpy, "judicialAuditServiceImpl", auditService);
+        setField(jrdExecutorSpy, "emailService", emailService);
         camelContext.getGlobalOptions().put(ERROR_MESSAGE, ERROR_MESSAGE);
         List<String> archivalFileNames = new ArrayList<>();
         archivalFileNames.add("test");
@@ -70,6 +72,10 @@ class JrdExecutorTest {
 
         doNothing().when(producerTemplate).sendBody(any());
         doNothing().when(auditService).auditSchedulerStatus(camelContext);
+        dataLoadUtilMock.when(() -> DataLoadUtil.getFileDetails(any(), anyString())).thenReturn(FileStatus.builder()
+                .auditStatus(SUCCESS)
+                .fileName("Test.csv")
+                .build());
         assertEquals(SUCCESS, jrdExecutorSpy.execute(camelContext, "test", "test"));
         verify(jrdExecutorSpy, times(1))
             .execute(camelContext, "test", "test");
@@ -106,5 +112,10 @@ class JrdExecutorTest {
         verify(auditService, times(1))
                 .auditSchedulerStatus(camelContext);
         verify(emailService, times(1)).sendEmail(any(Email.class));
+    }
+
+    @AfterEach
+    void tearDown() {
+        dataLoadUtilMock.close();
     }
 }
