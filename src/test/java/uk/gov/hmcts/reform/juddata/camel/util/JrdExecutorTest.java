@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -112,6 +112,35 @@ class JrdExecutorTest {
         verify(auditService, times(1))
                 .auditSchedulerStatus(camelContext);
         verify(emailService, times(1)).sendEmail(any(Email.class));
+    }
+
+    @Test
+    void testExecute_WhenFileFailures_EmailNotEnabled() {
+        EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
+        mailTypeConfig.setEnabled(false);
+        mailTypeConfig.setSubject("%s :: Publishing of JRD messages to ASB failed");
+        mailTypeConfig.setBody("Publishing of JRD messages to ASB failed for Job Id %s");
+        mailTypeConfig.setFrom("test@test.com");
+        mailTypeConfig.setTo(List.of("test@test.com"));
+        EmailConfiguration emailConfiguration = new EmailConfiguration();
+        emailConfiguration.setMailTypes(Map.of("report", mailTypeConfig));
+        camelContext.getGlobalOptions().put(IS_PARENT, String.valueOf(TRUE));
+        setField(jrdExecutorSpy, "dataLoadUtil", dataLoadUtil);
+        setField(jrdExecutorSpy, "producerTemplate", producerTemplate);
+        setField(jrdExecutorSpy, "emailConfiguration", emailConfiguration);
+
+        doNothing().when(producerTemplate).sendBody(any());
+        doNothing().when(auditService).auditSchedulerStatus(camelContext);
+        dataLoadUtilMock.when(() -> DataLoadUtil.getFileDetails(any(), anyString())).thenReturn(FileStatus.builder()
+                .auditStatus(FAILURE)
+                .fileName("Test.csv")
+                .build());
+        assertEquals(SUCCESS, jrdExecutorSpy.execute(camelContext, "test", "test"));
+        verify(jrdExecutorSpy, times(1))
+                .execute(camelContext, "test", "test");
+        verify(auditService, times(1))
+                .auditSchedulerStatus(camelContext);
+        verify(emailService, times(0)).sendEmail(any(Email.class));
     }
 
     @AfterEach
