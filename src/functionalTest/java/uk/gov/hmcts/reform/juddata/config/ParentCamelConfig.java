@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
@@ -53,8 +52,8 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
-import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
+import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 
 import javax.sql.DataSource;
 
@@ -343,7 +342,7 @@ public class ParentCamelConfig {
 
     @Bean
     LDClient ldClient() {
-        return new LDClient(getenv("RD_LD_SDK_KEY"));
+        return new LDClient("sdk-b1310c4a-e522-4512-9e68-d75d23b04c5d");
     }
 
     @Bean
@@ -364,11 +363,6 @@ public class ParentCamelConfig {
     @Bean
     TokenConfigProperties tokenConfigProperties() {
         return new TokenConfigProperties();
-    }
-
-    @Bean
-    RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 
     @Bean
