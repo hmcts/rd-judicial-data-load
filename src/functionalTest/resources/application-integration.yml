@@ -183,7 +183,7 @@ sendgrid:
 email:
   mailTypes:
     asb:
-      enabled: true
+      enabled: false
       from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
       to:
         - viswajit.kuna@hmcts.net
@@ -193,10 +193,13 @@ email:
       subject: "%s :: Publishing of JRD messages to ASB failed"
       body: "Publishing of JRD messages to ASB failed for Job Id %s"
     report:
-      enabled: true
+      enabled: false
       from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
       to:
-        - DLRefDataSupport@hmcts.net
+        - viswajit.kuna@hmcts.net
+        - sourav.roy@hmcts.net
+        - shreedhar.lomte@hmcts.net
+        - bharatkumar.patel@hmcts.net
       subject: "%s :: JRD - Execution Failed"
       body: "Execution Failed for files - %s"
 
