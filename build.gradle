@@ -245,7 +245,9 @@ dependencies {
     }
     implementation (group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0')
 
-    implementation('org.springframework.boot:spring-boot-starter-web')
+    testImplementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
 
     implementation "io.github.openfeign:feign-httpclient:11.0"
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
@@ -257,10 +259,10 @@ dependencies {
 
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
-
-    implementation 'com.github.hmcts:data-ingestion-lib:0.4.5.2'
+    implementation ('com.github.hmcts:data-ingestion-lib:0.4.5.2') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
+    }
 
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
