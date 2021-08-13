@@ -19,7 +19,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
-import uk.gov.hmcts.reform.juddata.email.config.EmailConfiguration;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;

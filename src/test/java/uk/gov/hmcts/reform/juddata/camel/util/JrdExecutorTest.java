@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
-import uk.gov.hmcts.reform.juddata.email.config.EmailConfiguration;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;

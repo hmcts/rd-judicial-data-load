@@ -54,7 +54,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
-import uk.gov.hmcts.reform.juddata.email.config.EmailConfiguration;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import javax.sql.DataSource;
 

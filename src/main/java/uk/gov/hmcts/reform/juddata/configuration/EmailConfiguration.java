@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.juddata.email.config;
+package uk.gov.hmcts.reform.juddata.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
