@@ -260,7 +260,7 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
 
 
-    implementation 'com.github.hmcts:data-ingestion-lib:0.4.5.2'
+    implementation 'com.github.hmcts:data-ingestion-lib:0.5.0.0'
 
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
