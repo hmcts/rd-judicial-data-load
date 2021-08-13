@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.email.config;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.juddata.email.config.EmailConfiguration;
 
