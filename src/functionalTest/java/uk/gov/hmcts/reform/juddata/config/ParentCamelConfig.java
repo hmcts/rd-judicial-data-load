@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
@@ -54,7 +53,6 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
-import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import javax.sql.DataSource;
 
@@ -367,15 +365,8 @@ public class ParentCamelConfig {
     }
 
     @Bean
-    RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
     EmailConfiguration emailConfiguration() {
         return new EmailConfiguration();
     }
 
-    // miscellaneous configuration ends
-    // miscellaneous configuration ends
 }
