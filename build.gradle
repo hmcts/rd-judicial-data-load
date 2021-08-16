@@ -260,7 +260,7 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.1') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.2') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
