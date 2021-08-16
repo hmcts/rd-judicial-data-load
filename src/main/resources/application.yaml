@@ -56,7 +56,7 @@ spring:
 email:
   mailTypes:
     asb:
-      enabled: false
+      enabled: true
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
