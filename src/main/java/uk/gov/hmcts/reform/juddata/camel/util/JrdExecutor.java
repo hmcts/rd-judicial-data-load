@@ -56,9 +56,11 @@ public class JrdExecutor extends RouteExecutor {
                 //runs Job Auditing
                 judicialAuditServiceImpl.auditSchedulerStatus(camelContext);
             }
-            List<FileStatus> fileStatuses = archivalFileNames.stream().map(s -> getFileDetails(camelContext, s))
+            List<String> fileStatuses = archivalFileNames.stream()
+                .map(s -> getFileDetails(camelContext, s))
                 .filter(fileStatus -> nonNull(fileStatus.getAuditStatus())
                     && fileStatus.getAuditStatus().equalsIgnoreCase(FAILURE))
+                .map(FileStatus::getFileName)
                 .collect(Collectors.toList());
             if (isNotTrue(isEmpty(fileStatuses))) {
                 EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get("report");
