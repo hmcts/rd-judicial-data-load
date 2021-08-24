@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.juddata.config;
 
-import com.azure.core.amqp.AmqpRetryOptions;
-import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import com.launchdarkly.sdk.server.LDClient;
 import org.apache.camel.CamelContext;
@@ -57,7 +55,6 @@ import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 import javax.sql.DataSource;
 
 import static java.lang.System.getenv;
-import static java.util.Objects.nonNull;
 import static org.mockito.Mockito.mock;
 
 
