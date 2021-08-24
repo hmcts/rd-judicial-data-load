@@ -319,23 +319,11 @@ public class ParentCamelConfig {
 
     @Bean
     TopicPublisher topicPublisher() {
-        if (nonNull(environment) && environment.startsWith("preview")) {
-            return new TopicPublisher();
-        }
         return mock(TopicPublisher.class);
     }
 
     @Bean
     public ServiceBusSenderClient getServiceBusSenderClient() {
-        if (nonNull(environment) && environment.startsWith("preview")) {
-            return new ServiceBusClientBuilder()
-                .connectionString(accessConnectionString)
-                .retryOptions(new AmqpRetryOptions())
-                .sender()
-                .topicName(topic)
-                .buildClient();
-        }
-
         return mock(ServiceBusSenderClient.class);
     }
 
