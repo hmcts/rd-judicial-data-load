@@ -172,7 +172,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        validateDbRecordCountFor(jdbcTemplate, epimmsIdSql, 1);
+        validateDbRecordCountFor(jdbcTemplate, epimmsIdSql, 2);
 
         final List<Object> epimmsId = retrieveColumnValues(jdbcTemplate, epimmsIdSql, "epimms_id");
         assertTrue(epimmsId.contains("20262"));
