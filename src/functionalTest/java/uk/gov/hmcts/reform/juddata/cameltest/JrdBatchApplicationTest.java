@@ -172,9 +172,25 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        validateDbRecordCountFor(jdbcTemplate, epimmsIdSql, 1);
+        validateDbRecordCountFor(jdbcTemplate, epimmsIdSql, 2);
 
         final List<Object> epimmsId = retrieveColumnValues(jdbcTemplate, epimmsIdSql, "epimms_id");
         assertTrue(epimmsId.contains("20262"));
+    }
+
+
+    @Test
+    void testServiceCodeMappingInJudicialOfficeAppointmentTable() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        validateDbRecordCountFor(jdbcTemplate, judicialOfficeAppointmentServiceCodeSql, 1);
+
+        final List<Object> serviceCodes = retrieveColumnValues(jdbcTemplate, judicialOfficeAppointmentServiceCodeSql,
+                "service_code");
+        assertTrue(serviceCodes.contains("BFA1"));
     }
 }

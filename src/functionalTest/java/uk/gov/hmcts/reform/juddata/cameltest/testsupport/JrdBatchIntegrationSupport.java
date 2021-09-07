@@ -67,6 +67,9 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${service-code-sql}")
     protected String serviceCodeSql;
 
+    @Value("${judicial-office-appointment-service-code-sql}")
+    protected String judicialOfficeAppointmentServiceCodeSql;
+
     @Value("${epimms-id-sql}")
     protected String epimmsIdSql;
 

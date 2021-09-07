@@ -3,13 +3,13 @@ appVersion: "0.1"
 description:  Data load from Judicial HR systems
 name: rd-judicial-data-load
 home: https://github.com/hmcts/rd-judicial-data-load
-version: 0.3.2
+version: 0.3.3
 
 maintainers:
   - name: Reference Data Team
 dependencies:
   - name: job
-    version: ~0.7.1
+    version: ~0.7.3
     repository: https://hmctspublic.azurecr.io/helm/v1/repo/
   - name: postgresql
     version: ~8.9.8
