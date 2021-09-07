@@ -1,3 +1,7 @@
 per_id,Personal_Code,Appointment,Known_As,Surname,Full_Name,Post_Nominals,Appointment_Type_Id,Work_Pattern,Ejudiciary_Email,Joining_Date,Last_Working_Date,Active_Flag,Extracted_Date,Object_Id
 1,Emp1,CRTS TRIB - RS Admin User,Joe,Bloggs,Joe Bloggs,Baroness,1,No Work Pattern (M to F),joe.bloggs@ejudiciary.net,2008-07-18 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,578256875287452
 2,Emp1,Circuit Judge,Joe,Bloggs,Joe Bloggs,His Honour Judge,5,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,
+3,Emp1,Senior Coroner,Joe,Bloggs,Joe Bloggs,His Honour Judge,5,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,
+4,Emp1,Assistant Coroner,Joe,Bloggs,Joe Bloggs,His Honour Judge,5,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,
+5,Emp1,Area Coroner,Joe,Bloggs,Joe Bloggs,His Honour Judge,5,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,
+6,Emp1,Acting Senior Coroner,Joe,Bloggs,Joe Bloggs,His Honour Judge,5,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,
