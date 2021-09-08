@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 import uk.gov.hmcts.reform.juddata.validators.Appointment;
 
@@ -20,7 +21,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TI
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 @Component
-public class JudicialUserProfile implements Serializable {
+public class JudicialUserProfile extends CommonCsvField implements Serializable {
 
     @DataField(pos = 1, columnName = "per_id")
     @NotEmpty

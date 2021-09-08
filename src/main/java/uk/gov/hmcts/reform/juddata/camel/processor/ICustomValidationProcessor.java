@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.ApplicationContext;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
@@ -19,7 +20,6 @@ import java.util.function.Predicate;
 
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.camel.util.ObjectHelper.isNotEmpty;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
@@ -41,7 +41,7 @@ public interface ICustomValidationProcessor<T> {
                                                  JsrValidatorInitializer<T> jsrValidatorInitializer,
                                                  Exchange exchange, String logComponentName) {
         Type mySuperclass = getType();
-        List<String> invalidPerIds = new ArrayList<>();
+        List<Pair<String, Long>> invalidPerIds = new ArrayList<>();
         if (nonNull(invalidJudicialUserProfileRecords)) {
 
             invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
@@ -59,7 +59,7 @@ public interface ICustomValidationProcessor<T> {
                             .equalsIgnoreCase(invalidRecords.getPerId()));
                 }
                 if (filteredRecord) {
-                    invalidPerIds.add(invalidRecords.getPerId());
+                    invalidPerIds.add(Pair.of(invalidRecords.getPerId(), invalidRecords.getRowId()));
                 }
             });
 
@@ -69,7 +69,10 @@ public interface ICustomValidationProcessor<T> {
                 LogHolder.log.info("{}:: Skipped invalid user profile per in {} {} & total skipped count {}",
                     logComponentName,
                     mySuperclass.getTypeName(),
-                    invalidPerIds.stream().collect(joining(",")),
+                    invalidPerIds
+                            .stream()
+                            .map(Pair::getLeft)
+                            .collect(joining(",")),
                     invalidPerIds.size());
             }
         }
@@ -88,15 +91,21 @@ public interface ICustomValidationProcessor<T> {
         if (isNotEmpty(missingForeignKeyRecords)) {
             if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                 .class.getCanonicalName())) {
+                List<Pair<String, Long>> pair = new ArrayList<>();
+                missingForeignKeyRecords.stream()
+                        .map(i -> ((JudicialOfficeAppointment) i))
+                        .forEach(j -> pair.add(Pair.of(j.getPerId(), j.getRowId())));
                 //Auditing foreign key skipped rows of user profile for Appointment
-                jsrValidatorInitializer.auditJsrExceptions(missingForeignKeyRecords.stream()
-                        .map(s -> ((JudicialOfficeAppointment) s).getPerId()).collect(toList()),
+                jsrValidatorInitializer.auditJsrExceptions(pair,
                     fieldInError, errorMessage, exchange);
             } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                 .class.getCanonicalName())) {
+                List<Pair<String, Long>> pair = new ArrayList<>();
+                missingForeignKeyRecords.stream()
+                        .map(i -> ((JudicialOfficeAuthorisation) i))
+                        .forEach(j -> pair.add(Pair.of(j.getPerId(), j.getRowId())));
                 //Auditing foreign key skipped rows of user profile for Authorization
-                jsrValidatorInitializer.auditJsrExceptions(missingForeignKeyRecords.stream()
-                        .map(s -> ((JudicialOfficeAuthorisation) s).getPerId()).collect(toList()),
+                jsrValidatorInitializer.auditJsrExceptions(pair,
                     fieldInError, errorMessage, exchange);
             }
         }
