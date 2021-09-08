@@ -10,9 +10,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,9 +41,6 @@ class JrdExecutorTest {
     public void init() {
         setField(jrdExecutorSpy, "judicialAuditServiceImpl", auditService);
         camelContext.getGlobalOptions().put(ERROR_MESSAGE, ERROR_MESSAGE);
-        List<String> archivalFileNames = new ArrayList<>();
-        archivalFileNames.add("test");
-        setField(jrdExecutorSpy, "archivalFileNames", archivalFileNames);
     }
 
     @Test

@@ -33,11 +33,13 @@ import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
@@ -48,6 +50,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.ORCHEST
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithAuthPerIdMissing;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithAuthorisationInvalidHeader;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithEmptyPerIdInAuth;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithPerIdInvalidInParent;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithPerIdMissing;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithForeignKeyViolations;
@@ -288,6 +291,25 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         List<Map<String, Object>> auditList = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         assertEquals(3, auditList.size()); //Personal, Locations, base-locations only
+    }
+
+    @Test
+    void testRowIdInExceptionTable() throws Exception {
+
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithEmptyPerIdInAuth);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+
+        jobLauncherTestUtils.launchJob();
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery,2 , false);
+        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
+
+        List<Long> row_id = exceptionList.stream()
+                .map(i -> i.get("row_id"))
+                .map(j -> (Long) j)
+                .collect(Collectors.toList());
+
+        assertTrue(row_id.containsAll(List.of(2L, 4L)));
+
     }
 
 }

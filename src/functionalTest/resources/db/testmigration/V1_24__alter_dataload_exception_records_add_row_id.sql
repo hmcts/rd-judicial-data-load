@@ -1,0 +1,1 @@
+ALTER TABLE dataload_exception_records ADD COLUMN row_id bigint;
