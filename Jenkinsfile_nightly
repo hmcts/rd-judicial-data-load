@@ -58,7 +58,7 @@ withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     enableMutationTest()
     enableSecurityScan()
-
+    enableFortifyScan()
 
     after('securityScan') {
         def sleepTime = (env.BRANCH_NAME.startsWith("PR")) ? '210s' : '120s'
@@ -93,6 +93,10 @@ withNightlyPipeline(type, product, component) {
                     reportName           : "JRD Functional Test Report"
             ]
         }
+    }
+
+    after('fortify-scan') {
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
 
 }
