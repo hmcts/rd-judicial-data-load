@@ -193,4 +193,33 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
                 "service_code");
         assertTrue(serviceCodes.contains("BFA1"));
     }
+
+    @Test
+    void testObjectIdMappingInJudicialOfficeAuthorisationTable() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        validateDbRecordCountFor(jdbcTemplate, authorizationSql, 8);
+
+        final List<Object> objectIds = retrieveColumnValues(jdbcTemplate, authorizationSql, "object_id");
+        assertTrue(objectIds.contains("578256875287452"));
+    }
+
+    @Test
+    void testObjectIdMappingInJudicialOfficeAppointmentTable() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        validateDbRecordCountFor(jdbcTemplate, appointmentSql, 2);
+
+        final List<Object> objectIds = retrieveColumnValues(jdbcTemplate, appointmentSql, "object_id");
+        assertTrue(objectIds.contains("578256875287452"));
+    }
+
 }
