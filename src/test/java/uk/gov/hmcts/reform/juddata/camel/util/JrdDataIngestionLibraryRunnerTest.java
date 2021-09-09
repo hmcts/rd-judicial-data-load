@@ -15,8 +15,11 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +67,8 @@ class JrdDataIngestionLibraryRunnerTest {
 
     JrdSidamTokenService jrdSidamTokenService = mock(JrdSidamTokenServiceImpl.class);
 
+    EmailServiceImpl emailService = mock(EmailServiceImpl.class);
+
     @BeforeEach
     public void beforeTest() {
         Map<String, String> options = new HashMap<>();
@@ -77,7 +82,7 @@ class JrdDataIngestionLibraryRunnerTest {
 
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
             .thenReturn(Pair.of("1", IN_PROGRESS.getStatus()));
-        when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(Integer.valueOf(0));
+        when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(0);
 
         jrdDataIngestionLibraryRunner.logComponentName = "loggingComponent";
         when(camelContext.getGlobalOptions()).thenReturn(options);
@@ -137,9 +142,38 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     void testRunException() {
         doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList(), anyString());
+        EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
+        mailTypeConfig.setEnabled(true);
+        mailTypeConfig.setSubject("%s :: Publishing of JRD messages to ASB failed");
+        mailTypeConfig.setBody("Publishing of JRD messages to ASB failed for Job Id %s");
+        mailTypeConfig.setFrom("test@test.com");
+        mailTypeConfig.setTo(List.of("test@test.com"));
+        EmailConfiguration emailConfiguration = new EmailConfiguration();
+        emailConfiguration.setMailTypes(Map.of("asb", mailTypeConfig));
+        jrdDataIngestionLibraryRunner.emailConfiguration = emailConfiguration;
         assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
         verify(topicPublisher, times(1)).sendMessage(any(), anyString());
         verify(jdbcTemplate, times(2)).update(anyString(), any(), anyInt());
+        verify(emailService, times(1)).sendEmail(any(Email.class));
+    }
+
+    @SneakyThrows
+    @Test
+    void testRunException_WhenEmailNotEnabled() {
+        doThrow(new RuntimeException("Some Exception")).when(topicPublisher).sendMessage(anyList(), anyString());
+        EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
+        mailTypeConfig.setEnabled(false);
+        mailTypeConfig.setSubject("%s :: Publishing of JRD messages to ASB failed");
+        mailTypeConfig.setBody("Publishing of JRD messages to ASB failed for Job Id %s");
+        mailTypeConfig.setFrom("test@test.com");
+        mailTypeConfig.setTo(List.of("test@test.com"));
+        EmailConfiguration emailConfiguration = new EmailConfiguration();
+        emailConfiguration.setMailTypes(Map.of("asb", mailTypeConfig));
+        jrdDataIngestionLibraryRunner.emailConfiguration = emailConfiguration;
+        assertThrows(Exception.class, () -> jrdDataIngestionLibraryRunner.run(job, jobParameters));
+        verify(topicPublisher, times(1)).sendMessage(any(), anyString());
+        verify(jdbcTemplate, times(2)).update(anyString(), any(), anyInt());
+        verify(emailService, times(0)).sendEmail(any(Email.class));
     }
 
     @SneakyThrows
@@ -156,7 +190,7 @@ class JrdDataIngestionLibraryRunnerTest {
     @SneakyThrows
     @Test
     void testRunFailedFiles() {
-        when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(Integer.valueOf(1));
+        when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(1);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
     }

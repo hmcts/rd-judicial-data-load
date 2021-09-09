@@ -12,8 +12,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -71,6 +74,12 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
 
     @Value("${update-job-sql}")
     String updateJobStatus;
+
+    @Autowired
+    IEmailService emailService;
+
+    @Autowired
+    EmailConfiguration emailConfiguration;
 
     public JrdDataIngestionLibraryRunner() {
         super();
@@ -171,9 +180,21 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 updateAsbStatus(jobId, SUCCESS.getStatus());
             }
         } catch (Exception ex) {
-            log.error("{}:: Publishing/Retrying JRD messages in ASB failed for Job Id", logComponentName, jobId);
+            log.error("ASB Failure Root cause - {}", ex.getMessage());
+            EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get("asb");
+            final String logMessage = String.format(mailTypeConfig.getSubject(), jobId);
+            log.error("{}:: {}", logComponentName, logMessage);
             camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FAILED.getStatus());
             updateAsbStatus(jobId, FAILED.getStatus());
+            if (mailTypeConfig.isEnabled()) {
+                Email email = Email.builder()
+                        .from(mailTypeConfig.getFrom())
+                        .to(mailTypeConfig.getTo())
+                        .messageBody(String.format(mailTypeConfig.getBody(), jobId))
+                        .subject(String.format(mailTypeConfig.getSubject(), environment))
+                        .build();
+                emailService.sendEmail(email);
+            }
             throw ex;
         }
     }
