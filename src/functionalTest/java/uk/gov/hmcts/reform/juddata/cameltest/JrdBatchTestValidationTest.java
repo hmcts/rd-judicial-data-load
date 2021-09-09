@@ -285,7 +285,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 7, false);
     }
 
     @Test
