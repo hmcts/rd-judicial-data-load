@@ -44,4 +44,7 @@ public class JudicialOfficeAuthorisation implements Serializable {
 
     @DataField(pos = 7, columnName = "personal_code")
     String personalCode;
+
+    @DataField(pos = 8, columnName = "object_id")
+    String objectId;
 }

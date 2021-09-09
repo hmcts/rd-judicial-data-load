@@ -82,6 +82,7 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setActiveFlag(true);
         judicialOfficeAppointmentMock.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAppointmentMock.setExtractedDate(getDateTimeWithFormat(dateTime));
+        judicialOfficeAppointmentMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         return judicialOfficeAppointmentMock;
     }
 
@@ -95,6 +96,7 @@ public class JrdTestSupport {
         judicialOfficeAuthorisation.setLowerLevel("lowerLevel");
         judicialOfficeAuthorisation.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAuthorisation.setTicketId(12345L);
+        judicialOfficeAuthorisation.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         return judicialOfficeAuthorisation;
     }
 

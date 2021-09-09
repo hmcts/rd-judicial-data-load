@@ -40,6 +40,7 @@ class JudicialOfficeAppointmentRowMapperTest {
         assertThat(response.get("created_date")).isNotNull();
         assertThat(response.get("last_loaded_date")).isNotNull();
         assertEquals("111", response.get("personal_code"));
+        assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", response.get("object_id"));
     }
 
     @Test

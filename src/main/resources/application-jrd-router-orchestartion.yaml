@@ -30,9 +30,9 @@ route:
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code)
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id)
       values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code)?batch=true&dataSource=dataSource
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id)?batch=true&dataSource=dataSource
     update-sql:
       sql:UPDATE judicial_office_appointment appt SET epimms_id=jlm.epimms_id,service_code=jlm.service_code FROM (select judicial_base_location_id,base_location_name,epimms_id,service_code from judicial_location_mapping) AS jlm where jlm.judicial_base_location_id = appt.base_location_id?dataSource=dataSource
     blob-path:
@@ -50,8 +50,8 @@ route:
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code)
-      values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code)?batch=true&dataSource=dataSource
+      sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id)
+      values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code, :#object_id)?batch=true&dataSource=dataSource
     update-sql:
       sql:UPDATE judicial_office_authorisation auth SET service_code=jsm.service_code FROM (select service_code,jurisdiction,lower_level from judicial_service_code_mapping) AS jsm where jsm.jurisdiction = auth.jurisdiction and jsm.lower_level = auth.lower_level?dataSource=dataSource
     blob-path:
@@ -59,7 +59,6 @@ route:
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
-
 
 
 
