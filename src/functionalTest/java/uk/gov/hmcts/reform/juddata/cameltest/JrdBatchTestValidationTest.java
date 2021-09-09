@@ -308,7 +308,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
                 .map(j -> (Long) j)
                 .collect(Collectors.toList());
 
-        assertTrue(row_id.containsAll(List.of(2L, 4L)));
+        assertTrue(row_id.containsAll(List.of(3L, 5L)));
 
     }
 
