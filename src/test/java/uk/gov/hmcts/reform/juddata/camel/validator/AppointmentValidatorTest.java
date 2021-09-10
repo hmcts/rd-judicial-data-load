@@ -24,5 +24,8 @@ class AppointmentValidatorTest {
         assertThat(appointmentValidator.isValid("MAGS - AC Admin User", null), is(false));
         assertThat(appointmentValidator.isValid("Person on a List", null), is(false));
         assertThat(appointmentValidator.isValid("Unknown", null), is(false));
+        assertThat(appointmentValidator.isValid("Area Coroner", null), is(false));
+        assertThat(appointmentValidator.isValid("Senior Coroner", null), is(false));
+        assertThat(appointmentValidator.isValid("Initial Automated Record", null), is(false));
     }
 }
