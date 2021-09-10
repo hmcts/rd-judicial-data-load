@@ -311,15 +311,15 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery,2 , false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 2, false);
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
 
-        List<Long> row_id = exceptionList.stream()
+        List<Long> rowId = exceptionList.stream()
                 .map(i -> i.get("row_id"))
                 .map(j -> (Long) j)
                 .collect(Collectors.toList());
 
-        assertTrue(row_id.containsAll(List.of(3L, 5L)));
+        assertTrue(rowId.containsAll(List.of(3L, 5L)));
 
     }
 
