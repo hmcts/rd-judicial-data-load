@@ -6,12 +6,13 @@ import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 
 @Component
 @Setter
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
-public class JudicialRegionType {
+public class JudicialRegionType extends CommonCsvField {
 
     @DataField(pos = 1, columnName = "region_id")
     @NotEmpty

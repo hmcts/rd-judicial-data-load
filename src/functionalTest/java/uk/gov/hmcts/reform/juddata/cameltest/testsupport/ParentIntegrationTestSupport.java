@@ -87,6 +87,10 @@ public interface ParentIntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"
     };
 
+    String[] fileWithEmptyPerIdInAuth = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation_per_empty.csv"};
+
     static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
                             boolean isParent, String... files) throws Exception {
         int i = isParent ? 0 : 3;
@@ -120,6 +124,7 @@ public interface ParentIntegrationTestSupport {
             assertNotNull(exception.get("error_description"));
             assertNotNull(exception.get("updated_timestamp"));
             if (isPartialSuccessValidation) {
+                assertNotNull(exception.get("row_id"));
                 assertNotNull(exception.get("table_name"));
                 assertNotNull(exception.get("key"));
                 assertNotNull(exception.get("field_in_error"));
