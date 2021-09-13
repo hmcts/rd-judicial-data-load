@@ -45,4 +45,7 @@ public class JudicialOfficeAuthorisation extends CommonCsvField implements Seria
 
     @DataField(pos = 7, columnName = "personal_code")
     String personalCode;
+
+    @DataField(pos = 8, columnName = "object_id")
+    String objectId;
 }

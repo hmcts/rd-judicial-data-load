@@ -63,9 +63,9 @@ route:
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code)
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id)
       values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code)?dataSource=dataSource&batch=true
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id)?dataSource=dataSource&batch=true
     blob-path: ${child.file.path}
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper
@@ -80,8 +80,8 @@ route:
     truncate-sql:
       sql:truncate table judicial_office_authorisation restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code)
-      values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code)?batch=true&dataSource=dataSource
+      sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id)
+      values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code, :#object_id)?batch=true&dataSource=dataSource
     blob-path: ${child1.file.path}
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
@@ -165,4 +165,3 @@ sendgrid:
   key: ${SENDGRID_API_KEY:AAAAAAAAAA}
   mail:
     from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
-

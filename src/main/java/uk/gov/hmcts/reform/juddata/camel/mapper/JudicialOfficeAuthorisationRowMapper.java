@@ -27,6 +27,7 @@ public class JudicialOfficeAuthorisationRowMapper {
         judOfficeAuthorizationRow.put("end_date", getDateTimeStamp(judicialOfficeAuthorisation.getEndDate()));
         judOfficeAuthorizationRow.put("lower_level", judicialOfficeAuthorisation.getLowerLevel());
         judOfficeAuthorizationRow.put("personal_code", judicialOfficeAuthorisation.getPersonalCode());
+        judOfficeAuthorizationRow.put("object_id", judicialOfficeAuthorisation.getObjectId());
         return  judOfficeAuthorizationRow;
     }
 

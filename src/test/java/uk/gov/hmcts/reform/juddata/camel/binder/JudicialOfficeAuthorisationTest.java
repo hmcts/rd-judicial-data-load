@@ -18,5 +18,6 @@ class JudicialOfficeAuthorisationTest {
         assertEquals(Long.valueOf("12345"), judicialOfficeAuthorisation.getTicketId());
         assertEquals("lowerLevel", judicialOfficeAuthorisation.getLowerLevel());
         assertEquals("111", judicialOfficeAuthorisation.getPersonalCode());
+        assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialOfficeAuthorisation.getObjectId());
     }
 }
