@@ -40,11 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.StringContains.containsString;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
@@ -200,8 +199,9 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
         //Jsr exception exceeds threshold limit in
 
-        assertThat(exceptionList.get(exceptionList.size() - 2).get("error_description").toString(),
-            containsString("Jsr exception exceeds threshold limit"));
+        String errorDescription = exceptionList.get(exceptionList.size() - 2).get("error_description").toString();
+
+        assertTrue(errorDescription.contains("Jsr exception exceeds threshold limit"));
     }
 
     @Test
@@ -315,11 +315,12 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
 
         List<Long> rowId = exceptionList.stream()
-                .map(i -> i.get("row_id"))
-                .map(j -> (Long) j)
+                .map(i -> (Long) i.get("row_id"))
                 .collect(Collectors.toList());
 
-        assertTrue(rowId.containsAll(List.of(3L, 5L)));
+        assertThat(rowId)
+                .hasSize(2)
+                .hasSameElementsAs(List.of(3L, 5L));
 
     }
 
