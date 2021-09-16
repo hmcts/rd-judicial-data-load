@@ -17,15 +17,24 @@ job:
       secrets:
         - judicial-api-POSTGRES-PASS
         - ApplicationInsightsInstrumentationKey
-        - ACCOUNT-NAME
-        - ACCOUNT-KEY
-        - CONTAINER-NAME
-        - judicial-topic-primary-connection-string
-        - LD-SDK-KEY
-        - OAUTH2-CLIENT-SECRET
-        - OAUTH2-AUTH
-        - OAUTH2-CLIENT-AUTH
-        - rd-sendgrid-api-key
+        - name: ACCOUNT-NAME
+          alias: ACCOUNT_NAME
+        - name: ACCOUNT-KEY
+          alias: ACCOUNT_KEY
+        - name: CONTAINER-NAME
+          alias: CONTAINER_NAME
+        - name: judicial-topic-primary-connection-string
+          alias: JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING
+        - name: LD-SDK-KEY
+          alias: LD_SDK_KEY
+        - name: OAUTH2-CLIENT-SECRET
+          alias: OAUTH2_CLIENT_SECRET
+        - name: OAUTH2-AUTH
+          alias: OAUTH2_AUTH
+        - name: OAUTH2-CLIENT-AUTH
+          alias: OAUTH2_CLIENT_AUTH
+        - name: rd-sendgrid-api-key
+          alias: RD_SENDGRID_API_KEY
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic

@@ -170,7 +170,7 @@ public abstract class JrdBatchIntegrationSupport {
             System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_NAME"));
             //serviceBusSecretString
             System.setProperty("JRD_ASB_CONNECTION_KEY_STR", System.getenv("serviceBusSecretString"));
-            System.setProperty("RD_LD_SDK_KEY", System.getenv("RD_LD_SDK_KEY"));
+            System.setProperty("LD_SDK_KEY", System.getenv("LD_SDK_KEY"));
         } else {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));

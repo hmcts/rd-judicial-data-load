@@ -35,7 +35,7 @@ spring:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
     username: ${POSTGRES_USERNAME:dbjuddata}
-    password: ${POSTGRES_PASSWORD:dbjuddata}
+    password: ${POSTGRES_PASSWORD:}
     properties:
       charSet: UTF-8
     hikari:
@@ -60,7 +60,7 @@ sendgrid:
 
 launchdarkly:
   sdk:
-    key: ${RD_LD_SDK_KEY:}
+    key: ${LD_SDK_KEY:}
     environment: ${ENV_NAME:local}
     user: rd
 
@@ -74,6 +74,6 @@ idam:
     url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
     client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
     redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
-    authorization: ${OAUTH2_AUTH:AAAAAAAAAA}
-    client-authorization: ${OAUTH2_CLIENT_AUTH:AAAAAAAAAA}
+    authorization: ${OAUTH2_AUTH:}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:}
 

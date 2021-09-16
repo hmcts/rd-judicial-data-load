@@ -162,7 +162,7 @@ jrd:
 
 launchdarkly:
   sdk:
-    key: ${RD_LD_SDK_KEY:}
+    key: ${LD_SDK_KEY:}
     environment: ${ENV_NAME:local}
     user: rd
 
