@@ -35,7 +35,7 @@ spring:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
     username: ${POSTGRES_USERNAME:dbjuddata}
-    password: ${POSTGRES_PASSWORD:}
+    password: ${POSTGRES_PASSWORD:dbjuddata}
     properties:
       charSet: UTF-8
     hikari:
@@ -54,9 +54,9 @@ mail:
   enabled: false
 
 sendgrid:
-  key: ${SENDGRID_API_KEY}
+  key: ${RD_SENDGRID_API_KEY}
   mail:
-    from: ${MAIL_FROM}
+    from: ${MAIL_FROM:dummy}
 
 launchdarkly:
   sdk:
