@@ -10,7 +10,7 @@ spring:
         ACCOUNT-KEY: azure.storage.account-key
         CONTAINER-NAME: azure.storage.container-name
         judicial-topic-primary-connection-string: JRD_ASB_CONNECTION_KEY_STR
-        LD-SDK-KEY: RD_LD_SDK_KEY
+        LD-SDK-KEY: LD_SDK_KEY
         OAUTH2-CLIENT-SECRET: idam.api-redirect-uri
         OAUTH2-AUTH: idam.api.authorization
         OAUTH2-CLIENT-AUTH: idam.api.client-authorization

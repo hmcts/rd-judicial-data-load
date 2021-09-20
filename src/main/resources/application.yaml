@@ -54,13 +54,13 @@ mail:
   enabled: false
 
 sendgrid:
-  key: ${SENDGRID_API_KEY}
+  key: ${RD_SENDGRID_API_KEY}
   mail:
-    from: ${MAIL_FROM}
+    from: ${MAIL_FROM:dummy}
 
 launchdarkly:
   sdk:
-    key: ${RD_LD_SDK_KEY:}
+    key: ${LD_SDK_KEY:}
     environment: ${ENV_NAME:local}
     user: rd
 
@@ -74,6 +74,6 @@ idam:
     url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
     client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
     redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
-    authorization: ${OAUTH2_AUTH:AAAAAAAAAA}
-    client-authorization: ${OAUTH2_CLIENT_AUTH:AAAAAAAAAA}
+    authorization: ${OAUTH2_AUTH:}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:}
 
