@@ -112,6 +112,9 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${region-select-jrd-sql}")
     protected String regionSql;
 
+    @Value("${role-select-jrd-sql}")
+    protected String roleSql;
+
     @Value("${start-leaf-route}")
     protected String startLeafRoute;
 
