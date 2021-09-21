@@ -74,6 +74,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
     }
 
     @Test
@@ -92,6 +93,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
         validateDbRecordCountFor(jdbcTemplate, selectDataLoadSchedulerAudit, 5);
         List<Map<String, Object>> auditDetailsNextRun = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         final Timestamp timestampNextRun = (Timestamp) auditDetailsNextRun.get(0).get("scheduler_end_time");
@@ -147,6 +149,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
     }
 
     @Test
