@@ -144,4 +144,12 @@ public class JrdTestSupport {
         String tail = datTime.substring(datTime.lastIndexOf(".")).concat("000");
         return datTime.substring(0, datTime.lastIndexOf(".")) + tail;
     }
+
+    public static JudicialUserRoleType createJudicialUserRoleType() {
+        JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
+        judicialUserRoleType.setRoleDescCy("roleDescCy");
+        judicialUserRoleType.setRoleDescEn("roleDescEn");
+        judicialUserRoleType.setRoleId("roleId");
+        return judicialUserRoleType;
+    }
 }

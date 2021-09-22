@@ -34,6 +34,7 @@ import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.config.LeafConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 import uk.gov.hmcts.reform.juddata.configuration.FeignConfiguration;
 import uk.gov.hmcts.reform.juddata.support.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.support.LeafIntegrationSupport;
@@ -64,7 +65,7 @@ import static uk.gov.hmcts.reform.juddata.support.ParentIntegrationTestSupport.s
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {ParentConfig.class, LeafConfig.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class,
-    FeignConfiguration.class},
+    FeignConfiguration.class, EmailConfiguration.class},
     initializers = ConfigDataApplicationContextInitializer.class)
 @CamelSpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)

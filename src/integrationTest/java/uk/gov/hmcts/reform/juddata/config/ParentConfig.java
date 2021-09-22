@@ -377,4 +377,9 @@ public class ParentConfig {
         return new TokenConfigProperties();
     }
 
+    @Bean
+    CommonCsvFieldProcessor commonCsvFieldProcessor() {
+        return new CommonCsvFieldProcessor();
+    }
+
 }
