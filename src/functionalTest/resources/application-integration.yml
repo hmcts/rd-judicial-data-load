@@ -26,7 +26,7 @@ spring:
 start-route: direct:JRD
 archival-route: direct:JrdArchival
 archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
-archival-file-names: Personal-Test,Appointments-Test,Authorisations-Test,Locations-Test,BaseLocations-Test
+archival-file-names: Personal-Test,Appointments-Test,Authorisations-Test,Locations-Test,BaseLocations-Test,Roles-Test
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data

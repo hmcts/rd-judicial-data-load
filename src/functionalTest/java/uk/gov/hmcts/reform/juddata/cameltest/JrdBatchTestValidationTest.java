@@ -158,6 +158,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
     }
 
     @Test
@@ -232,6 +233,9 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
         assertEquals(4, exceptionList.size());
+        List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
+        validateLeafRoleJsr(judicialUserRoleType);
+
     }
 
     @Test
@@ -322,6 +326,43 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
                 .hasSize(2)
                 .hasSameElementsAs(List.of(3L, 5L));
 
+    }
+
+    @Test
+    void testLeafFailuresInvalidHeaderContractsRollback() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
+
+
+        jobLauncherTestUtils.launchJob();
+
+        List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
+        assertEquals(6, judicialUserRoleType.size());
+
+        List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
+        assertEquals(6, judicialBaseLocationType.size());
+
+        List<Map<String, Object>> judicialRegionType = jdbcTemplate.queryForList(regionSql);
+        assertEquals(6, judicialRegionType.size());
+
+        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
+        assertNotNull(exceptionList.get(0).get("table_name"));
+        assertNotNull(exceptionList.get(0).get("scheduler_start_time"));
+        assertNotNull(exceptionList.get(0).get("error_description"));
+        assertNotNull(exceptionList.get(0).get("updated_timestamp"));
+        assertEquals(1, exceptionList.size());
+    }
+
+    private void validateLeafRoleJsr(List<Map<String, Object>> judicialUserRoleType) {
+        assertEquals(4, judicialUserRoleType.size());
+        assertEquals("1", judicialUserRoleType.get(1).get("role_id"));
+        assertEquals("3", judicialUserRoleType.get(2).get("role_id"));
+        assertEquals("7", judicialUserRoleType.get(3).get("role_id"));
+
+        assertEquals("Magistrate", judicialUserRoleType.get(1).get("role_desc_en"));
+        assertEquals("Advisory Committee Member - Non Magistrate",
+                judicialUserRoleType.get(2).get("role_desc_en"));
+        assertEquals("MAGS - AC Admin User", judicialUserRoleType.get(3).get("role_desc_en"));
     }
 
 }
