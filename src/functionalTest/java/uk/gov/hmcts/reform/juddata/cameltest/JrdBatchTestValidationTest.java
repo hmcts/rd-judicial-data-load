@@ -150,6 +150,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthorisationInvalidHeader);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
+
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
 
         jrdExecutor.execute(camelContext, LEAF_ROUTE, startLeafRoute);
@@ -232,7 +234,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("error_description"));
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
-        assertEquals(4, exceptionList.size());
+        assertEquals(6, exceptionList.size());
         List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
         validateLeafRoleJsr(judicialUserRoleType);
 
@@ -305,7 +307,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         List<Map<String, Object>> auditList = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
-        assertEquals(3, auditList.size()); //Personal, Locations, base-locations only
+        assertEquals(4, auditList.size()); //Personal, Locations, base-locations,Roles only
     }
 
     @Test
@@ -326,31 +328,6 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
                 .hasSize(2)
                 .hasSameElementsAs(List.of(3L, 5L));
 
-    }
-
-    @Test
-    void testLeafFailuresInvalidHeaderContractsRollback() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
-
-
-        jobLauncherTestUtils.launchJob();
-
-        List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
-        assertEquals(6, judicialUserRoleType.size());
-
-        List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
-        assertEquals(6, judicialBaseLocationType.size());
-
-        List<Map<String, Object>> judicialRegionType = jdbcTemplate.queryForList(regionSql);
-        assertEquals(6, judicialRegionType.size());
-
-        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
-        assertNotNull(exceptionList.get(0).get("table_name"));
-        assertNotNull(exceptionList.get(0).get("scheduler_start_time"));
-        assertNotNull(exceptionList.get(0).get("error_description"));
-        assertNotNull(exceptionList.get(0).get("updated_timestamp"));
-        assertEquals(1, exceptionList.size());
     }
 
     private void validateLeafRoleJsr(List<Map<String, Object>> judicialUserRoleType) {

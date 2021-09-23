@@ -72,4 +72,10 @@ public class LeafConfig {
         return new JudicialRoleTypeRowMapper();
     }
 
+    @Bean
+    JsrValidatorInitializer<JudicialUserRoleType> judicialUserRoleTypeJsrValidatorInitializer() {
+        return new JsrValidatorInitializer<>();
+    }
+
+
 }

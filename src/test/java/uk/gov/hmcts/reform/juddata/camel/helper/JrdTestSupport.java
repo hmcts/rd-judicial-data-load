@@ -30,6 +30,10 @@ public class JrdTestSupport {
     public static final Map<String, String> regions = ImmutableMap.of("perid_1", "regionId_1",
         "perid_2", "regionId_2", "perid_3", "regionId_3");
 
+    public static final Map<String, String> roles = ImmutableMap.of("elinksid_1", "roleId_1",
+            "elinksid_2", "roleId_2", "elinksid_3", "roleId_3");
+
+
     public static final String PERSONAL_CODE = "111";
 
     private JrdTestSupport() {
