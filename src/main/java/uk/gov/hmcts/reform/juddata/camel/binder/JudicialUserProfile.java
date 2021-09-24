@@ -1,7 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
@@ -17,8 +20,11 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PA
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
-@Setter
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 @Component
 public class JudicialUserProfile extends CommonCsvField implements Serializable {
