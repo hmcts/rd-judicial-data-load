@@ -29,7 +29,7 @@ def secrets = [
         secret('ACCOUNT-KEY-PREVIEW', 'ACCOUNT_KEY_PREVIEW'),
         secret('ACCOUNT-NAME', 'ACCOUNT_NAME'),
         secret('ACCOUNT-KEY', 'ACCOUNT_KEY'),
-        secret('LD-SDK-KEY', 'RD_LD_SDK_KEY'),
+        secret('LD-SDK-KEY', 'LD_SDK_KEY'),
         secret('OAUTH2-AUTH', 'OAUTH2_AUTH'),
         secret('OAUTH2-CLIENT-AUTH', 'OAUTH2_CLIENT_AUTH')
     ]
