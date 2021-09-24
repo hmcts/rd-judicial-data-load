@@ -180,7 +180,7 @@ idam:
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
 
 sendgrid:
-  key: ${SENDGRID_API_KEY:AAAAAAAAAA}
+  key: ${SENDGRID_API_KEY:}
 
 email:
   mailTypes:
