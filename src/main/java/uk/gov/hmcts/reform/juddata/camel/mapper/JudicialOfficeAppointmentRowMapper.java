@@ -35,6 +35,9 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
         judOfficeAppointmentRow.put("personal_code", officeAppointment.getPersonalCode());
         judOfficeAppointmentRow.put("object_id", officeAppointment.getObjectId());
+        judOfficeAppointmentRow.put("appointment", officeAppointment.getAppointment());
+        judOfficeAppointmentRow.put("appointment_type", officeAppointment.getAppointmentType());
+        judOfficeAppointmentRow.put("role_id", officeAppointment.getRoleId());
         return  judOfficeAppointmentRow;
     }
 
