@@ -52,6 +52,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
@@ -374,6 +375,11 @@ public class ParentCamelConfig {
     @Bean
     EmailConfiguration emailConfiguration() {
         return new EmailConfiguration();
+    }
+
+    @Bean
+    JrdUserProfileUtil jrdUserProfileUtil() {
+        return new JrdUserProfileUtil();
     }
 
 }
