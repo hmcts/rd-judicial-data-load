@@ -61,20 +61,16 @@ class JrdUserProfileUtilTest {
         judicialUserProfiles.addAll(judicialUserProfilesInvalidObjectIds);
         judicialUserProfiles.addAll(judicialUserProfilesInvalidPersonalCodes);
 
-        jrdUserProfileFilter.filterRemoveAndAudit(judicialUserProfiles);
-        assertThat(judicialUserProfiles).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
-
-        //verify audit
+        List<JudicialUserProfile> resultList = jrdUserProfileFilter.removeInvalidRecords(judicialUserProfiles);
+        assertThat(resultList).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
     }
 
     @Test
     void test_filter_and_remove_when_all_valid_profiles() {
         judicialUserProfiles.addAll(judicialUserProfilesValidRecords);
 
-        jrdUserProfileFilter.filterRemoveAndAudit(judicialUserProfiles);
-        assertThat(judicialUserProfiles).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
-
-        //verify audit
+        List<JudicialUserProfile> resultList = jrdUserProfileFilter.removeInvalidRecords(judicialUserProfiles);
+        assertThat(resultList).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
     }
 
     @Test
@@ -82,10 +78,8 @@ class JrdUserProfileUtilTest {
         judicialUserProfiles.addAll(judicialUserProfilesInvalidObjectIds);
         judicialUserProfiles.addAll(judicialUserProfilesInvalidPersonalCodes);
 
-        jrdUserProfileFilter.filterRemoveAndAudit(judicialUserProfiles);
-        assertThat(judicialUserProfiles).isEmpty();
-
-        //verify audit
+        List<JudicialUserProfile> resultList = jrdUserProfileFilter.removeInvalidRecords(judicialUserProfiles);
+        assertThat(resultList).isEmpty();
     }
 
     @Test

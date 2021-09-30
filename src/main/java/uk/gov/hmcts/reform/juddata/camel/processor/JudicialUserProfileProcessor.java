@@ -41,7 +41,7 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
     String loadPerId;
 
     @Autowired
-    JrdUserProfileUtil jrdUserProfileFilter;
+    JrdUserProfileUtil jrdUserProfileUtil;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -56,24 +56,25 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         log.info("{}:: Judicial User Profile Records count before Validation {}::", logComponentName,
             judicialUserProfiles.size());
 
-        jrdUserProfileFilter.filterRemoveAndAudit(judicialUserProfiles);
+        List<JudicialUserProfile> filteredJudicialUserProfiles = jrdUserProfileUtil
+                .removeInvalidRecords(judicialUserProfiles);
 
-        List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
-            judicialUserProfiles);
+        List<JudicialUserProfile> validJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
+                filteredJudicialUserProfiles);
 
         log.info("{}:: Judicial User Profile Records count after Validation {}::", logComponentName,
-            filteredJudicialUserProfiles.size());
+                validJudicialUserProfiles.size());
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
         //Get Per Ids from current load
-        validPerIdInUserProfile = filteredJudicialUserProfiles.stream()
+        validPerIdInUserProfile = validJudicialUserProfiles.stream()
             .map(JudicialUserProfile::getPerId).collect(toSet());
 
         //Get Per Id from previous loads
         validPerIdInUserProfile.addAll(loadPerId());
 
-        exchange.getMessage().setBody(filteredJudicialUserProfiles);
+        exchange.getMessage().setBody(validJudicialUserProfiles);
     }
 
     public Set<String> getValidPerIdInUserProfile() {
