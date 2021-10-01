@@ -56,6 +56,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithAuthPerIdMissing;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithAuthorisationInvalidHeader;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithEmptyPerIdInAuth;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidPerCodeObjectIds;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithPerIdInvalidInParent;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithPerIdMissing;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithForeignKeyViolations;
@@ -322,6 +323,15 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
                 .hasSize(2)
                 .hasSameElementsAs(List.of(3L, 5L));
 
+    }
+
+    @Test
+    void testUserProfileWithInvalidPersonalCodeObjectId() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidPerCodeObjectIds);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+
+        jobLauncherTestUtils.launchJob();
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 4);
     }
 
 }
