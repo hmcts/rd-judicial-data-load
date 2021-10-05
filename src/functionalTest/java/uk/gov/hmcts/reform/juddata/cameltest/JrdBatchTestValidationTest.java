@@ -342,5 +342,25 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("MAGS - AC Admin User", judicialUserRoleType.get(3).get("role_desc_en"));
     }
 
+    @Test
+    void testRowIdInExceptionTable() throws Exception {
+
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithEmptyPerIdInAuth);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+
+        jobLauncherTestUtils.launchJob();
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 2, false);
+        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
+
+        List<Long> rowId = exceptionList.stream()
+                .map(i -> (Long) i.get("row_id"))
+                .collect(Collectors.toList());
+
+        assertThat(rowId)
+                .hasSize(2)
+                .hasSameElementsAs(List.of(3L, 5L));
+
+    }
+
 }
 

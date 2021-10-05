@@ -40,7 +40,7 @@ def secrets = [
                 secret('ACCOUNT-KEY-PREVIEW', 'ACCOUNT_KEY_PREVIEW'),
                 secret('ACCOUNT-NAME', 'ACCOUNT_NAME'),
                 secret('ACCOUNT-KEY', 'ACCOUNT_KEY'),
-                secret('LD-SDK-KEY', 'RD_LD_SDK_KEY'),
+                secret('LD-SDK-KEY', 'LD_SDK_KEY'),
                 secret('OAUTH2-AUTH', 'OAUTH2_AUTH'),
                 secret('OAUTH2-CLIENT-AUTH', 'OAUTH2_CLIENT_AUTH')
         ]
@@ -58,7 +58,7 @@ withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     enableMutationTest()
     enableSecurityScan()
-
+    enableFortifyScan()
 
     after('securityScan') {
         def sleepTime = (env.BRANCH_NAME.startsWith("PR")) ? '210s' : '120s'
@@ -93,6 +93,10 @@ withNightlyPipeline(type, product, component) {
                     reportName           : "JRD Functional Test Report"
             ]
         }
+    }
+
+    after('fortify-scan') {
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
 
 }

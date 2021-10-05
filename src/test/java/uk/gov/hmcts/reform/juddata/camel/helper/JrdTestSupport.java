@@ -91,6 +91,7 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setAppointment("Magistrate");
         judicialOfficeAppointmentMock.setAppointmentType("1");
         judicialOfficeAppointmentMock.setRoleId("0");
+
         return judicialOfficeAppointmentMock;
     }
 
