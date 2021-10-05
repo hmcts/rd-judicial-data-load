@@ -17,9 +17,11 @@ class JudicialRoleTypeRowMapperTest {
         JudicialUserRoleType judicialContractType = createJudicialUserRoleType();
         Map<String, Object> response = judicialRoleTypeRowMapper.getMap(judicialContractType);
 
-        assertEquals("roleId", response.get("role_id"));
-        assertEquals("roleDescEn", response.get("role_desc_en"));
-        assertEquals("roleDescCy", response.get("role_desc_cy"));
+        assertEquals("46804", response.get("per_Id"));
+        assertEquals("Family Course Tutor (JC)", response.get("title"));
+        assertEquals("Nationwide", response.get("location"));
+        assertEquals("2018-05-02 00:00:00.000", response.get("start_date"));
+        assertEquals("2022-05-01 00:00:00", response.get("end_date"));
 
     }
 }

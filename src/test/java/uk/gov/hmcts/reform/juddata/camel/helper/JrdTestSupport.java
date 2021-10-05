@@ -156,9 +156,11 @@ public class JrdTestSupport {
 
     public static JudicialUserRoleType createJudicialUserRoleType() {
         JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
-        judicialUserRoleType.setRoleDescCy("roleDescCy");
-        judicialUserRoleType.setRoleDescEn("roleDescEn");
-        judicialUserRoleType.setRoleId("roleId");
+        judicialUserRoleType.setPerId("46804");
+        judicialUserRoleType.setTitle("Family Course Tutor (JC)");
+        judicialUserRoleType.setLocation("Nationwide");
+        judicialUserRoleType.setStartDate("2018-05-02 00:00:00.000");
+        judicialUserRoleType.setEndDate("2022-05-01 00:00:00");
         return judicialUserRoleType;
     }
 }

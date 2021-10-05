@@ -13,9 +13,11 @@ public class JudicialRoleTypeRowMapper implements IMapper {
         JudicialUserRoleType role = (JudicialUserRoleType) roleObject;
 
         Map<String, Object> roleRow = new HashMap<>();
-        roleRow.put("role_id", role.getRoleId());
-        roleRow.put("role_desc_en", role.getRoleDescEn());
-        roleRow.put("role_desc_cy", role.getRoleDescCy());
+        roleRow.put("per_Id", role.getPerId());
+        roleRow.put("title", role.getTitle());
+        roleRow.put("location", role.getLocation());
+        roleRow.put("start_date", role.getStartDate());
+        roleRow.put("end_date", role.getEndDate());
         return  roleRow;
     }
 }
