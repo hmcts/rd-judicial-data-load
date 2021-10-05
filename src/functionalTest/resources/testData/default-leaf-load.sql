@@ -5,7 +5,4 @@ insert into base_location_type(base_location_id,court_name,court_type,circuit,ar
 values ('0', 'default','default', 'default','default')
 on conflict (base_location_id) do nothing;
 
---insert into judicial_role_type (per_Id, title,location,start_date,end_date)
---values ('0', 'default', 'default',now(),now()) on conflict (role_id) do nothing;
-
 commit;
