@@ -20,6 +20,7 @@ scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,file_
 start-leaf-route: direct:leaf
 audit-enable: true
 update-sidam-ids: update judicial_user_profile set sidam_id = ? where object_id = ? and sidam_id is null
+scheduler-end-time: select max(scheduler_end_time) from dataload_schedular_audit where file_name = 'Personal' and STATUS in ('PartialSuccess', 'Success')
 
 logging-component-name: RD_Judicial_Ref_Data
 component:
