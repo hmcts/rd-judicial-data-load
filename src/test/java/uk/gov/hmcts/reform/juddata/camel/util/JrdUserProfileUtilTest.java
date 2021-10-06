@@ -1,10 +1,22 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 
 import java.util.ArrayList;
@@ -12,12 +24,40 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 
 @ExtendWith(MockitoExtension.class)
 class JrdUserProfileUtilTest {
 
     @InjectMocks
-    JrdUserProfileUtil jrdUserProfileFilter;
+    JrdUserProfileUtil jrdUserProfileFilter = spy(JrdUserProfileUtil.class);
+
+    @Mock
+    Exchange exchangeMock;
+    @Mock
+    Message messageMock;
+    @Mock
+    CamelContext camelContext;
+    @Mock
+    JdbcTemplate jdbcTemplate;
+    @Mock
+    PlatformTransactionManager platformTransactionManager;
+    @Mock
+    TransactionStatus transactionStatus;
+
+    ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
+    ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
     List<JudicialUserProfile> judicialUserProfiles;
     List<JudicialUserProfile> judicialUserProfilesValidRecords;
@@ -53,6 +93,23 @@ class JrdUserProfileUtilTest {
                 JudicialUserProfile.builder().personalCode("4927112").objectId("933fc903-4c39-4742-bb46-d69903835904")
                         .build()
         ));
+
+        RouteProperties routeProperties = new RouteProperties();
+        routeProperties.setFileName("test");
+
+        setField(jrdUserProfileFilter, "applicationContext", applicationContext);
+
+        when(exchangeMock.getIn()).thenReturn(messageMock);
+        lenient().when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
+        lenient().when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
+        lenient().when(exchangeMock.getMessage()).thenReturn(messageMock);
+        when(((ConfigurableApplicationContext)
+                applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        int[][] intArray = new int[1][];
+        lenient().when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
+        lenient().when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
+        lenient().doNothing().when(platformTransactionManager).commit(transactionStatus);
     }
 
     @Test
@@ -61,16 +118,20 @@ class JrdUserProfileUtilTest {
         judicialUserProfiles.addAll(judicialUserProfilesInvalidObjectIds);
         judicialUserProfiles.addAll(judicialUserProfilesInvalidPersonalCodes);
 
-        List<JudicialUserProfile> resultList = jrdUserProfileFilter.removeInvalidRecords(judicialUserProfiles);
+        List<JudicialUserProfile> resultList = jrdUserProfileFilter
+                .removeInvalidRecords(judicialUserProfiles, exchangeMock);
         assertThat(resultList).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
+        verify(jrdUserProfileFilter, times(1)).audit(anyList(), any());
     }
 
     @Test
     void test_filter_and_remove_when_all_valid_profiles() {
         judicialUserProfiles.addAll(judicialUserProfilesValidRecords);
 
-        List<JudicialUserProfile> resultList = jrdUserProfileFilter.removeInvalidRecords(judicialUserProfiles);
+        List<JudicialUserProfile> resultList = jrdUserProfileFilter
+                .removeInvalidRecords(judicialUserProfiles, exchangeMock);
         assertThat(resultList).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
+        verify(jrdUserProfileFilter, times(1)).audit(anyList(), any());
     }
 
     @Test
@@ -78,8 +139,10 @@ class JrdUserProfileUtilTest {
         judicialUserProfiles.addAll(judicialUserProfilesInvalidObjectIds);
         judicialUserProfiles.addAll(judicialUserProfilesInvalidPersonalCodes);
 
-        List<JudicialUserProfile> resultList = jrdUserProfileFilter.removeInvalidRecords(judicialUserProfiles);
+        List<JudicialUserProfile> resultList = jrdUserProfileFilter
+                .removeInvalidRecords(judicialUserProfiles, exchangeMock);
         assertThat(resultList).isEmpty();
+        verify(jrdUserProfileFilter, times(1)).audit(judicialUserProfiles, exchangeMock);
     }
 
     @Test

@@ -57,7 +57,7 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
             judicialUserProfiles.size());
 
         List<JudicialUserProfile> filteredJudicialUserProfiles = jrdUserProfileUtil
-                .removeInvalidRecords(judicialUserProfiles);
+                .removeInvalidRecords(judicialUserProfiles, exchange);
 
         List<JudicialUserProfile> validJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
                 filteredJudicialUserProfiles);
