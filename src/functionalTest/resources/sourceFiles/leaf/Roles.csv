@@ -1,6 +1,6 @@
-RoleID,Role
-1,Magistrate
-2,Advisory Committee Member - Magistrate
-3,Advisory Committee Member - Non Magistrate
-4,Chairman of the Advisory Committee
-7,MAGS - AC Admin User
+ID,Title,Location,StartDate,EndDate
+1,"Family Course Tutor (JC)","Nationwide",2018-05-02 00:00:00.000,2022-05-01 00:00:00
+2,"Family Course Tutor (JC)","Nationwide",2018-05-02 00:00:00.000,2022-05-01 00:00:00
+1,"Resident Judge","Shrewsbury ",2018-03-30 00:00:00.000,2022-02-28 00:00:00
+2,"Civil Course Tutor (JC)","Nationwide",2018-04-01 00:00:00.000,2020-03-31 00:00:00
+1,"Civil Course Tutor (JC)","Nationwide",2018-04-01 00:00:00.000,2022-03-31 00:00:00

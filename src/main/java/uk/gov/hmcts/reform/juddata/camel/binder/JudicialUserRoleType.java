@@ -8,14 +8,18 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 
+import java.io.Serializable;
+
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 @Component
 @Setter
 @Getter
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true)
-public class JudicialUserRoleType extends CommonCsvField {
+public class JudicialUserRoleType extends CommonCsvField implements Serializable {
 
     @DataField(pos = 1, columnName = "per_Id")
     @NotEmpty
@@ -34,8 +38,8 @@ public class JudicialUserRoleType extends CommonCsvField {
     String startDate;
 
     @DataField(pos = 5, columnName = "end_date")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String endDate;
 
 }

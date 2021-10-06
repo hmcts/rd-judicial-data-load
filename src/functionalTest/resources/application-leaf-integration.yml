@@ -31,8 +31,9 @@ route:
     file-name: Roles-Test
     table-name: judicial_role_type
     insert-sql:
-      sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
-      on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource&batch=true
+      sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
+      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
+      on conflict (role_id) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper

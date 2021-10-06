@@ -11,8 +11,9 @@ CREATE TABLE judicial_role_type(
 );
 
 --Modification for US3370
-ALTER TABLE judicial_role_type ADD CONSTRAINT per_Id_fk FOREIGN KEY (per_Id)
-REFERENCES judicial_user_profile (per_Id);
+--TODO add following constraint after verify
+--ALTER TABLE judicial_role_type ADD CONSTRAINT per_Id_fk FOREIGN KEY (per_Id)
+--REFERENCES judicial_user_profile (per_Id);
 
 
 --Update the Service_Code field length from varchar (16) to Varchar (64)

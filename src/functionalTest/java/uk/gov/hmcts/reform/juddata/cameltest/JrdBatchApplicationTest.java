@@ -149,7 +149,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
-        validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
     }
 
     @Test
