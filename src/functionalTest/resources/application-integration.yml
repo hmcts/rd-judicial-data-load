@@ -41,7 +41,7 @@ parent-route-task: parentRouteOrchestrationTask
 batchjob-name: JudicialDataLoad
 audit-enable: true
 
-routes-to-execute-orchestration: judicial-user-profile-orchestration, judicial-office-appointment, judicial-office-authorisation
+routes-to-execute-orchestration: judicial-user-profile-orchestration, judicial-office-appointment, judicial-office-authorisation, judicial-role-type
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
@@ -102,6 +102,18 @@ route:
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
+  judicial-role-type:
+    id: judicial-role-type
+    file-name: Roles-Test
+    table-name: judicial_role_type
+    insert-sql:
+      sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
+      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
+      on conflict (role_id) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
+    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-Test?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialUserRoleTypeProcessor
+    mapper-class: JudicialRoleTypeRowMapper
+    csv-binder-object: JudicialUserRoleType
 
 parent-select-jrd-sql: SELECT * FROM judicial_user_profile order by per_id
 
@@ -124,6 +136,8 @@ service-code-sql: SELECT * FROM judicial_office_authorisation WHERE service_code
 epimms-id-sql: SELECT * FROM judicial_office_appointment WHERE epimms_id IS NOT NULL
 
 judicial-office-appointment-service-code-sql: SELECT * FROM judicial_office_appointment WHERE service_code IS NOT NULL
+role-select-jrd-sql: SELECT * FROM judicial_role_type
+fetch-role-id: SELECT role_id FROM judicial_role_type
 
 start-leaf-route: direct:leaf
 

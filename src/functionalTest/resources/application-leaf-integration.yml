@@ -1,6 +1,6 @@
 start-leaf-route: direct:leaf
 
-routes-to-execute-leaf: judicial-region-type, judicial-base-location_type, judicial-role-type
+routes-to-execute-leaf: judicial-region-type, judicial-base-location_type
 
 route:
   judicial-region-type:
@@ -26,18 +26,6 @@ route:
     processor-class: JudicialBaseLocationProcessor
     mapper-class: JudicialBaseLocationRowTypeMapper
     csv-binder-object: JudicialBaseLocationType
-  judicial-role-type:
-    id: judicial-role-type
-    file-name: Roles-Test
-    table-name: judicial_role_type
-    insert-sql:
-      sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
-      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
-      on conflict (role_id) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
-    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-Test?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialUserRoleTypeProcessor
-    mapper-class: JudicialRoleTypeRowMapper
-    csv-binder-object: JudicialUserRoleType
 
 
 base-location-select-jrd-sql: SELECT * FROM base_location_type
@@ -46,9 +34,6 @@ region-select-jrd-sql: SELECT * FROM region_type
 
 fetch-base-location-id: SELECT base_location_id FROM base_location_type
 fetch-region-id: SELECT region_id FROM region_type
-
-role-select-jrd-sql: SELECT * FROM judicial_role_type
-fetch-role-id: SELECT role_id FROM judicial_role_type
 
 
 
