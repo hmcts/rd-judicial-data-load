@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.util;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,7 +105,7 @@ public class JrdUserProfileUtil {
             List<JudicialUserProfile> userProfiles) {
 
         return userProfiles.stream()
-                .filter(userProfile -> nonNull(userProfile.getObjectId()))
+                .filter(userProfile -> StringUtils.isNotBlank(userProfile.getObjectId()))
                 .collect(collectingAndThen(groupingBy(JudicialUserProfile::getObjectId), map -> {
                     map.values().removeIf(l -> l.stream()
                             .map(JudicialUserProfile::getPersonalCode)
@@ -123,7 +124,7 @@ public class JrdUserProfileUtil {
             List<JudicialUserProfile> userProfiles) {
 
         return userProfiles.stream()
-                .filter(userProfile -> nonNull(userProfile.getObjectId()))
+                .filter(userProfile -> StringUtils.isNotBlank(userProfile.getObjectId()))
                 .collect(collectingAndThen(groupingBy(JudicialUserProfile::getPersonalCode), map -> {
                     map.values().removeIf(l -> l.stream()
                             .map(JudicialUserProfile::getObjectId)
