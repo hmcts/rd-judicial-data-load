@@ -96,7 +96,7 @@ public class JrdUserProfileUtil {
 
     /**
      * Iterate through the list of user profiles and group them by object id,
-     * filter out the entries where for each object id, the number of distinct personal codes are less than 2.
+     * remove the entries where the object id is correctly associated with no more than 1 distinct personal code.
      * @param userProfiles original list of user profiles
      * @return map containing only the object ids where the associated personal codes are invalid
      */
@@ -104,6 +104,7 @@ public class JrdUserProfileUtil {
             List<JudicialUserProfile> userProfiles) {
 
         return userProfiles.stream()
+                .filter(userProfile -> nonNull(userProfile.getObjectId()))
                 .collect(collectingAndThen(groupingBy(JudicialUserProfile::getObjectId), map -> {
                     map.values().removeIf(l -> l.stream()
                             .map(JudicialUserProfile::getPersonalCode)
@@ -114,7 +115,7 @@ public class JrdUserProfileUtil {
 
     /**
      * Iterate through the list of user profiles and group them by personal code,
-     * filter out the entries where for each personal code, the number of distinct object ids are less than 2.
+     * remove the entries where the personal code is correctly associated with no more than 1 distinct object id.
      * @param userProfiles original list of user profiles
      * @return map containing only the personal codes where the associated object ids are invalid
      */
@@ -122,6 +123,7 @@ public class JrdUserProfileUtil {
             List<JudicialUserProfile> userProfiles) {
 
         return userProfiles.stream()
+                .filter(userProfile -> nonNull(userProfile.getObjectId()))
                 .collect(collectingAndThen(groupingBy(JudicialUserProfile::getPersonalCode), map -> {
                     map.values().removeIf(l -> l.stream()
                             .map(JudicialUserProfile::getObjectId)
