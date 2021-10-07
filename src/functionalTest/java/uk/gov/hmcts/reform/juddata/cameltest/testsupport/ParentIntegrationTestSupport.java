@@ -35,7 +35,8 @@ public interface ParentIntegrationTestSupport {
 
     String[] file = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+            "classpath:sourceFiles/parent/Roles.csv"};
 
     String[] fileWithError = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments_error.csv",
@@ -55,7 +56,8 @@ public interface ParentIntegrationTestSupport {
 
     String[] fileWithInvalidJsr = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
         "classpath:sourceFiles/parent/judicial_appointments_jsr.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv"
+        ,"classpath:sourceFiles/parent/Roles_jsr.csv"};
 
     String[] fileWithInvalidJsrExceedsThreshold = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
         "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv",
