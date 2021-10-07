@@ -106,6 +106,11 @@ route:
     id: judicial-role-type
     file-name: Roles-Test
     table-name: judicial_role_type
+    parent-failure-enabled: true
+    #Personal-Test only for testing else -Test not needed by main code
+    parent-name: Personal-Test
+    truncate-sql:
+      sql:truncate judicial_role_type restart identity?dataSource=dataSource&batch=true
     insert-sql:
       sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
       values(:#per_Id,:#title,:#location,:#start_date,:#end_date)

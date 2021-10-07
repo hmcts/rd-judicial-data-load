@@ -1,4 +1,4 @@
-routes-to-execute-leaf: judicial-region-type, judicial-base-location_type, judicial-role-type
+routes-to-execute-leaf: judicial-region-type, judicial-base-location_type
 route:
   judicial-region-type:
     id: judicial-region-type
@@ -25,18 +25,6 @@ route:
     processor-class: JudicialBaseLocationProcessor
     mapper-class: JudicialBaseLocationRowTypeMapper
     csv-binder-object: JudicialBaseLocationType
-  judicial-role-type:
-    id: judicial-role-type
-    file-name: Roles
-    table-name: judicial_role_type
-    insert-sql:
-      sql:insert into judicial_role_type (role_id,role_desc_en,role_desc_cy) values(:#role_id,:#role_desc_en,:#role_desc_cy)
-      on conflict (role_id) do update set role_desc_en = :#role_desc_en,role_desc_cy = :#role_desc_cy?dataSource=dataSource&batch=true
-    blob-path:
-      azure-blob://${azure.storage.account-name}/jud-ref-data/Roles?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: JudicialUserRoleTypeProcessor
-    mapper-class: JudicialRoleTypeRowMapper
-    csv-binder-object: JudicialUserRoleType
 
 
 
