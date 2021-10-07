@@ -39,7 +39,6 @@ class JudicialOfficeAppointmentTest {
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialOfficeAppointment.getObjectId());
         assertEquals("Magistrate", judicialOfficeAppointment.getAppointment());
         assertEquals("1", judicialOfficeAppointment.getAppointmentType());
-        assertEquals("0", judicialOfficeAppointment.getRoleId());
 
     }
 }

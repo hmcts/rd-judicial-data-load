@@ -90,7 +90,6 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         judicialOfficeAppointmentMock.setAppointment("Magistrate");
         judicialOfficeAppointmentMock.setAppointmentType("1");
-        judicialOfficeAppointmentMock.setRoleId("0");
 
         return judicialOfficeAppointmentMock;
     }

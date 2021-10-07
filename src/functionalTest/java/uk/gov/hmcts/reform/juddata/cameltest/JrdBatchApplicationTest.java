@@ -231,8 +231,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         final List<Object> appointmentTypes = retrieveColumnValues(jdbcTemplate, appointmentSql, "appointment_type");
         assertTrue(appointmentTypes.contains("1"));
 
-        final List<Object> roleIds = retrieveColumnValues(jdbcTemplate, appointmentSql, "role_id");
-        assertTrue(roleIds.contains("0"));
     }
 
 

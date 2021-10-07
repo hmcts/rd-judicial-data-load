@@ -65,7 +65,4 @@ public class JudicialOfficeAppointment extends CommonCsvField implements Seriali
 
     @DataField(pos = 12, columnName = "appointment_type")
     String appointmentType;
-
-    @DataField(pos = 13, columnName = "role_id")
-    String roleId;
 }
