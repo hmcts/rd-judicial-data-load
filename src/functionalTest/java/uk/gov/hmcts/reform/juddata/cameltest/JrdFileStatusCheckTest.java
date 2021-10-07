@@ -110,9 +110,6 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
             .toJobParameters();
         jobLauncherTestUtils.launchJob(params);
         List<Pair<String, String>> results = ImmutableList.of( new Pair<>(
-                "Roles-Test",
-                "not loaded due to file stale error"
-        ), new Pair<>(
             "Locations-Test",
             "not loaded due to file stale error"
         ), new Pair<>(
@@ -125,11 +122,9 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
 
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 4, false);
-        List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
-        assertTrue(judicialUserRoleType.size() > 0);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
 
-        assertEquals(4, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+        assertEquals(3, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
 
         //validate old day 1 data not gets truncated after day 2 stale file ran
         List<Map<String, Object>> userProfileList = jdbcTemplate.queryForList(userProfileSql);
@@ -165,15 +160,12 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
             "BaseLocations-Test",
             "BaseLocations-Test file does not exist in azure storage account"
         ), new Pair<>(
-            "Roles-Test",
-            "Roles-Test file does not exist in azure storage account"
-        ), new Pair<>(
             "Personal-Test",
             "Personal-Test file does not exist in azure storage account"
         ));
 
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
-        assertEquals(4, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+        assertEquals(3, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
 
         //validate old day 1 data not gets truncated after day 2  file not exist ran
         List<Map<String, Object>> appointmentList = jdbcTemplate.queryForList(appointmentSql);

@@ -160,7 +160,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
-        validateDbRecordCountFor(jdbcTemplate, roleSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 10);
     }
 
     @Test
@@ -234,9 +234,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("error_description"));
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
-        assertEquals(6, exceptionList.size());
-        List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(roleSql);
-        validateLeafRoleJsr(judicialUserRoleType);
+        assertEquals(4, exceptionList.size());
 
     }
 
@@ -294,7 +292,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 7, false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 13, false);
     }
 
     @Test
@@ -307,7 +305,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         List<Map<String, Object>> auditList = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
-        assertEquals(4, auditList.size()); //Personal, Locations, base-locations,Roles only
+        assertEquals(3, auditList.size()); //Personal, Locations, base-locations only
     }
 
     @Test
@@ -331,7 +329,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     }
 
     private void validateLeafRoleJsr(List<Map<String, Object>> judicialUserRoleType) {
-        assertEquals(4, judicialUserRoleType.size());
+        assertEquals(5, judicialUserRoleType.size());
         assertEquals("1", judicialUserRoleType.get(1).get("role_id"));
         assertEquals("3", judicialUserRoleType.get(2).get("role_id"));
         assertEquals("7", judicialUserRoleType.get(3).get("role_id"));
