@@ -16,12 +16,17 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -62,6 +67,14 @@ public class JrdUserProfileUtil {
     @Value("${invalid-jsr-sql}")
     String invalidJsrSql;
 
+    @Autowired
+    EmailConfiguration emailConfiguration;
+
+    @Autowired
+    IEmailService emailService;
+
+    private final String NEW_LINE = "\n";
+
     public List<JudicialUserProfile> removeInvalidRecords(List<JudicialUserProfile> judicialUserProfiles,
                                                           Exchange exchange) {
 
@@ -73,6 +86,8 @@ public class JrdUserProfileUtil {
         remove(invalidRecords, userProfiles);
 
         audit(invalidRecords, exchange);
+
+        sendEmail(invalidRecords, judicialUserProfiles);
 
         return List.copyOf(userProfiles);
     }
@@ -97,7 +112,8 @@ public class JrdUserProfileUtil {
 
     /**
      * Iterate through the list of user profiles and group them by object id,
-     * remove the entries where the object id is correctly associated with no more than 1 distinct personal code.
+     * remove the entries where the object id is correctly associated with no more than 1 distinct personal code,
+     * respecting 1-1 mapping between object ids and personal codes.
      * @param userProfiles original list of user profiles
      * @return map containing only the object ids where the associated personal codes are invalid
      */
@@ -116,7 +132,8 @@ public class JrdUserProfileUtil {
 
     /**
      * Iterate through the list of user profiles and group them by personal code,
-     * remove the entries where the personal code is correctly associated with no more than 1 distinct object id.
+     * remove the entries where the personal code is correctly associated with no more than 1 distinct object id,
+     * respecting 1-1 mapping between personal codes and object ids.
      * @param userProfiles original list of user profiles
      * @return map containing only the personal codes where the associated object ids are invalid
      */
@@ -191,5 +208,56 @@ public class JrdUserProfileUtil {
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
     }
+
+    private void sendEmail(List<JudicialUserProfile> userProfilesDeleted, List<JudicialUserProfile> userProfiles) {
+
+        if (!userProfilesDeleted.isEmpty()) {
+            EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get("userprofile");
+            if (mailTypeConfig.isEnabled()) {
+                Email email = Email.builder()
+                        .from(mailTypeConfig.getFrom())
+                        .to(mailTypeConfig.getTo())
+                        .messageBody(String.format(mailTypeConfig.getBody(), createMessageBody(userProfiles)))
+                        .subject(String.format(mailTypeConfig.getSubject(), LocalDate.now()
+                                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
+                        .build();
+                emailService.sendEmail(email);
+            }
+        }
+
+    }
+
+    private String createMessageBody(List<JudicialUserProfile> userProfiles) {
+        var messageBody = new StringBuilder();
+        var invalidObjectIdRows =  new StringBuilder();
+        var invalidPersonalCodeRows =  new StringBuilder();
+
+        messageBody.append(NEW_LINE);
+        messageBody.append("Profiles with one Object ID having multiple Personal Codes");
+        messageBody.append(NEW_LINE);
+        messageBody.append(createRows(invalidObjectIdRows, filterByObjectId(userProfiles)));
+        messageBody.append(NEW_LINE);
+        messageBody.append("\n=====================================================================================\n");
+        messageBody.append(NEW_LINE);
+        messageBody.append("Profiles with one Personal Code having multiple Object IDs");
+        messageBody.append(NEW_LINE);
+        messageBody.append(createRows(invalidPersonalCodeRows, filterByPersonalCode(userProfiles)));
+        messageBody.append(NEW_LINE);
+
+        return messageBody.toString();
+    }
+
+    private String createRows(StringBuilder messageBody, List<JudicialUserProfile> userProfiles) {
+        messageBody.append(String.format("%-30s %50s %70s %n", "Per Code", "Object ID", "Per Id"));
+
+        userProfiles.forEach(judicialUserProfile ->
+                messageBody.append(String.format("%-30s ",judicialUserProfile.getPersonalCode()))
+                        .append(String.format("%50s ",judicialUserProfile.getObjectId()))
+                        .append(String.format("%40s",judicialUserProfile.getPerId()))
+                        .append("\n"));
+
+        return messageBody.toString();
+    }
+
 
 }
