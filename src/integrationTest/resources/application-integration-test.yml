@@ -63,9 +63,11 @@ route:
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id)
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id,
+      appointment,appointment_type)
       values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id)?dataSource=dataSource&batch=true
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id,
+      :#appointment, :#appointment_type)?dataSource=dataSource&batch=true
     blob-path: ${child.file.path}
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper

@@ -126,7 +126,7 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
                 "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 18, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 17, true);
         validateForeignKeyRecordsAndMissingParentRecords();
     }
 
