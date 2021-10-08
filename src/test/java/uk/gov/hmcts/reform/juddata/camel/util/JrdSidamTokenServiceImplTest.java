@@ -226,4 +226,12 @@ class JrdSidamTokenServiceImplTest {
         String formattedQuery = invokeMethod(jrdSidamTokenService, "elasticSearchQuery");
         Assert.assertEquals("(roles:judiciary) AND lastModified:>now-25h", formattedQuery);
     }
+
+    @Test
+    void testElasticSearchQueryMaxIsNull() {
+        when(jdbcTemplate.queryForObject(jrdSidamTokenService.schedulerEndTime,
+                LocalDateTime.class)).thenReturn(null);
+        String formattedQuery = invokeMethod(jrdSidamTokenService, "elasticSearchQuery");
+        Assert.assertEquals("(roles:judiciary) AND lastModified:>now-72h", formattedQuery);
+    }
 }

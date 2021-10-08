@@ -137,7 +137,7 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
     private String elasticSearchQuery() {
         LocalDateTime maxSchedulerEndTime =
                 jdbcTemplate.queryForObject(schedulerEndTime, LocalDateTime.class);
-        return String.format(searchQuery,
+        return maxSchedulerEndTime == null ? String.format(searchQuery,72) : String.format(searchQuery,
                 Math.addExact(ChronoUnit.HOURS.between(maxSchedulerEndTime, LocalDateTime.now()), 1));
     }
 }
