@@ -126,16 +126,16 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
                 "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 17, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 15, true);
         validateForeignKeyRecordsAndMissingParentRecords();
     }
 
     private void validateForeignKeyRecordsAndMissingParentRecords() {
         String[] parameters = new String[]{INVALID_JSR_PARENT_ROW, "judicial-office-appointment"};
-        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 0,
             true, parameters);
         parameters = new String[]{INVALID_JSR_PARENT_ROW, "judicial_office_authorisation"};
-        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 0,
             true, parameters);
         parameters = new String[]{MISSING_PER_ID, "judicial-office-appointment"};
         validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
