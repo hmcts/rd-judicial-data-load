@@ -22,4 +22,7 @@ public class JrdConstants {
     public static final RowMapper<String> ROW_MAPPER = (rs, i) -> rs.getString(1);
     public static final String PER_CODE_OBJECT_ID_FIELD = "personal code/object id";
     public static final String PER_CODE_OBJECT_ID_ERROR_MESSAGE = "Invalid personal code or object id";
+    public static final String USERPROFILE = "userprofile";
+    public static final String NEW_LINE = "\n";
+    public static final String DATE_PATTERN = "dd/MM/yyyy";
 }

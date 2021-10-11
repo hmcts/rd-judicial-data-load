@@ -44,19 +44,19 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PAR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LINE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_FIELD;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.USERPROFILE;
 
 
 @Component
 public class JrdUserProfileUtil {
 
-    private static final String USERPROFILE = "userprofile";
-    private static final String NEW_LINE = "\n";
-    public static final String DATE_PATTERN = "dd/MM/yyyy";
-    public static final String ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
+    private static final String ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
             = "Profiles with one Object ID having multiple Personal Codes";
-    public static final String ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
+    private static final String ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
             = "Profiles with one Personal Code having multiple Object IDs";
 
     @Autowired
@@ -64,14 +64,14 @@ public class JrdUserProfileUtil {
     PlatformTransactionManager platformTransactionManager;
 
     @Autowired
-    protected ApplicationContext applicationContext;
+    ApplicationContext applicationContext;
 
     @Autowired
     CamelContext camelContext;
 
     @Autowired
     @Qualifier("springJdbcTemplate")
-    protected JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     @Value("${invalid-jsr-sql}")
     String invalidJsrSql;
