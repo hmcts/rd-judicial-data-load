@@ -95,9 +95,10 @@ public interface ParentIntegrationTestSupport {
                 "classpath:sourceFiles/parent/Roles.csv"};
 
 
-    String[] missingUserProfile = {"classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"
-    };
+    String[] missingUserProfile = {"classpath:sourceFiles/parent/judicial_userprofile_empty.csv",
+            "classpath:sourceFiles/parent/judicial_appointments.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+            "classpath:sourceFiles/parent/Roles.csv"};
 
     String[] fileWithEmptyPerIdInAuth = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",

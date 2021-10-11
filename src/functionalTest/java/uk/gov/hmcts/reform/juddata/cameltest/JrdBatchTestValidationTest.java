@@ -174,7 +174,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
         assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("ejudiciary_email"));
         assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("ejudiciary_email"));
-        assertEquals(2, judicialUserProfileList.size());
+        assertEquals(3, judicialUserProfileList.size());
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
@@ -184,7 +184,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(2, judicialAppointmentList.size());
 
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 2);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 5, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 4, true);
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
             .queryForList(schedulerInsertJrdSqlPartialSuccess);
@@ -249,14 +249,14 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
         assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("ejudiciary_email"));
         assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("ejudiciary_email"));
-        assertEquals(2, judicialUserProfileList.size());
+        assertEquals(3, judicialUserProfileList.size());
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
         assertEquals("1", judicialAppointmentList.get(0).get("per_id"));
         assertEquals("2", judicialAppointmentList.get(1).get("per_id"));
-        assertEquals(2, judicialAppointmentList.size());
+        assertEquals(3, judicialAppointmentList.size());
     }
 
     @Test
@@ -291,8 +291,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 13, false);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 6);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 0, false);
     }
 
     @Test
