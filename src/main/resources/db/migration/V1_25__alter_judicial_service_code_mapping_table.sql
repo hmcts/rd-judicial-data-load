@@ -4,7 +4,8 @@ CREATE TABLE judicial_service_code_mapping(
     service_id bigint NOT NULL,
     ticket_code varchar(16) NOT NULL,
     service_code varchar(64),
-    service_description varchar(512)
+    service_description varchar(512),
+    CONSTRAINT service_id PRIMARY KEY (service_id)
 );
 
 INSERT INTO judicial_service_code_mapping (service_id,ticket_code,service_code,service_description)
