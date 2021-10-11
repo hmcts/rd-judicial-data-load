@@ -64,6 +64,7 @@ public class JudicialOfficeAppointment extends CommonCsvField implements Seriali
     String objectId;
 
     @DataField(pos = 12, columnName = "appointment")
+    @NotEmpty
     String appointment;
 
 
