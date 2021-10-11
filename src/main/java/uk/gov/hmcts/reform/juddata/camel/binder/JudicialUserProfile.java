@@ -7,7 +7,6 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
-import uk.gov.hmcts.reform.juddata.validators.Appointment;
 
 import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;

@@ -88,7 +88,7 @@ class JudicialUserRoleTypeProcessorTest {
         judicialUserRoleTypeProcessor.process(exchangeMock);
 
         assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
-        verify(exchangeMock, times(3)).getMessage();
+        verify(exchangeMock, times(2)).getMessage();
         verify(judicialUserRoleTypeProcessor).audit(judicialUserRoleTypeJsrValidatorInitializer, exchangeMock);
         verify(messageMock).setBody(any());
     }

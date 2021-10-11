@@ -1,4 +1,5 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
+
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;

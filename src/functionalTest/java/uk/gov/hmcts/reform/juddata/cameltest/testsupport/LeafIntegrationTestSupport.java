@@ -8,6 +8,5 @@ public interface LeafIntegrationTestSupport {
         "classpath:sourceFiles/leaf/BaseLocations_jsr.csv"
     };
 
-    String[] file_error = {
-            "classpath:sourceFiles/leaf/Locations.csv", "classpath:sourceFiles/leaf/BaseLocations.csv"};
+    String[] file_error = {"classpath:sourceFiles/leaf/Locations.csv", "classpath:sourceFiles/leaf/BaseLocations.csv"};
 }

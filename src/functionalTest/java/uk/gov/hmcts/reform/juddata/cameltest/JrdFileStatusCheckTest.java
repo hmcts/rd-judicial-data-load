@@ -109,7 +109,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
             .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
             .toJobParameters();
         jobLauncherTestUtils.launchJob(params);
-        List<Pair<String, String>> results = ImmutableList.of( new Pair<>(
+        List<Pair<String, String>> results = ImmutableList.of(new Pair<>(
             "Locations-Test",
             "not loaded due to file stale error"
         ), new Pair<>(

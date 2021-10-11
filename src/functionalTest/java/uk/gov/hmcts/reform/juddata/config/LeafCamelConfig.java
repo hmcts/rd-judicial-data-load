@@ -56,6 +56,7 @@ public class LeafCamelConfig {
     JsrValidatorInitializer<JudicialRegionType> judicialRegionTypeJsrValidatorInitializer() {
         return new JsrValidatorInitializer<>();
     }
+
     @Bean
     public JudicialUserRoleType judicialUserRoleType() {
         return new JudicialUserRoleType();
