@@ -15,6 +15,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
@@ -50,6 +51,14 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJEC
 @Component
 public class JrdUserProfileUtil {
 
+    private static final String USERPROFILE = "userprofile";
+    private static final String NEW_LINE = "\n";
+    public static final String DATE_PATTERN = "dd/MM/yyyy";
+    public static final String ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
+            = "Profiles with one Object ID having multiple Personal Codes";
+    public static final String ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
+            = "Profiles with one Personal Code having multiple Object IDs";
+
     @Autowired
     @Qualifier("springJdbcTransactionManager")
     PlatformTransactionManager platformTransactionManager;
@@ -73,7 +82,7 @@ public class JrdUserProfileUtil {
     @Autowired
     IEmailService emailService;
 
-    private final String NEW_LINE = "\n";
+
 
     public List<JudicialUserProfile> removeInvalidRecords(List<JudicialUserProfile> judicialUserProfiles,
                                                           Exchange exchange) {
@@ -170,7 +179,7 @@ public class JrdUserProfileUtil {
 
     public void audit(List<JudicialUserProfile> invalidUserProfiles, Exchange exchange) {
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
-        var fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
+        FileStatus fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
 
         if (nonNull(invalidUserProfiles) && !CollectionUtils.isEmpty(invalidUserProfiles)) {
             auditInvalidUserProfiles(invalidUserProfiles, routeProperties.getTableName());
@@ -197,11 +206,11 @@ public class JrdUserProfileUtil {
                         ps.setString(1, tableName);
                         ps.setTimestamp(2, new Timestamp(Long.parseLong(schedulerTime)));
                         ps.setString(3, globalOptions.get(SCHEDULER_NAME));
-                        ps.setString(4, argument.getPerId());//key -> either per_code or object_id
-                        ps.setString(5, PER_CODE_OBJECT_ID_FIELD);//field in error -> percode or object id
-                        ps.setString(6, PER_CODE_OBJECT_ID_ERROR_MESSAGE);//error description -> hardcoded
-                        ps.setTimestamp(7, new Timestamp(new Date().getTime()));//updated timestamp
-                        ps.setLong(8, argument.getRowId());//rowId
+                        ps.setString(4, argument.getPerId());
+                        ps.setString(5, PER_CODE_OBJECT_ID_FIELD);
+                        ps.setString(6, PER_CODE_OBJECT_ID_ERROR_MESSAGE);
+                        ps.setTimestamp(7, new Timestamp(new Date().getTime()));
+                        ps.setLong(8, argument.getRowId());
                     }
                 });
 
@@ -209,22 +218,22 @@ public class JrdUserProfileUtil {
         platformTransactionManager.commit(status);
     }
 
-    private void sendEmail(List<JudicialUserProfile> userProfilesDeleted, List<JudicialUserProfile> userProfiles) {
+    public int sendEmail(List<JudicialUserProfile> userProfilesDeleted, List<JudicialUserProfile> userProfiles) {
 
         if (!userProfilesDeleted.isEmpty()) {
-            EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get("userprofile");
+            EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get(USERPROFILE);
             if (mailTypeConfig.isEnabled()) {
                 Email email = Email.builder()
                         .from(mailTypeConfig.getFrom())
                         .to(mailTypeConfig.getTo())
                         .messageBody(String.format(mailTypeConfig.getBody(), createMessageBody(userProfiles)))
                         .subject(String.format(mailTypeConfig.getSubject(), LocalDate.now()
-                                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
+                                .format(DateTimeFormatter.ofPattern(DATE_PATTERN))))
                         .build();
-                emailService.sendEmail(email);
+                return emailService.sendEmail(email);
             }
         }
-
+        return -1;
     }
 
     private String createMessageBody(List<JudicialUserProfile> userProfiles) {
@@ -233,13 +242,13 @@ public class JrdUserProfileUtil {
         var invalidPersonalCodeRows =  new StringBuilder();
 
         messageBody.append(NEW_LINE);
-        messageBody.append("Profiles with one Object ID having multiple Personal Codes");
+        messageBody.append(ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE);
         messageBody.append(NEW_LINE);
         messageBody.append(createRows(invalidObjectIdRows, filterByObjectId(userProfiles)));
         messageBody.append(NEW_LINE);
         messageBody.append("\n=====================================================================================\n");
         messageBody.append(NEW_LINE);
-        messageBody.append("Profiles with one Personal Code having multiple Object IDs");
+        messageBody.append(ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE);
         messageBody.append(NEW_LINE);
         messageBody.append(createRows(invalidPersonalCodeRows, filterByPersonalCode(userProfiles)));
         messageBody.append(NEW_LINE);
@@ -258,6 +267,5 @@ public class JrdUserProfileUtil {
 
         return messageBody.toString();
     }
-
 
 }
