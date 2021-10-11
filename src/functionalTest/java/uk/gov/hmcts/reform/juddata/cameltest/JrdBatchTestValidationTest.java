@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
@@ -86,6 +87,9 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Autowired
     JrdExecutor jrdExecutor;
+
+    @Autowired
+    JrdUserProfileUtil jrdUserProfileUtil;
 
     @Autowired
     DataIngestionLibraryRunner dataIngestionLibraryRunner;
@@ -327,6 +331,9 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testUserProfileWithInvalidPersonalCodeObjectId() throws Exception {
+        setField(jrdUserProfileUtil, "emailService", emailService);
+        Mockito.when(emailService.sendEmail(ArgumentMatchers.any(Email.class))).thenReturn(200);
+
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidPerCodeObjectIds);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
