@@ -18,7 +18,6 @@ REFERENCES judicial_user_profile (per_Id);
 --Update the Service_Code field length from varchar (16) to Varchar (64)
 
 ALTER TABLE judicial_office_appointment ALTER COLUMN service_code TYPE varchar(64);
-ALTER TABLE judicial_office_authorisation ALTER COLUMN service_code TYPE varchar(64);
 ALTER TABLE judicial_service_code_mapping ALTER COLUMN service_code TYPE varchar(64);
 
 --Alter judicial_office_appointment
