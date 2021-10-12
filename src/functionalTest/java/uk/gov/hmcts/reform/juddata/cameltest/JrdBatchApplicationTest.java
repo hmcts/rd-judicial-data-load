@@ -150,18 +150,17 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     }
 
     @Test
-    void testServiceCodeMappingInJudicialOfficeAuthorisationTable() throws Exception {
+    void testTicketCodeMappingInJudicialOfficeAuthorisationTable() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        validateDbRecordCountFor(jdbcTemplate, serviceCodeSql, 2);
+        validateDbRecordCountFor(jdbcTemplate, ticketCodeSql, 6);
 
-        final List<Object> serviceCodes = retrieveColumnValues(jdbcTemplate, serviceCodeSql, "service_code");
-        assertTrue(serviceCodes.contains("BFA1"));
-        assertTrue(serviceCodes.contains("BBA3"));
+        var ticketCodes = retrieveColumnValues(jdbcTemplate, ticketCodeSql, "ticket_code");
+        assertTrue(ticketCodes.containsAll(List.of("366","373","289")));
     }
 
     @Test
