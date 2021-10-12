@@ -71,7 +71,7 @@ email:
       body: "Execution Failed for files - %s"
 
 sendgrid:
-  key: ${SENDGRID_API_KEY}
+  key: ${RD_SENDGRID_API_KEY}
 
 launchdarkly:
   sdk:
