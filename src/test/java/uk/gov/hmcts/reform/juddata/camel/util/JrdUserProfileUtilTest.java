@@ -219,6 +219,7 @@ class JrdUserProfileUtilTest {
         jrdUserProfileUtil.remove(judicialUserProfilesInvalidPersonalCodes, judicialUserProfiles);
         assertThat(judicialUserProfiles).isNotNull().isEmpty();
     }
+
     @Test
     void test_audit() {
         judicialUserProfiles.addAll(judicialUserProfilesInvalidPersonalCodes);
