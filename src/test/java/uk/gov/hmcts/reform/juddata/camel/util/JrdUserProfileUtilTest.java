@@ -71,6 +71,7 @@ class JrdUserProfileUtilTest {
     List<JudicialUserProfile> judicialUserProfilesValidRecords;
     List<JudicialUserProfile> judicialUserProfilesInvalidObjectIds;
     List<JudicialUserProfile> judicialUserProfilesInvalidPersonalCodes;
+    List<JudicialUserProfile> judicialUserProfilesWithNoObjectIds;
 
     @BeforeEach
     public void setUp() {
@@ -79,6 +80,7 @@ class JrdUserProfileUtilTest {
 
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
+        routeProperties.setTableName("test");
 
         setField(jrdUserProfileUtil, "applicationContext", applicationContext);
 
@@ -103,6 +105,8 @@ class JrdUserProfileUtilTest {
                 JudicialUserProfile.builder().personalCode("1234567").objectId("673sg825-7c34-5456-aa54-e126394793056")
                         .build(),
                 JudicialUserProfile.builder().personalCode("2034512").objectId("6427c339-79bd-47a7-b000-2356cb77c13b")
+                        .build(),
+                JudicialUserProfile.builder().personalCode("2034513").objectId("")
                         .build()
         ));
         judicialUserProfilesInvalidObjectIds = new ArrayList<>(Arrays.asList(
@@ -122,6 +126,11 @@ class JrdUserProfileUtilTest {
                         .build(),
                 JudicialUserProfile.builder().personalCode("4927112").objectId("933fc903-4c39-4742-bb46-d69903835904")
                         .build()
+        ));
+        judicialUserProfilesWithNoObjectIds = new ArrayList<>(Arrays.asList(
+                JudicialUserProfile.builder().personalCode("1233456").objectId("").build(),
+                JudicialUserProfile.builder().personalCode("1234556").objectId("").build(),
+                JudicialUserProfile.builder().personalCode("1234345").objectId("").build()
         ));
     }
 
@@ -144,7 +153,7 @@ class JrdUserProfileUtilTest {
 
         List<JudicialUserProfile> resultList = jrdUserProfileUtil
                 .removeInvalidRecords(judicialUserProfiles, exchangeMock);
-        assertThat(resultList).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
+        assertThat(resultList).isNotNull().hasSize(4).isEqualTo(judicialUserProfilesValidRecords);
         verify(jrdUserProfileUtil, times(1)).audit(anyList(), any());
         verify(emailService, times(1)).sendEmail(any(Email.class));
     }
@@ -155,7 +164,7 @@ class JrdUserProfileUtilTest {
 
         List<JudicialUserProfile> resultList = jrdUserProfileUtil
                 .removeInvalidRecords(judicialUserProfiles, exchangeMock);
-        assertThat(resultList).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
+        assertThat(resultList).isNotNull().hasSize(4).isEqualTo(judicialUserProfilesValidRecords);
         verify(jrdUserProfileUtil, times(0)).remove(anyList(), any());
         verify(jrdUserProfileUtil, times(0)).audit(anyList(), any());
         verify(emailService, times(0)).sendEmail(any(Email.class));
@@ -185,10 +194,22 @@ class JrdUserProfileUtilTest {
     @Test
     void test_filter_by_personal_code() {
         judicialUserProfiles.addAll(judicialUserProfilesInvalidPersonalCodes);
+        judicialUserProfiles.addAll(judicialUserProfilesWithNoObjectIds);
         judicialUserProfiles.addAll(judicialUserProfilesValidRecords);
 
         List<JudicialUserProfile> profiles = jrdUserProfileUtil.filterByPersonalCode(judicialUserProfiles);
         assertThat(profiles).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesInvalidPersonalCodes);
+    }
+
+    @Test
+    void test_filter_methods_when_profiles_with_empty_object_ids() {
+        judicialUserProfiles.addAll(judicialUserProfilesWithNoObjectIds);
+
+        List<JudicialUserProfile> filteredList1 = jrdUserProfileUtil.filterByObjectId(judicialUserProfiles);
+        List<JudicialUserProfile> filteredList2 = jrdUserProfileUtil.filterByPersonalCode(judicialUserProfiles);
+
+        assertThat(filteredList1).isEmpty();
+        assertThat(filteredList2).isEmpty();
     }
 
     @Test
@@ -197,6 +218,13 @@ class JrdUserProfileUtilTest {
 
         jrdUserProfileUtil.remove(judicialUserProfilesInvalidPersonalCodes, judicialUserProfiles);
         assertThat(judicialUserProfiles).isNotNull().isEmpty();
+    }
+    @Test
+    void test_audit() {
+        judicialUserProfiles.addAll(judicialUserProfilesInvalidPersonalCodes);
+        jrdUserProfileUtil.audit(judicialUserProfiles, exchangeMock);
+
+        verify(platformTransactionManager,times(1)).commit(any());
     }
 
     @Test
