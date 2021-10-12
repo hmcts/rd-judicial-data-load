@@ -91,12 +91,14 @@ public class JrdUserProfileUtil {
 
         var invalidRecords = getInvalidRecords(userProfiles);
 
-        //remove the invalid entries from the original user profile list
-        remove(invalidRecords, userProfiles);
+        //remove and audit the invalid entries from the original user profile list
+        if (!CollectionUtils.isEmpty(invalidRecords)) {
+            remove(invalidRecords, userProfiles);
 
-        audit(invalidRecords, exchange);
+            audit(invalidRecords, exchange);
 
-        sendEmail(invalidRecords, judicialUserProfiles);
+            sendEmail(judicialUserProfiles);
+        }
 
         return List.copyOf(userProfiles);
     }
@@ -218,20 +220,18 @@ public class JrdUserProfileUtil {
         platformTransactionManager.commit(status);
     }
 
-    public int sendEmail(List<JudicialUserProfile> userProfilesDeleted, List<JudicialUserProfile> userProfiles) {
+    public int sendEmail(List<JudicialUserProfile> userProfiles) {
+        EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get(USERPROFILE);
 
-        if (!userProfilesDeleted.isEmpty()) {
-            EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get(USERPROFILE);
-            if (mailTypeConfig.isEnabled()) {
-                Email email = Email.builder()
-                        .from(mailTypeConfig.getFrom())
-                        .to(mailTypeConfig.getTo())
-                        .messageBody(String.format(mailTypeConfig.getBody(), createMessageBody(userProfiles)))
-                        .subject(String.format(mailTypeConfig.getSubject(), LocalDate.now()
-                                .format(DateTimeFormatter.ofPattern(DATE_PATTERN))))
-                        .build();
-                return emailService.sendEmail(email);
-            }
+        if (mailTypeConfig.isEnabled()) {
+            Email email = Email.builder()
+                    .from(mailTypeConfig.getFrom())
+                    .to(mailTypeConfig.getTo())
+                    .messageBody(String.format(mailTypeConfig.getBody(), createMessageBody(userProfiles)))
+                    .subject(String.format(mailTypeConfig.getSubject(), LocalDate.now()
+                            .format(DateTimeFormatter.ofPattern(DATE_PATTERN))))
+                    .build();
+            return emailService.sendEmail(email);
         }
         return -1;
     }

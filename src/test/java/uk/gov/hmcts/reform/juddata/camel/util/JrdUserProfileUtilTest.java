@@ -65,6 +65,7 @@ class JrdUserProfileUtilTest {
 
     ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
+    EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
 
     List<JudicialUserProfile> judicialUserProfiles;
     List<JudicialUserProfile> judicialUserProfilesValidRecords;
@@ -125,7 +126,6 @@ class JrdUserProfileUtilTest {
     }
 
     private void setUpEmailConfig() {
-        EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
         mailTypeConfig.setEnabled(true);
         mailTypeConfig.setSubject("Official Sensitive: JRD - Incorrect JO Profile Configurations - %s");
         mailTypeConfig.setBody("Following JO profiles were deleted : \n %s");
@@ -156,7 +156,8 @@ class JrdUserProfileUtilTest {
         List<JudicialUserProfile> resultList = jrdUserProfileUtil
                 .removeInvalidRecords(judicialUserProfiles, exchangeMock);
         assertThat(resultList).isNotNull().hasSize(3).isEqualTo(judicialUserProfilesValidRecords);
-        verify(jrdUserProfileUtil, times(1)).audit(anyList(), any());
+        verify(jrdUserProfileUtil, times(0)).remove(anyList(), any());
+        verify(jrdUserProfileUtil, times(0)).audit(anyList(), any());
         verify(emailService, times(0)).sendEmail(any(Email.class));
     }
 
@@ -199,18 +200,19 @@ class JrdUserProfileUtilTest {
     }
 
     @Test
-    void test_sendEmail_when_empty_invalid_records() {
-        List<JudicialUserProfile> invalidUserProfiles = new ArrayList<>();
-        assertEquals(-1, jrdUserProfileUtil.sendEmail(invalidUserProfiles, judicialUserProfiles));
+    void test_sendEmail_when_email_disabled() {
+        mailTypeConfig.setEnabled(false);
+
+        assertEquals(-1, jrdUserProfileUtil.sendEmail(judicialUserProfiles));
         verify(emailService, times(0)).sendEmail(any(Email.class));
     }
 
     @Test
-    void test_sendEmail_when_invalid_records_present() {
+    void test_sendEmail_when_invalid_records() {
         when(emailService.sendEmail(any(Email.class))).thenReturn(202);
 
         assertEquals(202, jrdUserProfileUtil
-                .sendEmail(judicialUserProfilesInvalidObjectIds, judicialUserProfiles));
+                .sendEmail(judicialUserProfiles));
         verify(emailService, times(1)).sendEmail(any(Email.class));
     }
 
