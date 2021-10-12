@@ -79,7 +79,7 @@ email:
       body: "Following JO profiles were deleted : \n %s"
 
 sendgrid:
-  key: ${SENDGRID_API_KEY}
+  key: ${RD_SENDGRID_API_KEY}
 
 launchdarkly:
   sdk:
