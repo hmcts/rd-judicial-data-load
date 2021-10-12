@@ -36,6 +36,7 @@ update-job-sql: update dataload_schedular_job set job_end_time = now() at time z
 select-job-status-sql:  select id, publishing_status from dataload_schedular_job where date(job_start_time) = current_date
 get-sidam-ids: select sidam_id from judicial_user_profile where sidam_id is not null
 scheduler-audit-failure: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date and status = 'Failure'
+scheduler-end-time: select max(scheduler_end_time) FROM dataload_schedular_audit where scheduler_end_time < ( select MAX(scheduler_end_time) from dataload_schedular_audit where file_name = 'Personal' and status in ('PartialSuccess', 'Success')) and file_name = 'Personal' and status in ('PartialSuccess', 'Success')
 
 jrd:
   publisher:
