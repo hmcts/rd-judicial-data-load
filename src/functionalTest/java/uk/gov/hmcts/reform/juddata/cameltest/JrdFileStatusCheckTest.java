@@ -43,11 +43,15 @@ import javax.sql.DataSource;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.MILLIS_IN_A_DAY;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.deleteBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateExceptionDbRecordCount;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateLrdServiceFileException;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordCountFor;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-integration.yml,"
     + "classpath:application-leaf-integration.yml"})
@@ -86,7 +90,6 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
     @Value("${routes-to-execute-orchestration}")
     List<String> routesToExecute;
 
-
     @Test
     void testTaskletStaleFileErrorDay2WithKeepingDay1Data() throws Exception {
 
@@ -95,6 +98,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         deleteBlobs(jrdBlobSupport, archivalFileNames);
@@ -107,6 +111,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         // camelContext.getGlobalOptions().remove(SCHEDULER_START_TIME);
         params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         jobLauncherTestUtils.launchJob(params);
         List<Pair<String, String>> results = ImmutableList.of(new Pair<>(
@@ -130,6 +135,18 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         assertTrue(userProfileList.size() > 0);
     }
 
+    @Test
+    void should_execute_files_with_previous_day_timestamp() throws Exception {
+        //Day 1 happy path
+        uploadFiles(String.valueOf(new Date(System.currentTimeMillis()).getTime() + MILLIS_IN_A_DAY));
+
+        JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+                .addString(START_ROUTE, DIRECT_JRD)
+                .toJobParameters();
+        jobLauncherTestUtils.launchJob(params);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
+    }
 
     @Test
     void testTaskletNoFileErrorDay2WithKeepingDay1Data() throws Exception {
@@ -139,6 +156,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         deleteBlobs(jrdBlobSupport, archivalFileNames);
@@ -149,6 +167,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
             String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), UUID.randomUUID().toString())
+            .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         jobLauncherTestUtils.launchJob(params);
         notDeletionFlag = true;

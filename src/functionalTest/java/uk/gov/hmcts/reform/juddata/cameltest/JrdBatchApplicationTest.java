@@ -35,6 +35,8 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithSingleRecord;
@@ -71,6 +73,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+            .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
@@ -84,7 +87,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
-            .toJobParameters();
+            .addString(START_ROUTE, DIRECT_JRD)
+             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         List<Map<String, Object>> auditDetails = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         final Timestamp timestamp = (Timestamp) auditDetails.get(0).get("scheduler_end_time");
@@ -155,6 +159,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .addString(START_ROUTE, DIRECT_JRD)
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, serviceCodeSql, 2);
@@ -170,6 +175,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .addString(START_ROUTE, DIRECT_JRD)
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, epimmsIdSql, 2);
@@ -185,6 +191,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .addString(START_ROUTE, DIRECT_JRD)
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, judicialOfficeAppointmentServiceCodeSql, 1);
@@ -200,6 +207,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .addString(START_ROUTE, DIRECT_JRD)
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 8);
@@ -214,6 +222,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .addString(START_ROUTE, DIRECT_JRD)
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 2);

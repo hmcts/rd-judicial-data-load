@@ -17,6 +17,9 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
+
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
 @Slf4j
@@ -33,6 +36,9 @@ public class JudicialApplication implements ApplicationRunner {
     @Value("${batchjob-name}")
     String jobName;
 
+    @Value("${start-route}")
+    String startRoute;
+
     private static String logComponentName;
 
     @Autowired
@@ -40,9 +46,6 @@ public class JudicialApplication implements ApplicationRunner {
 
     @Autowired
     AuditServiceImpl judicialAuditServiceImpl;
-
-
-
 
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
@@ -57,6 +60,7 @@ public class JudicialApplication implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         JobParameters params = new JobParametersBuilder()
             .addString(jobName, String.valueOf(System.currentTimeMillis()))
+            .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         dataIngestionLibraryRunner.run(job, params);
     }
