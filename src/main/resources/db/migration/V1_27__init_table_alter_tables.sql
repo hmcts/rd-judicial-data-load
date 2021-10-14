@@ -25,9 +25,6 @@ ALTER TABLE judicial_service_code_mapping ALTER COLUMN service_code TYPE varchar
 ALTER TABLE judicial_office_appointment ADD COLUMN appointment varchar(64);
 ALTER TABLE judicial_office_appointment ADD COLUMN appointment_type varchar(32);
 
--- Add constraint on judicial_office_appointment
-ALTER TABLE judicial_office_appointment ALTER COLUMN appointment SET NOT NULL;
-
 --Remove 'Appointment' & 'Appointment_Type' fields from judicial_user_profile table
 ALTER TABLE judicial_user_profile DROP COLUMN appointment;
 ALTER TABLE judicial_user_profile DROP COLUMN appointment_type;
