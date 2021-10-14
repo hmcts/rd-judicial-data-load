@@ -63,7 +63,7 @@ route:
     csv-binder-object: JudicialOfficeAuthorisation
   judicial-role-type:
     id: judicial-role-type
-    file-name: Roles
+    file-name: AdditionalInfoRoles
     table-name: judicial_role_type
     parent-failure-enabled: true
     #Personal-Test only for testing else -Test not needed by main code
@@ -74,7 +74,7 @@ route:
       sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
       values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
       on conflict (role_id) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
-    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles?credentials=#credsreg&operation=updateBlockBlob
+    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/AdditionalInfoRoles?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper
     csv-binder-object: JudicialUserRoleType
