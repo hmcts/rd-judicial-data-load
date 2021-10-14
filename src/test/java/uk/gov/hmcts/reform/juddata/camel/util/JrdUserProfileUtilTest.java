@@ -99,39 +99,55 @@ class JrdUserProfileUtilTest {
 
     private void createUserProfiles() {
         judicialUserProfiles = new ArrayList<>();
-        judicialUserProfilesValidRecords = new ArrayList<>(Arrays.asList(
-                JudicialUserProfile.builder().personalCode("1234567").objectId("673sg825-7c34-5456-aa54-e126394793056")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("1234567").objectId("673sg825-7c34-5456-aa54-e126394793056")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("2034512").objectId("6427c339-79bd-47a7-b000-2356cb77c13b")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("2034513").objectId("")
-                        .build()
-        ));
-        judicialUserProfilesInvalidObjectIds = new ArrayList<>(Arrays.asList(
-                JudicialUserProfile.builder().personalCode("16023").objectId("0d3b6f60-40b5-45d6-b526-d38a212992d9")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("16023").objectId("0d3b6f60-40b5-45d6-b526-d38a212992d9")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("4925916").objectId("0d3b6f60-40b5-45d6-b526-d38a212992d9")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("4925916").objectId("0d3b6f60-40b5-45d6-b526-d38a212992d9")
-                        .build()
-        ));
-        judicialUserProfilesInvalidPersonalCodes = new ArrayList<>(Arrays.asList(
-                JudicialUserProfile.builder().personalCode("4927112").objectId("a01009ed-e6d1-47a3-add6-adf4365ca397")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("4927112").objectId("bd30e3c4-c377-4da4-8eb5-d7b1ff71a4ba")
-                        .build(),
-                JudicialUserProfile.builder().personalCode("4927112").objectId("933fc903-4c39-4742-bb46-d69903835904")
-                        .build()
-        ));
-        judicialUserProfilesWithNoObjectIds = new ArrayList<>(Arrays.asList(
-                JudicialUserProfile.builder().personalCode("1233456").objectId("").build(),
-                JudicialUserProfile.builder().personalCode("1234556").objectId("").build(),
-                JudicialUserProfile.builder().personalCode("1234345").objectId("").build()
-        ));
+        JudicialUserProfile profile1 = new JudicialUserProfile();
+        profile1.setPersonalCode("1234567");
+        profile1.setObjectId("673sg825-7c34-5456-aa54-e126394793056");
+        JudicialUserProfile profile2 = new JudicialUserProfile();
+        profile2.setPersonalCode("1234567");
+        profile2.setObjectId("673sg825-7c34-5456-aa54-e126394793056");
+        JudicialUserProfile profile3 = new JudicialUserProfile();
+        profile3.setPersonalCode("2034512");
+        profile3.setObjectId("6427c339-79bd-47a7-b000-2356cb77c13b");
+        JudicialUserProfile profile4 = new JudicialUserProfile();
+        profile4.setPersonalCode("2034513");
+        profile4.setObjectId("");
+        judicialUserProfilesValidRecords = new ArrayList<>(Arrays.asList(profile1, profile2, profile3, profile4));
+
+        JudicialUserProfile profile5 = new JudicialUserProfile();
+        profile5.setPersonalCode("16023");
+        profile5.setObjectId("0d3b6f60-40b5-45d6-b526-d38a212992d9");
+        JudicialUserProfile profile6 = new JudicialUserProfile();
+        profile6.setPersonalCode("16023");
+        profile6.setObjectId("0d3b6f60-40b5-45d6-b526-d38a212992d9");
+        JudicialUserProfile profile7 = new JudicialUserProfile();
+        profile7.setPersonalCode("4925916");
+        profile7.setObjectId("0d3b6f60-40b5-45d6-b526-d38a212992d9");
+        JudicialUserProfile profile8 = new JudicialUserProfile();
+        profile8.setPersonalCode("4925916");
+        profile8.setObjectId("0d3b6f60-40b5-45d6-b526-d38a212992d9");
+        judicialUserProfilesInvalidObjectIds = new ArrayList<>(Arrays.asList(profile5, profile6, profile7, profile8));
+
+        JudicialUserProfile profile9 = new JudicialUserProfile();
+        profile9.setPersonalCode("4927112");
+        profile9.setObjectId("a01009ed-e6d1-47a3-add6-adf4365ca397");
+        JudicialUserProfile profile10 = new JudicialUserProfile();
+        profile10.setPersonalCode("4927112");
+        profile10.setObjectId("bd30e3c4-c377-4da4-8eb5-d7b1ff71a4ba");
+        JudicialUserProfile profile11 = new JudicialUserProfile();
+        profile11.setPersonalCode("4927112");
+        profile11.setObjectId("933fc903-4c39-4742-bb46-d69903835904");
+        judicialUserProfilesInvalidPersonalCodes = new ArrayList<>(Arrays.asList(profile9, profile10, profile11));
+
+        JudicialUserProfile profile12 = new JudicialUserProfile();
+        profile12.setPersonalCode("1233456");
+        profile12.setObjectId("");
+        JudicialUserProfile profile13 = new JudicialUserProfile();
+        profile13.setPersonalCode("1234556");
+        profile13.setObjectId("");
+        JudicialUserProfile profile14 = new JudicialUserProfile();
+        profile14.setPersonalCode("1234345");
+        profile14.setObjectId("");
+        judicialUserProfilesWithNoObjectIds = new ArrayList<>(Arrays.asList(profile12, profile13, profile14));
     }
 
     private void setUpEmailConfig() {

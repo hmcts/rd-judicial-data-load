@@ -125,6 +125,7 @@ pmd {
 task integration(type: Test, description: 'Runs the integration tests.', group: 'Verification') {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
+    finalizedBy aggregate
 }
 
 task functional(type: Test) {
@@ -181,9 +182,7 @@ pitest {
             'uk.gov.hmcts.reform.juddata.camel.util.JrdConstants',
             'uk.gov.hmcts.reform.juddata.camel.util.PublishJudicialData',
             'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
-            'uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil*',
-            'uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher',
-            'uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile*'
+            'uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher'
     ]
     threads = 6
     enableDefaultIncrementalAnalysis = true

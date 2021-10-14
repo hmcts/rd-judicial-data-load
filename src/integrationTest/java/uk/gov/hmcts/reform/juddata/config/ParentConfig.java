@@ -24,6 +24,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.processor.CommonCsvFieldProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileReadProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.FileResponseProcessor;
@@ -57,6 +58,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 
 import javax.sql.DataSource;
@@ -381,5 +383,15 @@ public class ParentConfig {
     @Bean
     JrdUserProfileUtil jrdUserProfileUtil() {
         return new JrdUserProfileUtil();
+    }
+
+    @Bean
+    EmailConfiguration emailConfiguration() {
+        return new EmailConfiguration();
+    }
+
+    @Bean
+    CommonCsvFieldProcessor commonCsvFieldProcessor() {
+        return new CommonCsvFieldProcessor();
     }
 }

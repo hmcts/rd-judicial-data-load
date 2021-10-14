@@ -25,7 +25,7 @@ active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
 file-read-time-out: 2000
 scheduler-audit-select: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date
 invalid-exception-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
-invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?, ?)
+invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp,row_id) values(?, ?, ?, ?, ?, ?, ?, ?)
 scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,file_name, scheduler_start_time,scheduler_end_time,status) values(?,?,?,?,?)
 jsr-threshold-limit: 10
 leaf-route-task: leafRouteTask
@@ -166,3 +166,28 @@ sendgrid:
   key: ${SENDGRID_API_KEY:}
   mail:
     from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
+
+email:
+  mailTypes:
+    asb:
+      enabled: true
+      from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "%s :: Publishing of JRD messages to ASB failed"
+      body: "Publishing of JRD messages to ASB failed for Job Id %s"
+    report:
+      enabled: false
+      from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "%s :: JRD - Execution Failed"
+      body: "Execution Failed for files - %s"
+    userprofile:
+      enabled: true
+      from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
+      body: "Following JO profiles were deleted : \n %s"
