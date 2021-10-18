@@ -245,14 +245,11 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 2);
 
-        final List<Object> objectIds = retrieveColumnValues(jdbcTemplate, appointmentSql, "object_id");
-        assertTrue(objectIds.contains("578256875287452"));
-
         final List<Object> appointments = retrieveColumnValues(jdbcTemplate, appointmentSql, "appointment");
         assertFalse(appointments.contains("Initial Automated Record"));
 
-        final List<Object> appointmentTypes = retrieveColumnValues(jdbcTemplate, appointmentSql, "appointment_type");
-        assertTrue(appointmentTypes.contains("1"));
+        final List<Object> appointmentsError = retrieveColumnValues(jdbcTemplate, exceptionQuery, "field_in_error");
+        assertTrue(appointmentsError.contains("appointment"));
 
     }
 
