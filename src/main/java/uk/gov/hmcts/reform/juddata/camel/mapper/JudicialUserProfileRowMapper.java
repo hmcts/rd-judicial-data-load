@@ -23,12 +23,10 @@ public class JudicialUserProfileRowMapper implements IMapper {
         Map<String, Object> judUserProfileRow = new HashMap<>();
         judUserProfileRow.put("per_id", judicialUserProfile.getPerId());
         judUserProfileRow.put("personal_code", judicialUserProfile.getPersonalCode());
-        judUserProfileRow.put("appointment", judicialUserProfile.getAppointment());
         judUserProfileRow.put("known_as", getKnownAsValue(judicialUserProfile));
         judUserProfileRow.put("surname", judicialUserProfile.getSurName());
         judUserProfileRow.put("full_name", judicialUserProfile.getFullName());
         judUserProfileRow.put("post_nominals", judicialUserProfile.getPostNominals());
-        judUserProfileRow.put("appointment_type", judicialUserProfile.getAppointmentTypeId());
         judUserProfileRow.put("work_pattern", judicialUserProfile.getWorkPattern());
         judUserProfileRow.put("ejudiciary_email", judicialUserProfile.getEjudiciaryEmail());
         judUserProfileRow.put("joining_date", judicialUserProfile.getJoiningDate());

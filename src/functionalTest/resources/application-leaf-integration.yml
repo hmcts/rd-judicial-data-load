@@ -27,12 +27,14 @@ route:
     mapper-class: JudicialBaseLocationRowTypeMapper
     csv-binder-object: JudicialBaseLocationType
 
+
 base-location-select-jrd-sql: SELECT * FROM base_location_type
 
 region-select-jrd-sql: SELECT * FROM region_type
 
 fetch-base-location-id: SELECT base_location_id FROM base_location_type
 fetch-region-id: SELECT region_id FROM region_type
+
 
 
 

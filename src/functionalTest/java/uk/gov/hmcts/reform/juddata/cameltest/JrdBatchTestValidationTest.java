@@ -150,6 +150,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthorisationInvalidHeader);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
+
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
 
         jrdExecutor.execute(camelContext, LEAF_ROUTE, startLeafRoute);
@@ -158,6 +160,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 10);
     }
 
     @Test
@@ -171,7 +174,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
         assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("ejudiciary_email"));
         assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("ejudiciary_email"));
-        assertEquals(2, judicialUserProfileList.size());
+        assertEquals(3, judicialUserProfileList.size());
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
@@ -181,7 +184,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(2, judicialAppointmentList.size());
 
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 2);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 5, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 4, true);
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
             .queryForList(schedulerInsertJrdSqlPartialSuccess);
@@ -232,6 +235,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
         assertEquals(4, exceptionList.size());
+
     }
 
     @Test
@@ -245,14 +249,14 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("2", judicialUserProfileList.get(1).get("per_id"));
         assertEquals("joe.bloggs@ejudiciary.net", judicialUserProfileList.get(0).get("ejudiciary_email"));
         assertEquals("jo1e.bloggs@ejudiciary.net", judicialUserProfileList.get(1).get("ejudiciary_email"));
-        assertEquals(2, judicialUserProfileList.size());
+        assertEquals(3, judicialUserProfileList.size());
 
         List<Map<String, Object>> judicialAppointmentList = jdbcTemplate.queryForList(appointmentSql);
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
         assertNotNull(judicialAppointmentList.get(0).get("judicial_office_appointment_id"));
         assertEquals("1", judicialAppointmentList.get(0).get("per_id"));
         assertEquals("2", judicialAppointmentList.get(1).get("per_id"));
-        assertEquals(2, judicialAppointmentList.size());
+        assertEquals(3, judicialAppointmentList.size());
     }
 
     @Test
@@ -287,8 +291,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 7, false);
+        validateDbRecordCountFor(jdbcTemplate, userProfileSql, 6);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 0, false);
     }
 
     @Test
@@ -323,6 +327,19 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
                 .hasSameElementsAs(List.of(3L, 5L));
 
     }
+
+    private void validateLeafRoleJsr(List<Map<String, Object>> judicialUserRoleType) {
+        assertEquals(5, judicialUserRoleType.size());
+        assertEquals("1", judicialUserRoleType.get(1).get("role_id"));
+        assertEquals("3", judicialUserRoleType.get(2).get("role_id"));
+        assertEquals("7", judicialUserRoleType.get(3).get("role_id"));
+
+        assertEquals("Magistrate", judicialUserRoleType.get(1).get("role_desc_en"));
+        assertEquals("Advisory Committee Member - Non Magistrate",
+                judicialUserRoleType.get(2).get("role_desc_en"));
+        assertEquals("MAGS - AC Admin User", judicialUserRoleType.get(3).get("role_desc_en"));
+    }
+
 
 }
 

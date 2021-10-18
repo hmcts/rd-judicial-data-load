@@ -1,5 +1,5 @@
-per_id,Personal_Code,Title,Known_As,Surname,Full_Name,Post_Nominals,Contract_Type_Id,Work_Pattern,Email_Id,Joining_Date,Last_Working_Date,Active_Flag,Extracted_Date,Object_Id
-1,Emp1,Magistrate,Joe,Bloggs,Joe Bloggs,Baroness,1,No Work Pattern (M to F),joe.bloggs@ejudiciary.net,2008-07-18 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,79070937
-2,Emp2,Circuit Judge,Joe,Bloggs,Joe Bloggs,His Honour Judge,5,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,
-3,Emp1,,Joe,Bloggs,Joe Bloggs,,1,No Work Pattern (M to F),joe.bloggs@ejudiciary.net,2008-07-18 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,9090898
-4,Emp2,Circuit Judge,,,Joe Bloggs,His Honour Judge,5,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,testing
+per_id,Personal_Code,Known_As,Surname,Full_Name,Post_Nominals,Work_Pattern,Email_Id,Joining_Date,Last_Working_Date,Active_Flag,Extracted_Date,Object_Id
+1,Emp1,Joe,Bloggs,Joe Bloggs,Baroness,No Work Pattern (M to F),joe.bloggs@ejudiciary.net,2008-07-18 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,79070937
+2,Emp2,Joe,Bloggs,Joe Bloggs,His Honour Judge,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,
+3,Emp1,Joe,Bloggs,Joe Bloggs,,No Work Pattern (M to F),joe.bloggs@ejudiciary.net,2008-07-18 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,9090898
+4,Emp2,,,Joe Bloggs,His Honour Judge,Salaried Judiciary 5 Days Mon - Fri,jo1e.bloggs@ejudiciary.net,2006-08-10 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,testing

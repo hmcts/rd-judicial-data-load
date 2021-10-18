@@ -123,6 +123,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
+
         assertEquals(3, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
 
         //validate old day 1 data not gets truncated after day 2 stale file ran

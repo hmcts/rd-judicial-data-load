@@ -25,7 +25,7 @@ active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
 file-read-time-out: 2000
 scheduler-audit-select: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date
 invalid-exception-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
-invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp) values(?, ?, ?, ?, ?, ?, ?)
+invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp,row_id) values(?, ?, ?, ?, ?, ?, ?, ?)
 scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,file_name, scheduler_start_time,scheduler_end_time,status) values(?,?,?,?,?)
 jsr-threshold-limit: 10
 leaf-route-task: leafRouteTask
@@ -40,13 +40,13 @@ route:
     file-name: ${parent.file.name:''}
     table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile (per_id,personal_code,appointment,known_as,surname,full_name,post_nominals,appointment_type,work_pattern,ejudiciary_email,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (per_id,personal_code,known_as,surname,full_name,post_nominals,work_pattern,ejudiciary_email,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date,object_id)
-      values(:#per_id,:#personal_code,:#appointment,:#known_as,:#surname,:#full_name,:#post_nominals,
-      :#appointment_type,:#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code, appointment = :#appointment,
+      values(:#per_id,:#personal_code,:#known_as,:#surname,:#full_name,:#post_nominals,
+      :#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
-      appointment_type = :#appointment_type, work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
+      work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc' ,object_id = :#object_id?batch=true&dataSource=dataSource
     blob-path: ${parent.file.path}
@@ -63,9 +63,11 @@ route:
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id)
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id,
+      appointment,appointment_type)
       values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id)?dataSource=dataSource&batch=true
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id,
+      :#appointment, :#appointment_type)?dataSource=dataSource&batch=true
     blob-path: ${child.file.path}
     processor-class: JudicialOfficeAppointmentProcessor
     mapper-class: JudicialOfficeAppointmentRowMapper

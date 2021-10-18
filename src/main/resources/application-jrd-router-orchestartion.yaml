@@ -1,18 +1,18 @@
 jdbc-batch-size: 10
-routes-to-execute-orchestration: judicial-user-profile-orchestration,judicial-office-appointment,judicial-office-authorisation
+routes-to-execute-orchestration: judicial-user-profile-orchestration,judicial-office-appointment,judicial-office-authorisation,judicial-role-type
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
     file-name: Personal
     table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile (per_id,personal_code,appointment,known_as,surname,full_name,post_nominals,appointment_type,work_pattern,ejudiciary_email,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (per_id,personal_code,known_as,surname,full_name,post_nominals,work_pattern,ejudiciary_email,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date,object_id)
-      values(:#per_id,:#personal_code,:#appointment,:#known_as,:#surname,:#full_name,:#post_nominals,
-      :#appointment_type,:#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code, appointment = :#appointment,
+      values(:#per_id,:#personal_code,:#known_as,:#surname,:#full_name,:#post_nominals,
+      :#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
-      appointment_type = :#appointment_type, work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
+      work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc' ,object_id = :#object_id?batch=true&dataSource=dataSource
     blob-path:
@@ -30,9 +30,11 @@ route:
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id)
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id,
+      appointment,appointment_type)
       values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id)?batch=true&dataSource=dataSource
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id,
+      :#appointment, :#appointment_type)?batch=true&dataSource=dataSource
     update-sql:
       sql:UPDATE judicial_office_appointment appt SET epimms_id=jlm.epimms_id,service_code=jlm.service_code FROM (select judicial_base_location_id,base_location_name,epimms_id,service_code from judicial_location_mapping) AS jlm where jlm.judicial_base_location_id = appt.base_location_id?dataSource=dataSource
     blob-path:
@@ -59,6 +61,23 @@ route:
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
+  judicial-role-type:
+    id: judicial-role-type
+    file-name: AdditionalInfoRoles
+    table-name: judicial_role_type
+    parent-failure-enabled: true
+    #Personal-Test only for testing else -Test not needed by main code
+    parent-name: Personal
+    truncate-sql:
+      sql:truncate judicial_role_type restart identity?dataSource=dataSource&batch=true
+    insert-sql:
+      sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
+      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
+      on conflict (role_id) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
+    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/AdditionalInfoRoles?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialUserRoleTypeProcessor
+    mapper-class: JudicialRoleTypeRowMapper
+    csv-binder-object: JudicialUserRoleType
 
 
 
