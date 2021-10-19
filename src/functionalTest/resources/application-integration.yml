@@ -26,7 +26,7 @@ spring:
 start-route: direct:JRD
 archival-route: direct:JrdArchival
 archival-path: azure-blob://${azure.storage.account-name}/jud-ref-data-archive
-archival-file-names: Personal-Test,Appointments-Test,Authorisations-Test,Locations-Test,BaseLocations-Test
+archival-file-names: Personal-Test,Appointments-Test,Authorisations-Test,Roles-Test,Locations-Test,BaseLocations-Test
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
@@ -42,20 +42,20 @@ parent-route-task: parentRouteOrchestrationTask
 batchjob-name: JudicialDataLoad
 audit-enable: true
 
-routes-to-execute-orchestration: judicial-user-profile-orchestration, judicial-office-appointment, judicial-office-authorisation
+routes-to-execute-orchestration: judicial-user-profile-orchestration, judicial-office-appointment, judicial-office-authorisation, judicial-role-type
 route:
   judicial-user-profile-orchestration:
     id: judicial-user-profile-orchestration
     file-name: Personal-Test
     table-name: judicial_user_profile
     insert-sql:
-      sql:insert into judicial_user_profile (per_id,personal_code,appointment,known_as,surname,full_name,post_nominals,appointment_type,work_pattern,ejudiciary_email,joining_date,last_working_date,
+      sql:insert into judicial_user_profile (per_id,personal_code,known_as,surname,full_name,post_nominals,work_pattern,ejudiciary_email,joining_date,last_working_date,
       active_flag,extracted_date,created_date,last_loaded_date,object_id)
-      values(:#per_id,:#personal_code,:#appointment,:#known_as,:#surname,:#full_name,:#post_nominals,
-      :#appointment_type,:#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code, appointment = :#appointment,
+      values(:#per_id,:#personal_code,:#known_as,:#surname,:#full_name,:#post_nominals,
+      :#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
+      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), now() at time zone 'utc', now() at time zone 'utc', :#object_id) on conflict (per_id) do update set personal_code = :#personal_code,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
-      appointment_type = :#appointment_type, work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
+      work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
       extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), last_loaded_date = now() at time zone 'utc', object_id = :#object_id?batch=true&dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Personal-Test?credentials=#credsreg&operation=updateBlockBlob
@@ -73,9 +73,11 @@ route:
     truncate-sql:
       sql:truncate judicial_office_appointment restart identity?dataSource=dataSource&batch=true
     insert-sql:
-      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id)
+      sql:insert into judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id,
+      appointment,appointment_type)
       values(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id)?dataSource=dataSource&batch=true
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),now() at time zone 'utc',now() at time zone 'utc', :#personal_code, :#object_id,
+      :#appointment, :#appointment_type)?dataSource=dataSource&batch=true
     update-sql:
       sql:UPDATE judicial_office_appointment appt SET epimms_id=jlm.epimms_id,service_code=jlm.service_code FROM (select judicial_base_location_id,base_location_name,epimms_id,service_code from judicial_location_mapping) AS jlm where jlm.judicial_base_location_id = appt.base_location_id?dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments-Test?credentials=#credsreg&operation=updateBlockBlob
@@ -96,11 +98,28 @@ route:
       sql:insert into judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id)
       values(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,now() at time zone 'utc',now() at time zone 'utc',:#lower_level,:#personal_code, :#object_id)?dataSource=dataSource&batch=true
     update-sql:
-      sql:UPDATE judicial_office_authorisation auth SET service_code=jsm.service_code FROM (select service_code,jurisdiction,lower_level from judicial_service_code_mapping) AS jsm where jsm.jurisdiction = auth.jurisdiction and jsm.lower_level = auth.lower_level?dataSource=dataSource
+      sql:UPDATE judicial_office_authorisation auth SET ticket_code=jtm.ticket_code FROM (select ticket_code,jurisdiction,lower_level from judicial_ticket_code_mapping) AS jtm where jtm.jurisdiction = auth.jurisdiction and jtm.lower_level = auth.lower_level?dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
     csv-binder-object: JudicialOfficeAuthorisation
+  judicial-role-type:
+    id: judicial-role-type
+    file-name: Roles-Test
+    table-name: judicial_role_type
+    parent-failure-enabled: true
+    #Personal-Test only for testing else -Test not needed by main code
+    parent-name: Personal-Test
+    truncate-sql:
+      sql:truncate judicial_role_type restart identity?dataSource=dataSource&batch=true
+    insert-sql:
+      sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
+      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
+      on conflict (role_id) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
+    blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-Test?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: JudicialUserRoleTypeProcessor
+    mapper-class: JudicialRoleTypeRowMapper
+    csv-binder-object: JudicialUserRoleType
 
 parent-select-jrd-sql: SELECT * FROM judicial_user_profile order by per_id
 
@@ -118,11 +137,13 @@ select-dataload-scheduler-audit-partial-success: select *  from dataload_schedul
 
 select-dataload-scheduler-audit-success: select *  from dataload_schedular_audit where status='Success'
 
-service-code-sql: SELECT * FROM judicial_office_authorisation WHERE service_code IS NOT NULL
+ticket-code-sql: SELECT * FROM judicial_office_authorisation WHERE ticket_code IS NOT NULL
 
 epimms-id-sql: SELECT * FROM judicial_office_appointment WHERE epimms_id IS NOT NULL
 
 judicial-office-appointment-service-code-sql: SELECT * FROM judicial_office_appointment WHERE service_code IS NOT NULL
+role-select-jrd-sql: SELECT * FROM judicial_role_type
+fetch-role-id: SELECT role_id FROM judicial_role_type
 
 start-leaf-route: direct:leaf
 
@@ -148,6 +169,7 @@ update-job-sql: update dataload_schedular_job set job_end_time = now() at time z
 select-job-status-sql: select id, publishing_status from dataload_schedular_job where date(job_start_time) = current_date
 get-sidam-ids: select sidam_id from judicial_user_profile where sidam_id is not null
 scheduler-audit-failure: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date and status = 'Failure'
+scheduler-end-time: select max(scheduler_end_time) FROM dataload_schedular_audit where scheduler_end_time < ( select MAX(scheduler_end_time) from dataload_schedular_audit where file_name = 'Personal-Test' and status in ('PartialSuccess', 'Success')) and file_name = 'Personal-Test' and status in ('PartialSuccess', 'Success')
 update-sidam-ids: update judicial_user_profile set sidam_id = ? where object_id = ? and sidam_id is null
 
 jrd:
@@ -169,7 +191,7 @@ launchdarkly:
 
 elastic:
   search:
-    query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-7200h}
+    query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
     recordsPerPage: 500
 
 idam:

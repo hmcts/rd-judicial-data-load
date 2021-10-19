@@ -5,17 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
 import lombok.SneakyThrows;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 import uk.gov.hmcts.reform.juddata.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.juddata.response.OpenIdAccessTokenResponse;
 
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +48,8 @@ class JrdSidamTokenServiceImplTest {
     private final OpenIdAccessTokenResponse openIdTokenResponseMock = mock(OpenIdAccessTokenResponse.class);
     @InjectMocks
     private JrdSidamTokenServiceImpl jrdSidamTokenService;
+    @Mock
+    JdbcTemplate jdbcTemplate;
 
     public static final String CLIENT_AUTHORIZATION =
         "eyjfddsfsdfsdfdj03903.dffkljfke932rjf032j02f3--fskfljdskls-fdkldskll";
@@ -63,6 +69,8 @@ class JrdSidamTokenServiceImplTest {
         tokenConfigProperties.setUrl(url);
         jrdSidamTokenService.props = tokenConfigProperties;
         jrdSidamTokenService.recordsPerPage = 1;
+        jrdSidamTokenService.schedulerEndTime = "test sql";
+        jrdSidamTokenService.searchQuery = "(roles:judiciary) AND lastModified:>now-%sh";
     }
 
     @Test
@@ -100,6 +108,8 @@ class JrdSidamTokenServiceImplTest {
             Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
             .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(jdbcTemplate.queryForObject(jrdSidamTokenService.schedulerEndTime,
+                LocalDateTime.class)).thenReturn(LocalDateTime.now());
         Set<IdamClient.User> useResponses = jrdSidamTokenService.getSyncFeed();
         assertThat(response).isNotNull();
         useResponses.forEach(useResponse -> {
@@ -122,6 +132,8 @@ class JrdSidamTokenServiceImplTest {
             Request.Body.empty(), null)).body(body, Charset.defaultCharset())
             .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(jdbcTemplate.queryForObject(jrdSidamTokenService.schedulerEndTime,
+                LocalDateTime.class)).thenReturn(LocalDateTime.now());
         assertThrows(JudicialDataLoadException.class, () -> jrdSidamTokenService.getSyncFeed());
     }
 
@@ -144,6 +156,8 @@ class JrdSidamTokenServiceImplTest {
             Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
             .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(jdbcTemplate.queryForObject(jrdSidamTokenService.schedulerEndTime,
+                LocalDateTime.class)).thenReturn(LocalDateTime.now());
         assertThrows(JudicialDataLoadException.class, () -> jrdSidamTokenService.getSyncFeed());
     }
 
@@ -203,5 +217,21 @@ class JrdSidamTokenServiceImplTest {
             .status(500).build());
         invokeMethod(jrdSidamTokenService, "logIdamResponse", response);
         verify(response, times(3)).status();
+    }
+
+    @Test
+    void testElasticSearchQuery() {
+        when(jdbcTemplate.queryForObject(jrdSidamTokenService.schedulerEndTime,
+                LocalDateTime.class)).thenReturn(LocalDateTime.now().minusDays(1));
+        String formattedQuery = invokeMethod(jrdSidamTokenService, "elasticSearchQuery");
+        Assert.assertEquals("(roles:judiciary) AND lastModified:>now-25h", formattedQuery);
+    }
+
+    @Test
+    void testElasticSearchQueryMaxIsNull() {
+        when(jdbcTemplate.queryForObject(jrdSidamTokenService.schedulerEndTime,
+                LocalDateTime.class)).thenReturn(null);
+        String formattedQuery = invokeMethod(jrdSidamTokenService, "elasticSearchQuery");
+        Assert.assertEquals("(roles:judiciary) AND lastModified:>now-72h", formattedQuery);
     }
 }

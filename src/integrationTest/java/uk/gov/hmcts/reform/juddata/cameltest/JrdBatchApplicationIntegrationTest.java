@@ -34,6 +34,7 @@ import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.config.LeafConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentConfig;
 import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 import uk.gov.hmcts.reform.juddata.configuration.FeignConfiguration;
 import uk.gov.hmcts.reform.juddata.support.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.support.LeafIntegrationSupport;
@@ -64,7 +65,7 @@ import static uk.gov.hmcts.reform.juddata.support.ParentIntegrationTestSupport.s
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {ParentConfig.class, LeafConfig.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class,
-    FeignConfiguration.class},
+    FeignConfiguration.class, EmailConfiguration.class},
     initializers = ConfigDataApplicationContextInitializer.class)
 @CamelSpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
@@ -125,16 +126,16 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
                 "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 18, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 15, true);
         validateForeignKeyRecordsAndMissingParentRecords();
     }
 
     private void validateForeignKeyRecordsAndMissingParentRecords() {
         String[] parameters = new String[]{INVALID_JSR_PARENT_ROW, "judicial-office-appointment"};
-        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 0,
             true, parameters);
         parameters = new String[]{INVALID_JSR_PARENT_ROW, "judicial_office_authorisation"};
-        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 0,
             true, parameters);
         parameters = new String[]{MISSING_PER_ID, "judicial-office-appointment"};
         validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,

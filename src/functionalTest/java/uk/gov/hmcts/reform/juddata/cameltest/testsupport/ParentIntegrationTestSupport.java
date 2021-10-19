@@ -33,67 +33,94 @@ import static org.springframework.util.ResourceUtils.getFile;
 
 public interface ParentIntegrationTestSupport {
 
-    String[] file = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] file =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithError = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] fileWithError =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments_error.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithSingleRecord = {"classpath:sourceFiles/parent/judicial_userprofile_singlerecord.csv",
+    String[] fileWithSingleRecord =
+        {"classpath:sourceFiles/parent/judicial_userprofile_singlerecord.csv",
         "classpath:sourceFiles/parent/judicial_appointments_singlerecord.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_singlerecord.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation_singlerecord.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] fileWithInvalidHeader =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments_invalidheader.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithAuthorisationInvalidHeader = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] fileWithAuthorisationInvalidHeader =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_invalidheader.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation_invalidheader.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithInvalidJsr = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+    String[] fileWithInvalidJsr =
+        {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
         "classpath:sourceFiles/parent/judicial_appointments_jsr.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation_jsr_partial_success.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithInvalidJsrExceedsThreshold = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+    String[] fileWithInvalidJsrExceedsThreshold =
+        {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
         "classpath:sourceFiles/parent/judicial_appointments_jsr_exccedthreshold.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithPerIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] fileWithPerIdMissing =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments_per_missing.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithAuthPerIdMissing = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] fileWithAuthPerIdMissing =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_per_missings.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation_per_missings.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithPerIdInvalidInParent = {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
+    String[] fileWithPerIdInvalidInParent =
+        {"classpath:sourceFiles/parent/judicial_userprofile_jsr.csv",
         "classpath:sourceFiles/parent/judicial_appointments_invalid_jsr_parent_per.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
-    String[] fileWithForeignKeyViolations = {"classpath:sourceFiles/parent/judicial_userprofile_multiple_rows.csv",
+    String[] fileWithForeignKeyViolations =
+        {"classpath:sourceFiles/parent/judicial_userprofile_multiple_rows.csv",
         "classpath:sourceFiles/parent/judicial_appointments_with_foreignkey_violations.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_with_foreignkey_violations.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation_with_foreignkey_violations.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
     String[] fileWithInvalidAppointments =
         {"classpath:sourceFiles/parent/judicial_userprofile_with_invalid_appointment.csv",
-            "classpath:sourceFiles/parent/judicial_appointments.csv",
-            "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
+         "classpath:sourceFiles/parent/judicial_appointments.csv",
+         "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+         "classpath:sourceFiles/parent/Roles.csv"};
 
 
-    String[] missingUserProfile = {"classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation.csv"
-    };
-
-    String[] fileWithEmptyPerIdInAuth = {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+    String[] missingUserProfile =
+        {"classpath:sourceFiles/parent/judicial_userprofile_empty.csv",
         "classpath:sourceFiles/parent/judicial_appointments.csv",
-        "classpath:sourceFiles/parent/judicial_office_authorisation_per_empty.csv"};
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
+
+    String[] fileWithEmptyPerIdInAuth =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation_per_empty.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
 
     static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
                             boolean isParent, String... files) throws Exception {
-        int i = isParent ? 0 : 3;
+        int i = isParent ? 0 : 4;
         for (String absoluteFileName : files) {
             jrdBlobSupport.uploadFile(
                 archivalFileNames.get(i),

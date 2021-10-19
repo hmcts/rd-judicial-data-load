@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -29,6 +30,10 @@ public class JrdTestSupport {
     public static final Map<String, String> regions = ImmutableMap.of("perid_1", "regionId_1",
         "perid_2", "regionId_2", "perid_3", "regionId_3");
 
+    public static final Map<String, String> roles = ImmutableMap.of("elinksid_1", "roleId_1",
+            "elinksid_2", "roleId_2", "elinksid_3", "roleId_3");
+
+
     public static final String PERSONAL_CODE = "111";
 
     private JrdTestSupport() {
@@ -41,12 +46,10 @@ public class JrdTestSupport {
         JudicialUserProfile judicialUserProfileMock = new JudicialUserProfile();
         judicialUserProfileMock.setPerId(perId);
         judicialUserProfileMock.setPersonalCode("personalCode_1");
-        judicialUserProfileMock.setAppointment("appointment");
         judicialUserProfileMock.setKnownAs("knownAs");
         judicialUserProfileMock.setSurName("surname");
         judicialUserProfileMock.setFullName("fullName");
         judicialUserProfileMock.setPostNominals("postNominals");
-        judicialUserProfileMock.setAppointmentTypeId("appointmentTypeId");
         judicialUserProfileMock.setWorkPattern("workpatterns");
         judicialUserProfileMock.setEjudiciaryEmail("some@hmcts.net");
         judicialUserProfileMock.setJoiningDate(getDateWithFormat(currentDate, DATE_FORMAT));
@@ -83,6 +86,9 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAppointmentMock.setExtractedDate(getDateTimeWithFormat(dateTime));
         judicialOfficeAppointmentMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
+        judicialOfficeAppointmentMock.setAppointment("Magistrate");
+        judicialOfficeAppointmentMock.setAppointmentType("1");
+
         return judicialOfficeAppointmentMock;
     }
 
@@ -143,5 +149,15 @@ public class JrdTestSupport {
         String datTime = dateTime.toString().replace("T", " ");
         String tail = datTime.substring(datTime.lastIndexOf(".")).concat("000");
         return datTime.substring(0, datTime.lastIndexOf(".")) + tail;
+    }
+
+    public static JudicialUserRoleType createJudicialUserRoleType() {
+        JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
+        judicialUserRoleType.setPerId("46804");
+        judicialUserRoleType.setTitle("Family Course Tutor (JC)");
+        judicialUserRoleType.setLocation("Nationwide");
+        judicialUserRoleType.setStartDate("2018-05-02 00:00:00.000");
+        judicialUserRoleType.setEndDate("2022-05-01 00:00:00");
+        return judicialUserRoleType;
     }
 }

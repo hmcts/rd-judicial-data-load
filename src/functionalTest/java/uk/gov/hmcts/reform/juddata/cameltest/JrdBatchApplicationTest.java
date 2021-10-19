@@ -77,6 +77,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
     }
 
     @Test
@@ -96,7 +97,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
-        validateDbRecordCountFor(jdbcTemplate, selectDataLoadSchedulerAudit, 5);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
+        validateDbRecordCountFor(jdbcTemplate, selectDataLoadSchedulerAudit, 6);
         List<Map<String, Object>> auditDetailsNextRun = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         final Timestamp timestampNextRun = (Timestamp) auditDetailsNextRun.get(0).get("scheduler_end_time");
         assertEquals(timestamp, timestampNextRun);
@@ -151,10 +153,11 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
     }
 
     @Test
-    void testServiceCodeMappingInJudicialOfficeAuthorisationTable() throws Exception {
+    void testTicketCodeMappingInJudicialOfficeAuthorisationTable() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
@@ -162,11 +165,10 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
                 .addString(START_ROUTE, DIRECT_JRD)
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        validateDbRecordCountFor(jdbcTemplate, serviceCodeSql, 2);
+        validateDbRecordCountFor(jdbcTemplate, ticketCodeSql, 6);
 
-        final List<Object> serviceCodes = retrieveColumnValues(jdbcTemplate, serviceCodeSql, "service_code");
-        assertTrue(serviceCodes.contains("BFA1"));
-        assertTrue(serviceCodes.contains("BBA3"));
+        var ticketCodes = retrieveColumnValues(jdbcTemplate, ticketCodeSql, "ticket_code");
+        assertTrue(ticketCodes.containsAll(List.of("366","373","289")));
     }
 
     @Test
@@ -216,8 +218,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         assertTrue(objectIds.contains("578256875287452"));
     }
 
+
     @Test
-    void testObjectIdMappingInJudicialOfficeAppointmentTable() throws Exception {
+    void testMappingInJudicialOfficeAppointmentTable() throws Exception {
         uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
@@ -229,6 +232,14 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         final List<Object> objectIds = retrieveColumnValues(jdbcTemplate, appointmentSql, "object_id");
         assertTrue(objectIds.contains("578256875287452"));
+
+        final List<Object> appointments = retrieveColumnValues(jdbcTemplate, appointmentSql, "appointment");
+        assertTrue(appointments.contains("Magistrate"));
+
+        final List<Object> appointmentTypes = retrieveColumnValues(jdbcTemplate, appointmentSql, "appointment_type");
+        assertTrue(appointmentTypes.contains("1"));
+
     }
+
 
 }

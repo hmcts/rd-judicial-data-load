@@ -64,8 +64,8 @@ public abstract class JrdBatchIntegrationSupport {
     @Value("${child-select-child2-sql}")
     protected String authorizationSql;
 
-    @Value("${service-code-sql}")
-    protected String serviceCodeSql;
+    @Value("${ticket-code-sql}")
+    protected String ticketCodeSql;
 
     @Value("${judicial-office-appointment-service-code-sql}")
     protected String judicialOfficeAppointmentServiceCodeSql;
@@ -111,6 +111,9 @@ public abstract class JrdBatchIntegrationSupport {
 
     @Value("${region-select-jrd-sql}")
     protected String regionSql;
+
+    @Value("${role-select-jrd-sql}")
+    protected String roleSql;
 
     @Value("${start-leaf-route}")
     protected String startLeafRoute;

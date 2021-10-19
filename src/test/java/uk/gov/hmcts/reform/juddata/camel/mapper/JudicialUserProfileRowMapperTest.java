@@ -28,12 +28,10 @@ class JudicialUserProfileRowMapperTest {
 
         assertEquals(PERID_1, response.get("per_id"));
         assertEquals("personalCode_1", response.get("personal_code"));
-        assertEquals("appointment", response.get("appointment"));
         assertEquals("knownAs", response.get("known_as"));
         assertEquals("surname", response.get("surname"));
         assertEquals("fullName", response.get("full_name"));
         assertEquals("postNominals", response.get("post_nominals"));
-        assertEquals("appointmentTypeId", response.get("appointment_type"));
         assertEquals("workpatterns", response.get("work_pattern"));
         assertEquals("some@hmcts.net", response.get("ejudiciary_email"));
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("joining_date"));
@@ -56,12 +54,10 @@ class JudicialUserProfileRowMapperTest {
 
         assertEquals(PERID_1, response.get("per_id"));
         assertEquals("personalCode_1", response.get("personal_code"));
-        assertEquals("appointment", response.get("appointment"));
         assertEquals("fullName", response.get("known_as"));
         assertEquals("surname", response.get("surname"));
         assertEquals("fullName", response.get("full_name"));
         assertEquals("postNominals", response.get("post_nominals"));
-        assertEquals("appointmentTypeId", response.get("appointment_type"));
         assertEquals("workpatterns", response.get("work_pattern"));
         assertEquals("some@hmcts.net", response.get("ejudiciary_email"));
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), response.get("joining_date"));

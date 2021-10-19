@@ -4,14 +4,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 import uk.gov.hmcts.reform.juddata.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.juddata.response.OpenIdAccessTokenResponse;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +26,10 @@ import java.util.Set;
 @Slf4j
 @Component
 public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
+
+    @Autowired
+    @Qualifier("springJdbcTemplate")
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
     IdamClient idamClient;
@@ -38,6 +46,8 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
     @Value("${elastic.search.recordsPerPage}")
     int recordsPerPage;
 
+    @Value("${scheduler-end-time}")
+    String schedulerEndTime;
 
     @Override
     public String getBearerToken() throws JudicialDataLoadException {
@@ -67,6 +77,7 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
     @SuppressWarnings("unchecked")
     public Set<IdamClient.User> getSyncFeed() throws JudicialDataLoadException {
         Map<String, String> formParams = new HashMap<>();
+        searchQuery = elasticSearchQuery();
         formParams.put("query",searchQuery);
         log.info("{}:: search elk query {}", loggingComponentName, searchQuery);
         Set<IdamClient.User> judicialUsers = new HashSet<>();
@@ -121,5 +132,12 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
                 log.info("{}:: Response body from Idam Client ::{}", loggingComponentName, response.status());
             }
         }
+    }
+
+    private String elasticSearchQuery() {
+        LocalDateTime maxSchedulerEndTime =
+                jdbcTemplate.queryForObject(schedulerEndTime, LocalDateTime.class);
+        return maxSchedulerEndTime == null ? String.format(searchQuery,72) : String.format(searchQuery,
+                Math.addExact(ChronoUnit.HOURS.between(maxSchedulerEndTime, LocalDateTime.now()), 1));
     }
 }

@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialBaseLocationRowTypeMapper;
 import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialRegionTypeRowMapper;
+import uk.gov.hmcts.reform.juddata.camel.mapper.JudicialRoleTypeRowMapper;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialBaseLocationProcessor;
 import uk.gov.hmcts.reform.juddata.camel.processor.JudicialRegionTypeProcessor;
+import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserRoleTypeProcessor;
 
 
 @Configuration
@@ -53,4 +56,25 @@ public class LeafCamelConfig {
     JsrValidatorInitializer<JudicialRegionType> judicialRegionTypeJsrValidatorInitializer() {
         return new JsrValidatorInitializer<>();
     }
+
+    @Bean
+    public JudicialUserRoleType judicialUserRoleType() {
+        return new JudicialUserRoleType();
+    }
+
+    @Bean
+    public JudicialUserRoleTypeProcessor judicialUserRoleTypeProcessor() {
+        return new JudicialUserRoleTypeProcessor();
+    }
+
+    @Bean
+    public JudicialRoleTypeRowMapper judicialRoleTypeRowMapper() {
+        return new JudicialRoleTypeRowMapper();
+    }
+
+    @Bean
+    JsrValidatorInitializer<JudicialUserRoleType> judicialUserRoleTypeJsrValidatorInitializer() {
+        return new JsrValidatorInitializer<>();
+    }
+
 }
