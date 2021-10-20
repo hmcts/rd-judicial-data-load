@@ -36,9 +36,6 @@ public class JudicialApplication implements ApplicationRunner {
     @Value("${batchjob-name}")
     String jobName;
 
-    @Value("${start-route}")
-    String startRoute;
-
     private static String logComponentName;
 
     @Autowired
