@@ -34,9 +34,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidAppointmentsEntry;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithSingleRecord;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAppointmentFile;
@@ -125,6 +127,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 0);
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 8);
     }
+
 
     @Test
     void testParentOrchestrationSingleRecord() throws Exception {
@@ -229,6 +232,24 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         final List<Object> appointmentTypes = retrieveColumnValues(jdbcTemplate, appointmentSql, "appointment_type");
         assertTrue(appointmentTypes.contains("1"));
+
+    }
+
+    @Test
+    void testMappingInJudicialOfficeAppointmentWithErrors() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidAppointmentsEntry);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        validateDbRecordCountFor(jdbcTemplate, appointmentSql, 2);
+
+        final List<Object> appointments = retrieveColumnValues(jdbcTemplate, appointmentSql, "appointment");
+        assertFalse(appointments.contains("Initial Automated Record"));
+
+        final List<Object> appointmentsError = retrieveColumnValues(jdbcTemplate, exceptionQuery, "field_in_error");
+        assertTrue(appointmentsError.contains("appointment"));
 
     }
 

@@ -118,6 +118,13 @@ public interface ParentIntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_office_authorisation_per_empty.csv",
         "classpath:sourceFiles/parent/Roles.csv"};
 
+    String[] fileWithInvalidAppointmentsEntry =
+        {"classpath:sourceFiles/parent/judicial_userprofile.csv",
+        "classpath:sourceFiles/parent/judicial_appointments_constraints_error.csv",
+        "classpath:sourceFiles/parent/judicial_office_authorisation.csv",
+        "classpath:sourceFiles/parent/Roles.csv"};
+
+
     static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
                             boolean isParent, String... files) throws Exception {
         int i = isParent ? 0 : 4;
