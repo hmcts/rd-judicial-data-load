@@ -16,6 +16,7 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
+import uk.gov.hmcts.reform.juddata.validators.Appointment;
 
 @Setter
 @Getter
@@ -65,6 +66,7 @@ public class JudicialOfficeAppointment extends CommonCsvField implements Seriali
 
     @DataField(pos = 12, columnName = "appointment")
     @NotEmpty
+    @Appointment
     String appointment;
 
 
