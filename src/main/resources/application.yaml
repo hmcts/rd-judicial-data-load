@@ -69,6 +69,14 @@ email:
         - DLRefDataSupport@hmcts.net
       subject: "%s :: JRD - Execution Failed"
       body: "Execution Failed for files - %s"
+    userprofile:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
+      body: "Following JO profiles were deleted : \n %s"
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}

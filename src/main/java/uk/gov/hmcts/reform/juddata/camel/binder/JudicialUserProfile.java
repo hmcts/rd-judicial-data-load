@@ -16,8 +16,8 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PA
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
-@Setter
 @Getter
+@Setter
 @CsvRecord(separator = ",", crlf = "UNIX", skipFirstLine = true, skipField = true)
 @Component
 public class JudicialUserProfile extends CommonCsvField implements Serializable {

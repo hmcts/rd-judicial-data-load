@@ -57,6 +57,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 
 import javax.sql.DataSource;
@@ -383,4 +384,8 @@ public class ParentConfig {
         return new CommonCsvFieldProcessor();
     }
 
+    @Bean
+    JrdUserProfileUtil jrdUserProfileUtil() {
+        return new JrdUserProfileUtil();
+    }
 }

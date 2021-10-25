@@ -119,14 +119,14 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        assertEquals(6, jdbcTemplate.queryForList(userProfileSql).size());
+        assertEquals(2, jdbcTemplate.queryForList(userProfileSql).size());
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
             .queryForList(selectDataLoadSchedulerAudit);
         assertEquals(PARTIAL_SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
         assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
                 "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 15, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 20, true);
         validateForeignKeyRecordsAndMissingParentRecords();
     }
 
@@ -138,10 +138,10 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 0,
             true, parameters);
         parameters = new String[]{MISSING_PER_ID, "judicial-office-appointment"};
-        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 3,
             true, parameters);
         parameters = new String[]{MISSING_PER_ID, "judicial_office_authorisation"};
-        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 1,
+        validateExceptionDbRecordCount(jdbcTemplate, failedRecords, 2,
             true, parameters);
     }
 
