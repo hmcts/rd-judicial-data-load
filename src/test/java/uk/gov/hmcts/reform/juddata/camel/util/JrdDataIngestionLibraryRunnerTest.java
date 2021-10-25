@@ -40,7 +40,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.*;
+import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
+import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ROW_MAPPER;
 
