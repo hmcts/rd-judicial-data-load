@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
@@ -126,13 +127,21 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         return false;
     }
 
-    private Pair<String, String> getJobDetails() {
+    public Pair<String, String> getJobDetails() {
+        Optional<Pair<String, String>> pair = getJobStatus();
+
+        final String jobId = pair.map(Pair::getLeft).orElse("0");
+        final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
+        return Pair.of(jobId, jobStatus);
+    }
+
+    private Optional<Pair<String, String>> getJobStatus() {
         try {
-            return jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
-                    Pair.of(rs.getString(1), rs.getString(2)));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
+                    Pair.of(rs.getString(1), rs.getString(2))));
         } catch (EmptyResultDataAccessException ex) {
             log.info("No record found in table dataload_schedular_job");
-            return Pair.of(ZERO, EMPTY);
+            return Optional.empty();
         }
     }
 
