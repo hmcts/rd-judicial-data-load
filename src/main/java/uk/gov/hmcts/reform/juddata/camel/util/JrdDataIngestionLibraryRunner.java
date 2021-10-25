@@ -8,6 +8,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
@@ -40,6 +40,8 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING
 @Component
 @Slf4j
 public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
+
+    public static final String ZERO = "0";
 
     @Autowired
     @Qualifier("springJdbcTemplate")
@@ -124,12 +126,14 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         return false;
     }
 
-    public Pair<String, String> getJobDetails() {
-        Optional<Pair<String, String>> pair = Optional.of(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
-            Pair.of(rs.getString(1), rs.getString(2))));
-        final String jobId = pair.map(Pair::getLeft).orElse(EMPTY);
-        final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
-        return Pair.of(jobId, jobStatus);
+    private Pair<String, String> getJobDetails() {
+        try {
+            return jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
+                    Pair.of(rs.getString(1), rs.getString(2)));
+        } catch (EmptyResultDataAccessException ex) {
+            log.info("No record found in table dataload_schedular_job");
+            return Pair.of(ZERO, EMPTY);
+        }
     }
 
     private void mapAndPublishSidamIds(String jobId, String jobStatus) {
