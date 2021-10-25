@@ -181,7 +181,8 @@ pitest {
             'uk.gov.hmcts.reform.juddata.camel.util.JrdConstants',
             'uk.gov.hmcts.reform.juddata.camel.util.PublishJudicialData',
             'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
-            'uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher'
+            'uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher',
+            'uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil*'
     ]
     threads = 6
     enableDefaultIncrementalAnalysis = true
@@ -207,7 +208,8 @@ sonarqube {
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/response/**,"
+                "src/main/java/uk/gov/hmcts/reform/juddata/response/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/camel/binder/**,"
     }
 }
 

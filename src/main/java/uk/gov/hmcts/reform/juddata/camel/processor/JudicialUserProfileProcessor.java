@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,9 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
     @Value("${fetch-personal-per-id}")
     String loadPerId;
 
+    @Autowired
+    JrdUserProfileUtil jrdUserProfileUtil;
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
@@ -52,22 +56,25 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         log.info("{}:: Judicial User Profile Records count before Validation {}::", logComponentName,
             judicialUserProfiles.size());
 
-        List<JudicialUserProfile> filteredJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
-            judicialUserProfiles);
+        List<JudicialUserProfile> filteredJudicialUserProfiles = jrdUserProfileUtil
+                .removeInvalidRecords(judicialUserProfiles, exchange);
+
+        List<JudicialUserProfile> validJudicialUserProfiles = validate(judicialUserProfileJsrValidatorInitializer,
+                filteredJudicialUserProfiles);
 
         log.info("{}:: Judicial User Profile Records count after Validation {}::", logComponentName,
-            filteredJudicialUserProfiles.size());
+                validJudicialUserProfiles.size());
 
         audit(judicialUserProfileJsrValidatorInitializer, exchange);
 
         //Get Per Ids from current load
-        validPerIdInUserProfile = filteredJudicialUserProfiles.stream()
+        validPerIdInUserProfile = validJudicialUserProfiles.stream()
             .map(JudicialUserProfile::getPerId).collect(toSet());
 
         //Get Per Id from previous loads
         validPerIdInUserProfile.addAll(loadPerId());
 
-        exchange.getMessage().setBody(filteredJudicialUserProfiles);
+        exchange.getMessage().setBody(validJudicialUserProfiles);
     }
 
     public Set<String> getValidPerIdInUserProfile() {

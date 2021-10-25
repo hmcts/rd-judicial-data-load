@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ class JudicialUserProfileProcessorTest {
 
     private JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
 
+    private JrdUserProfileUtil judicialUserProfileUtil;
+
     private Validator validator;
 
     private JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
@@ -77,11 +80,12 @@ class JudicialUserProfileProcessorTest {
         judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
         judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_2);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
+        judicialUserProfileUtil = new JrdUserProfileUtil();
         judicialUserProfileJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
         setField(judicialUserProfileProcessor,
             "judicialUserProfileJsrValidatorInitializer", judicialUserProfileJsrValidatorInitializer);
-
+        setField(judicialUserProfileProcessor, "jrdUserProfileUtil", judicialUserProfileUtil);
         setField(judicialUserProfileProcessor, "jdbcTemplate", jdbcTemplate);
         setField(judicialUserProfileProcessor,
             "loadPerId", "dummysql");
