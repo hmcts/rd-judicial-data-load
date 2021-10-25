@@ -204,4 +204,13 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(topicPublisher, times(0)).sendMessage(any(), anyString());
     }
+
+    @SneakyThrows
+    @Test
+    void test_when_get_job_details_returns_no_exception() {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", IN_PROGRESS.getStatus()));
+        jrdDataIngestionLibraryRunner.run(job, jobParameters);
+        verify(topicPublisher, times(1)).sendMessage(any(), anyString());
+    }
 }
