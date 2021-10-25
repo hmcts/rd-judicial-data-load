@@ -381,6 +381,11 @@ public class ParentConfig {
     }
 
     @Bean
+    CommonCsvFieldProcessor commonCsvFieldProcessor() {
+        return new CommonCsvFieldProcessor();
+    }
+
+    @Bean
     JrdUserProfileUtil jrdUserProfileUtil() {
         return new JrdUserProfileUtil();
     }
@@ -388,10 +393,5 @@ public class ParentConfig {
     @Bean
     EmailConfiguration emailConfiguration() {
         return new EmailConfiguration();
-    }
-
-    @Bean
-    CommonCsvFieldProcessor commonCsvFieldProcessor() {
-        return new CommonCsvFieldProcessor();
     }
 }
