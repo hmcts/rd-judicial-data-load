@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
@@ -193,5 +194,14 @@ class JrdDataIngestionLibraryRunnerTest {
         when(jdbcTemplate.queryForObject("failedAuditFileCount", Integer.class)).thenReturn(1);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
+    }
+
+    @SneakyThrows
+    @Test
+    void test_when_get_job_details_runs_into_an_exception() {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenThrow(new EmptyResultDataAccessException(1));
+        jrdDataIngestionLibraryRunner.run(job, jobParameters);
+        verify(topicPublisher, times(0)).sendMessage(any(), anyString());
     }
 }
