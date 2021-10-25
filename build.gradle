@@ -433,7 +433,12 @@ configurations.all {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'io.netty'
                 && details.requested.name != 'netty-tcnative-boringssl-static' ) {
-            details.useVersion "4.1.63.Final"
+            details.useVersion "4.1.69.Final"
+        }
+
+        // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
+        if (details.requested.group == 'com.ibm.icu') {
+            details.useVersion "66.1"
         }
     }
 }
