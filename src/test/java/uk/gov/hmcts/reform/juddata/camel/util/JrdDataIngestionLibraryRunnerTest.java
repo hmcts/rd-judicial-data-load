@@ -40,8 +40,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
-import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.*;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.JOB_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ROW_MAPPER;
 
@@ -209,8 +208,8 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     void test_when_get_job_details_returns_no_exception() {
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
-                .thenReturn(Pair.of("1", IN_PROGRESS.getStatus()));
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
-        verify(topicPublisher, times(1)).sendMessage(any(), anyString());
+        verify(topicPublisher, times(0)).sendMessage(any(), anyString());
     }
 }
