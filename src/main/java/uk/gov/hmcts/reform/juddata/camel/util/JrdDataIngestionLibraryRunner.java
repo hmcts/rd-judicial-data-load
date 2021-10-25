@@ -130,7 +130,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     public Pair<String, String> getJobDetails() {
         Optional<Pair<String, String>> pair = getJobStatus();
 
-        final String jobId = pair.map(Pair::getLeft).orElse("0");
+        final String jobId = pair.map(Pair::getLeft).orElse(ZERO);
         final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
         return Pair.of(jobId, jobStatus);
     }
