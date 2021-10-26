@@ -23,7 +23,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 @Slf4j
 public class JudicialUserRoleTypeProcessor
         extends JsrValidationBaseProcessor<JudicialUserRoleType>
-        implements ICustomValidationProcessor<JudicialUserRoleType>{
+        implements ICustomValidationProcessor<JudicialUserRoleType> {
 
     @Autowired
     JsrValidatorInitializer<JudicialUserRoleType> judicialUserRoleTypeJsrValidatorInitializer;
