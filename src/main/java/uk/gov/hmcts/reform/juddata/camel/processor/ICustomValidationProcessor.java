@@ -58,7 +58,7 @@ public interface ICustomValidationProcessor<T> {
                     filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
                         ((JudicialOfficeAuthorisation) filterInvalidUserProfAuthorization).getPerId()
                             .equalsIgnoreCase(invalidRecords.getPerId()));
-                }else if (((Class) mySuperclass).getCanonicalName().equals(JudicialUserRoleType
+                } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialUserRoleType
                         .class.getCanonicalName())) {
                     filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
                             ((JudicialUserRoleType) filterInvalidUserProfAuthorization).getPerId()
