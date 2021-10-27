@@ -124,7 +124,7 @@ class JudicialUserRoleTypeProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void testProcess() throws Exception {
+    void shouldReturnJudicialUserRoleTypeResponse() throws Exception {
         List<JudicialUserRoleType> judicialUserRoleTypes = new ArrayList<>();
         JudicialUserRoleType judicialUserRoleTypeMock1 = createJudicialUserRoleType();
         JudicialUserRoleType judicialUserRoleTypeMock2 = createJudicialUserRoleType();
