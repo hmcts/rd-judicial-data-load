@@ -113,6 +113,15 @@ public interface ICustomValidationProcessor<T> {
                 //Auditing foreign key skipped rows of user profile for Authorization
                 jsrValidatorInitializer.auditJsrExceptions(pair,
                     fieldInError, errorMessage, exchange);
+            } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialUserRoleType
+                    .class.getCanonicalName())) {
+                List<Pair<String, Long>> pair = new ArrayList<>();
+                missingForeignKeyRecords.stream()
+                        .map(i -> ((JudicialUserRoleType) i))
+                        .forEach(j -> pair.add(Pair.of(j.getPerId(), j.getRowId())));
+                //Auditing foreign key skipped rows of user profile for Authorization
+                jsrValidatorInitializer.auditJsrExceptions(pair,
+                        fieldInError, errorMessage, exchange);
             }
         }
     }

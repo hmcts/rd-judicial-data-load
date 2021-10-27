@@ -253,5 +253,29 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     }
 
+    @Test
+    void testMappingInJudicialUserRoleTypesWithErrors() throws Exception {
+        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
+        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
+
+        final List<Object> perIds = retrieveColumnValues(jdbcTemplate, roleSql, "per_id");
+        assertFalse(perIds.contains("5"));
+
+        final List<Object> titles = retrieveColumnValues(jdbcTemplate, roleSql, "title");
+        assertTrue(titles.contains("Family Course Tutor (JC)"));
+
+        final List<Object> locations = retrieveColumnValues(jdbcTemplate, roleSql, "location");
+        assertTrue(locations.contains("Nationwide"));
+
+        final List<Object> RolesError = retrieveColumnValues(jdbcTemplate, exceptionQuery, "field_in_error");
+        assertTrue(RolesError.contains("per_id"));
+
+    }
+
 
 }
