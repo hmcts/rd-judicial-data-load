@@ -16,14 +16,18 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
+import static org.junit.Assert.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,12 +40,22 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_2;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_3;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserRoleType;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 
 class JudicialUserRoleTypeProcessorTest {
+
+    private Validator validator;
+    String date = "2017-10-01 00:00:00.000";
+
+    Date currentDate = new Date();
+
+    LocalDateTime dateTime = LocalDateTime.now();
 
     JudicialUserRoleTypeProcessor judicialUserRoleTypeProcessor = spy(new JudicialUserRoleTypeProcessor());
 
@@ -59,9 +73,6 @@ class JudicialUserRoleTypeProcessorTest {
     final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
     final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
-
-    private Validator validator;
-
 
 
     @BeforeEach
@@ -127,5 +138,34 @@ class JudicialUserRoleTypeProcessorTest {
         verify(exchangeMock, times(2)).getMessage();
         verify(judicialUserRoleTypeProcessor).audit(judicialUserRoleTypeJsrValidatorInitializer, exchangeMock);
         verify(messageMock).setBody(any());
+    }
+
+    @Test
+    void testFilterAuthorizationRecordsForForeignKeyViolation() {
+
+        List<JudicialUserRoleType> judicialUserRoleTypes = new ArrayList<>();
+
+        JudicialUserRoleType judicialUserRoleTypeMock1 = createJudicialUserRoleType();
+        judicialUserRoleTypeMock1.setPerId(PERID_1);
+        JudicialUserRoleType judicialUserRoleTypeMock2 = createJudicialUserRoleType();
+        judicialUserRoleTypeMock2.setPerId(PERID_2);
+
+
+        judicialUserRoleTypes.add(judicialUserRoleTypeMock1);
+        judicialUserRoleTypes.add(judicialUserRoleTypeMock2);
+
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_3);
+
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock);
+        judicialUserProfiles.add(judicialUserProfileMock2);
+
+        when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+
+        invokeMethod(judicialUserRoleTypeProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
+                judicialUserRoleTypes, exchangeMock);
+        assertEquals(1, judicialUserRoleTypes.size());
     }
 }
