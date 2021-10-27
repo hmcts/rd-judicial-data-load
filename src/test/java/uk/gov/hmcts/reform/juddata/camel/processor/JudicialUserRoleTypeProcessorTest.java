@@ -142,7 +142,7 @@ class JudicialUserRoleTypeProcessorTest {
     }
 
     @Test
-    void testFilterAuthorizationRecordsForForeignKeyViolation() {
+    void testFilterJudicialUserRoleTypeRecordsForForeignKeyViolation() {
 
         List<JudicialUserRoleType> judicialUserRoleTypes = new ArrayList<>();
 
@@ -172,7 +172,7 @@ class JudicialUserRoleTypeProcessorTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void should_return_JudicialOfficeAuthorizationRow_response() {
+    void shouldReturnJudicialUserRoleTypeRowResponse() {
 
         List<JudicialUserRoleType> judicialUserRoleTypes = new ArrayList<>();
 
@@ -200,6 +200,19 @@ class JudicialUserRoleTypeProcessorTest {
                 isNull(),
                 any(), any(),
                 isNull());
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_3);
+
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock);
+        judicialUserProfiles.add(judicialUserProfileMock2);
+        when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+
+        invokeMethod(judicialUserRoleTypeProcessor, "filterInvalidUserProfileRecords",
+                judicialUserRoleTypes,judicialUserProfiles,judicialUserRoleTypeJsrValidatorInitializer,
+                exchangeMock,"JudicialUserRoleType");
+        assertEquals(1, judicialUserRoleTypes.size());
     }
 
 }
