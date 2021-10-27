@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -168,4 +169,37 @@ class JudicialUserRoleTypeProcessorTest {
                 judicialUserRoleTypes, exchangeMock);
         assertEquals(1, judicialUserRoleTypes.size());
     }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void should_return_JudicialOfficeAuthorizationRow_response() {
+
+        List<JudicialUserRoleType> judicialUserRoleTypes = new ArrayList<>();
+
+        JudicialUserRoleType judicialUserRoleTypeMock1 = createJudicialUserRoleType();
+        judicialUserRoleTypeMock1.setPerId(PERID_1);
+        JudicialUserRoleType judicialUserRoleTypeMock2 = createJudicialUserRoleType();
+        judicialUserRoleTypeMock2.setPerId(PERID_2);
+
+
+        judicialUserRoleTypes.add(judicialUserRoleTypeMock1);
+        judicialUserRoleTypes.add(judicialUserRoleTypeMock2);
+
+        when(messageMock.getBody()).thenReturn(judicialUserRoleTypes);
+        judicialUserRoleTypeProcessor.process(exchangeMock);
+        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List<JudicialUserRoleType>) exchangeMock.getMessage().getBody()))
+                .isSameAs(judicialUserRoleTypes);
+
+        verify(exchangeMock, times(4)).getIn();
+        verify(exchangeMock, times(3)).getMessage();
+        verify(messageMock, times(4)).getBody();
+        verify(judicialUserRoleTypeProcessor).audit(any(), any());
+        verify(messageMock).setBody(any());
+        verify(judicialUserRoleTypeProcessor).filterInvalidUserProfileRecords(anyList(),
+                isNull(),
+                any(), any(),
+                isNull());
+    }
+
 }
