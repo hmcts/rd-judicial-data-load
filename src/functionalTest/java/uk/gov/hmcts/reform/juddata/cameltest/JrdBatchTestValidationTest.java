@@ -109,7 +109,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 2, false);
     }
 
     @Test
@@ -120,7 +120,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 2, false);
     }
 
     @Test
@@ -131,7 +131,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 0);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 2, false);
     }
 
     @Test
@@ -144,7 +144,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         //testAuthorisationInvalidHeaderRollback only Authorization
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 2);
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 0);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 1, false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 2, false);
     }
 
     @Test
@@ -191,7 +191,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals(2, judicialAppointmentList.size());
 
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 2);
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 4, true);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 5, true);
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
             .queryForList(schedulerInsertJrdSqlPartialSuccess);
@@ -209,7 +209,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
         //Jsr exception exceeds threshold limit in
 
-        String errorDescription = exceptionList.get(exceptionList.size() - 2).get("error_description").toString();
+        String errorDescription = exceptionList.get(exceptionList.size() - 3).get("error_description").toString();
 
         assertTrue(errorDescription.contains("Jsr exception exceeds threshold limit"));
     }
@@ -241,7 +241,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             assertNotNull(exceptionList.get(count).get("error_description"));
             assertNotNull(exceptionList.get(count).get("updated_timestamp"));
         }
-        assertEquals(4, exceptionList.size());
+        assertEquals(5, exceptionList.size());
 
     }
 
@@ -324,7 +324,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
-        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 2, false);
+        validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
         List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
 
         List<Long> rowId = exceptionList.stream()
@@ -332,8 +332,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
                 .collect(Collectors.toList());
 
         assertThat(rowId)
-                .hasSize(2)
-                .hasSameElementsAs(List.of(3L, 5L));
+                .hasSize(3)
+                .hasSameElementsAs(List.of(3L, 5L, 7L));
 
     }
 

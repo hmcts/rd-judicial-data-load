@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -57,6 +58,11 @@ public interface ICustomValidationProcessor<T> {
                     filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
                         ((JudicialOfficeAuthorisation) filterInvalidUserProfAuthorization).getPerId()
                             .equalsIgnoreCase(invalidRecords.getPerId()));
+                } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialUserRoleType
+                        .class.getCanonicalName())) {
+                    filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
+                            ((JudicialUserRoleType) filterInvalidUserProfAuthorization).getPerId()
+                                    .equalsIgnoreCase(invalidRecords.getPerId()));
                 }
                 if (filteredRecord) {
                     invalidPerIds.add(Pair.of(invalidRecords.getPerId(), invalidRecords.getRowId()));
@@ -64,7 +70,7 @@ public interface ICustomValidationProcessor<T> {
             });
 
             if (isNotEmpty(invalidPerIds)) {
-                //Auditing JSR skipped rows of user profile for Appointment/Authorization
+                //Auditing JSR skipped rows of user profile for Appointment/Authorization/JudicialUserRoleType
                 jsrValidatorInitializer.auditJsrExceptions(invalidPerIds, PER_ID, INVALID_JSR_PARENT_ROW, exchange);
                 LogHolder.log.info("{}:: Skipped invalid user profile per in {} {} & total skipped count {}",
                     logComponentName,
@@ -107,6 +113,15 @@ public interface ICustomValidationProcessor<T> {
                 //Auditing foreign key skipped rows of user profile for Authorization
                 jsrValidatorInitializer.auditJsrExceptions(pair,
                     fieldInError, errorMessage, exchange);
+            } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialUserRoleType
+                    .class.getCanonicalName())) {
+                List<Pair<String, Long>> pair = new ArrayList<>();
+                missingForeignKeyRecords.stream()
+                        .map(i -> ((JudicialUserRoleType) i))
+                        .forEach(j -> pair.add(Pair.of(j.getPerId(), j.getRowId())));
+                //Auditing foreign key skipped rows of user profile for Authorization
+                jsrValidatorInitializer.auditJsrExceptions(pair,
+                        fieldInError, errorMessage, exchange);
             }
         }
     }
