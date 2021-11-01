@@ -46,26 +46,41 @@ public interface ICustomValidationProcessor<T> {
         if (nonNull(invalidJudicialUserProfileRecords)) {
 
             invalidJudicialUserProfileRecords.forEach(invalidRecords -> {
-                //Remove invalid appointment for user profile and add to invalidPerIds List
-                boolean filteredRecord = false;
                 if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                     .class.getCanonicalName())) {
-                    filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAppointment ->
+                    filteredChildren.stream()
+                            .map( c -> (JudicialOfficeAppointment) c)
+                            .filter(app -> app.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
+                            .forEach( filteredApp ->
+                                    invalidPerIds.add(Pair.of(filteredApp.getPerId(), filteredApp.getRowId())));
+
+                    filteredChildren.removeIf(filterInvalidUserProfAppointment ->
                         ((JudicialOfficeAppointment) filterInvalidUserProfAppointment).getPerId()
                             .equalsIgnoreCase(invalidRecords.getPerId()));
                 } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                     .class.getCanonicalName())) {
-                    filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
-                        ((JudicialOfficeAuthorisation) filterInvalidUserProfAuthorization).getPerId()
-                            .equalsIgnoreCase(invalidRecords.getPerId()));
+                    filteredChildren.stream()
+                            .map( c -> (JudicialOfficeAuthorisation) c)
+                            .filter(auth -> auth.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
+                            .forEach( filteredAuth ->
+                                    invalidPerIds.add(Pair.of(filteredAuth.getPerId(), filteredAuth.getRowId())));
+
+                    filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
+                            ((JudicialOfficeAuthorisation) filterInvalidUserProfAuthorization).getPerId()
+                                    .equalsIgnoreCase(invalidRecords.getPerId()));
                 } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialUserRoleType
                         .class.getCanonicalName())) {
-                    filteredRecord = filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
-                            ((JudicialUserRoleType) filterInvalidUserProfAuthorization).getPerId()
+
+                    filteredChildren.stream()
+                            .map( c -> (JudicialUserRoleType) c)
+                            .filter(roleType -> roleType.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
+                            .forEach( filteredRoleType ->
+                                    invalidPerIds.add(Pair.of(filteredRoleType.getPerId(),
+                                            filteredRoleType.getRowId())));
+
+                    filteredChildren.removeIf(filterInvalidUserProfRoleType ->
+                            ((JudicialUserRoleType) filterInvalidUserProfRoleType).getPerId()
                                     .equalsIgnoreCase(invalidRecords.getPerId()));
-                }
-                if (filteredRecord) {
-                    invalidPerIds.add(Pair.of(invalidRecords.getPerId(), invalidRecords.getRowId()));
                 }
             });
 
