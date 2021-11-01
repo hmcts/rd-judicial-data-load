@@ -47,6 +47,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
@@ -262,6 +263,15 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("1", judicialAppointmentList.get(0).get("per_id"));
         assertEquals("2", judicialAppointmentList.get(1).get("per_id"));
         assertEquals(3, judicialAppointmentList.size());
+
+        List<Map<String, Object>> exceptionList = jdbcTemplate.queryForList(exceptionQuery);
+        assertEquals(4, exceptionList.size());
+        assertEquals("judicial-office-appointment", exceptionList.get(1).get("table_name"));
+        assertEquals("judicial-office-appointment", exceptionList.get(2).get("table_name"));
+        assertEquals(INVALID_JSR_PARENT_ROW, exceptionList.get(1).get("error_description"));
+        assertEquals(INVALID_JSR_PARENT_ROW, exceptionList.get(2).get("error_description"));
+        assertEquals(5L, exceptionList.get(1).get("row_id"));
+        assertEquals(6L, exceptionList.get(2).get("row_id"));
     }
 
     @Test
