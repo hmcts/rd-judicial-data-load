@@ -49,9 +49,9 @@ public interface ICustomValidationProcessor<T> {
                 if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                     .class.getCanonicalName())) {
                     filteredChildren.stream()
-                            .map( c -> (JudicialOfficeAppointment) c)
+                            .map(c -> (JudicialOfficeAppointment) c)
                             .filter(app -> app.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
-                            .forEach( filteredApp ->
+                            .forEach(filteredApp ->
                                     invalidPerIds.add(Pair.of(filteredApp.getPerId(), filteredApp.getRowId())));
 
                     filteredChildren.removeIf(filterInvalidUserProfAppointment ->
@@ -60,9 +60,9 @@ public interface ICustomValidationProcessor<T> {
                 } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                     .class.getCanonicalName())) {
                     filteredChildren.stream()
-                            .map( c -> (JudicialOfficeAuthorisation) c)
+                            .map(c -> (JudicialOfficeAuthorisation) c)
                             .filter(auth -> auth.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
-                            .forEach( filteredAuth ->
+                            .forEach(filteredAuth ->
                                     invalidPerIds.add(Pair.of(filteredAuth.getPerId(), filteredAuth.getRowId())));
 
                     filteredChildren.removeIf(filterInvalidUserProfAuthorization ->
@@ -72,9 +72,9 @@ public interface ICustomValidationProcessor<T> {
                         .class.getCanonicalName())) {
 
                     filteredChildren.stream()
-                            .map( c -> (JudicialUserRoleType) c)
+                            .map(c -> (JudicialUserRoleType) c)
                             .filter(roleType -> roleType.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
-                            .forEach( filteredRoleType ->
+                            .forEach(filteredRoleType ->
                                     invalidPerIds.add(Pair.of(filteredRoleType.getPerId(),
                                             filteredRoleType.getRowId())));
 
