@@ -272,6 +272,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         assertEquals("judicial-office-appointment", exceptionList.get(2).get("table_name"));
         assertEquals(INVALID_JSR_PARENT_ROW, exceptionList.get(1).get("error_description"));
         assertEquals(INVALID_JSR_PARENT_ROW, exceptionList.get(2).get("error_description"));
+
         assertEquals(5L, exceptionList.get(1).get("row_id"));
         assertEquals(6L, exceptionList.get(2).get("row_id"));
     }
