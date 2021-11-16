@@ -8,7 +8,7 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
@@ -27,7 +27,7 @@ import static com.microsoft.azure.storage.blob.DeleteSnapshotsOption.INCLUDE_SNA
 @Component
 @Slf4j
 @ContextConfiguration(classes = {
-    AzureBlobConfig.class, BlobStorageCredentials.class}, initializers = ConfigFileApplicationContextInitializer.class)
+    AzureBlobConfig.class, BlobStorageCredentials.class}, initializers = ConfigDataApplicationContextInitializer.class)
 public class JrdBlobSupport {
 
     CloudStorageAccount acc;
