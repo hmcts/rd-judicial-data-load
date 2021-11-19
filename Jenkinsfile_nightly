@@ -99,4 +99,15 @@ withNightlyPipeline(type, product, component) {
       steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
 
+    after('mutationTest') {
+        publishHTML target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/pitest",
+                reportFiles          : "index.html",
+                reportName           : "Mutation Tests Report"
+        ]
+    }
+
 }
