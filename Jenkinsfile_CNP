@@ -96,6 +96,8 @@ withPipeline(type, product, component) {
                         reportName           : "JRD Functional Test Report"
                 ]
             }
+            steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/tests/**/*'
+            steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
         }
 
     after('sonarscan') {
