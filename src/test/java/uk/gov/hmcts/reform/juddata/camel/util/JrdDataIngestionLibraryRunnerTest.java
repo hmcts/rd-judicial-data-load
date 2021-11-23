@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.blob.BlobProperties;
+import com.microsoft.azure.storage.blob.CloudBlobClient;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -8,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -18,6 +24,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
+import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
@@ -52,6 +59,24 @@ class JrdDataIngestionLibraryRunnerTest {
 
     TopicPublisher topicPublisher = mock(TopicPublisher.class);
 
+    @Mock
+    CloudStorageAccount cloudStorageAccount;
+
+    @Mock
+    AzureBlobConfig azureBlobConfig;
+
+    @Mock
+    CloudBlobClient blobClient;
+
+    @Mock
+    CloudBlobContainer container;
+
+    @Mock
+    CloudBlockBlob cloudBlockBlob;
+
+    @Mock
+    BlobProperties blobProperties;
+
     @InjectMocks
     private JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
 
@@ -72,7 +97,7 @@ class JrdDataIngestionLibraryRunnerTest {
     EmailServiceImpl emailService = mock(EmailServiceImpl.class);
 
     @BeforeEach
-    public void beforeTest() {
+    public void beforeTest() throws Exception {
         Map<String, String> options = new HashMap<>();
         options.put(JOB_ID, "1");
         List<String> sidamIds = new ArrayList<>();
@@ -108,6 +133,10 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
         when(camelContext.getGlobalOptions()).thenReturn(camelGlobalOptions);
         when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
+        when(cloudStorageAccount.createCloudBlobClient()).thenReturn(blobClient);
+        when(azureBlobConfig.getContainerName()).thenReturn("test");
+        when(blobClient.getContainerReference(anyString())).thenReturn(container);
+        when(container.getBlockBlobReference(any())).thenReturn(cloudBlockBlob);
     }
 
     @SneakyThrows

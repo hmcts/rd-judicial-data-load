@@ -32,7 +32,7 @@ archival-date-format: dd-MM-yyyy
 active-blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data
 file-read-time-out: 2000
 scheduler-audit-select: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date
-scheduler-audit-prev-day: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date - INTEGER '1'
+scheduler-audit-prev-day: select file_name, scheduler_start_time, status from dataload_schedular_audit where date(scheduler_start_time) = current_date - INTEGER '1'
 invalid-exception-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
 invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp,row_id) values(?, ?, ?, ?, ?, ?, ?, ?)
 scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,file_name, scheduler_start_time,scheduler_end_time,status) values(?,?,?,?,?)
@@ -167,7 +167,7 @@ fetch-personal-per-id: select per_id from judicial_user_profile
 insert-job-sql: insert into dataload_schedular_job(job_start_time, publishing_status) values(?, ?)
 update-job-sql: update dataload_schedular_job set job_end_time = now() at time zone 'utc', publishing_status = ? where id =?
 select-job-status-sql: select id, publishing_status from dataload_schedular_job where date(job_start_time) = current_date
-get-sidam-ids: select sidam_id from judicial_user_profile where sidam_id is not null
+get-sidam-ids: select distinct sidam_id from judicial_user_profile where sidam_id is not null
 scheduler-audit-failure: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date and status = 'Failure'
 scheduler-end-time: select max(scheduler_end_time) FROM dataload_schedular_audit where scheduler_end_time < ( select MAX(scheduler_end_time) from dataload_schedular_audit where file_name = 'Personal-Test' and status in ('PartialSuccess', 'Success')) and file_name = 'Personal-Test' and status in ('PartialSuccess', 'Success')
 update-sidam-ids: update judicial_user_profile set sidam_id = ? where object_id = ? and sidam_id is null
