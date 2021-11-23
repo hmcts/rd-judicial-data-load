@@ -58,15 +58,6 @@ withPipeline(type, product, component) {
     // Sync demo and perftest with master branch
     syncBranchesWithMaster(branchesToSync)
 
-   after('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
-
-    }
-
-    after('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
-    }
-
     after('akschartsinstall') {
 
         def sleepTime = (env.BRANCH_NAME.startsWith("PR")) ? '210s' : '120s'
@@ -105,5 +96,18 @@ withPipeline(type, product, component) {
                         reportName           : "JRD Functional Test Report"
                 ]
             }
+            steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/tests/**/*'
+            steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
         }
+
+    after('sonarscan') {
+         publishHTML target: [
+             allowMissing         : true,
+             alwaysLinkToLastBuild: true,
+             keepAll              : true,
+             reportDir            : "build/reports/tests/test",
+             reportFiles          : "index.html",
+             reportName           : "Unit Tests Report"
+         ]
+    }
 }
