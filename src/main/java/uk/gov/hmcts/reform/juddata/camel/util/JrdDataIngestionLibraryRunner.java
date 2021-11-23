@@ -30,7 +30,6 @@ import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl.JRD_ASB_FLAG;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FAILED;
@@ -99,7 +98,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
                 && Boolean.FALSE.equals(environment.startsWith("prod"))) {
-                if (isBlank(jobDetails.getRight()) || isLoadFailed(jobDetails)) {
+                if (isLoadFailed(jobDetails)) {
                     return;
                 }
                 mapAndPublishSidamIds(jobDetails.getLeft(), jobDetails.getRight());
