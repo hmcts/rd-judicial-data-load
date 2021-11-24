@@ -79,6 +79,7 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
         Map<String, String> formParams = new HashMap<>();
         searchQuery = elasticSearchQuery();
         formParams.put("query",searchQuery);
+        formParams.put("size",String.valueOf(recordsPerPage));
         log.info("{}:: search elk query {}", loggingComponentName, searchQuery);
         Set<IdamClient.User> judicialUsers = new HashSet<>();
         int totalCount = 0;
