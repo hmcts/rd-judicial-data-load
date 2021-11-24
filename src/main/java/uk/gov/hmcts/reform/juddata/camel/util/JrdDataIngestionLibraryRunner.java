@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
@@ -78,6 +79,12 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${update-job-sql}")
     String updateJobStatus;
 
+    @Value("${get-current-day-pub-status}")
+    String retrieveCurrentDayPublishingStatus;
+
+    @Value("${get-prev-day-pub-status}")
+    String retrievePreviousDayPublishingStatus;
+
     @Autowired
     IEmailService emailService;
 
@@ -98,9 +105,10 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
                 && Boolean.FALSE.equals(environment.startsWith("prod"))) {
-                if (isLoadFailed(jobDetails)) {
+                if (shouldReturn()) {
                     return;
                 }
+
                 mapAndPublishSidamIds(jobDetails.getLeft(), jobDetails.getRight());
                 log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName,
                     getJobDetails().getLeft());
@@ -211,4 +219,29 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             throw ex;
         }
     }
+
+    private boolean shouldReturn() throws Exception {
+       return currentDayPublishingStatusIsSuccessOrFileProcessingFailed()
+                || noFileUploadAfterSuccessfulDataIngestionOnPreviousDay();
+    }
+
+    public boolean currentDayPublishingStatusIsSuccessOrFileProcessingFailed() {
+        Optional<String> currentDayPublishingStatus = getPublishingStatus(retrieveCurrentDayPublishingStatus);
+
+        return currentDayPublishingStatus.map(status ->
+                status.equals(SUCCESS.getStatus())).orElse(false) || isLoadFailed( getJobDetails());
+    }
+
+    public boolean noFileUploadAfterSuccessfulDataIngestionOnPreviousDay() throws Exception {
+        Optional<String> previousDayPublishingStatus = getPublishingStatus(retrievePreviousDayPublishingStatus);
+        System.out.println();
+        return auditServiceImpl.hasDataIngestionRunAfterFileUpload(getFileTimestamp(fileName))
+                && previousDayPublishingStatus.map(status ->
+                status.equals(SUCCESS.getStatus())).orElse(false);
+    }
+
+    private Optional<String> getPublishingStatus(String query) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class));
+    }
+
 }

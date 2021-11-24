@@ -22,6 +22,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
@@ -37,11 +38,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -76,6 +75,9 @@ class JrdDataIngestionLibraryRunnerTest {
 
     @Mock
     BlobProperties blobProperties;
+
+    @Mock
+    AuditServiceImpl auditServiceImpl;
 
     @InjectMocks
     private JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
@@ -242,5 +244,27 @@ class JrdDataIngestionLibraryRunnerTest {
                 .thenReturn(Pair.of("1", SUCCESS.getStatus()));
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(topicPublisher, times(0)).sendMessage(any(), anyString());
+    }
+
+    @Test
+    void should_return_true_when_publishing_status_is_success() throws Exception {
+        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(SUCCESS.getStatus());
+        when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(true);
+        assertTrue(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
+    }
+
+    @Test
+    void should_return_false_when_publishing_status_is_failed() throws Exception {
+        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(FAILED.getStatus());
+        when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(true);
+        assertFalse(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
+    }
+
+    @Test
+    void should_return_false_when_publishing_status_is_success_and_file_uploaded_after_data_ingestion()
+            throws Exception {
+        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(SUCCESS.getStatus());
+        when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(false);
+        assertFalse(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
     }
 }
