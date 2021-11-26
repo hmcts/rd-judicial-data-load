@@ -28,7 +28,7 @@ Kubernetes scheduler triggers Apache Camel routes which process files stored in 
 
 # Building and deploying the application
 Building the application
-The project uses Gradle as a build tool. It already contains ./gradlew wrapper script, so there's no need to install gradle.
+The project uses Gradle as a build tool. It already contain ./gradlew wrapper script, so there's no need to install gradle.
 
 To build the project execute the following command:
   ./gradlew build 
