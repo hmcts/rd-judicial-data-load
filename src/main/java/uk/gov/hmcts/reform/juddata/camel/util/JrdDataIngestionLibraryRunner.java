@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
@@ -221,15 +220,15 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     }
 
     private boolean shouldReturn() throws Exception {
-       return currentDayPublishingStatusIsSuccessOrFileProcessingFailed()
+        return currentDayPublishingStatusIsSuccessOrFileLoadFailed()
                 || noFileUploadAfterSuccessfulDataIngestionOnPreviousDay();
     }
 
-    public boolean currentDayPublishingStatusIsSuccessOrFileProcessingFailed() {
+    public boolean currentDayPublishingStatusIsSuccessOrFileLoadFailed() {
         Optional<String> currentDayPublishingStatus = getPublishingStatus(retrieveCurrentDayPublishingStatus);
 
         return currentDayPublishingStatus.map(status ->
-                status.equals(SUCCESS.getStatus())).orElse(false) || isLoadFailed( getJobDetails());
+                status.equals(SUCCESS.getStatus())).orElse(false) || isLoadFailed(getJobDetails());
     }
 
     public boolean noFileUploadAfterSuccessfulDataIngestionOnPreviousDay() throws Exception {
