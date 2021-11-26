@@ -10,7 +10,6 @@ job:
     ENV_NAME: preview
     CONTAINER_NAME: jud-ref-data
     JRD_MQ_TRUST_ALL_CERTS: false
-    JRD_DATA_PER_MESSAGE: 500
     MAIL_FROM: no-reply@mail-rd-nonprod.platform.hmcts.net
   keyVaults:
     rd:
