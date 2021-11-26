@@ -78,10 +78,10 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${update-job-sql}")
     String updateJobStatus;
 
-    @Value("${get-current-day-pub-status}")
+    @Value("${select-current-day-job-status}")
     String retrieveCurrentDayPublishingStatus;
 
-    @Value("${get-prev-day-pub-status}")
+    @Value("${select-previous-day-job-status}")
     String retrievePreviousDayPublishingStatus;
 
     @Autowired
