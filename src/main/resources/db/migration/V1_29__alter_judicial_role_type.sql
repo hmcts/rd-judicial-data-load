@@ -1,0 +1,1 @@
+ALTER TABLE judicial_role_type ADD CONSTRAINT per_Id_title_unique UNIQUE (per_Id,title);
