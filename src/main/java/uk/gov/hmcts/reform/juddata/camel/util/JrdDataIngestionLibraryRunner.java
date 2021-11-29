@@ -233,14 +233,18 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
 
     public boolean noFileUploadAfterSuccessfulDataIngestionOnPreviousDay() throws Exception {
         Optional<String> previousDayPublishingStatus = getPublishingStatus(retrievePreviousDayPublishingStatus);
-        System.out.println();
         return auditServiceImpl.hasDataIngestionRunAfterFileUpload(getFileTimestamp(fileName))
                 && previousDayPublishingStatus.map(status ->
                 status.equals(SUCCESS.getStatus())).orElse(false);
     }
 
     private Optional<String> getPublishingStatus(String query) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class));
+        } catch (EmptyResultDataAccessException ex) {
+            log.info("No publishing status found in table dataload_schedular_job");
+            return Optional.empty();
+        }
     }
 
 }
