@@ -69,7 +69,7 @@ route:
     #Personal-Test only for testing else -Test not needed by main code
     parent-name: Personal
     truncate-sql:
-      sql:truncate judicial_role_type restart identity?dataSource=dataSource&batch=true
+      sql:truncate table judicial_role_type restart identity?dataSource=dataSource
     insert-sql:
       sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
       values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
