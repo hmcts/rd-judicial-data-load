@@ -72,8 +72,7 @@ route:
       sql:truncate table judicial_role_type restart identity?dataSource=dataSource
     insert-sql:
       sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
-      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
-      on conflict (per_Id,title) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
+      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)?batch=true&dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/AdditionalInfoRoles?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper
