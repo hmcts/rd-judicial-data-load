@@ -69,11 +69,10 @@ route:
     #Personal-Test only for testing else -Test not needed by main code
     parent-name: Personal
     truncate-sql:
-      sql:truncate judicial_role_type restart identity?dataSource=dataSource&batch=true
+      sql:truncate table judicial_role_type restart identity?dataSource=dataSource
     insert-sql:
       sql:insert into judicial_role_type (per_Id,title,location,start_date,end_date)
-      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)
-      on conflict (role_id) do update set per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
+      values(:#per_Id,:#title,:#location,:#start_date,:#end_date)?batch=true&dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/AdditionalInfoRoles?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper
