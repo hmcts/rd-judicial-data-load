@@ -112,6 +112,7 @@ class JrdDataIngestionLibraryRunnerTest {
         List<String> sidamIds = new ArrayList<>();
         sidamIds.add(UUID.randomUUID().toString());
         jrdDataIngestionLibraryRunner.selectJobStatus = "dummyjobstatus";
+        jrdDataIngestionLibraryRunner.selectPreviousDayJobStatus = "dummyjobstatus";
         jrdDataIngestionLibraryRunner.getSidamIds = "dummyQuery";
         jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
         jrdDataIngestionLibraryRunner.failedAuditFileCount = "failedAuditFileCount";
@@ -224,7 +225,7 @@ class JrdDataIngestionLibraryRunnerTest {
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
-        verify(jdbcTemplate, times(3)).queryForObject(anyString(), any(RowMapper.class));
+        verify(jdbcTemplate, times(5)).queryForObject(anyString(), any(RowMapper.class));
         verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 
@@ -256,14 +257,16 @@ class JrdDataIngestionLibraryRunnerTest {
 
     @Test
     void should_return_true_when_publishing_status_is_success_for_prev_day() throws Exception {
-        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(SUCCESS.getStatus());
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
         when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(true);
         assertTrue(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
     }
 
     @Test
     void should_return_false_when_publishing_status_is_failed_for_prev_day() throws Exception {
-        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(FAILED.getStatus());
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
         when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(true);
         assertFalse(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
     }
@@ -271,7 +274,8 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     void should_return_false_when_publishing_status_is_success_and_file_uploaded_after_data_ingestion()
             throws Exception {
-        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(SUCCESS.getStatus());
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
         when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(false);
         assertFalse(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
     }
@@ -279,7 +283,8 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
     void should_return_true_when_publishing_status_is_success_for_current_day() throws Exception {
-        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(SUCCESS.getStatus());
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
         when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(0);
         assertTrue(jrdDataIngestionLibraryRunner.currentDayPublishingStatusIsSuccessOrFileLoadFailed());
         verify(jdbcTemplate, times(0)).update(any(), any(), any());
@@ -288,7 +293,8 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
     void should_return_false_when_publishing_status_is_failed_for_current_day() throws Exception {
-        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(FAILED.getStatus());
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
         when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(0);
         assertFalse(jrdDataIngestionLibraryRunner.currentDayPublishingStatusIsSuccessOrFileLoadFailed());
     }
@@ -296,9 +302,34 @@ class JrdDataIngestionLibraryRunnerTest {
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
     void should_return_true_when_file_load_failed_for_current_day() throws Exception {
-        when(jdbcTemplate.queryForObject(any(), eq(String.class))).thenReturn(null);
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(null);
         when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(1);
         assertTrue(jrdDataIngestionLibraryRunner.currentDayPublishingStatusIsSuccessOrFileLoadFailed());
         verify(jdbcTemplate, times(1)).update(anyString(), (Object[]) any());
+    }
+
+    @Test
+    void should_return_true_when_file_load_is_success_and_publishing_failed_for_previous_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
+        when(auditServiceImpl.isAuditingCompletedPrevDay(any())).thenReturn(true);
+        assertTrue(jrdDataIngestionLibraryRunner.isAuditingCompletedPrevDayAndPublishingFailed());
+    }
+
+    @Test
+    void should_return_false_when_file_load_is_failed_for_previous_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
+        when(auditServiceImpl.isAuditingCompletedPrevDay(any())).thenReturn(false);
+        assertFalse(jrdDataIngestionLibraryRunner.isAuditingCompletedPrevDayAndPublishingFailed());
+    }
+
+    @Test
+    void should_return_false_when_publishing_success_for_previous_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
+        when(auditServiceImpl.isAuditingCompletedPrevDay(any())).thenReturn(true);
+        assertFalse(jrdDataIngestionLibraryRunner.isAuditingCompletedPrevDayAndPublishingFailed());
     }
 }
