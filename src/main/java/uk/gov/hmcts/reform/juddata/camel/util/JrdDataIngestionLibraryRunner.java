@@ -229,8 +229,8 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         Optional<Pair<String, String>> previousDayJobDetails = getJobStatus(selectJobStatus);
 
         return previousDayJobDetails.map(pair ->
-                pair.getRight().equals(SUCCESS.getStatus())).orElse(false) ||
-                isLoadFailed(getJobDetails(selectJobStatus));
+                pair.getRight().equals(SUCCESS.getStatus())).orElse(false)
+                || isLoadFailed(getJobDetails(selectJobStatus));
     }
 
     public boolean noFileUploadAfterSuccessfulDataIngestionOnPreviousDay() throws Exception {
