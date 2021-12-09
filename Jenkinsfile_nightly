@@ -58,7 +58,7 @@ withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     enableMutationTest()
     enableSecurityScan()
-    enableFortifyScan()
+    //enableFortifyScan()
 
     after('securityScan') {
         def sleepTime = (env.BRANCH_NAME.startsWith("PR")) ? '210s' : '120s'
@@ -95,9 +95,9 @@ withNightlyPipeline(type, product, component) {
         }
     }
 
-    after('fortify-scan') {
-      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
-    }
+//     after('fortify-scan') {
+//       steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+//     }
 
     after('mutationTest') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
