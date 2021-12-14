@@ -8,11 +8,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -20,6 +24,7 @@ import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.REGIONS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATION_ID;
@@ -29,6 +34,9 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATIO
 public class JudicialOfficeAppointmentProcessor
     extends JsrValidationBaseProcessor<JudicialOfficeAppointment>
     implements ICustomValidationProcessor<JudicialOfficeAppointment> {
+
+    @Autowired
+    private JrdUserProfileUtil jrdUserProfileUtil;
 
     @Autowired
     JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
@@ -51,6 +59,12 @@ public class JudicialOfficeAppointmentProcessor
 
     @Value("${fetch-personal-per-id}")
     String loadPerId;
+
+    @Autowired
+    EmailConfiguration emailConfiguration;
+
+    @Autowired
+    IEmailService emailService;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -107,15 +121,31 @@ public class JudicialOfficeAppointmentProcessor
         //remove & audit missing Locations
         List<String> locations = jdbcTemplate.queryForList(fetchLocations, String.class);
         Predicate<JudicialOfficeAppointment> locationsViolations = c -> isFalse(locations.contains(c.getRegionId()))
-            && isFalse(c.getRegionId().equalsIgnoreCase("0"));
+            && isFalse("0".equalsIgnoreCase(c.getRegionId()));
         removeForeignKeyElements(filteredJudicialAppointments, locationsViolations, LOCATION_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_LOCATION);
+            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_LOCATION, emailService,
+                emailConfiguration.getMailTypes().get(REGIONS));
 
         //remove & audit missing BaseLocations
         List<String> baseLocations = jdbcTemplate.queryForList(fetchBaseLocations, String.class);
         Predicate<JudicialOfficeAppointment> baseLocationsViolations = c -> isFalse(baseLocations.contains(
             c.getBaseLocationId())) && isFalse(c.getBaseLocationId().equalsIgnoreCase("0"));
         removeForeignKeyElements(filteredJudicialAppointments, baseLocationsViolations, BASE_LOCATION_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_BASE_LOCATION);
+            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_BASE_LOCATION, emailService,
+                emailConfiguration.getMailTypes().get(REGIONS));
+    }
+
+    @Override
+    public String createEmailBody(Set<JudicialOfficeAppointment> data) {
+        var messageBody = new StringBuilder();
+        messageBody.append(String.format("%-30s %50s %70s %n", "Per Code", "Object ID", "Per Id"));
+
+        data.forEach(appointment ->
+                messageBody.append(String.format("%-30s ",appointment.getPersonalCode()))
+                        .append(String.format("%50s ",appointment.getObjectId()))
+                        .append(String.format("%40s",appointment.getPerId()))
+                        .append("\n"));
+
+        return messageBody.toString();
     }
 }

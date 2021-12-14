@@ -18,9 +18,12 @@ import org.springframework.transaction.TransactionStatus;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdConstants;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +33,8 @@ import java.util.List;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -38,6 +43,7 @@ import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -103,6 +109,12 @@ class JudicialOfficeAppointmentProcessorTest {
 
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
 
+    final IEmailService emailService = mock(IEmailService.class);
+
+    final EmailConfiguration emailConfiguration = mock(EmailConfiguration.class);
+
+    final EmailConfiguration.MailTypeConfig config = mock(EmailConfiguration.MailTypeConfig.class);
+
     @BeforeEach
     public void setup() {
 
@@ -115,6 +127,9 @@ class JudicialOfficeAppointmentProcessorTest {
             "judicialOfficeAppointmentJsrValidatorInitializer", judicialOfficeAppointmentJsrValidatorInitializer);
         setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",
             judicialUserProfileProcessor);
+        setField(judicialOfficeAppointmentProcessor, "emailConfiguration", emailConfiguration);
+        setField(judicialOfficeAppointmentProcessor, "emailService", emailService);
+
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
@@ -151,6 +166,10 @@ class JudicialOfficeAppointmentProcessorTest {
             "baseLocationId_1", "baseLocationId_2"));
         when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
         doNothing().when(platformTransactionManager).commit(transactionStatus);
+
+        when(emailConfiguration.getMailTypes()).thenReturn(Map.of("key", config));
+        when(emailService.sendEmail(any())).thenReturn(1);
+
     }
 
     @Test
@@ -307,11 +326,58 @@ class JudicialOfficeAppointmentProcessorTest {
         when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         invokeMethod(judicialOfficeAppointmentProcessor, "filterAppointmentsRecordsForForeignKeyViolation",
             judicialOfficeAppointments, exchangeMock);
-        verify(judicialOfficeAppointmentProcessor, times(3))
+        verify(judicialOfficeAppointmentProcessor, times(1))
             .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
+        verify(judicialOfficeAppointmentProcessor, times(3))
+                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString(), any(), any());
         verify(judicialOfficeAppointmentJsrValidatorInitializer, times(1))
             .auditJsrExceptions(anyList(), anyString(), anyString(), any());
         assertEquals(1, judicialOfficeAppointments.size());
+    }
+
+    @Test
+    void testFilterAppointmentsRecordsForForeignKeyViolation_extraLocations() {
+        List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
+        JudicialOfficeAppointment judicialOfficeAppointmentMock5 = createJudicialOfficeAppointmentMock(currentDate,
+                dateTime, "PERID_5");
+        judicialOfficeAppointmentMock5.setRegionId("region_5");
+        judicialOfficeAppointmentMock5.setBaseLocationId("location_5");
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock5);
+        JudicialOfficeAppointment judicialOfficeAppointmentMock0 = createJudicialOfficeAppointmentMock(currentDate,
+                dateTime, "PERID_0");
+        judicialOfficeAppointmentMock0.setBaseLocationId("location_0");
+        judicialOfficeAppointmentMock0.setRegionId("region_0");
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock0);
+
+
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_3);
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock);
+        judicialUserProfiles.add(judicialUserProfileMock2);
+
+        when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Set.of("PERID_0", "PERID_5"));
+        when(jdbcTemplate.queryForList(any(), eq(String.class)))
+                .thenReturn(Collections.singletonList("region_5"))
+                .thenReturn(Collections.emptyList());
+        when(emailConfiguration.getMailTypes()).thenReturn(Map.of(JrdConstants.REGIONS, config));
+        when(config.isEnabled()).thenReturn(true);
+        when(config.getBody()).thenReturn("email sample body");
+        when(config.getSubject()).thenReturn("email sample subject");
+
+        invokeMethod(judicialOfficeAppointmentProcessor, "filterAppointmentsRecordsForForeignKeyViolation",
+                judicialOfficeAppointments, exchangeMock);
+        verify(judicialOfficeAppointmentProcessor, times(1))
+                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
+        verify(judicialOfficeAppointmentProcessor, times(3))
+                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString(), any(), any());
+        verify(judicialOfficeAppointmentJsrValidatorInitializer, times(3))
+                .auditJsrExceptions(anyList(), anyString(), anyString(), any());
+        verify(emailService, times(2))
+                .sendEmail(any());
     }
 
 }

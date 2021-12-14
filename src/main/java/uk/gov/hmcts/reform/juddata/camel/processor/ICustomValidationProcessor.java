@@ -6,14 +6,19 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.ApplicationContext;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +34,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PAR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
-
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATION_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
 
 public interface ICustomValidationProcessor<T> {
 
@@ -103,6 +110,15 @@ public interface ICustomValidationProcessor<T> {
     default void removeForeignKeyElements(List<T> filteredJudicialAppointments,
                                           Predicate<T> predicate, String fieldInError, Exchange exchange,
                                           JsrValidatorInitializer<T> jsrValidatorInitializer, String errorMessage) {
+        removeForeignKeyElements(filteredJudicialAppointments, predicate, fieldInError, exchange,
+                jsrValidatorInitializer, errorMessage, null, new EmailConfiguration.MailTypeConfig());
+    }
+
+    default void removeForeignKeyElements(List<T> filteredJudicialAppointments,
+                                          Predicate<T> predicate, String fieldInError, Exchange exchange,
+                                          JsrValidatorInitializer<T> jsrValidatorInitializer, String errorMessage,
+                                          IEmailService emailService,
+                                          EmailConfiguration.MailTypeConfig config) {
 
         Set<T> missingForeignKeyRecords =
             filteredJudicialAppointments.stream().filter(predicate).collect(toSet());
@@ -119,6 +135,12 @@ public interface ICustomValidationProcessor<T> {
                 //Auditing foreign key skipped rows of user profile for Appointment
                 jsrValidatorInitializer.auditJsrExceptions(pair,
                     fieldInError, errorMessage, exchange);
+                if (emailService != null && config.isEnabled()
+                        && List.of(LOCATION_ID, BASE_LOCATION_ID).contains(fieldInError)) {
+                    Object[] params = new Object[]{fieldInError,
+                            LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN))};
+                    emailService.sendEmail(createEmail(config,params,missingForeignKeyRecords));
+                }
             } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                 .class.getCanonicalName())) {
                 List<Pair<String, Long>> pair = new ArrayList<>();
@@ -139,6 +161,19 @@ public interface ICustomValidationProcessor<T> {
                         fieldInError, errorMessage, exchange);
             }
         }
+    }
+
+    default Email createEmail(EmailConfiguration.MailTypeConfig config, Object[] subjectParams, Set<T> data) {
+        return Email.builder()
+                .from(config.getFrom())
+                .to(config.getTo())
+                .messageBody(String.format(config.getBody(), createEmailBody(data)))
+                .subject(String.format(config.getSubject(), subjectParams))
+                .build();
+    }
+
+    default String createEmailBody(Set<T> data) {
+        return "email body has to be implemented";
     }
 
     private Type getType() {
