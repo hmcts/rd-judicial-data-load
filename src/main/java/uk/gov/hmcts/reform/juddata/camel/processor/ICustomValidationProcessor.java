@@ -6,14 +6,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.ApplicationContext;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
-import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
-import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
-import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -106,19 +103,9 @@ public interface ICustomValidationProcessor<T> {
         }
     }
 
-
     default void removeForeignKeyElements(List<T> filteredJudicialAppointments,
                                           Predicate<T> predicate, String fieldInError, Exchange exchange,
                                           JsrValidatorInitializer<T> jsrValidatorInitializer, String errorMessage) {
-        removeForeignKeyElements(filteredJudicialAppointments, predicate, fieldInError, exchange,
-                jsrValidatorInitializer, errorMessage, null, new EmailConfiguration.MailTypeConfig());
-    }
-
-    default void removeForeignKeyElements(List<T> filteredJudicialAppointments,
-                                          Predicate<T> predicate, String fieldInError, Exchange exchange,
-                                          JsrValidatorInitializer<T> jsrValidatorInitializer, String errorMessage,
-                                          IEmailService emailService,
-                                          EmailConfiguration.MailTypeConfig config) {
 
         Set<T> missingForeignKeyRecords =
             filteredJudicialAppointments.stream().filter(predicate).collect(toSet());
@@ -135,11 +122,9 @@ public interface ICustomValidationProcessor<T> {
                 //Auditing foreign key skipped rows of user profile for Appointment
                 jsrValidatorInitializer.auditJsrExceptions(pair,
                     fieldInError, errorMessage, exchange);
-                if (emailService != null && config.isEnabled()
-                        && List.of(LOCATION_ID, BASE_LOCATION_ID).contains(fieldInError)) {
-                    Object[] params = new Object[]{fieldInError,
-                            LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN))};
-                    emailService.sendEmail(createEmail(config,params,missingForeignKeyRecords));
+                if (List.of(LOCATION_ID, BASE_LOCATION_ID).contains(fieldInError)) {
+                    sendEmail(missingForeignKeyRecords, fieldInError,
+                            LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
                 }
             } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                 .class.getCanonicalName())) {
@@ -163,17 +148,14 @@ public interface ICustomValidationProcessor<T> {
         }
     }
 
-    default Email createEmail(EmailConfiguration.MailTypeConfig config, Object[] subjectParams, Set<T> data) {
-        return Email.builder()
-                .from(config.getFrom())
-                .to(config.getTo())
-                .messageBody(String.format(config.getBody(), createEmailBody(data)))
-                .subject(String.format(config.getSubject(), subjectParams))
-                .build();
-    }
-
-    default String createEmailBody(Set<T> data) {
-        return "email body has to be implemented";
+    /**
+     * Has to be overridden when it needs.
+     * @param data data to prepare email body
+     * @param params data to build subject or any other dynamic data
+     * @return positive when email send success
+     */
+    default int sendEmail(Set<T> data, Object... params) {
+        return -1;
     }
 
     private Type getType() {

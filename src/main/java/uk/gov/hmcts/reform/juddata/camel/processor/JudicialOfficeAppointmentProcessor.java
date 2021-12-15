@@ -9,10 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.List;
@@ -34,9 +34,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATIO
 public class JudicialOfficeAppointmentProcessor
     extends JsrValidationBaseProcessor<JudicialOfficeAppointment>
     implements ICustomValidationProcessor<JudicialOfficeAppointment> {
-
-    @Autowired
-    private JrdUserProfileUtil jrdUserProfileUtil;
 
     @Autowired
     JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
@@ -123,20 +120,17 @@ public class JudicialOfficeAppointmentProcessor
         Predicate<JudicialOfficeAppointment> locationsViolations = c -> isFalse(locations.contains(c.getRegionId()))
             && isFalse("0".equalsIgnoreCase(c.getRegionId()));
         removeForeignKeyElements(filteredJudicialAppointments, locationsViolations, LOCATION_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_LOCATION, emailService,
-                emailConfiguration.getMailTypes().get(REGIONS));
+            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_LOCATION);
 
         //remove & audit missing BaseLocations
         List<String> baseLocations = jdbcTemplate.queryForList(fetchBaseLocations, String.class);
         Predicate<JudicialOfficeAppointment> baseLocationsViolations = c -> isFalse(baseLocations.contains(
             c.getBaseLocationId())) && isFalse(c.getBaseLocationId().equalsIgnoreCase("0"));
         removeForeignKeyElements(filteredJudicialAppointments, baseLocationsViolations, BASE_LOCATION_ID, exchange,
-            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_BASE_LOCATION, emailService,
-                emailConfiguration.getMailTypes().get(REGIONS));
+            judicialOfficeAppointmentJsrValidatorInitializer, MISSING_BASE_LOCATION);
     }
 
-    @Override
-    public String createEmailBody(Set<JudicialOfficeAppointment> data) {
+    private String createEmailBody(Set<JudicialOfficeAppointment> data) {
         var messageBody = new StringBuilder();
         messageBody.append(String.format("%-30s %50s %70s %n", "Per Code", "Object ID", "Per Id"));
 
@@ -148,4 +142,20 @@ public class JudicialOfficeAppointmentProcessor
 
         return messageBody.toString();
     }
+
+    @Override
+    public int sendEmail(Set<JudicialOfficeAppointment> data, Object... params) {
+        EmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes().get(REGIONS);
+        if (config.isEnabled()) {
+            Email email = Email.builder()
+                    .from(config.getFrom())
+                    .to(config.getTo())
+                    .messageBody(String.format(config.getBody(), createEmailBody(data)))
+                    .subject(String.format(config.getSubject(), params))
+                    .build();
+            return emailService.sendEmail(email);
+        }
+        return -1;
+    }
+
 }

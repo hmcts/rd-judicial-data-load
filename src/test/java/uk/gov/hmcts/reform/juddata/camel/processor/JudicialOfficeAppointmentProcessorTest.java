@@ -326,10 +326,8 @@ class JudicialOfficeAppointmentProcessorTest {
         when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         invokeMethod(judicialOfficeAppointmentProcessor, "filterAppointmentsRecordsForForeignKeyViolation",
             judicialOfficeAppointments, exchangeMock);
-        verify(judicialOfficeAppointmentProcessor, times(1))
-            .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
         verify(judicialOfficeAppointmentProcessor, times(3))
-                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString(), any(), any());
+                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
         verify(judicialOfficeAppointmentJsrValidatorInitializer, times(1))
             .auditJsrExceptions(anyList(), anyString(), anyString(), any());
         assertEquals(1, judicialOfficeAppointments.size());
@@ -370,10 +368,8 @@ class JudicialOfficeAppointmentProcessorTest {
 
         invokeMethod(judicialOfficeAppointmentProcessor, "filterAppointmentsRecordsForForeignKeyViolation",
                 judicialOfficeAppointments, exchangeMock);
-        verify(judicialOfficeAppointmentProcessor, times(1))
-                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
         verify(judicialOfficeAppointmentProcessor, times(3))
-                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString(), any(), any());
+                .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
         verify(judicialOfficeAppointmentJsrValidatorInitializer, times(3))
                 .auditJsrExceptions(anyList(), anyString(), anyString(), any());
         verify(emailService, times(2))
