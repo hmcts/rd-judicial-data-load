@@ -359,7 +359,7 @@ dependencies {
 
     testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
     testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.2'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
     testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
 
