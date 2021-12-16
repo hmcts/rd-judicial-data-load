@@ -51,6 +51,9 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     @Value("${select-job-status-sql}")
     String selectJobStatus;
 
+    @Value("${previous-day-job-status}")
+    String selectPreviousDayJobStatus;
+
     @Value("${logging-component-name}")
     String logComponentName;
 
@@ -93,24 +96,29 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     public void run(Job job, JobParameters params) throws Exception {
         try {
             super.run(job, params);
-            Pair<String, String> jobDetails = getJobDetails();
+            Pair<String, String> jobDetails = getJobDetails(selectJobStatus);
             //After Job completes Publish message in ASB and toggle off for prod with launch Darkly & one
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
                 && Boolean.FALSE.equals(environment.startsWith("prod"))) {
-                if (isLoadFailed(jobDetails)) {
+                if (shouldReturn()) {
                     return;
                 }
+
+                if (jobDetails.getLeft().equals(ZERO) && isAuditingCompletedPrevDayAndPublishingFailed()) {
+                    jobDetails = getJobDetails(selectPreviousDayJobStatus);
+                }
+
                 mapAndPublishSidamIds(jobDetails.getLeft(), jobDetails.getRight());
                 log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName,
-                    getJobDetails().getLeft());
+                    getJobDetails(selectJobStatus).getLeft());
             }
         } catch (Exception ex) {
             String publishStatus = camelContext.getGlobalOptions().get(ASB_PUBLISHING_STATUS);
             publishStatus = (nonNull(publishStatus) && isNotTrue(publishStatus
                 .equalsIgnoreCase(IN_PROGRESS.getStatus())))
                 ? publishStatus : FILE_LOAD_FAILED.getStatus();
-            updateAsbStatus(getJobDetails().getLeft(), publishStatus);
+            updateAsbStatus(getJobDetails(selectJobStatus).getLeft(), publishStatus);
             throw ex;
         }
     }
@@ -127,17 +135,17 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         return false;
     }
 
-    public Pair<String, String> getJobDetails() {
-        Optional<Pair<String, String>> pair = getJobStatus();
+    public Pair<String, String> getJobDetails(String jobStatusQuery) {
+        Optional<Pair<String, String>> pair = getJobStatus(jobStatusQuery);
 
         final String jobId = pair.map(Pair::getLeft).orElse(ZERO);
         final String jobStatus = pair.map(Pair::getRight).orElse(EMPTY);
         return Pair.of(jobId, jobStatus);
     }
 
-    private Optional<Pair<String, String>> getJobStatus() {
+    private Optional<Pair<String, String>> getJobStatus(String jobStatusQuery) {
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(selectJobStatus, (rs, i) ->
+            return Optional.ofNullable(jdbcTemplate.queryForObject(jobStatusQuery, (rs, i) ->
                     Pair.of(rs.getString(1), rs.getString(2))));
         } catch (EmptyResultDataAccessException ex) {
             log.info("No record found in table dataload_schedular_job");
@@ -211,4 +219,34 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             throw ex;
         }
     }
+
+    private boolean shouldReturn() throws Exception {
+        return currentDayPublishingStatusIsSuccessOrFileLoadFailed()
+                || noFileUploadAfterSuccessfulDataIngestionOnPreviousDay();
+    }
+
+    public boolean currentDayPublishingStatusIsSuccessOrFileLoadFailed() {
+        Optional<Pair<String, String>> previousDayJobDetails = getJobStatus(selectJobStatus);
+
+        return previousDayJobDetails.map(pair ->
+                pair.getRight().equals(SUCCESS.getStatus())).orElse(false)
+                || isLoadFailed(getJobDetails(selectJobStatus));
+    }
+
+    public boolean noFileUploadAfterSuccessfulDataIngestionOnPreviousDay() throws Exception {
+        Optional<Pair<String, String>> previousDayJobDetails = getJobStatus(selectPreviousDayJobStatus);
+
+        return auditServiceImpl.hasDataIngestionRunAfterFileUpload(getFileTimestamp(fileName))
+                && previousDayJobDetails.map(pair ->
+                pair.getRight().equals(SUCCESS.getStatus())).orElse(false);
+    }
+
+    public boolean isAuditingCompletedPrevDayAndPublishingFailed() throws Exception {
+        Optional<Pair<String, String>> previousDayJobDetails = getJobStatus(selectPreviousDayJobStatus);
+
+        return auditServiceImpl.isAuditingCompletedPrevDay(getFileTimestamp(fileName))
+                && previousDayJobDetails.map(pair ->
+                pair.getRight().equals(FAILED.getStatus())).orElse(false);
+    }
+
 }

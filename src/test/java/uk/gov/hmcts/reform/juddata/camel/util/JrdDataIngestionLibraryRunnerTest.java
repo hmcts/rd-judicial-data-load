@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -22,6 +24,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
@@ -37,11 +40,14 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -77,6 +83,9 @@ class JrdDataIngestionLibraryRunnerTest {
     @Mock
     BlobProperties blobProperties;
 
+    @Mock
+    AuditServiceImpl auditServiceImpl;
+
     @InjectMocks
     private JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
 
@@ -103,6 +112,7 @@ class JrdDataIngestionLibraryRunnerTest {
         List<String> sidamIds = new ArrayList<>();
         sidamIds.add(UUID.randomUUID().toString());
         jrdDataIngestionLibraryRunner.selectJobStatus = "dummyjobstatus";
+        jrdDataIngestionLibraryRunner.selectPreviousDayJobStatus = "dummyjobstatus";
         jrdDataIngestionLibraryRunner.getSidamIds = "dummyQuery";
         jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
         jrdDataIngestionLibraryRunner.failedAuditFileCount = "failedAuditFileCount";
@@ -133,6 +143,7 @@ class JrdDataIngestionLibraryRunnerTest {
         jrdDataIngestionLibraryRunner.updateJobStatus = "dummyQuery";
         when(camelContext.getGlobalOptions()).thenReturn(camelGlobalOptions);
         when(jdbcTemplate.update(anyString(), any(), anyInt())).thenReturn(1);
+
         when(cloudStorageAccount.createCloudBlobClient()).thenReturn(blobClient);
         when(azureBlobConfig.getContainerName()).thenReturn("test");
         when(blobClient.getContainerReference(anyString())).thenReturn(container);
@@ -214,7 +225,7 @@ class JrdDataIngestionLibraryRunnerTest {
         when(jdbcTemplate.query("dummyQuery", ROW_MAPPER)).thenReturn(sidamIds);
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(jobLauncherMock).run(any(), any());
-        verify(jdbcTemplate, times(2)).queryForObject(anyString(), any(RowMapper.class));
+        verify(jdbcTemplate, times(5)).queryForObject(anyString(), any(RowMapper.class));
         verify(jdbcTemplate).update(anyString(), any(), anyInt());
     }
 
@@ -242,5 +253,83 @@ class JrdDataIngestionLibraryRunnerTest {
                 .thenReturn(Pair.of("1", SUCCESS.getStatus()));
         jrdDataIngestionLibraryRunner.run(job, jobParameters);
         verify(topicPublisher, times(0)).sendMessage(any(), anyString());
+    }
+
+    @Test
+    void should_return_true_when_publishing_status_is_success_for_prev_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
+        when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(true);
+        assertTrue(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
+    }
+
+    @Test
+    void should_return_false_when_publishing_status_is_failed_for_prev_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
+        when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(true);
+        assertFalse(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
+    }
+
+    @Test
+    void should_return_false_when_publishing_status_is_success_and_file_uploaded_after_data_ingestion()
+            throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
+        when(auditServiceImpl.hasDataIngestionRunAfterFileUpload(any())).thenReturn(false);
+        assertFalse(jrdDataIngestionLibraryRunner.noFileUploadAfterSuccessfulDataIngestionOnPreviousDay());
+    }
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void should_return_true_when_publishing_status_is_success_for_current_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
+        when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(0);
+        assertTrue(jrdDataIngestionLibraryRunner.currentDayPublishingStatusIsSuccessOrFileLoadFailed());
+        verify(jdbcTemplate, times(0)).update(any(), any(), any());
+    }
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void should_return_false_when_publishing_status_is_failed_for_current_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
+        when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(0);
+        assertFalse(jrdDataIngestionLibraryRunner.currentDayPublishingStatusIsSuccessOrFileLoadFailed());
+    }
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void should_return_true_when_file_load_failed_for_current_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(null);
+        when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(1);
+        assertTrue(jrdDataIngestionLibraryRunner.currentDayPublishingStatusIsSuccessOrFileLoadFailed());
+        verify(jdbcTemplate, times(1)).update(anyString(), (Object[]) any());
+    }
+
+    @Test
+    void should_return_true_when_file_load_is_success_and_publishing_failed_for_previous_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
+        when(auditServiceImpl.isAuditingCompletedPrevDay(any())).thenReturn(true);
+        assertTrue(jrdDataIngestionLibraryRunner.isAuditingCompletedPrevDayAndPublishingFailed());
+    }
+
+    @Test
+    void should_return_false_when_file_load_is_failed_for_previous_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
+        when(auditServiceImpl.isAuditingCompletedPrevDay(any())).thenReturn(false);
+        assertFalse(jrdDataIngestionLibraryRunner.isAuditingCompletedPrevDayAndPublishingFailed());
+    }
+
+    @Test
+    void should_return_false_when_publishing_success_for_previous_day() throws Exception {
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", SUCCESS.getStatus()));
+        when(auditServiceImpl.isAuditingCompletedPrevDay(any())).thenReturn(true);
+        assertFalse(jrdDataIngestionLibraryRunner.isAuditingCompletedPrevDayAndPublishingFailed());
     }
 }
