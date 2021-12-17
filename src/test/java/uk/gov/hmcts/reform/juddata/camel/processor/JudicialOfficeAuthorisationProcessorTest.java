@@ -5,6 +5,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -31,7 +32,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -96,6 +97,8 @@ class JudicialOfficeAuthorisationProcessorTest  {
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "validator", validator);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
+        setField(judicialOfficeAuthorisationProcessor, "jdbcTemplate", jdbcTemplate);
+        setField(judicialOfficeAuthorisationProcessor, "fetchLowerLevels", "fetchLowerLevels");
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "platformTransactionManager",
             platformTransactionManager);
 
@@ -150,7 +153,6 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
     @Test
     void should_return_JudicialOfficeAuthorizationRow_with_single_record_response() {
-
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisation1);
 
@@ -259,6 +261,62 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
         invokeMethod(judicialOfficeAuthorisationProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
             judicialOfficeAuthorisations, exchangeMock);
-        assertEquals(1, judicialOfficeAuthorisations.size());
+        Assert.assertEquals(1, judicialOfficeAuthorisations.size());
+    }
+
+    @Test
+    void should_return_new_lower_level_authorisations() {
+        JudicialOfficeAuthorisation joAuth1 = createJudicialOfficeAuthorisation(date);
+        joAuth1.setPerId(PERID_1);
+        joAuth1.setLowerLevel("01 - Social Security");
+
+        JudicialOfficeAuthorisation joAuth2 = createJudicialOfficeAuthorisation(date);
+        joAuth2.setPerId(PERID_2);
+        joAuth2.setLowerLevel("05 - Industrial Injuries");
+
+        JudicialOfficeAuthorisation joAuth3 = createJudicialOfficeAuthorisation(date);
+        joAuth3.setPerId(PERID_3);
+        joAuth3.setLowerLevel("07 - Vaccine Damage");
+
+        when(jdbcTemplate.queryForList("fetchLowerLevels", String.class))
+                .thenReturn(List.of(
+                        "01 - Social Security",
+                        "02 - Child Support",
+                        "03 - Disability Living Allowance"));
+
+        var joAuths = List.of(joAuth1, joAuth2, joAuth3);
+
+        List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations =
+            invokeMethod(judicialOfficeAuthorisationProcessor, "retrieveNewLowerLevelAuthorisations", joAuths);
+        assert judicialOfficeAuthorisations != null;
+        assertEquals(2, judicialOfficeAuthorisations.size());
+    }
+
+    @Test
+    void should_not_return_any_new_lower_level_authorisation() {
+        JudicialOfficeAuthorisation joAuth1 = createJudicialOfficeAuthorisation(date);
+        joAuth1.setPerId(PERID_1);
+        joAuth1.setLowerLevel("01 - Social Security");
+
+        JudicialOfficeAuthorisation joAuth2 = createJudicialOfficeAuthorisation(date);
+        joAuth2.setPerId(PERID_2);
+        joAuth2.setLowerLevel("02 - Child Support");
+
+        JudicialOfficeAuthorisation joAuth3 = createJudicialOfficeAuthorisation(date);
+        joAuth3.setPerId(PERID_3);
+        joAuth3.setLowerLevel("03 - Disability Living Allowance");
+
+        when(jdbcTemplate.queryForList("fetchLowerLevels", String.class))
+                .thenReturn(List.of(
+                        "01 - Social Security",
+                        "02 - Child Support",
+                        "03 - Disability Living Allowance"));
+
+        var joAuths = List.of(joAuth1, joAuth2, joAuth3);
+
+        List<JudicialOfficeAuthorisation> judicialOfficeAuthorisations =
+                invokeMethod(judicialOfficeAuthorisationProcessor, "retrieveNewLowerLevelAuthorisations", joAuths);
+        assert judicialOfficeAuthorisations != null;
+        assertEquals(0, judicialOfficeAuthorisations.size());
     }
 }

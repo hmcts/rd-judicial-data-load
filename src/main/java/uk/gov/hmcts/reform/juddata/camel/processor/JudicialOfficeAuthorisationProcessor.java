@@ -3,7 +3,9 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
@@ -33,6 +36,12 @@ public class JudicialOfficeAuthorisationProcessor
     @Value("${logging-component-name}")
     private String logComponentName;
 
+    @Autowired
+    @Qualifier("springJdbcTemplate")
+    protected JdbcTemplate jdbcTemplate;
+
+    @Value("${fetch-lower-levels}")
+    String fetchLowerLevels;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -84,6 +93,18 @@ public class JudicialOfficeAuthorisationProcessor
         //remove & audit missing personal e-links id
         removeForeignKeyElements(filteredJudicialAuthorisations, perViolations, PER_ID, exchange,
             judicialOfficeAuthorisationJsrValidatorInitializer, MISSING_PER_ID);
+    }
+
+    public List<JudicialOfficeAuthorisation> retrieveNewLowerLevelAuthorisations(List<JudicialOfficeAuthorisation>
+                                                            filteredJudicialAuthorisations) {
+        List<String> lowerLevels = jdbcTemplate.queryForList(fetchLowerLevels, String.class);
+
+        Predicate<JudicialOfficeAuthorisation> lowerLevelPredicate =
+            juAuth -> !lowerLevels.contains(juAuth.getLowerLevel());
+
+        return filteredJudicialAuthorisations.stream()
+                .filter(lowerLevelPredicate)
+                .collect(toUnmodifiableList());
     }
 
 }
