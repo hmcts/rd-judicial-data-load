@@ -30,18 +30,18 @@ apply plugin: "io.spring.dependency-management"
 
 
 def versions = [
-        lombok             : '1.18.6',
-        reformLogging      : '5.1.0',
-        reformS2sClient    : '3.1.2',
-        serenity           : '2.0.23',
-        sonarPitest        : '0.5',
-        springBoot         : '2.4.6',
-        springHystrix      : '2.2.8.RELEASE',
-        springfoxSwagger   : '2.9.2',
-        jackson            : '2.11.4',
-        launchDarklySdk    : "5.2.2",
-        camel              : '3.8.0',
-        log4j              : '2.16.0'
+        lombok          : '1.18.6',
+        reformLogging   : '5.1.0',
+        reformS2sClient : '3.1.2',
+        serenity        : '2.0.23',
+        sonarPitest     : '0.5',
+        springBoot      : '2.4.6',
+        springHystrix   : '2.2.8.RELEASE',
+        springfoxSwagger: '2.9.2',
+        jackson         : '2.11.4',
+        launchDarklySdk : "5.2.2",
+        camel           : '3.8.0',
+        log4j           : '2.16.0'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
@@ -79,7 +79,7 @@ sourceSets {
             runtimeClasspath += main.output + test.output
             srcDir file('src/integrationTest/java')
         }
-        resources.srcDirs = [file('src/integrationTest/resources'), file ('src/functionalTest/resources')]
+        resources.srcDirs = [file('src/integrationTest/resources'), file('src/functionalTest/resources')]
     }
 
     smokeTest {
@@ -148,10 +148,10 @@ task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     }
 }
 
-task fortifyScan(type: JavaExec)  {
-  main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
-  classpath += sourceSets.test.runtimeClasspath
-  jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+task fortifyScan(type: JavaExec) {
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    classpath += sourceSets.test.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
 
 jacoco {
@@ -242,17 +242,17 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
-    implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-databind') {
+    implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-databind') {
         version {
             strictly versions.jackson
         }
     }
-    implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-core') {
+    implementation(group: 'com.fasterxml.jackson.core', name: 'jackson-core') {
         version {
             strictly versions.jackson
         }
     }
-    implementation (group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0')
+    implementation(group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0')
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.glassfish', module: 'jakarta.el'
@@ -269,7 +269,7 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.8') {
+    implementation('com.github.hmcts:data-ingestion-lib:0.5.0.8') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
@@ -301,7 +301,7 @@ dependencies {
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
     implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.5'
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.12'
-    
+
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
@@ -321,7 +321,7 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-library"
     }
 
-    testImplementation (group: 'io.rest-assured', name: 'rest-assured', version: '4.1.2') {
+    testImplementation(group: 'io.rest-assured', name: 'rest-assured', version: '4.1.2') {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }
     testImplementation group: 'com.h2database', name: 'h2'
@@ -439,7 +439,7 @@ applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 configurations.all {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'io.netty'
-                && details.requested.name != 'netty-tcnative-boringssl-static' ) {
+                && details.requested.name != 'netty-tcnative-boringssl-static') {
             details.useVersion "4.1.72.Final"
         }
 
