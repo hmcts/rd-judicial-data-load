@@ -16,15 +16,17 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.REGIONS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.REGION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATION_ID;
@@ -62,6 +64,9 @@ public class JudicialOfficeAppointmentProcessor
 
     @Autowired
     IEmailService emailService;
+    
+    private final Map<String, String> emailConfigMapping = Map.of(LOCATION_ID, REGION,
+            BASE_LOCATION_ID, BASE_LOCATION);
 
     @SuppressWarnings("unchecked")
     @Override
@@ -130,28 +135,53 @@ public class JudicialOfficeAppointmentProcessor
             judicialOfficeAppointmentJsrValidatorInitializer, MISSING_BASE_LOCATION);
     }
 
-    private String createEmailBody(Set<JudicialOfficeAppointment> data) {
+    private String createRegionEmailBody(Set<JudicialOfficeAppointment> data) {
         var messageBody = new StringBuilder();
-        messageBody.append(String.format("%-30s %50s %70s %n", "Per Code", "Object ID", "Per Id"));
+        messageBody.append(String.format("%-30s %50s %40s %30s %n", "Per Code", "Object ID", "Per Id", "Region ID"));
 
         data.forEach(appointment ->
-                messageBody.append(String.format("%-30s ",appointment.getPersonalCode()))
-                        .append(String.format("%50s ",appointment.getObjectId()))
-                        .append(String.format("%40s",appointment.getPerId()))
-                        .append("\n"));
+                messageBody.append(String.format("%-30s ", appointment.getPersonalCode()))
+                    .append(String.format("%40s ", appointment.getObjectId()))
+                    .append(String.format("%25s", appointment.getPerId()))
+                    .append(String.format("%30s", appointment.getRegionId()))
+                    .append("\n")
+        );
+
+        return messageBody.toString();
+    }
+
+    private String createLocationEmailBody(Set<JudicialOfficeAppointment> data) {
+        var messageBody = new StringBuilder();
+        messageBody.append(String.format("%-30s %50s %40s %30s %n", "Per Code", "Object ID", "Per Id",
+                "Base Location ID"));
+
+        data.forEach(appointment ->
+            messageBody.append(String.format("%-30s ", appointment.getPersonalCode()))
+                    .append(String.format("%40s ", appointment.getObjectId()))
+                    .append(String.format("%25s", appointment.getPerId()))
+                    .append(String.format("%30s", appointment.getBaseLocationId()))
+                    .append("\n")
+        );
 
         return messageBody.toString();
     }
 
     @Override
-    public int sendEmail(Set<JudicialOfficeAppointment> data, Object... params) {
-        EmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes().get(REGIONS);
-        if (config.isEnabled()) {
+    public int sendEmail(Set<JudicialOfficeAppointment> data, String type, Object... params) {
+        EmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes()
+                .get(emailConfigMapping.get(type));
+        if (config != null && config.isEnabled()) {
+            String emailBody = null;
+            if (LOCATION_ID.equals(type)) {
+                emailBody = createRegionEmailBody(data);
+            } else if (BASE_LOCATION_ID.equals(type)) {
+                emailBody = createLocationEmailBody(data);
+            }
             Email email = Email.builder()
                     .from(config.getFrom())
                     .to(config.getTo())
-                    .messageBody(String.format(config.getBody(), createEmailBody(data)))
                     .subject(String.format(config.getSubject(), params))
+                    .messageBody(String.format(config.getBody(), emailBody))
                     .build();
             return emailService.sendEmail(email);
         }

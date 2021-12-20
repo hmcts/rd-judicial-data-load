@@ -154,7 +154,7 @@ public interface ICustomValidationProcessor<T> {
      * @param params data to build subject or any other dynamic data
      * @return positive when email send success
      */
-    default int sendEmail(Set<T> data, Object... params) {
+    default int sendEmail(Set<T> data, String type, Object... params) {
         return -1;
     }
 

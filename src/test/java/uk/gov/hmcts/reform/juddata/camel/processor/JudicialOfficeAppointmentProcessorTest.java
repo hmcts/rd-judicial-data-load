@@ -361,7 +361,7 @@ class JudicialOfficeAppointmentProcessorTest {
         when(jdbcTemplate.queryForList(any(), eq(String.class)))
                 .thenReturn(Collections.singletonList("region_5"))
                 .thenReturn(Collections.emptyList());
-        when(emailConfiguration.getMailTypes()).thenReturn(Map.of(JrdConstants.REGIONS, config));
+        when(emailConfiguration.getMailTypes()).thenReturn(Map.of(JrdConstants.REGION, config));
         when(config.isEnabled()).thenReturn(true);
         when(config.getBody()).thenReturn("email sample body");
         when(config.getSubject()).thenReturn("email sample subject");
@@ -372,7 +372,7 @@ class JudicialOfficeAppointmentProcessorTest {
                 .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
         verify(judicialOfficeAppointmentJsrValidatorInitializer, times(3))
                 .auditJsrExceptions(anyList(), anyString(), anyString(), any());
-        verify(emailService, times(2))
+        verify(emailService, times(1))
                 .sendEmail(any());
     }
 
