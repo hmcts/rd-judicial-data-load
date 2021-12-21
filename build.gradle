@@ -41,7 +41,7 @@ def versions = [
         jackson            : '2.11.4',
         launchDarklySdk    : "5.2.2",
         camel              : '3.8.0',
-        log4j              : '2.16.0'
+        log4j              : '2.17.0'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
