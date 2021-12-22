@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -20,6 +22,8 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOWER_LEVEL;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LOWER_LEVEL;
 
 @Slf4j
 @Component
@@ -42,6 +46,9 @@ public class JudicialOfficeAuthorisationProcessor
 
     @Value("${fetch-lower-levels}")
     String fetchLowerLevels;
+
+    @Autowired
+    EmailConfiguration emailConfiguration;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -93,6 +100,13 @@ public class JudicialOfficeAuthorisationProcessor
         //remove & audit missing personal e-links id
         removeForeignKeyElements(filteredJudicialAuthorisations, perViolations, PER_ID, exchange,
             judicialOfficeAuthorisationJsrValidatorInitializer, MISSING_PER_ID);
+
+        List<JudicialOfficeAuthorisation> newLowerLevelAuths
+                = retrieveNewLowerLevelAuthorisations(filteredJudicialAuthorisations);
+
+        if (!newLowerLevelAuths.isEmpty()) {
+            flagNewLowerLevelAuths(newLowerLevelAuths, exchange);
+        }
     }
 
     public List<JudicialOfficeAuthorisation> retrieveNewLowerLevelAuthorisations(List<JudicialOfficeAuthorisation>
@@ -105,6 +119,19 @@ public class JudicialOfficeAuthorisationProcessor
         return filteredJudicialAuthorisations.stream()
                 .filter(lowerLevelPredicate)
                 .collect(toUnmodifiableList());
+    }
+
+    public void flagNewLowerLevelAuths(List<JudicialOfficeAuthorisation> newLowerLevelAuths,
+                                       Exchange exchange) {
+        List<Pair<String, Long>> pairs = newLowerLevelAuths.stream()
+                .map(auth -> Pair.of(auth.getPerId(), auth.getRowId()))
+                .collect(toUnmodifiableList());
+
+        judicialOfficeAuthorisationJsrValidatorInitializer
+                .auditJsrExceptions(pairs, LOWER_LEVEL, NEW_LOWER_LEVEL, exchange);
+
+
+
     }
 
 }
