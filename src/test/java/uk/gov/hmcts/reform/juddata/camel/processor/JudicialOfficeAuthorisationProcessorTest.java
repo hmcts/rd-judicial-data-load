@@ -21,12 +21,15 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdConstants;
+import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Date;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -79,6 +82,8 @@ class JudicialOfficeAuthorisationProcessorTest  {
     final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
     final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
+    final EmailConfiguration emailConfiguration = mock(EmailConfiguration.class);
+    EmailConfiguration.MailTypeConfig mailConfig = mock(EmailConfiguration.MailTypeConfig.class);
 
     @BeforeEach
     public void setup() {
@@ -99,6 +104,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAuthorisationProcessor, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAuthorisationProcessor, "fetchLowerLevels", "fetchLowerLevels");
+        setField(judicialOfficeAuthorisationProcessor, "emailConfiguration", emailConfiguration);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "platformTransactionManager",
             platformTransactionManager);
 
@@ -258,6 +264,8 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
         when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+        when(emailConfiguration.getMailTypes()).thenReturn(Map.of(JrdConstants.LOWER_LEVEL_AUTH, mailConfig));
+        when(mailConfig.isEnabled()).thenReturn(false);
 
         invokeMethod(judicialOfficeAuthorisationProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
             judicialOfficeAuthorisations, exchangeMock);

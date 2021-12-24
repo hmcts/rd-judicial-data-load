@@ -9,11 +9,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -24,12 +28,19 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOWER_LEVEL;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LOWER_LEVEL;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.LOWER_LEVEL_AUTH;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
 
 @Slf4j
 @Component
 public class JudicialOfficeAuthorisationProcessor
     extends JsrValidationBaseProcessor<JudicialOfficeAuthorisation>
     implements ICustomValidationProcessor<JudicialOfficeAuthorisation> {
+
+    private static final String ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
+            = "Profiles with one Object ID having multiple Personal Codes";
+    private static final String ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
+            = "Profiles with one Personal Code having multiple Object IDs";
 
     @Autowired
     JsrValidatorInitializer<JudicialOfficeAuthorisation> judicialOfficeAuthorisationJsrValidatorInitializer;
@@ -49,6 +60,9 @@ public class JudicialOfficeAuthorisationProcessor
 
     @Autowired
     EmailConfiguration emailConfiguration;
+
+    @Autowired
+    IEmailService emailService;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -130,8 +144,40 @@ public class JudicialOfficeAuthorisationProcessor
         judicialOfficeAuthorisationJsrValidatorInitializer
                 .auditJsrExceptions(pairs, LOWER_LEVEL, NEW_LOWER_LEVEL, exchange);
 
-
+        sendEmail(newLowerLevelAuths);
 
     }
 
+    public int sendEmail(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
+        EmailConfiguration.MailTypeConfig mailConfig = emailConfiguration.getMailTypes().get(LOWER_LEVEL_AUTH);
+
+        if (mailConfig.isEnabled()) {
+            Email email = Email.builder()
+                    .from(mailConfig.getFrom())
+                    .to(mailConfig.getTo())
+                    .messageBody(String.format(mailConfig.getBody(),
+                            createRowsWithLowerLevels(newLowerLevelAuths)))
+                    .subject(String.format(mailConfig.getSubject(), LocalDate.now()
+                            .format(DateTimeFormatter.ofPattern(DATE_PATTERN))))
+                    .build();
+            return emailService.sendEmail(email);
+        }
+
+        return -1;
+    }
+
+    private String createRowsWithLowerLevels(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
+        var messageBody = new StringBuilder();
+        messageBody.append(String.format("%-30s %50s %40s %30s %n", "Per Code", "Object ID", "Per Id",
+                "Lower Level"));
+
+        newLowerLevelAuths.forEach(auths ->
+                messageBody.append(String.format("%-30s ",auths.getPersonalCode()))
+                        .append(String.format("%40s ",auths.getObjectId()))
+                        .append(String.format("%25s",auths.getPerId()))
+                        .append(String.format("%30s", auths.getLowerLevel()))
+                        .append("\n"));
+
+        return messageBody.toString();
+    }
 }

@@ -71,12 +71,22 @@ email:
       body: "Execution Failed for files - %s"
     userprofile:
       enabled: true
+      template-id: djhfgdsjg876896dkjghdkh
       from: ${MAIL_FROM}
       to:
         - pradipta.dey@hmcts.net
         - candyliyen.kuek@hmcts.net
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
       body: "Following JO profiles were deleted : \n %s"
+    lowerLevelAuth:
+      enabled: true
+      template-key: dg23452kdjhbfhbb3465
+        from: ${MAIL_FROM}
+        to:
+          - pradipta.dey@hmcts.net
+          - candyliyen.kuek@hmcts.net
+        subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
+        body: "New Lower Level in following Authorisations : \n %s"
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}
