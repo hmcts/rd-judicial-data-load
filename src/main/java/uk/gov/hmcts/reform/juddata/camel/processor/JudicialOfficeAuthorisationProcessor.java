@@ -174,7 +174,7 @@ public class JudicialOfficeAuthorisationProcessor
         newLowerLevelAuths.forEach(auths ->
                 messageBody.append(String.format("%-30s ",auths.getPersonalCode()))
                         .append(String.format("%40s ",auths.getObjectId()))
-                        .append(String.format("%25s",auths.getPerId()))
+                        .append(String.format("%40s",auths.getPerId()))
                         .append(String.format("%30s", auths.getLowerLevel()))
                         .append("\n"));
 
