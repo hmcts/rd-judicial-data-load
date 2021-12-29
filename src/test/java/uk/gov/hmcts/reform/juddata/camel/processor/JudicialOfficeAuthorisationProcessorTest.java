@@ -5,7 +5,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -17,6 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableSet;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
@@ -84,6 +84,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
     final EmailConfiguration emailConfiguration = mock(EmailConfiguration.class);
     EmailConfiguration.MailTypeConfig mailConfig = mock(EmailConfiguration.MailTypeConfig.class);
+    final IEmailService emailService = mock(IEmailService.class);
 
     @BeforeEach
     public void setup() {
@@ -105,6 +106,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
         setField(judicialOfficeAuthorisationProcessor, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAuthorisationProcessor, "fetchLowerLevels", "fetchLowerLevels");
         setField(judicialOfficeAuthorisationProcessor, "emailConfiguration", emailConfiguration);
+        setField(judicialOfficeAuthorisationProcessor, "emailService", emailService);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "platformTransactionManager",
             platformTransactionManager);
 
@@ -265,11 +267,14 @@ class JudicialOfficeAuthorisationProcessorTest  {
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
         when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
         when(emailConfiguration.getMailTypes()).thenReturn(Map.of(JrdConstants.LOWER_LEVEL_AUTH, mailConfig));
-        when(mailConfig.isEnabled()).thenReturn(false);
+        when(mailConfig.isEnabled()).thenReturn(true);
+        when(mailConfig.getBody()).thenReturn("email body");
+        when(mailConfig.getSubject()).thenReturn("email subject");
 
         invokeMethod(judicialOfficeAuthorisationProcessor, "filterAuthorizationsRecordsForForeignKeyViolation",
             judicialOfficeAuthorisations, exchangeMock);
-        Assert.assertEquals(1, judicialOfficeAuthorisations.size());
+        assertEquals(1, judicialOfficeAuthorisations.size());
+        verify(emailService, times(1)).sendEmail(any());
     }
 
     @Test
