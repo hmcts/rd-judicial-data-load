@@ -241,7 +241,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
     implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-databind') {
         version {
             strictly versions.jackson
@@ -262,7 +262,7 @@ dependencies {
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
-    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.2'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
@@ -289,7 +289,7 @@ dependencies {
     implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-    implementation group: 'com.opencsv', name: 'opencsv', version: '3.7'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
     implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
     implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
@@ -327,7 +327,7 @@ dependencies {
     testImplementation group: 'com.h2database', name: 'h2'
     //testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.11.2'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.2.0'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.2'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.4'
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
@@ -359,7 +359,7 @@ dependencies {
 
     testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
     testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.2'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
     testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
 
