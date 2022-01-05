@@ -23,6 +23,8 @@ public class JrdConstants {
     public static final String PER_CODE_OBJECT_ID_FIELD = "personal code/object id";
     public static final String PER_CODE_OBJECT_ID_ERROR_MESSAGE = "Invalid personal code or object id";
     public static final String USERPROFILE = "userprofile";
+    public static final String LOWER_LEVEL_AUTH = "lowerLevelAuth";
     public static final String NEW_LINE = "\n";
     public static final String DATE_PATTERN = "dd/MM/yyyy";
+    public static final String NEW_LOWER_LEVEL = "New lower level is found in Authorisations file";
 }

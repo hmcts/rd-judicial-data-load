@@ -31,6 +31,7 @@ fetch-base-location-id: SELECT base_location_id FROM base_location_type
 fetch-region-id: SELECT region_id FROM region_type
 fetch-contract-id: SELECT contract_type_id FROM contract_type
 fetch-role-id: SELECT role_id FROM judicial_role_type
+fetch-lower-levels: SELECT lower_level FROM judicial_ticket_code_mapping
 
 insert-job-sql: insert into dataload_schedular_job(job_start_time, publishing_status) values(?, ?)
 update-job-sql: update dataload_schedular_job set job_end_time = now() at time zone 'utc', publishing_status = ? where id =?
