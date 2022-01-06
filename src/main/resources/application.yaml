@@ -85,6 +85,7 @@ email:
         - candyliyen.kuek@hmcts.net
       subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
       body: "New Lower Level in following Authorisations : \n %s"
+      template: lower-level-auth.ftl
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}
