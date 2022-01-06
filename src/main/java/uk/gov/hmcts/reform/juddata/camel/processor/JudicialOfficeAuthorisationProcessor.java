@@ -30,17 +30,15 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOWER_L
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LOWER_LEVEL;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.LOWER_LEVEL_AUTH;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_HTML;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getMailTypeConfig;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getEmailBody;
 
 @Slf4j
 @Component
 public class JudicialOfficeAuthorisationProcessor
     extends JsrValidationBaseProcessor<JudicialOfficeAuthorisation>
     implements ICustomValidationProcessor<JudicialOfficeAuthorisation> {
-
-    private static final String ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
-            = "Profiles with one Object ID having multiple Personal Codes";
-    private static final String ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
-            = "Profiles with one Personal Code having multiple Object IDs";
 
     @Autowired
     JsrValidatorInitializer<JudicialOfficeAuthorisation> judicialOfficeAuthorisationJsrValidatorInitializer;
@@ -57,9 +55,6 @@ public class JudicialOfficeAuthorisationProcessor
 
     @Value("${fetch-lower-levels}")
     String fetchLowerLevels;
-
-    @Autowired
-    EmailConfiguration emailConfiguration;
 
     @Autowired
     IEmailService emailService;
@@ -145,18 +140,17 @@ public class JudicialOfficeAuthorisationProcessor
                 .auditJsrExceptions(pairs, LOWER_LEVEL, NEW_LOWER_LEVEL, exchange);
 
         sendEmail(newLowerLevelAuths);
-
     }
 
     public int sendEmail(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
-        EmailConfiguration.MailTypeConfig mailConfig = emailConfiguration.getMailTypes().get(LOWER_LEVEL_AUTH);
+        EmailConfiguration.MailTypeConfig mailConfig = getMailTypeConfig(newLowerLevelAuths, LOWER_LEVEL_AUTH);
 
         if (mailConfig.isEnabled()) {
             Email email = Email.builder()
+                    .contentType(CONTENT_TYPE_HTML)
                     .from(mailConfig.getFrom())
                     .to(mailConfig.getTo())
-                    .messageBody(String.format(mailConfig.getBody(),
-                            createRowsWithLowerLevels(newLowerLevelAuths)))
+                    .messageBody(getEmailBody(mailConfig.getTemplate(), mailConfig.getModel()))
                     .subject(String.format(mailConfig.getSubject(), LocalDate.now()
                             .format(DateTimeFormatter.ofPattern(DATE_PATTERN))))
                     .build();
@@ -164,20 +158,5 @@ public class JudicialOfficeAuthorisationProcessor
         }
 
         return -1;
-    }
-
-    private String createRowsWithLowerLevels(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
-        var messageBody = new StringBuilder();
-        messageBody.append(String.format("%-30s %50s %40s %30s %n", "Per Code", "Object ID", "Per Id",
-                "Lower Level"));
-
-        newLowerLevelAuths.forEach(auths ->
-                messageBody.append(String.format("%-30s ",auths.getPersonalCode()))
-                        .append(String.format("%40s ",auths.getObjectId()))
-                        .append(String.format("%40s",auths.getPerId()))
-                        .append(String.format("%30s", auths.getLowerLevel()))
-                        .append("\n"));
-
-        return messageBody.toString();
     }
 }

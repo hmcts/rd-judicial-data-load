@@ -26,5 +26,7 @@ public class JrdConstants {
     public static final String LOWER_LEVEL_AUTH = "lowerLevelAuth";
     public static final String NEW_LINE = "\n";
     public static final String DATE_PATTERN = "dd/MM/yyyy";
+    public static final String CONTENT_TYPE_HTML = "text/html";
+    public static final String CONTENT_TYPE_PLAIN = "text/plain";
     public static final String NEW_LOWER_LEVEL = "New lower level is found in Authorisations file";
 }
