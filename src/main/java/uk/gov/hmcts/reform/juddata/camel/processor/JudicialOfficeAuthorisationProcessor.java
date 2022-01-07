@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.EmailTemplate;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.time.LocalDate;
@@ -31,8 +32,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LOWER_LEVE
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.LOWER_LEVEL_AUTH;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_HTML;
-import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getMailTypeConfig;
-import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getEmailBody;
 
 @Slf4j
 @Component
@@ -58,6 +57,9 @@ public class JudicialOfficeAuthorisationProcessor
 
     @Autowired
     IEmailService emailService;
+
+    @Autowired
+    EmailTemplate emailTemplate;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -143,14 +145,14 @@ public class JudicialOfficeAuthorisationProcessor
     }
 
     public int sendEmail(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
-        EmailConfiguration.MailTypeConfig mailConfig = getMailTypeConfig(newLowerLevelAuths, LOWER_LEVEL_AUTH);
+        EmailConfiguration.MailTypeConfig mailConfig = emailTemplate.getMailTypeConfig(newLowerLevelAuths, LOWER_LEVEL_AUTH);
 
         if (mailConfig.isEnabled()) {
             Email email = Email.builder()
                     .contentType(CONTENT_TYPE_HTML)
                     .from(mailConfig.getFrom())
                     .to(mailConfig.getTo())
-                    .messageBody(getEmailBody(mailConfig.getTemplate(), mailConfig.getModel()))
+                    .messageBody(emailTemplate.getEmailBody(mailConfig.getTemplate(), mailConfig.getModel()))
                     .subject(String.format(mailConfig.getSubject(), LocalDate.now()
                             .format(DateTimeFormatter.ofPattern(DATE_PATTERN))))
                     .build();
