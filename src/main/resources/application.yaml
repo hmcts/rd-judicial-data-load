@@ -83,7 +83,7 @@ email:
       to:
         - pradipta.dey@hmcts.net
         - candyliyen.kuek@hmcts.net
-      subject: "JRD - New Region ID in Appointment file - %s"
+      subject: "Official Sensitive: JRD - New Region ID in Appointment file - %s"
       body: "Following JO profiles where with RegionID's newly found : \n %s"
     baselocation:
       enabled: true
@@ -91,7 +91,7 @@ email:
       to:
         - pradipta.dey@hmcts.net
         - candyliyen.kuek@hmcts.net
-      subject: "JRD - New Base Location in Appointment file - %s"
+      subject: "Official Sensitive: JRD - New Base Location in Appointment file - %s"
       body: "Following JO profiles where with Base Location Id's newly found : \n %s"
 
 sendgrid:
