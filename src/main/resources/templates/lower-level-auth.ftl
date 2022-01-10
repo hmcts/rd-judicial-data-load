@@ -24,14 +24,14 @@
                 <p>New Lower Level in following Authorisations :</p>
                 </br>
                 <div>
-                    <table style="border-collapse: expression('separate', cellSpacing='10px'); border-spacing: 10px">
+                    <table style="border-collapse: expression('separate', cellSpacing='15px'); border-spacing: 15px">
                         <tr bgcolor="#eaeaea">
                             <td style="text-align: center">Per Code</td>
                             <td style="text-align: center">Object Id</td>
                             <td style="text-align: center">Per Id</td>
                             <td style="text-align: center">Lower Level</td>
                         </tr>
-                        <#list listOfObjects as newLowerLevelAuth>
+                        <#list newLowerLevelAuths as newLowerLevelAuth>
                             <tr style="border: 1px solid black;">
                                 <td style="text-align: left">${newLowerLevelAuth.personalCode}</td>
                                 <td style="text-align: center">${newLowerLevelAuth.objectId}</td>

@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.EmailTemplate;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdConstants;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
@@ -83,6 +84,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
     final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
     final EmailConfiguration emailConfiguration = mock(EmailConfiguration.class);
+    final EmailTemplate emailTemplate = mock(EmailTemplate.class);
     EmailConfiguration.MailTypeConfig mailConfig = mock(EmailConfiguration.MailTypeConfig.class);
     final IEmailService emailService = mock(IEmailService.class);
 
@@ -105,8 +107,8 @@ class JudicialOfficeAuthorisationProcessorTest  {
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAuthorisationProcessor, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAuthorisationProcessor, "fetchLowerLevels", "fetchLowerLevels");
-        setField(judicialOfficeAuthorisationProcessor, "emailConfiguration", emailConfiguration);
         setField(judicialOfficeAuthorisationProcessor, "emailService", emailService);
+        setField(judicialOfficeAuthorisationProcessor, "emailTemplate", emailTemplate);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "platformTransactionManager",
             platformTransactionManager);
 
@@ -266,6 +268,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
         when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
         when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+        when(emailTemplate.getMailTypeConfig(any(), any())).thenReturn(mailConfig);
         when(emailConfiguration.getMailTypes()).thenReturn(Map.of(JrdConstants.LOWER_LEVEL_AUTH, mailConfig));
         when(mailConfig.isEnabled()).thenReturn(true);
         when(mailConfig.getBody()).thenReturn("email body");

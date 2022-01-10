@@ -20,6 +20,8 @@ import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -145,7 +147,8 @@ public class JudicialOfficeAuthorisationProcessor
     }
 
     public int sendEmail(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
-        EmailConfiguration.MailTypeConfig mailConfig = emailTemplate.getMailTypeConfig(newLowerLevelAuths, LOWER_LEVEL_AUTH);
+        EmailConfiguration.MailTypeConfig mailConfig =
+                emailTemplate.getMailTypeConfig(getModel(newLowerLevelAuths), LOWER_LEVEL_AUTH);
 
         if (mailConfig.isEnabled()) {
             Email email = Email.builder()
@@ -160,5 +163,11 @@ public class JudicialOfficeAuthorisationProcessor
         }
 
         return -1;
+    }
+
+    private Map<String, Object> getModel(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("newLowerLevelAuths", newLowerLevelAuths);
+        return model;
     }
 }

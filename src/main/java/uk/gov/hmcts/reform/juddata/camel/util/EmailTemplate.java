@@ -12,9 +12,7 @@ import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 import uk.gov.hmcts.reform.juddata.exception.EmailException;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 @Slf4j
 @Component
@@ -39,12 +37,8 @@ public class EmailTemplate {
         return emailBody;
     }
 
-    public <T> EmailConfiguration.MailTypeConfig getMailTypeConfig(List<T> list, String emailConfig) {
+    public EmailConfiguration.MailTypeConfig getMailTypeConfig(Map<String, Object> model, String emailConfig) {
         EmailConfiguration.MailTypeConfig mailConfig = emailConfiguration.getMailTypes().get(emailConfig);
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("listOfObjects", list);
-
         mailConfig.setModel(model);
         return mailConfig;
     }
