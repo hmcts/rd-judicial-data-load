@@ -258,7 +258,7 @@ dependencies {
         exclude group: 'org.glassfish', module: 'jakarta.el'
     }
 
-    implementation "io.github.openfeign:feign-httpclient:11.0"
+    implementation "io.github.openfeign:feign-httpclient:11.8"
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
