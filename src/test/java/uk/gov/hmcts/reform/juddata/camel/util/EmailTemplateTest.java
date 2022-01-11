@@ -13,7 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyString;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +56,7 @@ class EmailTemplateTest {
     void getEmailBody_should_throw_exception() throws Exception {
         when(freemarkerConfig.getTemplate(anyString())).thenThrow(IOException.class);
         assertThrows(EmailException.class,
-                () -> emailTemplate.getEmailBody("lower-level-auth.ftl", getModel()));
+            () -> emailTemplate.getEmailBody("lower-level-auth.ftl", getModel()));
     }
 
     @NotNull
