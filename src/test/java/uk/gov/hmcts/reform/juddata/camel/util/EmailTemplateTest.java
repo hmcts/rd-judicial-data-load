@@ -53,7 +53,7 @@ class EmailTemplateTest {
     void getEmailBody_should_throw_exception() throws Exception {
         when(freemarkerConfig.getTemplate(anyString())).thenThrow(IOException.class);
         assertThrows(EmailException.class,
-                () -> emailTemplate.getEmailBody("lower-level-auth.ftl", getModel());
+                () -> emailTemplate.getEmailBody("lower-level-auth.ftl", getModel()));
     }
 
     @NotNull
