@@ -350,7 +350,7 @@ public class ParentCamelConfig {
 
     @Bean
     LDClient ldClient() {
-        return new LDClient(getenv("RD_LD_SDK_KEY"));
+        return new LDClient(getenv("LD_SDK_KEY"));
     }
 
     @Bean
