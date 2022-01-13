@@ -143,13 +143,10 @@ public class JudicialOfficeAuthorisationProcessor
         judicialOfficeAuthorisationJsrValidatorInitializer
                 .auditJsrExceptions(pairs, LOWER_LEVEL, NEW_LOWER_LEVEL, exchange);
 
-        sendEmail(newLowerLevelAuths);
+        sendEmail(getLowerLevelAuthMailTypeConfig(newLowerLevelAuths));
     }
 
-    public int sendEmail(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
-        EmailConfiguration.MailTypeConfig mailConfig =
-                emailTemplate.getMailTypeConfig(getModel(newLowerLevelAuths), LOWER_LEVEL_AUTH);
-
+    public int sendEmail(EmailConfiguration.MailTypeConfig mailConfig) {
         if (mailConfig.isEnabled()) {
             Email email = Email.builder()
                     .contentType(CONTENT_TYPE_HTML)
@@ -165,7 +162,12 @@ public class JudicialOfficeAuthorisationProcessor
         return -1;
     }
 
-    private Map<String, Object> getModel(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
+    private EmailConfiguration.MailTypeConfig getLowerLevelAuthMailTypeConfig(
+            List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
+        return emailTemplate.getMailTypeConfig(getLowerLevelAuthModel(newLowerLevelAuths), LOWER_LEVEL_AUTH);
+    }
+
+    private Map<String, Object> getLowerLevelAuthModel(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
         Map<String, Object> model = new HashMap<>();
         model.put("newLowerLevelAuths", newLowerLevelAuths);
         return model;
