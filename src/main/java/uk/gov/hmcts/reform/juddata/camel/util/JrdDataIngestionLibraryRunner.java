@@ -37,6 +37,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.FILE_LOAD_FAILED;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ASB_PUBLISHING_STATUS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_PLAIN;
 
 @Component
 @Slf4j
@@ -209,6 +210,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             updateAsbStatus(jobId, FAILED.getStatus());
             if (mailTypeConfig.isEnabled()) {
                 Email email = Email.builder()
+                        .contentType(CONTENT_TYPE_PLAIN)
                         .from(mailTypeConfig.getFrom())
                         .to(mailTypeConfig.getTo())
                         .messageBody(String.format(mailTypeConfig.getBody(), jobId))

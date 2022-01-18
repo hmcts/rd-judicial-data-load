@@ -34,6 +34,7 @@ region-select-jrd-sql: SELECT * FROM region_type
 
 fetch-base-location-id: SELECT base_location_id FROM base_location_type
 fetch-region-id: SELECT region_id FROM region_type
+fetch-lower-levels: SELECT lower_level FROM judicial_ticket_code_mapping
 
 
 

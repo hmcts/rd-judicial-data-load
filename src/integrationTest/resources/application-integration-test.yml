@@ -195,3 +195,11 @@ email:
         - candyliyen.kuek@hmcts.net
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
       body: "Following JO profiles were deleted : \n %s"
+    lowerLevelAuth:
+      enabled: true
+      from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
+      template: lower-level-auth.ftl
