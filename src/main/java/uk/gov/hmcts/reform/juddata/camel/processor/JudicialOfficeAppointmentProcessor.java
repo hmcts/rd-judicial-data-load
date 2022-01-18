@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.BASE_LOCATION;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_PLAIN;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_LOCATION;
@@ -178,6 +179,7 @@ public class JudicialOfficeAppointmentProcessor
                 emailBody = createLocationEmailBody(data);
             }
             Email email = Email.builder()
+                    .contentType(CONTENT_TYPE_PLAIN)
                     .from(config.getFrom())
                     .to(config.getTo())
                     .subject(String.format(config.getSubject(), params))

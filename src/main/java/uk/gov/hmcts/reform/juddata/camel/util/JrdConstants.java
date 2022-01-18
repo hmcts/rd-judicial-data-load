@@ -27,4 +27,5 @@ public class JrdConstants {
     public static final String BASE_LOCATION = "baselocation";
     public static final String NEW_LINE = "\n";
     public static final String DATE_PATTERN = "dd/MM/yyyy";
+    public static final String CONTENT_TYPE_PLAIN = "text/plain";
 }
