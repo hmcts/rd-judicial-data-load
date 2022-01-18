@@ -49,7 +49,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LINE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_FIELD;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.USERPROFILE;
-
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_PLAIN;
 
 @Component
 public class JrdUserProfileUtil {
@@ -225,6 +225,7 @@ public class JrdUserProfileUtil {
 
         if (mailTypeConfig.isEnabled()) {
             Email email = Email.builder()
+                    .contentType(CONTENT_TYPE_PLAIN)
                     .from(mailTypeConfig.getFrom())
                     .to(mailTypeConfig.getTo())
                     .messageBody(String.format(mailTypeConfig.getBody(), createMessageBody(userProfiles)))

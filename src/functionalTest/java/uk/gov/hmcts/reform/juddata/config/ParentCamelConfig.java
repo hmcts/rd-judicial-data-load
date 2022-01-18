@@ -46,15 +46,16 @@ import uk.gov.hmcts.reform.juddata.camel.processor.JudicialUserProfileProcessor;
 import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.camel.task.LeafRouteTask;
 import uk.gov.hmcts.reform.juddata.camel.task.ParentRouteTask;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleService;
 import uk.gov.hmcts.reform.juddata.camel.util.FeatureToggleServiceImpl;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenService;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdSidamTokenServiceImpl;
-import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
+import uk.gov.hmcts.reform.juddata.camel.util.EmailTemplate;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBlobSupport;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
+import uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil;
 import uk.gov.hmcts.reform.juddata.configuration.TokenConfigProperties;
 
 import javax.sql.DataSource;
@@ -375,6 +376,16 @@ public class ParentCamelConfig {
     @Bean
     EmailConfiguration emailConfiguration() {
         return new EmailConfiguration();
+    }
+
+    @Bean(name = "emailConfigBean")
+    freemarker.template.Configuration configuration() {
+        return new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_31);
+    }
+
+    @Bean
+    EmailTemplate emailTemplate() {
+        return new EmailTemplate();
     }
 
     @Bean
