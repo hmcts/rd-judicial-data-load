@@ -240,7 +240,7 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.0'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
     implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-databind') {
