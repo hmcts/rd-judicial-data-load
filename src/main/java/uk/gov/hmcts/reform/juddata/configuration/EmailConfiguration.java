@@ -27,6 +27,8 @@ public class EmailConfiguration {
         private String subject;
         private String body;
         private boolean enabled;
+        private String template;
+        private Map<String, Object> model;
     }
 
 }

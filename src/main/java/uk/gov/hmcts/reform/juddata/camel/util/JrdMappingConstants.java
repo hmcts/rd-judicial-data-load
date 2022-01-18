@@ -24,6 +24,7 @@ public class JrdMappingConstants {
 
     public static final String LOCATION_ID = "region_id";
 
-    public static final String BASE_LOCATION_ID = "base_location_id";
+    public static final String LOWER_LEVEL = "lowerlevel";
 
+    public static final String BASE_LOCATION_ID = "base_location_id";
 }
