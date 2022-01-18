@@ -168,7 +168,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
                 .addString(START_ROUTE, DIRECT_JRD)
                 .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        validateDbRecordCountFor(jdbcTemplate, ticketCodeSql, 6);
+        validateDbRecordCountFor(jdbcTemplate, ticketCodeSql, 7);
 
         var ticketCodes = retrieveColumnValues(jdbcTemplate, ticketCodeSql, "ticket_code");
         assertTrue(ticketCodes.containsAll(List.of("366","373","289")));
