@@ -239,6 +239,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: versions.springBoot
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
@@ -269,7 +270,7 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.8') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.9') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
