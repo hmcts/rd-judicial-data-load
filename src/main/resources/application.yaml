@@ -77,6 +77,22 @@ email:
         - candyliyen.kuek@hmcts.net
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
       body: "Following JO profiles were deleted : \n %s"
+    region:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - New Region ID in Appointment file - %s"
+      body: "Following JO profiles where with RegionID's newly found : \n %s"
+    baselocation:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - New Base Location in Appointment file - %s"
+      body: "Following JO profiles where with Base Location Id's newly found : \n %s"
     lowerLevelAuth:
       enabled: true
       from: ${MAIL_FROM}
@@ -85,6 +101,7 @@ email:
         - candyliyen.kuek@hmcts.net
       subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
       template: lower-level-auth.ftl
+
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}
