@@ -14,6 +14,8 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +31,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PAR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
-
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATION_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
 
 public interface ICustomValidationProcessor<T> {
 
@@ -99,7 +103,6 @@ public interface ICustomValidationProcessor<T> {
         }
     }
 
-
     default void removeForeignKeyElements(List<T> filteredJudicialAppointments,
                                           Predicate<T> predicate, String fieldInError, Exchange exchange,
                                           JsrValidatorInitializer<T> jsrValidatorInitializer, String errorMessage) {
@@ -119,6 +122,10 @@ public interface ICustomValidationProcessor<T> {
                 //Auditing foreign key skipped rows of user profile for Appointment
                 jsrValidatorInitializer.auditJsrExceptions(pair,
                     fieldInError, errorMessage, exchange);
+                if (List.of(LOCATION_ID, BASE_LOCATION_ID).contains(fieldInError)) {
+                    sendEmail(missingForeignKeyRecords, fieldInError,
+                            LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
+                }
             } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                 .class.getCanonicalName())) {
                 List<Pair<String, Long>> pair = new ArrayList<>();
@@ -139,6 +146,16 @@ public interface ICustomValidationProcessor<T> {
                         fieldInError, errorMessage, exchange);
             }
         }
+    }
+
+    /**
+     * Has to be overridden when it needs.
+     * @param data data to prepare email body
+     * @param params data to build subject or any other dynamic data
+     * @return positive when email send success
+     */
+    default int sendEmail(Set<T> data, String type, Object... params) {
+        return -1;
     }
 
     private Type getType() {
