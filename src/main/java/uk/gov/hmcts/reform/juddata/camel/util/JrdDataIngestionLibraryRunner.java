@@ -101,7 +101,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             //After Job completes Publish message in ASB and toggle off for prod with launch Darkly & one
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
-            ) {
+               ) {
                 if (shouldReturn()) {
                     return;
                 }
@@ -112,13 +112,13 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
 
                 mapAndPublishSidamIds(jobDetails.getLeft(), jobDetails.getRight());
                 log.info("{}:: completed JrdDataIngestionLibraryRunner for JOB id {}", logComponentName,
-                        getJobDetails(selectJobStatus).getLeft());
+                    getJobDetails(selectJobStatus).getLeft());
             }
         } catch (Exception ex) {
             String publishStatus = camelContext.getGlobalOptions().get(ASB_PUBLISHING_STATUS);
             publishStatus = (nonNull(publishStatus) && isNotTrue(publishStatus
-                    .equalsIgnoreCase(IN_PROGRESS.getStatus())))
-                    ? publishStatus : FILE_LOAD_FAILED.getStatus();
+                .equalsIgnoreCase(IN_PROGRESS.getStatus())))
+                ? publishStatus : FILE_LOAD_FAILED.getStatus();
             updateAsbStatus(getJobDetails(selectJobStatus).getLeft(), publishStatus);
             throw ex;
         }
@@ -128,7 +128,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         int failedFileCount = jdbcTemplate.queryForObject(failedAuditFileCount, Integer.class);
         if (failedFileCount > 0) {
             log.warn("{}:: JRD load failed, hence no publishing sidam id's to ASB", logComponentName,
-                    jobDetails.getLeft());
+                jobDetails.getLeft());
             camelContext.getGlobalOptions().put(ASB_PUBLISHING_STATUS, FILE_LOAD_FAILED.getStatus());
             updateAsbStatus(jobDetails.getLeft(), FILE_LOAD_FAILED.getStatus());
             return true;
@@ -162,7 +162,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         //In case on NO sidam id's matched for object id's nothing to publish in ASB
         if (isEmpty(sidamIds)) {
             log.warn("{}:: No Sidam id exists in JRD  for publishing in ASB for JOB id {}",
-                    logComponentName, jobId);
+                logComponentName, jobId);
             updateAsbStatus(jobId, SUCCESS.getStatus());
             return;
         }
@@ -178,24 +178,24 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     private void updateSidamIds(Set<IdamClient.User> sidamUsers) {
         List<Pair<String, String>> sidamObjectId = new ArrayList<>();
         sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
-                sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
+            sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
 
         jdbcTemplate.batchUpdate(
-                updateSidamIds,
-                sidamObjectId,
-                10,
-                new ParameterizedPreparedStatementSetter<Pair<String, String>>() {
-                    public void setValues(PreparedStatement ps, Pair<String, String> argument) throws SQLException {
-                        ps.setString(1, argument.getLeft());
-                        ps.setString(2, argument.getRight());
-                    }
-                });
+            updateSidamIds,
+            sidamObjectId,
+            10,
+            new ParameterizedPreparedStatementSetter<Pair<String, String>>() {
+                public void setValues(PreparedStatement ps, Pair<String, String> argument) throws SQLException {
+                    ps.setString(1, argument.getLeft());
+                    ps.setString(2, argument.getRight());
+                }
+            });
     }
 
     private void publishMessage(String status, List<String> sidamIds, String jobId) {
         try {
             if ((IN_PROGRESS.getStatus().equals(status))
-                    || (FAILED.getStatus()).equals(status) && isNotEmpty(sidamIds)) {
+                || (FAILED.getStatus()).equals(status) && isNotEmpty(sidamIds)) {
                 //Publish or retry Message in ASB
                 log.info("{}:: Publishing/Retrying JRD messages in ASB for Job Id ", logComponentName, jobId);
                 topicPublisher.sendMessage(sidamIds, jobId);
