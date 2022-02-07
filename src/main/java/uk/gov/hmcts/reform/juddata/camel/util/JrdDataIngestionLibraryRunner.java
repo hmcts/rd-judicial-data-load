@@ -101,7 +101,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
             //After Job completes Publish message in ASB and toggle off for prod with launch Darkly & one
             //more explicit check to  avoid executing in prod Should be removed in prod release
             if (featureToggleService.isFlagEnabled(JRD_ASB_FLAG)
-                && Boolean.FALSE.equals(environment.startsWith("prod"))) {
+            ) {
                 if (shouldReturn()) {
                     return;
                 }
