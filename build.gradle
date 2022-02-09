@@ -18,7 +18,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '2.8'
     id "org.flywaydb.flyway" version "6.2.0"
-    id 'uk.gov.hmcts.java' version '0.12.0'
+    id 'uk.gov.hmcts.java' version '0.12.12'
 }
 
 apply plugin: 'java'
@@ -35,13 +35,13 @@ def versions = [
         reformS2sClient    : '3.1.2',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
-        springBoot         : '2.4.6',
+        springBoot         : '2.4.13',
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.11.4',
         launchDarklySdk    : "5.2.2",
         camel              : '3.8.0',
-        log4j              : '2.17.0'
+        log4j              : '2.17.1'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
