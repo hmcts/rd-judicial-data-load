@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.4.6'
+        springBootVersion = '2.6.3'
     }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
