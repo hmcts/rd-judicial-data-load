@@ -146,7 +146,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAuthorisations);
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAuthorisations);
 
@@ -233,7 +233,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);//done
 
         judicialOfficeAuthorisationProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
         judicialOfficeAuthorisations = new ArrayList<>();
         judicialOfficeAuthorisations.add(judicialOfficeAuthorisation2);
         assertThat(((List<JudicialOfficeAuthorisation>) exchangeMock.getMessage().getBody()))

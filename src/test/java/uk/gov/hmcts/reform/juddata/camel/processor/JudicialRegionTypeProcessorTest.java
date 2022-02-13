@@ -94,7 +94,7 @@ class JudicialRegionTypeProcessorTest {
         verify(judicialRegionTypeProcessor).audit(judicialRegionTypeJsrValidatorInitializer, exchangeMock);
         verify(messageMock).setBody(any());
 
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
     }
 
 } 
