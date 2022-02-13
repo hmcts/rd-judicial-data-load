@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
+import com.microsoft.azure.storage.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
+import java.net.URISyntaxException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -235,7 +237,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 || isLoadFailed(getJobDetails(selectJobStatus));
     }
 
-    public boolean noFileUploadAfterSuccessfulDataIngestionOnPreviousDay() throws Exception {
+    public boolean noFileUploadAfterSuccessfulDataIngestionOnPreviousDay() throws URISyntaxException, StorageException {
         Optional<Pair<String, String>> previousDayJobDetails = getJobStatus(selectPreviousDayJobStatus);
 
         return auditServiceImpl.hasDataIngestionRunAfterFileUpload(getFileTimestamp(fileName))
@@ -243,7 +245,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
                 pair.getRight().equals(SUCCESS.getStatus())).orElse(false);
     }
 
-    public boolean isAuditingCompletedPrevDayAndPublishingFailed() throws Exception {
+    public boolean isAuditingCompletedPrevDayAndPublishingFailed() throws URISyntaxException, StorageException {
         Optional<Pair<String, String>> previousDayJobDetails = getJobStatus(selectPreviousDayJobStatus);
 
         return auditServiceImpl.isAuditingCompletedPrevDay(getFileTimestamp(fileName))

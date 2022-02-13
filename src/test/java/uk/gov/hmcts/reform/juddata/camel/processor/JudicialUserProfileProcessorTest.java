@@ -110,6 +110,7 @@ class JudicialUserProfileProcessorTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void should_return_JudicialUserProfileRow_response() {
 
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
@@ -117,7 +118,7 @@ class JudicialUserProfileProcessorTest {
         judicialUserProfiles.add(judicialUserProfileMock2);
         when(messageMock.getBody()).thenReturn(judicialUserProfiles);
         judicialUserProfileProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat((ArrayList)exchangeMock.getMessage().getBody()).hasSize(2);
         when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
 
     }
@@ -196,9 +197,8 @@ class JudicialUserProfileProcessorTest {
         doNothing().when(platformTransactionManager).commit(transactionStatus);
         when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
 
-        Assertions.assertThrows(RouteFailedException.class, () -> {
-            judicialUserProfileProcessor.process(exchangeMock);
-        });
+        Assertions.assertThrows(RouteFailedException.class, () ->
+            judicialUserProfileProcessor.process(exchangeMock));
         assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
     }
 
