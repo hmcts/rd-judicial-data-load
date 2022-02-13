@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -190,7 +190,7 @@ class JudicialOfficeAppointmentProcessorTest {
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(3);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(3);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
@@ -217,7 +217,7 @@ class JudicialOfficeAppointmentProcessorTest {
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
