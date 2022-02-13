@@ -88,7 +88,7 @@ class JudicialBaseLocationProcessorTest {
         when(messageMock.getBody()).thenReturn(judicialBaseLocationTypes);
         judicialBaseLocationProcessor.process(exchangeMock);
 
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
         verify(judicialBaseLocationProcessor).audit(judicialBaseLocationTypeJsrValidatorInitializer,exchangeMock);
         verify(messageMock).setBody(any());
         verify(exchangeMock, times(2)).getMessage();

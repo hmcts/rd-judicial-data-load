@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 import uk.gov.hmcts.reform.juddata.exception.EmailException;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ class EmailTemplateTest {
         EmailConfiguration.MailTypeConfig mailTypeConfigReturned =
                 emailTemplate.getMailTypeConfig(model, "lowerLevelAuth");
         assertEquals(model, mailTypeConfigReturned.getModel());
-        assertThat(((List)mailTypeConfigReturned.getModel().get("newLowerLevelAuths")).size()).isEqualTo(1);
+        assertThat(Arrays.asList(mailTypeConfigReturned.getModel().get("newLowerLevelAuths"))).hasSize(1);
     }
 
     @Test
