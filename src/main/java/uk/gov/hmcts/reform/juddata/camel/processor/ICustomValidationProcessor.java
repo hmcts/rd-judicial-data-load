@@ -53,7 +53,7 @@ public interface ICustomValidationProcessor<T> {
                 if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAppointment
                     .class.getCanonicalName())) {
                     filteredChildren.stream()
-                            .map(c -> (JudicialOfficeAppointment) c)
+                            .map(JudicialOfficeAppointment.class::cast)
                             .filter(app -> app.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
                             .forEach(filteredApp ->
                                     invalidPerIds.add(Pair.of(filteredApp.getPerId(), filteredApp.getRowId())));
@@ -64,7 +64,7 @@ public interface ICustomValidationProcessor<T> {
                 } else if (((Class) mySuperclass).getCanonicalName().equals(JudicialOfficeAuthorisation
                     .class.getCanonicalName())) {
                     filteredChildren.stream()
-                            .map(c -> (JudicialOfficeAuthorisation) c)
+                            .map(JudicialOfficeAuthorisation.class::cast)
                             .filter(auth -> auth.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
                             .forEach(filteredAuth ->
                                     invalidPerIds.add(Pair.of(filteredAuth.getPerId(), filteredAuth.getRowId())));
@@ -76,7 +76,7 @@ public interface ICustomValidationProcessor<T> {
                         .class.getCanonicalName())) {
 
                     filteredChildren.stream()
-                            .map(c -> (JudicialUserRoleType) c)
+                            .map(JudicialUserRoleType.class::cast)
                             .filter(roleType -> roleType.getPerId().equalsIgnoreCase(invalidRecords.getPerId()))
                             .forEach(filteredRoleType ->
                                     invalidPerIds.add(Pair.of(filteredRoleType.getPerId(),
@@ -117,7 +117,7 @@ public interface ICustomValidationProcessor<T> {
                 .class.getCanonicalName())) {
                 List<Pair<String, Long>> pair = new ArrayList<>();
                 missingForeignKeyRecords.stream()
-                        .map(i -> ((JudicialOfficeAppointment) i))
+                        .map(JudicialOfficeAppointment.class::cast)
                         .forEach(j -> pair.add(Pair.of(j.getPerId(), j.getRowId())));
                 //Auditing foreign key skipped rows of user profile for Appointment
                 jsrValidatorInitializer.auditJsrExceptions(pair,
@@ -130,7 +130,7 @@ public interface ICustomValidationProcessor<T> {
                 .class.getCanonicalName())) {
                 List<Pair<String, Long>> pair = new ArrayList<>();
                 missingForeignKeyRecords.stream()
-                        .map(i -> ((JudicialOfficeAuthorisation) i))
+                        .map(JudicialOfficeAuthorisation.class::cast)
                         .forEach(j -> pair.add(Pair.of(j.getPerId(), j.getRowId())));
                 //Auditing foreign key skipped rows of user profile for Authorization
                 jsrValidatorInitializer.auditJsrExceptions(pair,
@@ -139,7 +139,7 @@ public interface ICustomValidationProcessor<T> {
                     .class.getCanonicalName())) {
                 List<Pair<String, Long>> pair = new ArrayList<>();
                 missingForeignKeyRecords.stream()
-                        .map(i -> ((JudicialUserRoleType) i))
+                        .map(JudicialUserRoleType.class::cast)
                         .forEach(j -> pair.add(Pair.of(j.getPerId(), j.getRowId())));
                 //Auditing foreign key skipped rows of user profile for Authorization
                 jsrValidatorInitializer.auditJsrExceptions(pair,

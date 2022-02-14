@@ -135,7 +135,7 @@ class JudicialUserRoleTypeProcessorTest {
         when(messageMock.getBody()).thenReturn(judicialUserRoleTypes);
         judicialUserRoleTypeProcessor.process(exchangeMock);
 
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
         verify(exchangeMock, times(2)).getMessage();
         verify(judicialUserRoleTypeProcessor).audit(judicialUserRoleTypeJsrValidatorInitializer, exchangeMock);
         verify(messageMock).setBody(any());
@@ -187,7 +187,7 @@ class JudicialUserRoleTypeProcessorTest {
 
         when(messageMock.getBody()).thenReturn(judicialUserRoleTypes);
         judicialUserRoleTypeProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody()).size()).isEqualTo(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
         assertThat(((List<JudicialUserRoleType>) exchangeMock.getMessage().getBody()))
                 .isSameAs(judicialUserRoleTypes);
 
