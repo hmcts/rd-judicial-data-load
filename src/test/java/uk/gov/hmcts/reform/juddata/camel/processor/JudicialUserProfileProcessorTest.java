@@ -218,6 +218,6 @@ class JudicialUserProfileProcessorTest {
         when(jdbcTemplate.queryForList("dummysql", String.class))
             .thenReturn(ImmutableList.of(PERID_1, PERID_2, "0"));
         List<String> resultList = invokeMethod(judicialUserProfileProcessor, "loadPerId");
-        assertThat(resultList.size()).isEqualTo(3);
+        assertThat(resultList).hasSize(3);
     }
 }
