@@ -23,6 +23,8 @@ import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.sql.DataSource;
 
 import static net.logstash.logback.encoder.org.apache.commons.lang3.BooleanUtils.isNotTrue;
@@ -130,8 +132,11 @@ public abstract class JrdBatchIntegrationSupport {
     @Autowired
     protected JrdBlobSupport jrdBlobSupport;
 
-    @Value("${archival-file-names}")
-    protected List<String> archivalFileNames;
+    @Value("${parent-file-names}")
+    protected List<String> parentFiles;
+
+    @Value("${leaf-file-names}")
+    protected List<String> leafFiles;
 
     protected TestContextManager testContextManager;
 
@@ -187,6 +192,8 @@ public abstract class JrdBatchIntegrationSupport {
     @AfterEach
     public void cleanUp() throws Exception {
         if (isNotTrue(notDeletionFlag)) {
+            List<String> archivalFileNames = Stream.concat(parentFiles.stream(), leafFiles.stream())
+                    .collect(Collectors.toList());
             deleteBlobs(jrdBlobSupport, archivalFileNames);
         }
     }
