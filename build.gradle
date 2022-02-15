@@ -31,8 +31,7 @@ apply plugin: "io.spring.dependency-management"
 
 def versions = [
         lombok             : '1.18.6',
-        reformLogging      : '5.1.0',
-        reformS2sClient    : '3.1.2',
+        reformLogging      : '5.1.9',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
         springBoot         : '2.4.13',
@@ -219,13 +218,10 @@ project.tasks['sonarqube'].group = "Verification"
 
 repositories {
     mavenLocal()
-    jcenter()
     mavenCentral()
-
     maven {
         url "https://jitpack.io"
     }
-
 }
 
 dependencies {
@@ -253,7 +249,7 @@ dependencies {
             strictly versions.jackson
         }
     }
-    implementation (group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0')
+    implementation 'com.github.hmcts:idam-java-client:2.0.1'
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.glassfish', module: 'jakarta.el'
@@ -267,10 +263,11 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
+    implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
+    implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
+    implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.9') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.1') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
