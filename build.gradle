@@ -267,7 +267,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.1') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.2') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
@@ -362,7 +362,7 @@ dependencies {
     testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.2'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
-    testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
+    testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation(group: 'org.yaml', name: 'snakeyaml') {
         version {
@@ -382,14 +382,14 @@ dependencies {
         }
     }
 
-    functionalTestCompile sourceSets.main.runtimeClasspath
-    functionalTestCompile sourceSets.test.runtimeClasspath
+    functionalTestImplementation sourceSets.main.runtimeClasspath
+    functionalTestImplementation sourceSets.test.runtimeClasspath
 
-    integrationTestCompile sourceSets.main.runtimeClasspath
-    integrationTestCompile sourceSets.test.runtimeClasspath
+    integrationTestImplementation sourceSets.main.runtimeClasspath
+    integrationTestImplementation sourceSets.test.runtimeClasspath
 
-    smokeTestCompile sourceSets.main.runtimeClasspath
-    smokeTestCompile sourceSets.test.runtimeClasspath
+    smokeTestImplementation sourceSets.main.runtimeClasspath
+    smokeTestImplementation sourceSets.test.runtimeClasspath
 }
 
 dependencyManagement {
@@ -463,3 +463,14 @@ integration {
     useJUnitPlatform()
 }
 
+rootProject.tasks.named("processSmokeTestResources") {
+    duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processFunctionalTestResources") {
+    duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processIntegrationTestResources") {
+    duplicatesStrategy = 'include'
+}
