@@ -224,7 +224,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         }
     }
 
-    private boolean shouldReturn() throws Exception {
+    private boolean shouldReturn() throws URISyntaxException, StorageException {
         return currentDayPublishingStatusIsSuccessOrFileLoadFailed()
                 || noFileUploadAfterSuccessfulDataIngestionOnPreviousDay();
     }
