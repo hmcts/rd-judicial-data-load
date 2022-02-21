@@ -12,7 +12,7 @@ file-read-time-out: 180000
 leaf-route-task: leafRouteTask
 parent-route-task: parentRouteOrchestrationTask
 batchjob-name: JudicialDataLoad
-scheduler-audit-select: SELECT count(*) FROM dataload_schedular_audit WHERE date(scheduler_start_time) = current_date
+scheduler-audit-select: SELECT COUNT(*) FROM dataload_schedular_audit WHERE date(scheduler_start_time) = current_date
 scheduler-audit-prev-day: SELECT file_name, scheduler_start_time, status FROM dataload_schedular_audit WHERE date(scheduler_start_time) = current_date - INTEGER '1'
 invalid-exception-sql: INSERT INTO dataload_exception_records(table_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) VALUES(?, ?, ?, ?, ?)
 invalid-jsr-sql: INSERT INTO dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp,row_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)
@@ -34,11 +34,11 @@ fetch-role-id: SELECT role_id FROM judicial_role_type
 fetch-lower-levels: SELECT lower_level FROM judicial_ticket_code_mapping
 
 insert-job-sql: INSERT INTO dataload_schedular_job(job_start_time, publishing_status) VALUES(?, ?)
-update-job-sql: UPDATE dataload_schedular_job SET job_end_time = now() AT TIME ZONE 'utc', publishing_status = ? WHERE id =?
-select-job-status-sql:  SELECT id, publishing_status FROM dataload_schedular_job WHERE date(job_start_time) = current_date
-previous-day-job-status: SELECT id, publishing_status FROM dataload_schedular_job WHERE date(job_start_time) = current_date - INTEGER '1'
+update-job-sql: UPDATE dataload_schedular_job SET job_end_time = NOW() AT TIME ZONE 'utc', publishing_status = ? WHERE id =?
+select-job-status-sql:  SELECT id, publishing_status FROM dataload_schedular_job WHERE DATE(job_start_time) = current_date
+previous-day-job-status: SELECT id, publishing_status FROM dataload_schedular_job WHERE DATE(job_start_time) = current_date - INTEGER '1'
 get-sidam-ids: SELECT DISTINCT sidam_id FROM judicial_user_profile WHERE sidam_id IS NOT NULL
-scheduler-audit-failure: SELECT count(*) FROM dataload_schedular_audit WHERE date(scheduler_start_time) = current_date AND status = 'Failure'
+scheduler-audit-failure: SELECT COUNT(*) FROM dataload_schedular_audit WHERE DATE(scheduler_start_time) = current_date AND status = 'Failure'
 scheduler-end-time: SELECT max(scheduler_end_time) FROM dataload_schedular_audit WHERE scheduler_end_time < ( SELECT MAX(scheduler_end_time) FROM dataload_schedular_audit WHERE file_name = 'Personal' AND status IN ('PartialSuccess', 'Success')) AND file_name = 'Personal' AND status IN ('PartialSuccess', 'Success')
 
 jrd:
