@@ -130,7 +130,7 @@ public abstract class JrdBatchIntegrationSupport {
     DataSource dataSource;
 
     @BeforeEach
-    public void setUpStringContext() throws Exception {
+    public void setUpStringContext() {
 
         executeScripts("testData/truncate-all.sql");
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);

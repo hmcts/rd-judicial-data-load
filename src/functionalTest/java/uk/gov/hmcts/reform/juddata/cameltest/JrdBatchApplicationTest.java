@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -33,7 +34,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
@@ -103,7 +103,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         validateDbRecordCountFor(jdbcTemplate, selectDataLoadSchedulerAudit, 6);
         List<Map<String, Object>> auditDetailsNextRun = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         final Timestamp timestampNextRun = (Timestamp) auditDetailsNextRun.get(0).get("scheduler_end_time");
-        assertEquals(timestamp, timestampNextRun);
+        Assertions.assertEquals(timestamp, timestampNextRun);
     }
 
     @Test

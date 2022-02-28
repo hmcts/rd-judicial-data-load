@@ -82,7 +82,6 @@ public class JudicialUserProfileProcessor extends JsrValidationBaseProcessor<Jud
         return isNotEmpty(validPerIdInUserProfile) ? validPerIdInUserProfile : emptySet();
     }
 
-    @SuppressWarnings("unchecked")
     private List<String> loadPerId() {
         log.info("{} : starting load Per Id ", logComponentName);
         List<String> perIdList = jdbcTemplate.queryForList(loadPerId, String.class);

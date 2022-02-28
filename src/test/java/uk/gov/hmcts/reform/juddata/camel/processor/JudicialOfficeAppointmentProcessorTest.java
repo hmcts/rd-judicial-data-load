@@ -70,22 +70,22 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.regions;
 @PrepareForTest(JudicialOfficeAppointmentProcessor.class)
 class JudicialOfficeAppointmentProcessorTest {
 
-    Date currentDate = new Date();
+    final Date currentDate = new Date();
 
-    LocalDateTime dateTime = LocalDateTime.now();
+    final LocalDateTime dateTime = LocalDateTime.now();
 
-    JudicialOfficeAppointment judicialOfficeAppointmentMock1 = createJudicialOfficeAppointmentMock(currentDate,
+    final JudicialOfficeAppointment judicialOfficeAppointmentMock1 = createJudicialOfficeAppointmentMock(currentDate,
         dateTime, PERID_1);
 
 
-    JudicialOfficeAppointment judicialOfficeAppointmentMock2 = createJudicialOfficeAppointmentMock(currentDate,
+    final JudicialOfficeAppointment judicialOfficeAppointmentMock2 = createJudicialOfficeAppointmentMock(currentDate,
         dateTime, PERID_2);
 
 
-    JudicialOfficeAppointment judicialOfficeAppointmentMock3 = createJudicialOfficeAppointmentMock(currentDate,
+    final JudicialOfficeAppointment judicialOfficeAppointmentMock3 = createJudicialOfficeAppointmentMock(currentDate,
         dateTime, PERID_3);
 
-    JudicialOfficeAppointment judicialOfficeAppointmentMock4 = createJudicialOfficeAppointmentMock(currentDate,
+    final JudicialOfficeAppointment judicialOfficeAppointmentMock4 = createJudicialOfficeAppointmentMock(currentDate,
         dateTime, PERID_4);
 
     JudicialOfficeAppointmentProcessor judicialOfficeAppointmentProcessor;
@@ -93,21 +93,19 @@ class JudicialOfficeAppointmentProcessorTest {
     private JsrValidatorInitializer<JudicialOfficeAppointment> judicialOfficeAppointmentJsrValidatorInitializer;
 
 
-    private Validator validator;
-
-    CamelContext camelContext = new DefaultCamelContext();
+    final CamelContext camelContext = new DefaultCamelContext();
 
     JudicialUserProfileProcessor judicialUserProfileProcessor = spy(new JudicialUserProfileProcessor());
 
-    Exchange exchangeMock = spy(new DefaultExchange(camelContext));
+    final Exchange exchangeMock = spy(new DefaultExchange(camelContext));
 
     Message messageMock;
 
     Registry registryMock;
 
-    ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
+    final ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
 
-    ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
+    final ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
     final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
 
@@ -137,7 +135,7 @@ class JudicialOfficeAppointmentProcessorTest {
         setField(judicialOfficeAppointmentProcessor, "emailService", emailService);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        Validator validator = factory.getValidator();
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "validator", validator);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);

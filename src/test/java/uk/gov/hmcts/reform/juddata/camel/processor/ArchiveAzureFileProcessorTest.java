@@ -5,7 +5,7 @@ import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 
@@ -21,7 +21,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LEAF_RO
 
 class ArchiveAzureFileProcessorTest {
 
-    ArchiveFileProcessor archiveFileProcessor = new ArchiveFileProcessor();
+    final ArchiveFileProcessor archiveFileProcessor = new ArchiveFileProcessor();
 
     private final CamelContext camelContextMock = mock(CamelContext.class);
 
@@ -34,7 +34,7 @@ class ArchiveAzureFileProcessorTest {
     private final ConsumerTemplate consumerTemplateMock = mock(ConsumerTemplate.class);
 
     @Test
-    void test_process() throws Exception {
+    void test_process() {
 
         List<String> archivalFileNames = new ArrayList<>();
         File file = new File("src/test/resources/sourceFiles/test.csv");
@@ -60,6 +60,6 @@ class ArchiveAzureFileProcessorTest {
         setField(archiveFileProcessor, "fileReadTimeOut", 1000);
 
         archiveFileProcessor.process(exchangeMock);
-        Assert.assertNotNull(exchangeMock);
+        Assertions.assertNotNull(exchangeMock);
     }
 }

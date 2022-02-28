@@ -63,9 +63,9 @@ class JrdUserProfileUtilTest {
     @Mock
     EmailServiceImpl emailService;
 
-    ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
-    ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
-    EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
+    final ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
+    final ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
+    final EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
 
     List<JudicialUserProfile> judicialUserProfiles;
     List<JudicialUserProfile> judicialUserProfilesValidRecords;

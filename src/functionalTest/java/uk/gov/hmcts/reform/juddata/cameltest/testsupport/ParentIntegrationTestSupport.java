@@ -141,7 +141,7 @@ public interface ParentIntegrationTestSupport {
         }
     }
 
-    static void deleteBlobs(JrdBlobSupport jrdBlobSupport, List<String> fileNames) throws Exception {
+    static void deleteBlobs(JrdBlobSupport jrdBlobSupport, List<String> fileNames) {
         for (String fileName : fileNames) {
             jrdBlobSupport.deleteBlob(fileName);
         }
@@ -235,7 +235,8 @@ public interface ParentIntegrationTestSupport {
             File file = ResourceUtils.getFile(inputFilePath);
             InputStream inputStream = new FileInputStream(file);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            authorisations = bufferedReader.lines().skip(1).map(line -> mapJudicialOfficeAuthorisation(line))
+            authorisations = bufferedReader.lines().skip(1).map(
+                    ParentIntegrationTestSupport::mapJudicialOfficeAuthorisation)
                 .collect(Collectors.toList());
             bufferedReader.close();
         } catch (IOException e) {

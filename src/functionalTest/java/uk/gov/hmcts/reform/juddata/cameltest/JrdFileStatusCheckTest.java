@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -42,7 +43,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.sql.DataSource;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
@@ -135,7 +135,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
         //validate old day 1 data not gets truncated after day 2 stale file ran
         List<Map<String, Object>> userProfileList = jdbcTemplate.queryForList(userProfileSql);
-        assertTrue(userProfileList.size() > 0);
+        Assertions.assertTrue(userProfileList.size() > 0);
     }
 
     @Test
@@ -190,12 +190,12 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
         //validate old day 1 data not gets truncated after day 2  file not exist ran
         List<Map<String, Object>> appointmentList = jdbcTemplate.queryForList(appointmentSql);
-        assertTrue(appointmentList.size() > 0);
+        Assertions.assertTrue(appointmentList.size() > 0);
         List<Map<String, Object>> profileList = jdbcTemplate.queryForList(userProfileSql);
-        assertTrue(profileList.size() > 0);
+        Assertions.assertTrue(profileList.size() > 0);
     }
 
-    private void deleteAuditAndExceptionDataOfDay1() throws Exception {
+    private void deleteAuditAndExceptionDataOfDay1() {
         jdbcTemplate.execute(truncateAudit);
         jdbcTemplate.execute(truncateException);
         SpringStarter.getInstance().restart();

@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import com.launchdarkly.sdk.server.LDClient;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,9 +47,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -75,7 +73,6 @@ import static uk.gov.hmcts.reform.juddata.support.ParentIntegrationTestSupport.s
 @SpringBootTest
 @EnableFeignClients(clients = {IdamClient.class, IdamApi.class})
 @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-@SuppressWarnings("unchecked")
 class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
 
     @Autowired
@@ -119,11 +116,11 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        assertEquals(2, jdbcTemplate.queryForList(userProfileSql).size());
+        Assertions.assertEquals(2, jdbcTemplate.queryForList(userProfileSql).size());
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate
             .queryForList(selectDataLoadSchedulerAudit);
-        assertEquals(PARTIAL_SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
-        assertEquals(PARTIAL_SUCCESS,
+        Assertions.assertEquals(PARTIAL_SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
+        Assertions.assertEquals(PARTIAL_SUCCESS,
             DataLoadUtil.getFileDetails(camelContext,
                 "classpath:sourceFiles/judicial_userprofile_jsr.csv").getAuditStatus());
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 20, true);
@@ -156,20 +153,20 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         }
 
         exceptionList.forEach(exception -> {
-            assertTrue(isNotEmpty(exception.get("scheduler_name")));
-            assertTrue(isNotEmpty(exception.get("scheduler_start_time")));
-            assertTrue(isNotEmpty(exception.get("error_description")));
-            assertTrue(isNotEmpty(exception.get("updated_timestamp")));
+            Assertions.assertTrue(isNotEmpty(exception.get("scheduler_name")));
+            Assertions.assertTrue(isNotEmpty(exception.get("scheduler_start_time")));
+            Assertions.assertTrue(isNotEmpty(exception.get("error_description")));
+            Assertions.assertTrue(isNotEmpty(exception.get("updated_timestamp")));
             if (isPartialSuccessValidation) {
-                assertTrue(isNotEmpty(exception.get("table_name")));
+                Assertions.assertTrue(isNotEmpty(exception.get("table_name")));
                 if (isNotEmpty(params)) {
-                    assertTrue(isNotEmpty(exception.get("key")));
+                    Assertions.assertTrue(isNotEmpty(exception.get("key")));
                 } else {
-                    assertNotNull((exception.get("key")));
+                    Assertions.assertNotNull((exception.get("key")));
                 }
-                assertTrue(isNotEmpty(exception.get("field_in_error")));
+                Assertions.assertTrue(isNotEmpty(exception.get("field_in_error")));
             }
         });
-        assertEquals(expectedCount, exceptionList.size());
+        Assertions.assertEquals(expectedCount, exceptionList.size());
     }
 }

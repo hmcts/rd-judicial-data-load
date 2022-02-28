@@ -61,11 +61,7 @@ class JudicialUserProfileProcessorTest {
 
     private JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
 
-    private JrdUserProfileUtil judicialUserProfileUtil;
-
-    private Validator validator;
-
-    private JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+    private final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
 
     CamelContext camelContext = new DefaultCamelContext();
     Exchange exchangeMock;
@@ -80,7 +76,7 @@ class JudicialUserProfileProcessorTest {
         judicialUserProfileMock1 = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
         judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_2);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
-        judicialUserProfileUtil = new JrdUserProfileUtil();
+        JrdUserProfileUtil judicialUserProfileUtil = new JrdUserProfileUtil();
         judicialUserProfileJsrValidatorInitializer
             = new JsrValidatorInitializer<>();
         setField(judicialUserProfileProcessor,
@@ -90,7 +86,7 @@ class JudicialUserProfileProcessorTest {
         setField(judicialUserProfileProcessor,
             "loadPerId", "dummysql");
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        Validator validator = factory.getValidator();
         setField(judicialUserProfileJsrValidatorInitializer, "validator", validator);
         messageMock = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();

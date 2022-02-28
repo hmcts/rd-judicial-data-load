@@ -41,8 +41,6 @@ class JudicialRegionTypeProcessorTest {
 
     JsrValidatorInitializer<JudicialRegionType> judicialRegionTypeJsrValidatorInitializer;
 
-    private Validator validator;
-
     Exchange exchangeMock;
 
     Message messageMock;
@@ -63,7 +61,7 @@ class JudicialRegionTypeProcessorTest {
             "judicialRegionTypeJsrValidatorInitializer", judicialRegionTypeJsrValidatorInitializer);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        Validator validator = factory.getValidator();
         setField(judicialRegionTypeJsrValidatorInitializer, "validator", validator);
         messageMock = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();

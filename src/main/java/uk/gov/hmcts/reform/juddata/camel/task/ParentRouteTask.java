@@ -51,7 +51,7 @@ public class ParentRouteTask implements Tasklet {
     }
 
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         log.info("{}:: ParentRouteTask starts::", logComponentName);
         camelContext.getGlobalOptions().put(IS_PARENT, valueOf(TRUE));
         String status = jrdExecutor.execute(camelContext, JUDICIAL_REF_DATA_ORCHESTRATION, startRoute);

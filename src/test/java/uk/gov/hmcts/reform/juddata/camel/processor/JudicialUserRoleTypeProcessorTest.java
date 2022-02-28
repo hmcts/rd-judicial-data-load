@@ -51,7 +51,6 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 
 class JudicialUserRoleTypeProcessorTest {
 
-    private Validator validator;
     String date = "2017-10-01 00:00:00.000";
 
     Date currentDate = new Date();
@@ -87,7 +86,7 @@ class JudicialUserRoleTypeProcessorTest {
                 judicialUserProfileProcessor);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        Validator validator = factory.getValidator();
         setField(judicialUserRoleTypeJsrValidatorInitializer, "validator", validator);
         setField(judicialUserRoleTypeJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialUserRoleTypeJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);

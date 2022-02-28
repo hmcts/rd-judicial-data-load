@@ -26,7 +26,7 @@ public class EmailTemplate {
     EmailConfiguration emailConfiguration;
 
     public String getEmailBody(String template, Map<String, Object> model) {
-        String emailBody = "";
+        String emailBody;
         try {
             Template t = freemarkerConfig.getTemplate(template);
             emailBody = FreeMarkerTemplateUtils.processTemplateIntoString(t, model);

@@ -26,7 +26,7 @@ public class JudicialRegionTypeProcessor extends JsrValidationBaseProcessor<Judi
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
 
         List<JudicialRegionType> judicialRegionTypes;
 

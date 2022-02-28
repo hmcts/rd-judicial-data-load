@@ -39,20 +39,20 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
 @ExtendWith(SpringExtension.class)
 class JrdExecutorTest {
-    JrdExecutor jrdExecutor = new JrdExecutor();
+    final JrdExecutor jrdExecutor = new JrdExecutor();
 
-    JrdExecutor jrdExecutorSpy = spy(jrdExecutor);
+    final JrdExecutor jrdExecutorSpy = spy(jrdExecutor);
 
-    CamelContext camelContext = new DefaultCamelContext();
+    final CamelContext camelContext = new DefaultCamelContext();
 
-    AuditServiceImpl auditService = mock(AuditServiceImpl.class);
+    final AuditServiceImpl auditService = mock(AuditServiceImpl.class);
 
-    ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
+    final ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
 
-    DataLoadUtil dataLoadUtil = mock(DataLoadUtil.class);
-    MockedStatic<DataLoadUtil> dataLoadUtilMock = mockStatic(DataLoadUtil.class);
+    final DataLoadUtil dataLoadUtil = mock(DataLoadUtil.class);
+    final MockedStatic<DataLoadUtil> dataLoadUtilMock = mockStatic(DataLoadUtil.class);
 
-    EmailServiceImpl emailService = mock(EmailServiceImpl.class);
+    final EmailServiceImpl emailService = mock(EmailServiceImpl.class);
 
     @BeforeEach
     public void init() {
