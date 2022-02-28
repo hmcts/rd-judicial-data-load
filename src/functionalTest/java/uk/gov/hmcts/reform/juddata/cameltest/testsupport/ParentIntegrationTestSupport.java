@@ -131,14 +131,13 @@ public interface ParentIntegrationTestSupport {
         "classpath:sourceFiles/parent/judicial_office_authorisation.csv"};
 
     static void uploadBlobs(JrdBlobSupport jrdBlobSupport, List<String> archivalFileNames,
-                            boolean isParent, String... files) throws Exception {
-        int i = isParent ? 0 : 4;
-        for (String absoluteFileName : files) {
+                            String... files) throws Exception {
+
+        for (int i = 0; i < files.length; i++) {
             jrdBlobSupport.uploadFile(
-                archivalFileNames.get(i),
-                new FileInputStream(getFile(absoluteFileName))
+                    archivalFileNames.get(i),
+                    new FileInputStream(getFile(files[i]))
             );
-            i++;
         }
     }
 

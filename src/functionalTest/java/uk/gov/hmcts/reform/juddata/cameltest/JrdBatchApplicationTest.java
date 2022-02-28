@@ -71,8 +71,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testTasklet() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
             .addString(START_ROUTE, DIRECT_JRD)
@@ -86,8 +86,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     void testTaskletIdempotent() throws Exception {
         //clean context
         SpringStarter.getInstance().restart();
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
             .addString(START_ROUTE, DIRECT_JRD)
@@ -95,8 +95,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         List<Map<String, Object>> auditDetails = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         final Timestamp timestamp = (Timestamp) auditDetails.get(0).get("scheduler_end_time");
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
@@ -109,8 +109,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     void testParentOrchestration() throws Exception {
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
@@ -122,8 +122,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     void testAppointmentFailureRollbacksAppointment() throws Exception {
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithError);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithError);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
@@ -136,8 +136,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     void testParentOrchestrationSingleRecord() throws Exception {
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithSingleRecord);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithSingleRecord);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 1);
@@ -149,8 +149,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     void testAllLeafs() throws Exception {
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
@@ -161,8 +161,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testTicketCodeMappingInJudicialOfficeAuthorisationTable() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .addString(START_ROUTE, DIRECT_JRD)
@@ -176,8 +176,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testLocationsMappingInJudicialOfficeAppointmentTable() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .addString(START_ROUTE, DIRECT_JRD)
@@ -192,8 +192,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testServiceCodeMappingInJudicialOfficeAppointmentTable() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .addString(START_ROUTE, DIRECT_JRD)
@@ -208,8 +208,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testObjectIdMappingInJudicialOfficeAuthorisationTable() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .addString(START_ROUTE, DIRECT_JRD)
@@ -224,8 +224,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testMappingInJudicialOfficeAppointmentTable() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .addString(START_ROUTE, DIRECT_JRD)
@@ -246,8 +246,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testMappingInJudicialOfficeAppointmentWithErrors() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidAppointmentsEntry);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithInvalidAppointmentsEntry);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
@@ -264,8 +264,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testMappingInJudicialUserRoleTypesWithErrors() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         final JobParameters params = new JobParametersBuilder()
                 .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
