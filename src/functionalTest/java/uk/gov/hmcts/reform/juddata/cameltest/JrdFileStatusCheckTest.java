@@ -38,6 +38,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.sql.DataSource;
 
 import static org.junit.Assert.assertTrue;
@@ -101,7 +103,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
             .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        deleteBlobs(jrdBlobSupport, archivalFileNames);
+        deleteBlobs(jrdBlobSupport, listFileNames());
         deleteAuditAndExceptionDataOfDay1();
 
         //Day 2 stale files
@@ -160,7 +162,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
             .addString(START_ROUTE, DIRECT_JRD)
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
-        deleteBlobs(jrdBlobSupport, archivalFileNames);
+        deleteBlobs(jrdBlobSupport, listFileNames());
         deleteAuditAndExceptionDataOfDay1();
 
         //Day 2 no upload file
@@ -201,7 +203,12 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
 
     private void uploadFiles(String time) throws Exception {
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, time);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
+    }
+
+    private List<String> listFileNames() {
+        return Stream.concat(parentFiles.stream(), leafFiles.stream())
+                .collect(Collectors.toList());
     }
 }

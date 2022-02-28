@@ -105,8 +105,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testTaskletException() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithPerIdMissing);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithPerIdMissing);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
@@ -116,8 +116,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     void testAuthorisationPerMissing() throws Exception {
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthPerIdMissing);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithAuthPerIdMissing);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
@@ -126,8 +126,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testParentOrchestrationInvalidHeaderAppointmentsRollbackAppointments() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidHeader);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithInvalidHeader);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
@@ -137,8 +137,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testAuthorisationInvalidHeaderAuthorizationRollback() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthorisationInvalidHeader);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithAuthorisationInvalidHeader);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
@@ -152,13 +152,13 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     void testLeafFailuresRollbackAndKeepExistingState() throws Exception {
         setField(jrdExecutor, "emailService", emailService);
         Mockito.when(emailService.sendEmail(ArgumentMatchers.any(Email.class))).thenReturn(200);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithAuthorisationInvalidHeader);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_error);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithAuthorisationInvalidHeader);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file_error);
 
         camelContext.getGlobalOptions().put(ORCHESTRATED_ROUTE, JUDICIAL_REF_DATA_ORCHESTRATION);
 
@@ -173,8 +173,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testParentOrchestrationJsrAuditTestAndPartialSuccess() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidJsr);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithInvalidJsr);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         jobLauncherTestUtils.launchJob();
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
@@ -201,8 +201,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testParentOrchestrationJsrExceedsThresholdAuditTest() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidJsrExceedsThreshold);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithInvalidJsrExceedsThreshold);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
 
         jobLauncherTestUtils.launchJob();
@@ -217,8 +217,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testLeafFailuresInvalidJsr() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, file);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file_jsr_error);
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file_jsr_error);
         jobLauncherTestUtils.launchJob();
 
         List<Map<String, Object>> judicialBaseLocationType = jdbcTemplate.queryForList(baseLocationSql);
@@ -248,8 +248,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testParentOrchestrationJsrSkipChildAppointmentRecordsForInvalidUserProfile() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithPerIdInvalidInParent);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithPerIdInvalidInParent);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         jobLauncherTestUtils.launchJob();
 
         List<Map<String, Object>> judicialUserProfileList = jdbcTemplate.queryForList(userProfileSql);
@@ -280,8 +280,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     void testParentOrchestrationJsrSkipChildRecordsForeignKeyViolations() throws Exception {
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithForeignKeyViolations);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithForeignKeyViolations);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
@@ -306,8 +306,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testUserProfileWithInvalidAppointmentValue() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidAppointments);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithInvalidAppointments);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 6);
@@ -316,8 +316,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testChildSkipsOnParentFailure() throws Exception {
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, missingUserProfile);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, missingUserProfile);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         JobParameters params = new JobParametersBuilder()
             .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
@@ -331,8 +331,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     @Test
     void testRowIdInExceptionTable() throws Exception {
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithEmptyPerIdInAuth);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithEmptyPerIdInAuth);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
@@ -366,8 +366,8 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
         setField(jrdUserProfileUtil, "emailService", emailService);
         Mockito.when(emailService.sendEmail(ArgumentMatchers.any(Email.class))).thenReturn(200);
 
-        uploadBlobs(jrdBlobSupport, archivalFileNames, true, fileWithInvalidPerCodeObjectIds);
-        uploadBlobs(jrdBlobSupport, archivalFileNames, false, LeafIntegrationTestSupport.file);
+        uploadBlobs(jrdBlobSupport, parentFiles, fileWithInvalidPerCodeObjectIds);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
 
         jobLauncherTestUtils.launchJob();
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 4);
