@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -99,7 +98,7 @@ public class JrdSidamTokenServiceImpl implements JrdSidamTokenService {
             if (response.status() == 200) {
 
                 Set<IdamClient.User> users = (Set<IdamClient.User>) responseEntity.getBody();
-                judicialUsers.addAll(Objects.requireNonNull(users));
+                judicialUsers.addAll(users);
 
                 try {
                     List<String> headerCount = responseEntity.getHeaders().get("X-Total-Count");

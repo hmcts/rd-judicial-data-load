@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
@@ -20,6 +21,8 @@ import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.net.URISyntaxException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -91,6 +94,7 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
         super();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void run(Job job, JobParameters params) throws Exception {
         try {
@@ -176,15 +180,17 @@ public class JrdDataIngestionLibraryRunner extends DataIngestionLibraryRunner {
     private void updateSidamIds(Set<IdamClient.User> sidamUsers) {
         List<Pair<String, String>> sidamObjectId = new ArrayList<>();
         sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
-                sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
+            sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
 
         jdbcTemplate.batchUpdate(
-                updateSidamIds,
-                sidamObjectId,
-                10,
-            (ps, argument) -> {
-                ps.setString(1, argument.getLeft());
-                ps.setString(2, argument.getRight());
+            updateSidamIds,
+            sidamObjectId,
+            10,
+            new ParameterizedPreparedStatementSetter<Pair<String, String>>() {
+                public void setValues(PreparedStatement ps, Pair<String, String> argument) throws SQLException {
+                    ps.setString(1, argument.getLeft());
+                    ps.setString(2, argument.getRight());
+                }
             });
     }
 

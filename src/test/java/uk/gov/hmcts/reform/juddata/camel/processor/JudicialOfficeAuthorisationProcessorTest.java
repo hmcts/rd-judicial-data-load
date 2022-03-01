@@ -59,32 +59,33 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 
 class JudicialOfficeAuthorisationProcessorTest  {
 
-    final String date = "2017-10-01 00:00:00.000";
+    private Validator validator;
+    String date = "2017-10-01 00:00:00.000";
 
-    final Date currentDate = new Date();
+    Date currentDate = new Date();
 
-    final LocalDateTime dateTime = LocalDateTime.now();
-    final JudicialOfficeAuthorisation judicialOfficeAuthorisation1 = createJudicialOfficeAuthorisation(date);
+    LocalDateTime dateTime = LocalDateTime.now();
+    JudicialOfficeAuthorisation judicialOfficeAuthorisation1 = createJudicialOfficeAuthorisation(date);
 
-    final JudicialOfficeAuthorisation judicialOfficeAuthorisation2 = createJudicialOfficeAuthorisation(date);
+    JudicialOfficeAuthorisation judicialOfficeAuthorisation2 = createJudicialOfficeAuthorisation(date);
 
     JudicialOfficeAuthorisationProcessor judicialOfficeAuthorisationProcessor;
 
     private JsrValidatorInitializer<JudicialOfficeAuthorisation> judicialOfficeAuthorisationJsrValidatorInitializer;
-    final JudicialUserProfileProcessor judicialUserProfileProcessor = spy(new JudicialUserProfileProcessor());
-    final CamelContext camelContext = new DefaultCamelContext();
+    JudicialUserProfileProcessor judicialUserProfileProcessor = spy(new JudicialUserProfileProcessor());
+    CamelContext camelContext = new DefaultCamelContext();
 
     Exchange exchangeMock;
     Message messageMock;
     Registry registryMock;
-    final ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
-    final ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
+    ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
+    ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
     final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
     final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
     final TransactionStatus transactionStatus = mock(TransactionStatus.class);
     final EmailConfiguration emailConfiguration = mock(EmailConfiguration.class);
     final EmailTemplate emailTemplate = mock(EmailTemplate.class);
-    final EmailConfiguration.MailTypeConfig mailConfig = mock(EmailConfiguration.MailTypeConfig.class);
+    EmailConfiguration.MailTypeConfig mailConfig = mock(EmailConfiguration.MailTypeConfig.class);
     final IEmailService emailService = mock(IEmailService.class);
 
     @BeforeEach
@@ -100,7 +101,7 @@ class JudicialOfficeAuthorisationProcessorTest  {
         setField(judicialOfficeAuthorisationProcessor, "judicialUserProfileProcessor",
             judicialUserProfileProcessor);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        validator = factory.getValidator();
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "validator", validator);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "camelContext", camelContext);
         setField(judicialOfficeAuthorisationJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);

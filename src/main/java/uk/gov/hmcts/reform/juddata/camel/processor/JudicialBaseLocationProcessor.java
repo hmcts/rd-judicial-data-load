@@ -25,7 +25,7 @@ public class JudicialBaseLocationProcessor extends JsrValidationBaseProcessor<Ju
 
     @SuppressWarnings("unchecked")
     @Override
-    public void process(Exchange exchange) {
+    public void process(Exchange exchange) throws Exception {
 
         List<JudicialBaseLocationType> locationsRecords;
 

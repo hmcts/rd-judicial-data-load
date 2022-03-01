@@ -41,11 +41,11 @@ class TopicPublisherTest {
     @InjectMocks
     private TopicPublisher topicPublisher;
 
-    final List<String> sidamIdsList = new ArrayList<>();
+    List<String> sidamIdsList = new ArrayList<>();
 
     List<ServiceBusMessage> serviceBusMessageList = new ArrayList<>();
 
-    final CamelContext camelContext = mock(CamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
 
     @BeforeEach
     public void beforeTest() {

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.task;
 
 import org.apache.camel.CamelContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +15,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -35,23 +35,23 @@ class ParentRouteTaskTest {
     @Mock
     JrdExecutor jrdExecutor;
 
-    final Map<String, String> globalOptions = new HashMap<>();
-    final CamelContext camelContext = mock(CamelContext.class);
-    final StepContribution stepContribution = mock(StepContribution.class);
-    final ChunkContext chunkContext = mock(ChunkContext.class);
+    Map<String, String> globalOptions = new HashMap<>();
+    CamelContext camelContext = mock(CamelContext.class);
+    StepContribution stepContribution = mock(StepContribution.class);
+    ChunkContext chunkContext = mock(ChunkContext.class);
 
     @Test
-    void testInit() {
+    void testInit() throws Exception {
         parentRouteTask.init();
         verify(dataLoadRoute).startRoute(any(), any());
     }
 
     @Test
-    void testParentExecute() {
+    void testParentExecute() throws Exception {
         setField(parentRouteTask, "logComponentName", "testlogger");
         when(jrdExecutor.execute(any(), any(), any())).thenReturn("success");
         when(camelContext.getGlobalOptions()).thenReturn(globalOptions);
-        Assertions.assertEquals(RepeatStatus.FINISHED, parentRouteTask.execute(stepContribution, chunkContext));
+        assertEquals(RepeatStatus.FINISHED, parentRouteTask.execute(stepContribution, chunkContext));
         verify(jrdExecutor, times(1)).execute(any(), any(), any());
         verify(camelContext, times(1)).getGlobalOptions();
     }

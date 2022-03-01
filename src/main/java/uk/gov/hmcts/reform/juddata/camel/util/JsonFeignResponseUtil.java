@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
-@SuppressWarnings({"HideUtilityClassConstructor"})
+@SuppressWarnings({"unchecked","HideUtilityClassConstructor"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonFeignResponseUtil {
@@ -29,7 +29,7 @@ public class JsonFeignResponseUtil {
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static ResponseEntity<Object> toResponseEntity(Response response, TypeReference<?> reference) {
-        Optional<Object> payload;
+        Optional<Object> payload = Optional.empty();
 
         try {
             payload = Optional.of(json.readValue(response.body().asReader(Charset.defaultCharset()), reference));
@@ -47,7 +47,8 @@ public class JsonFeignResponseUtil {
 
     public static MultiValueMap<String, String> convertHeaders(Map<String, Collection<String>> responseHeaders) {
         HttpHeaders responseEntityHeaders = new HttpHeaders();
-        responseHeaders.forEach((key, value) -> responseEntityHeaders.put(key, new ArrayList<>(value)));
+        responseHeaders.entrySet().stream().forEach(e ->
+            responseEntityHeaders.put(e.getKey(), new ArrayList<>(e.getValue())));
         return responseEntityHeaders;
     }
 }

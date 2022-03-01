@@ -18,14 +18,14 @@ import static org.mockito.Mockito.when;
 class JsonFeignResponseUtilTest {
     private Response responseMock; //mocked as builder has private access
     private Response.Body bodyMock; //mocked as Body is an interface in Feign.Response
+    private Reader readerMock; //mocked as it is an abstract class from Java.io
     final int statusCode = 200;
 
     @BeforeEach
     public void setUp() throws IOException {
         responseMock = mock(Response.class);
         bodyMock = mock(Response.Body.class);
-        //mocked as it is an abstract class from Java.io
-        Reader readerMock = mock(Reader.class);
+        readerMock = mock(Reader.class);
 
         when(responseMock.body()).thenReturn(bodyMock);
         when(responseMock.body().asReader(Charset.defaultCharset())).thenReturn(readerMock);

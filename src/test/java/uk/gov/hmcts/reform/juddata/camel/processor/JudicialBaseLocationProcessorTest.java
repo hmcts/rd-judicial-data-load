@@ -42,6 +42,8 @@ class JudicialBaseLocationProcessorTest {
 
     JsrValidatorInitializer<JudicialBaseLocationType> judicialBaseLocationTypeJsrValidatorInitializer;
 
+    private Validator validator;
+
     Exchange exchangeMock;
     Message messageMock;
     Registry registryMock;
@@ -59,7 +61,7 @@ class JudicialBaseLocationProcessorTest {
             "judicialBaseLocationTypeJsrValidatorInitializer", judicialBaseLocationTypeJsrValidatorInitializer);
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        validator = factory.getValidator();
         setField(judicialBaseLocationTypeJsrValidatorInitializer, "validator", validator);
 
         messageMock = mock(Message.class);

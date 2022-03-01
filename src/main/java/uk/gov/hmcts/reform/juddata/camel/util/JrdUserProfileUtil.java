@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -22,6 +23,8 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -80,6 +83,7 @@ public class JrdUserProfileUtil {
     IEmailService emailService;
 
 
+
     public List<JudicialUserProfile> removeInvalidRecords(List<JudicialUserProfile> judicialUserProfiles,
                                                           Exchange exchange) {
 
@@ -121,7 +125,6 @@ public class JrdUserProfileUtil {
      * Iterate through the list of user profiles and group them by object id,
      * remove the entries where the object id is correctly associated with no more than 1 distinct personal code,
      * respecting 1-1 mapping between object ids and personal codes.
-     *
      * @param userProfiles original list of user profiles
      * @return map containing only the object ids where the associated personal codes are invalid
      */
@@ -134,8 +137,7 @@ public class JrdUserProfileUtil {
                     map.values().removeIf(l -> l.stream()
                             .map(JudicialUserProfile::getPersonalCode)
                             .distinct().count() < 2);
-                    return map;
-                }));
+                    return map; }));
     }
 
 
@@ -143,7 +145,6 @@ public class JrdUserProfileUtil {
      * Iterate through the list of user profiles and group them by personal code,
      * remove the entries where the personal code is correctly associated with no more than 1 distinct object id,
      * respecting 1-1 mapping between personal codes and object ids.
-     *
      * @param userProfiles original list of user profiles
      * @return map containing only the personal codes where the associated object ids are invalid
      */
@@ -156,8 +157,7 @@ public class JrdUserProfileUtil {
                     map.values().removeIf(l -> l.stream()
                             .map(JudicialUserProfile::getObjectId)
                             .distinct().count() < 2);
-                    return map;
-                }));
+                    return map; }));
     }
 
     private List<JudicialUserProfile> getInvalidRecords(List<JudicialUserProfile> userProfiles) {
@@ -203,16 +203,18 @@ public class JrdUserProfileUtil {
                 invalidJsrSql,
                 invalidUserProfiles,
                 10,
-            (ps, argument) -> {
-                ps.setString(1, tableName);
-                ps.setTimestamp(2, new Timestamp(Long.parseLong(schedulerTime)));
-                ps.setString(3, globalOptions.get(SCHEDULER_NAME));
-                ps.setString(4, argument.getPerId());
-                ps.setString(5, PER_CODE_OBJECT_ID_FIELD);
-                ps.setString(6, PER_CODE_OBJECT_ID_ERROR_MESSAGE);
-                ps.setTimestamp(7, new Timestamp(new Date().getTime()));
-                ps.setLong(8, argument.getRowId());
-            });
+                new ParameterizedPreparedStatementSetter<>() {
+                    public void setValues(PreparedStatement ps, JudicialUserProfile argument) throws SQLException {
+                        ps.setString(1, tableName);
+                        ps.setTimestamp(2, new Timestamp(Long.parseLong(schedulerTime)));
+                        ps.setString(3, globalOptions.get(SCHEDULER_NAME));
+                        ps.setString(4, argument.getPerId());
+                        ps.setString(5, PER_CODE_OBJECT_ID_FIELD);
+                        ps.setString(6, PER_CODE_OBJECT_ID_ERROR_MESSAGE);
+                        ps.setTimestamp(7, new Timestamp(new Date().getTime()));
+                        ps.setLong(8, argument.getRowId());
+                    }
+                });
 
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
@@ -236,39 +238,32 @@ public class JrdUserProfileUtil {
     }
 
     private String createMessageBody(List<JudicialUserProfile> userProfiles) {
-        var invalidObjectIdRows = new StringBuilder();
-        var invalidPersonalCodeRows = new StringBuilder();
+        var messageBody = new StringBuilder();
+        var invalidObjectIdRows =  new StringBuilder();
+        var invalidPersonalCodeRows =  new StringBuilder();
 
-        return NEW_LINE
-                +
-                ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
-                +
-                NEW_LINE
-                +
-                createRows(invalidObjectIdRows, filterByObjectId(userProfiles))
-                +
-                NEW_LINE
-                +
-                "\n=====================================================================================\n"
-                +
-                NEW_LINE
-                +
-                ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
-                +
-                NEW_LINE
-                +
-                createRows(invalidPersonalCodeRows, filterByPersonalCode(userProfiles))
-                +
-                NEW_LINE;
+        messageBody.append(NEW_LINE);
+        messageBody.append(ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE);
+        messageBody.append(NEW_LINE);
+        messageBody.append(createRows(invalidObjectIdRows, filterByObjectId(userProfiles)));
+        messageBody.append(NEW_LINE);
+        messageBody.append("\n=====================================================================================\n");
+        messageBody.append(NEW_LINE);
+        messageBody.append(ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE);
+        messageBody.append(NEW_LINE);
+        messageBody.append(createRows(invalidPersonalCodeRows, filterByPersonalCode(userProfiles)));
+        messageBody.append(NEW_LINE);
+
+        return messageBody.toString();
     }
 
     private String createRows(StringBuilder messageBody, List<JudicialUserProfile> userProfiles) {
         messageBody.append(String.format("%-30s %50s %70s %n", "Per Code", "Object ID", "Per Id"));
 
         userProfiles.forEach(judicialUserProfile ->
-                messageBody.append(String.format("%-30s ", judicialUserProfile.getPersonalCode()))
-                        .append(String.format("%50s ", judicialUserProfile.getObjectId()))
-                        .append(String.format("%40s", judicialUserProfile.getPerId()))
+                messageBody.append(String.format("%-30s ",judicialUserProfile.getPersonalCode()))
+                        .append(String.format("%50s ",judicialUserProfile.getObjectId()))
+                        .append(String.format("%40s",judicialUserProfile.getPerId()))
                         .append("\n"));
 
         return messageBody.toString();

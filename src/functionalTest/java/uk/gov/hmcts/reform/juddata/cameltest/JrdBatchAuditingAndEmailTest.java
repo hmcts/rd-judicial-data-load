@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.juddata.cameltest;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.test.JobLauncherTestUtils;
@@ -30,6 +29,7 @@ import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
@@ -63,7 +63,7 @@ class JrdBatchAuditingAndEmailTest extends JrdBatchIntegrationSupport {
         jobLauncherTestUtils.launchJob();
 
         List<Map<String, Object>> dataLoadSchedulerAudit = jdbcTemplate.queryForList(schedulerInsertJrdSqlSuccess);
-        Assertions.assertEquals(SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
+        assertEquals(SUCCESS, dataLoadSchedulerAudit.get(0).get(FILE_STATUS));
     }
 
     @Disabled("To be implemented when Email functionality is fully functional")

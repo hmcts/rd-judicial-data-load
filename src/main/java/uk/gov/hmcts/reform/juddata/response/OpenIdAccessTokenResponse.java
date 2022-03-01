@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OpenIdAccessTokenResponse {
 
     @JsonProperty("access_token")
-    private final String accessToken;
+    private String accessToken;
 
     @JsonCreator
     public OpenIdAccessTokenResponse(String accessToken) {

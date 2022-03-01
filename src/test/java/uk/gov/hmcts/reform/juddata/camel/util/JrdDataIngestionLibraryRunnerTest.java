@@ -63,7 +63,7 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.ROW_MAPPER;
 @SuppressWarnings("unchecked")
 class JrdDataIngestionLibraryRunnerTest {
 
-    final TopicPublisher topicPublisher = mock(TopicPublisher.class);
+    TopicPublisher topicPublisher = mock(TopicPublisher.class);
 
     @Mock
     CloudStorageAccount cloudStorageAccount;
@@ -89,21 +89,21 @@ class JrdDataIngestionLibraryRunnerTest {
     @InjectMocks
     private JrdDataIngestionLibraryRunner jrdDataIngestionLibraryRunner;
 
-    final CamelContext camelContext = mock(CamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
 
-    final JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+    JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
 
-    final Job job = mock(Job.class);
+    Job job = mock(Job.class);
 
-    final JobParameters jobParameters = mock(JobParameters.class);
+    JobParameters jobParameters = mock(JobParameters.class);
 
-    final JobLauncher jobLauncherMock = mock(JobLauncher.class);
+    JobLauncher jobLauncherMock = mock(JobLauncher.class);
 
-    final FeatureToggleService featureToggleService = mock(FeatureToggleService.class);
+    FeatureToggleService featureToggleService = mock(FeatureToggleService.class);
 
-    final JrdSidamTokenService jrdSidamTokenService = mock(JrdSidamTokenServiceImpl.class);
+    JrdSidamTokenService jrdSidamTokenService = mock(JrdSidamTokenServiceImpl.class);
 
-    final EmailServiceImpl emailService = mock(EmailServiceImpl.class);
+    EmailServiceImpl emailService = mock(EmailServiceImpl.class);
 
     @BeforeEach
     public void beforeTest() throws Exception {
@@ -282,7 +282,7 @@ class JrdDataIngestionLibraryRunnerTest {
 
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
-    void should_return_true_when_publishing_status_is_success_for_current_day() {
+    void should_return_true_when_publishing_status_is_success_for_current_day() throws Exception {
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
                 .thenReturn(Pair.of("1", SUCCESS.getStatus()));
         when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(0);
@@ -292,7 +292,7 @@ class JrdDataIngestionLibraryRunnerTest {
 
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
-    void should_return_false_when_publishing_status_is_failed_for_current_day() {
+    void should_return_false_when_publishing_status_is_failed_for_current_day() throws Exception {
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
                 .thenReturn(Pair.of("1", FAILED.getStatus()));
         when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(0);
@@ -301,7 +301,7 @@ class JrdDataIngestionLibraryRunnerTest {
 
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
-    void should_return_true_when_file_load_failed_for_current_day() {
+    void should_return_true_when_file_load_failed_for_current_day() throws Exception {
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
                 .thenReturn(null);
         when(jdbcTemplate.queryForObject(any(), eq(Integer.class))).thenReturn(1);

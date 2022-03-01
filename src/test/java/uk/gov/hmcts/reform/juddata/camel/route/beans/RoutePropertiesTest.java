@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.route.beans;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport;
 
+import static org.junit.Assert.assertEquals;
 
 class RoutePropertiesTest {
 
@@ -13,13 +13,13 @@ class RoutePropertiesTest {
 
         RouteProperties routeProperties = JrdTestSupport.createRoutePropertiesMock();
 
-        Assertions.assertEquals("Binder", routeProperties.getBinder());
-        Assertions.assertEquals("Blobpath", routeProperties.getBlobPath());
-        Assertions.assertEquals("childNames", routeProperties.getChildNames());
-        Assertions.assertEquals("mapper", routeProperties.getMapper());
-        Assertions.assertEquals("processor", routeProperties.getProcessor());
-        Assertions.assertEquals("routeName", routeProperties.getRouteName());
-        Assertions.assertEquals("sql", routeProperties.getSql());
-        Assertions.assertEquals("truncateSql", routeProperties.getTruncateSql());
+        assertEquals("Binder", routeProperties.getBinder());
+        assertEquals("Blobpath", routeProperties.getBlobPath());
+        assertEquals("childNames", routeProperties.getChildNames());
+        assertEquals("mapper", routeProperties.getMapper());
+        assertEquals("processor", routeProperties.getProcessor());
+        assertEquals("routeName", routeProperties.getRouteName());
+        assertEquals("sql", routeProperties.getSql());
+        assertEquals("truncateSql", routeProperties.getTruncateSql());
     }
 }

@@ -23,7 +23,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.sql.DataSource;
@@ -164,7 +163,7 @@ public abstract class JrdBatchIntegrationSupport {
 
 
     public void executeScripts(String path) {
-        var a = new FileSystemResource(Objects.requireNonNull(getClass().getClassLoader().getResource(path))
+        var a = new FileSystemResource(getClass().getClassLoader().getResource(path)
             .getPath());
         var resourceDatabasePopulator = new ResourceDatabasePopulator();
         resourceDatabasePopulator.addScripts(a);
@@ -173,7 +172,7 @@ public abstract class JrdBatchIntegrationSupport {
 
 
     @BeforeAll
-    public static void setupBlobProperties() {
+    public static void setupBlobProperties() throws Exception {
         if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_NAME"));
@@ -191,7 +190,7 @@ public abstract class JrdBatchIntegrationSupport {
     }
 
     @AfterEach
-    public void cleanUp() {
+    public void cleanUp() throws Exception {
         if (isNotTrue(notDeletionFlag)) {
             List<String> archivalFileNames = Stream.concat(parentFiles.stream(), leafFiles.stream())
                     .collect(Collectors.toList());

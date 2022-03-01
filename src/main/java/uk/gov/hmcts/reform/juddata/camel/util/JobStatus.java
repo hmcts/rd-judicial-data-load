@@ -7,7 +7,7 @@ public enum JobStatus {
     SUCCESS("SUCCESS"),
     FILE_LOAD_FAILED("FILE_LOAD_FAILED");
 
-    final String status;
+    String status;
 
     JobStatus(String status) {
         this.status = status;

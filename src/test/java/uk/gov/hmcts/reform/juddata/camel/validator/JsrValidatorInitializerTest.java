@@ -38,11 +38,11 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 
 class JsrValidatorInitializerTest {
 
-    static final JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer
+    static JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer
         = new JsrValidatorInitializer<>();
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void beforeAll() throws Exception {
         judicialUserProfileJsrValidatorInitializer.initializeFactory();
     }
 

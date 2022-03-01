@@ -38,6 +38,7 @@ class EmailTemplateTest {
     }
 
     @Test
+    @SuppressWarnings("rawtypes")
     void getMailTypeConfigTest() {
         EmailConfiguration.MailTypeConfig mailConfig = new EmailConfiguration.MailTypeConfig();
 
