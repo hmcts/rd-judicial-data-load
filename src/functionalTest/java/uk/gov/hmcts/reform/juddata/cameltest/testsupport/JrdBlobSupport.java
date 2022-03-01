@@ -16,8 +16,8 @@ import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -62,7 +62,7 @@ public class JrdBlobSupport {
             CloudBlockBlob cloudBlockBlob = cloudBlobContainer.getBlockBlobReference(blob);
             cloudBlockBlob.delete(INCLUDE_SNAPSHOTS, null, null, null);
 
-            String date =  (LocalDateTime.now()).format(DateTimeFormatter.ofPattern("archivalDateFormat"));
+            String date = new SimpleDateFormat(archivalDateFormat).format(new Date());
             cloudBlockBlob = cloudBlobArchContainer.getBlockBlobReference(blob.concat(date));
             cloudBlockBlob.delete(INCLUDE_SNAPSHOTS, null, null, null);
         } catch (StorageException | URISyntaxException storageException) {
