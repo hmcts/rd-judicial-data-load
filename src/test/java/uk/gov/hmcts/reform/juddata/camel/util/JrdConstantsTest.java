@@ -16,7 +16,6 @@ class JrdConstantsTest {
     void test_expected_exception_on_instantiation() throws NoSuchMethodException {
         Constructor<JrdConstants> constructor = JrdConstants.class.getDeclaredConstructor();
         constructor.setAccessible(true);
-        //constructor.newInstance();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         InvocationTargetException invocationTargetException =
                 assertThrows(InvocationTargetException.class, constructor::newInstance);
