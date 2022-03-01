@@ -74,7 +74,7 @@ public class JudicialUserRoleTypeProcessor
 
     private void filterAuthorizationsRecordsForForeignKeyViolation(List<JudicialUserRoleType> filteredJudicialRoleTypes,
                                                                    Exchange exchange) {
-
+        log.info("{} : starting filter Authorizations Records For Foreign Key Violation ", logComponentName);
         Predicate<JudicialUserRoleType> perViolations = c ->
                 isFalse(judicialUserProfileProcessor.getValidPerIdInUserProfile().contains(c.getPerId()));
 
