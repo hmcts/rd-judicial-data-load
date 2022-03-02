@@ -113,6 +113,8 @@ public class JudicialOfficeAppointmentProcessor
     private void filterAppointmentsRecordsForForeignKeyViolation(List<JudicialOfficeAppointment>
                                                                      filteredJudicialAppointments,
                                                                  Exchange exchange) {
+        log.info("{}:: Before filter Appointments Records For Foreign Key Violation {}:: ",
+                logComponentName, filteredJudicialAppointments.size());
 
         Predicate<JudicialOfficeAppointment> perViolations = c ->
             isFalse(judicialUserProfileProcessor.getValidPerIdInUserProfile().contains(c.getPerId()));
@@ -134,9 +136,13 @@ public class JudicialOfficeAppointmentProcessor
             c.getBaseLocationId())) && isFalse(c.getBaseLocationId().equalsIgnoreCase("0"));
         removeForeignKeyElements(filteredJudicialAppointments, baseLocationsViolations, BASE_LOCATION_ID, exchange,
             judicialOfficeAppointmentJsrValidatorInitializer, MISSING_BASE_LOCATION);
+
+        log.info("{}:: After filter Appointments Records For Foreign Key Violation {}:: ",
+                logComponentName, filteredJudicialAppointments.size());
     }
 
     private String createRegionEmailBody(Set<JudicialOfficeAppointment> data) {
+        log.info("{} : create Region Email Body",logComponentName);
         var messageBody = new StringBuilder();
         messageBody.append(String.format("%-30s %50s %40s %30s %n", "Per Code", "Object ID", "Per Id", "Region ID"));
 
@@ -152,6 +158,7 @@ public class JudicialOfficeAppointmentProcessor
     }
 
     private String createLocationEmailBody(Set<JudicialOfficeAppointment> data) {
+        log.info("{} : create Location Email Body",logComponentName);
         var messageBody = new StringBuilder();
         messageBody.append(String.format("%-30s %50s %40s %30s %n", "Per Code", "Object ID", "Per Id",
                 "Base Location ID"));
@@ -169,6 +176,7 @@ public class JudicialOfficeAppointmentProcessor
 
     @Override
     public int sendEmail(Set<JudicialOfficeAppointment> data, String type, Object... params) {
+        log.info("{} : send Email",logComponentName);
         EmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes()
                 .get(emailConfigMapping.get(type));
         if (config != null && config.isEnabled()) {
