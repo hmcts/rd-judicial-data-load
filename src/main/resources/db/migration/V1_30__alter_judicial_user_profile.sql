@@ -5,3 +5,4 @@ ALTER TABLE judicial_user_profile ADD COLUMN MRD_Created_Time Timestamp;
 ALTER TABLE judicial_user_profile ADD COLUMN MRD_Updated_Time Timestamp;
 ALTER TABLE judicial_user_profile ADD COLUMN MRD_Deleted_Time Timestamp;
 COMMIT;
+
