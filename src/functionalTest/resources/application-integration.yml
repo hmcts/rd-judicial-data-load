@@ -115,8 +115,8 @@ route:
     truncate-sql:
       sql:TRUNCATE judicial_role_type RESTART IDENTITY?dataSource=dataSource&batch=true
     insert-sql:
-      sql:INSERT INTO judicial_role_type (per_Id,title,location,start_date,end_date)
-      VALUES(:#per_Id,:#title,:#location,:#start_date,:#end_date)
+      sql:INSERT INTO judicial_role_type (per_Id,title,location,start_date,end_date,mrd_created_time,mrd_updated_time,mrd_deleted_time)
+      VALUES(:#per_Id,:#title,:#location,:#start_date,:#end_date,:#mrd_created_time,:#mrd_updated_time,#mrd_deleted_time)?batch=true&dataSource=dataSource
       ON CONFLICT (role_id) DO UPDATE SET per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor

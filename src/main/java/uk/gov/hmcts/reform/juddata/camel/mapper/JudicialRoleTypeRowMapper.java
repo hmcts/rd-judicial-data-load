@@ -20,6 +20,9 @@ public class JudicialRoleTypeRowMapper implements IMapper {
         roleRow.put("location", role.getLocation());
         roleRow.put("start_date", CommonUtils.getDateTimeStamp(role.getStartDate()));
         roleRow.put("end_date", CommonUtils.getDateTimeStamp(role.getEndDate()));
+        roleRow.put("mrd_created_time", CommonUtils.getDateTimeStamp(role.getMrdCreatedTime()));
+        roleRow.put("mrd_updated_time", CommonUtils.getDateTimeStamp(role.getMrdUpdatedTime()));
+        roleRow.put("mrd_deleted_time", CommonUtils.getDateTimeStamp(role.getMrdDeletedTime()));
         return  roleRow;
     }
 }

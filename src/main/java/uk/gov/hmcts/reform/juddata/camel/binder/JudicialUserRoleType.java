@@ -43,4 +43,19 @@ public class JudicialUserRoleType extends CommonCsvField implements Serializable
             message = "date pattern should be " + DATE_TIME_FORMAT)
     String endDate;
 
+    @DataField(pos = 6, columnName = "mrd_created_time")
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+        message = DATE_FORMAT_ERROR_MESSAGE)
+    String mrdCreatedTime;
+
+    @DataField(pos = 7, columnName = "mrd_updated_time")
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+        message = DATE_FORMAT_ERROR_MESSAGE)
+    String mrdUpdatedTime;
+
+    @DataField(pos = 8, columnName = "mrd_deleted_time")
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+        message = DATE_FORMAT_ERROR_MESSAGE)
+    String mrdDeletedTime;
+
 }
