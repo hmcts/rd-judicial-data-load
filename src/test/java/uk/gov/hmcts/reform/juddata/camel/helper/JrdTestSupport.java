@@ -33,6 +33,14 @@ public class JrdTestSupport {
     public static final Map<String, String> roles = ImmutableMap.of("elinksid_1", "roleId_1",
             "elinksid_2", "roleId_2", "elinksid_3", "roleId_3");
 
+    public static final Map<String, String> primaryLocations = ImmutableMap.of("perid_1", "primaryLocationId_1",
+            "perid_2", "primaryLocationId_2", "perid_3", "primaryLocationId_3");
+
+    public static final Map<String, String> secondaryLocations = ImmutableMap.of("perid_1", "secondaryLocationId_1",
+            "perid_2", "secondaryLocationId_2", "perid_3", "secondaryLocationId_3");
+
+    public static final Map<String, String> tertiaryLocations = ImmutableMap.of("perid_1", "tertiaryLocationId_1",
+            "perid_2", "tertiaryLocationId_2", "perid_3", "tertiaryLocationId_3");
 
     public static final String PERSONAL_CODE = "111";
 
@@ -88,6 +96,12 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         judicialOfficeAppointmentMock.setAppointment("Magistrate");
         judicialOfficeAppointmentMock.setAppointmentType("1");
+        judicialOfficeAppointmentMock.setPrimaryLocation(primaryLocations.get(perId));
+        judicialOfficeAppointmentMock.setSecondaryLocation(secondaryLocations.get(perId));
+        judicialOfficeAppointmentMock.setTertiaryLocation(tertiaryLocations.get(perId));
+        judicialOfficeAppointmentMock.setMrdCreatedTime("2022-05-03 00:00:00");
+        judicialOfficeAppointmentMock.setMrdUpdatedTime("2022-05-04 00:00:00");
+        judicialOfficeAppointmentMock.setMrdDeletedTime("2022-05-05 00:00:00");
 
         return judicialOfficeAppointmentMock;
     }
