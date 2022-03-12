@@ -52,8 +52,8 @@ route:
     truncate-sql:
       sql:TRUNCATE TABLE judicial_office_authorisation RESTART IDENTITY?dataSource=dataSource
     insert-sql:
-      sql:INSERT INTO judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id)
-      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id)?batch=true&dataSource=dataSource
+      sql:INSERT INTO judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
+      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id ,:#mrd_created_time ,:#mrd_updated_time ,:#mrd_deleted_time )?batch=true&dataSource=dataSource
     update-sql:
       sql:UPDATE judicial_office_authorisation auth SET ticket_code=jtm.ticket_code FROM (SELECT ticket_code,jurisdiction,lower_level FROM judicial_ticket_code_mapping) AS jtm WHERE jtm.jurisdiction = auth.jurisdiction and jtm.lower_level = auth.lower_level?dataSource=dataSource
     blob-path:

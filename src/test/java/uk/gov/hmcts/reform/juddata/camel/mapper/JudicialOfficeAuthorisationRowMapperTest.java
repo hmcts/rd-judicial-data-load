@@ -33,6 +33,12 @@ class JudicialOfficeAuthorisationRowMapperTest {
         assertEquals("lowerLevel", authMap.get("lower_level"));
         assertEquals("111", authMap.get("personal_code"));
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", authMap.get("object_id"));
+        assertEquals(Timestamp.valueOf(judicialOfficeAuthorisation.getMrdCreatedTime()),authMap
+            .get("mrd_created_time"));
+        assertEquals(Timestamp.valueOf(judicialOfficeAuthorisation.getMrdUpdatedTime()),authMap
+            .get("mrd_updated_time"));
+        assertEquals(Timestamp.valueOf(judicialOfficeAuthorisation.getMrdDeletedTime()),authMap
+            .get("mrd_deleted_time"));
     }
 
     @Test

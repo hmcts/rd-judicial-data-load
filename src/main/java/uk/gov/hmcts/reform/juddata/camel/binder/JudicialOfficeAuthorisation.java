@@ -48,4 +48,21 @@ public class JudicialOfficeAuthorisation extends CommonCsvField implements Seria
 
     @DataField(pos = 8, columnName = "object_id")
     String objectId;
+
+    @DataField(pos = 9, columnName = "mrd_created_time")
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+        message = DATE_FORMAT_ERROR_MESSAGE)
+    String mrdCreatedTime;
+
+    @DataField(pos = 10, columnName = "mrd_updated_time")
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+        message = DATE_FORMAT_ERROR_MESSAGE)
+    String mrdUpdatedTime;
+
+    @DataField(pos = 10, columnName = "mrd_deleted_time")
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+        message = DATE_FORMAT_ERROR_MESSAGE)
+    String mrdDeletedTime;
+
+
 }
