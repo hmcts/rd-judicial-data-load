@@ -23,6 +23,9 @@ class JudicialRoleTypeRowMapperTest {
         assertEquals("Nationwide", response.get("location"));
         assertEquals(CommonUtils.getDateTimeStamp("2018-05-02 00:00:00.0"), response.get("start_date"));
         assertEquals(CommonUtils.getDateTimeStamp("2022-05-01 00:00:00"), response.get("end_date"));
+        assertEquals(CommonUtils.getDateTimeStamp("2022-05-03 00:00:00"), response.get("mrd_created_time"));
+        assertEquals(CommonUtils.getDateTimeStamp("2022-05-04 00:00:00"), response.get("mrd_updated_time"));
+        assertEquals(CommonUtils.getDateTimeStamp("2022-05-05 00:00:00"), response.get("mrd_deleted_time"));
 
     }
 }

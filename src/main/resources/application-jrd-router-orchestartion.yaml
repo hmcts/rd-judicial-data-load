@@ -72,7 +72,7 @@ route:
       sql:TRUNCATE TABLE judicial_role_type RESTART IDENTITY?dataSource=dataSource
     insert-sql:
       sql:INSERT INTO judicial_role_type (per_Id,title,location,start_date,end_date,mrd_created_time,mrd_updated_time,mrd_deleted_time)
-      VALUES(:#per_Id,:#title,:#location,:#start_date,:#end_date,:#mrd_created_time,:#mrd_updated_time,#mrd_deleted_time)?batch=true&dataSource=dataSource
+      VALUES(:#per_Id,:#title,:#location,:#start_date,:#end_date,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?batch=true&dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/AdditionalInfoRoles?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper
