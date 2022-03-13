@@ -191,7 +191,7 @@ class JudicialUserRoleTypeProcessorTest {
         assertThat(((List<JudicialUserRoleType>) exchangeMock.getMessage().getBody()))
                 .isSameAs(judicialUserRoleTypes);
 
-        verify(exchangeMock, times(4)).getIn();
+        verify(exchangeMock, times(6)).getIn();
         verify(exchangeMock, times(3)).getMessage();
         verify(messageMock, times(4)).getBody();
         verify(judicialUserRoleTypeProcessor).audit(any(), any());
