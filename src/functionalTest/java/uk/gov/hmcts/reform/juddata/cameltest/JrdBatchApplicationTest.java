@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfig
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.SqlConfig;
@@ -20,6 +21,7 @@ import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
@@ -32,6 +34,7 @@ import uk.gov.hmcts.reform.juddata.configuration.FeignConfiguration;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -42,6 +45,7 @@ import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegratio
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidAppointmentsEntry;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithSingleRecord;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.handleNull;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAppointmentFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAuthorisationFile;
@@ -157,6 +161,8 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         validateDbRecordCountFor(jdbcTemplate, baseLocationSql, 8);
         validateDbRecordCountFor(jdbcTemplate, regionSql, 6);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
+        
+        validateLocationLeafFile(jdbcTemplate, regionSql);
     }
 
     @Test
@@ -286,5 +292,26 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     }
 
+    private void validateLocationLeafFile(JdbcTemplate jdbcTemplate, String regionSql) {
+        final List<Map<String, Object>> locations = jdbcTemplate.queryForList(regionSql);
+        var judicialRegionTypes = locations.stream()
+                .map(l -> {
+                    JudicialRegionType judicialRegionType = new JudicialRegionType();
+                    judicialRegionType.setRegionId((String) l.get("region_id"));
+                    judicialRegionType.setRegionDescCy((String) l.get("region_desc_cy"));
+                    judicialRegionType.setRegionDescEn((String) l.get("region_desc_en"));
+                    judicialRegionType
+                            .setMrdCreatedTime(handleNull((Timestamp) l.get("mrd_created_time")));
+                    judicialRegionType
+                            .setMrdUpdatedTime(handleNull((Timestamp) l.get("mrd_updated_time")));
+                    judicialRegionType
+                            .setMrdDeletedTime(handleNull((Timestamp) l.get("mrd_deleted_time")));
+                    return judicialRegionType;
+                })
+                .collect(Collectors.toList());
+        assertTrue(judicialRegionTypes.get(2).getMrdCreatedTime().contains("2018-05-02"));
+        assertTrue(judicialRegionTypes.get(2).getMrdUpdatedTime().contains("2022-05-01"));
+        assertTrue(judicialRegionTypes.get(2).getMrdDeletedTime().contains("2022-05-01"));
+    }
 
 }
