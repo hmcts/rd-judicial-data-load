@@ -48,9 +48,11 @@ class JudicialBaseLocationProcessorTest {
 
     List<JudicialBaseLocationType> judicialBaseLocationTypes = new ArrayList<>();
 
-    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock();
+    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock(
+            mrdCreatedTimeValue,mrdUpdatedTimeValue,mrdDeletedTimeValue);
 
-    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock();
+    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock(
+            mrdCreatedTimeValue,mrdUpdatedTimeValue,mrdDeletedTimeValue);
 
     JsrValidatorInitializer<JudicialBaseLocationType> judicialBaseLocationTypeJsrValidatorInitializer;
 
