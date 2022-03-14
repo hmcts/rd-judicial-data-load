@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
 
 public class JrdTestSupport {
 
@@ -122,6 +123,12 @@ public class JrdTestSupport {
     }
 
     public static String createCurrentLocalDate() {
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter formatter = getDateFormatter();
+        return date.format(formatter);
+    }
+
+    public static String getDateWithMillisValue() {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter formatter = getDateFormatter();
         return date.format(formatter);
