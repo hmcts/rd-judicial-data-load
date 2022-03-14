@@ -8,15 +8,14 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 class JudicialRegionTypeTest {
 
     @Test
-    @SuppressWarnings("unchecked")
     void test_objects_JudicialOfficeAppointment_correctly() {
         JudicialRegionType judicialRegionType = createJudicialRegionType();
 
         assertEquals("regionId", judicialRegionType.getRegionId());
         assertEquals("region_desc_en", judicialRegionType.getRegionDescEn());
         assertEquals("region_desc_cy", judicialRegionType.getRegionDescCy());
-        assertEquals("2022-05-03 00:00:00.000", judicialRegionType.getMrdCreatedTime());
-        assertEquals("2022-05-01 00:00:00.000", judicialRegionType.getMrdUpdatedTime());
-        assertEquals("2022-05-04 00:00:00.000", judicialRegionType.getMrdDeletedTime());
+        assertEquals("2022-05-03 00:00:00", judicialRegionType.getMrdCreatedTime());
+        assertEquals("2022-05-01 00:00:00", judicialRegionType.getMrdUpdatedTime());
+        assertEquals("2022-05-04 00:00:00", judicialRegionType.getMrdDeletedTime());
     }
 }
