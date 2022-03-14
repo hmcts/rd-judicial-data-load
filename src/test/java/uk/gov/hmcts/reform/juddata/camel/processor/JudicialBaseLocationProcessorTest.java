@@ -52,7 +52,7 @@ class JudicialBaseLocationProcessorTest {
             mrdCreatedTimeValue,mrdUpdatedTimeValue,mrdDeletedTimeValue);
 
     JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock(
-            mrdCreatedTimeValue,mrdUpdatedTimeValue,mrdDeletedTimeValue);
+            null,null,null);
 
     JsrValidatorInitializer<JudicialBaseLocationType> judicialBaseLocationTypeJsrValidatorInitializer;
 
