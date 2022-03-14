@@ -61,7 +61,23 @@ public class JrdTestSupport {
         return judicialUserProfileMock;
     }
 
-    public static JudicialBaseLocationType createJudicialOfficeAppointmentMock() {
+    public static JudicialBaseLocationType createJudicialBaseLocationMock(
+            String mrdCreatedTimeValue,String mrdUpdatedTimeValue, String mrdDeletedTimeValue
+            ) {
+        JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
+
+        judicialBaseLocationType.setArea("area");
+        judicialBaseLocationType.setBaseLocationId("baseLocationId");
+        judicialBaseLocationType.setCircuit("circuit");
+        judicialBaseLocationType.setCourtName("courtName");
+        judicialBaseLocationType.setCourtType("courtType");
+        judicialBaseLocationType.setMrdCreatedTime(mrdCreatedTimeValue);
+        judicialBaseLocationType.setMrdUpdatedTime(mrdUpdatedTimeValue);
+        judicialBaseLocationType.setMrdDeletedTime(mrdDeletedTimeValue);
+        return judicialBaseLocationType;
+    }
+
+    public static JudicialBaseLocationType createJudicialBaseLocationMock() {
         JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
 
         judicialBaseLocationType.setArea("area");

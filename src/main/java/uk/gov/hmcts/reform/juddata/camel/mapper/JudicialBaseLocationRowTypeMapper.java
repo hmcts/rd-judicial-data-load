@@ -22,6 +22,10 @@ public class JudicialBaseLocationRowTypeMapper implements IMapper {
         locationRow.put("court_type", locationType.getCourtType());
         locationRow.put("circuit", locationType.getCircuit());
         locationRow.put("area_of_expertise", locationType.getArea());
+        locationRow.put("mrd_created_time", locationType.getMrdCreatedTime());
+        locationRow.put("mrd_updated_time", locationType.getMrdUpdatedTime());
+        locationRow.put("mrd_deleted_time", locationType.getMrdDeletedTime());
+
         return  locationRow;
     }
 

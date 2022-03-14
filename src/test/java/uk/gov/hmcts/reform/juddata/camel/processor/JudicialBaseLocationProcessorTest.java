@@ -4,6 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -28,17 +29,28 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialBaseLocationMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithMillisValue;
 
 class JudicialBaseLocationProcessorTest {
+    private static String mrdCreatedTimeValue;
+    private static String mrdUpdatedTimeValue;
+    private static String mrdDeletedTimeValue;
 
+    @BeforeAll
+    public static void init(){
+        mrdCreatedTimeValue = getDateWithMillisValue();
+        mrdUpdatedTimeValue = getDateWithMillisValue();
+        mrdDeletedTimeValue = getDateWithMillisValue();
+    }
     JudicialBaseLocationProcessor judicialBaseLocationProcessor = spy(new JudicialBaseLocationProcessor());
 
     List<JudicialBaseLocationType> judicialBaseLocationTypes = new ArrayList<>();
 
-    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialOfficeAppointmentMock();
+    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock();
 
-    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialOfficeAppointmentMock();
+    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock();
 
     JsrValidatorInitializer<JudicialBaseLocationType> judicialBaseLocationTypeJsrValidatorInitializer;
 
