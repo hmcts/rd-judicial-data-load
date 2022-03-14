@@ -4,7 +4,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -30,12 +29,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialBaseLocationMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithMillisValue;
 
 class JudicialBaseLocationProcessorTest {
-    private static String mrdCreatedTimeValue;
-    private static String mrdUpdatedTimeValue;
-    private static String mrdDeletedTimeValue;
 
 
 
@@ -43,11 +38,9 @@ class JudicialBaseLocationProcessorTest {
 
     List<JudicialBaseLocationType> judicialBaseLocationTypes = new ArrayList<>();
 
-    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock(mrdCreatedTimeValue,
-            mrdUpdatedTimeValue,mrdDeletedTimeValue);
+    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock();
 
-    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock(
-            null,null,null);
+    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock();
 
     JsrValidatorInitializer<JudicialBaseLocationType> judicialBaseLocationTypeJsrValidatorInitializer;
 
@@ -59,13 +52,6 @@ class JudicialBaseLocationProcessorTest {
     ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
-
-    @BeforeAll
-    public static void init() {
-        mrdCreatedTimeValue = getDateWithMillisValue();
-        mrdUpdatedTimeValue = getDateWithMillisValue();
-        mrdDeletedTimeValue = getDateWithMillisValue();
-    }
 
     @BeforeEach
     public void setup() {

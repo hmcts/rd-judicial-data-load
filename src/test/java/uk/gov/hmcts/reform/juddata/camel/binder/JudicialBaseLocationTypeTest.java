@@ -1,24 +1,12 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createCurrentLocalDate;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithMillisValue;
 
 class JudicialBaseLocationTypeTest {
 
-    private static String mrdCreatedTimeValue;
-    private static String mrdUpdatedTimeValue;
-    private static String mrdDeletedTimeValue;
-
-    @BeforeAll
-    public static void init() {
-        mrdCreatedTimeValue = getDateWithMillisValue();
-        mrdUpdatedTimeValue = getDateWithMillisValue();
-        mrdDeletedTimeValue = getDateWithMillisValue();
-    }
 
     @Test
     @SuppressWarnings("unchecked")
@@ -31,9 +19,9 @@ class JudicialBaseLocationTypeTest {
         assertEquals("circuit", judicialBaseLocationType.getCircuit());
         assertEquals("courtName", judicialBaseLocationType.getCourtName());
         assertEquals("courtType", judicialBaseLocationType.getCourtType());
-        assertEquals(mrdCreatedTimeValue, judicialBaseLocationType.getMrdCreatedTime());
-        assertEquals(mrdUpdatedTimeValue, judicialBaseLocationType.getMrdUpdatedTime());
-        assertEquals(mrdDeletedTimeValue, judicialBaseLocationType.getMrdDeletedTime());
+        assertEquals("2020-01-01 00:00:00", judicialBaseLocationType.getMrdCreatedTime());
+        assertEquals("2020-01-01 00:00:00", judicialBaseLocationType.getMrdUpdatedTime());
+        assertEquals("2020-01-01 00:00:00", judicialBaseLocationType.getMrdDeletedTime());
 
     }
 
@@ -45,9 +33,9 @@ class JudicialBaseLocationTypeTest {
         judicialBaseLocationType.setCircuit("circuit");
         judicialBaseLocationType.setCourtName("courtName");
         judicialBaseLocationType.setCourtType("courtType");
-        judicialBaseLocationType.setMrdCreatedTime(mrdCreatedTimeValue);
-        judicialBaseLocationType.setMrdUpdatedTime(mrdUpdatedTimeValue);
-        judicialBaseLocationType.setMrdDeletedTime(mrdDeletedTimeValue);
+        judicialBaseLocationType.setMrdCreatedTime("2020-01-01 00:00:00");
+        judicialBaseLocationType.setMrdUpdatedTime("2020-01-01 00:00:00");
+        judicialBaseLocationType.setMrdDeletedTime("2020-01-01 00:00:00");
         return  judicialBaseLocationType;
     }
 }
