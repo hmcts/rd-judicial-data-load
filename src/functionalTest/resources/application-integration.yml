@@ -98,7 +98,7 @@ route:
       sql:TRUNCATE TABLE judicial_office_authorisation RESTART IDENTITY?dataSource=dataSource
     insert-sql:
       sql:INSERT INTO judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
-      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id ,TO_DATE(NULLIF(:#mrd_created_time,''), 'yyyy-MM-dd') ,TO_DATE(NULLIF(:#mrd_updated_time,''), 'yyyy-MM-dd') ,TO_DATE(NULLIF(:#mrd_deleted_time,''), 'yyyy-MM-dd') )?batch=true&dataSource=dataSource
+      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id ,TO_TIMESTAMP(NULLIF(:#mrd_created_time,''), 'YYYY-MM-DD HH24:MI:SS') ,TO_TIMESTAMP(NULLIF(:#mrd_updated_time,''), 'YYYY-MM-DD HH24:MI:SS') ,TO_TIMESTAMP(NULLIF(:#mrd_deleted_time,''), 'YYYY-MM-DD HH24:MI:SS')  )?batch=true&dataSource=dataSource
     update-sql:
       sql:UPDATE judicial_office_authorisation auth SET ticket_code=jtm.ticket_code FROM (SELECT ticket_code,jurisdiction,lower_level FROM judicial_ticket_code_mapping) AS jtm WHERE jtm.jurisdiction = auth.jurisdiction AND jtm.lower_level = auth.lower_level?dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations-Test?credentials=#credsreg&operation=updateBlockBlob
