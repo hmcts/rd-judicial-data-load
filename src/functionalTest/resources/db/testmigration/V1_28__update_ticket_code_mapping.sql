@@ -6,9 +6,4 @@ UPDATE judicial_ticket_code_mapping SET lower_level = 'S9(4) Appointment - Chanc
 UPDATE judicial_ticket_code_mapping SET lower_level = 'S9(4) Appointment - Queens Bench' WHERE ticket_code = '398';
 UPDATE judicial_ticket_code_mapping SET lower_level = 'S9(4) Appointment - Family' WHERE ticket_code = '400';
 
---Alter region_type
-ALTER TABLE region_type ADD COLUMN mrd_created_time TIMESTAMP;
-ALTER TABLE region_type ADD COLUMN mrd_updated_time TIMESTAMP;
-ALTER TABLE region_type ADD COLUMN mrd_deleted_time TIMESTAMP;
-
 COMMIT;
