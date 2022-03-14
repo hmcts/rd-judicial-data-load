@@ -6,8 +6,6 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.Registry;
 import org.apache.camel.support.DefaultExchange;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.junit.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -24,6 +22,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
+import uk.gov.hmcts.reform.juddata.camel.util.EmailTemplate;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdConstants;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
@@ -119,6 +118,8 @@ class JudicialOfficeAppointmentProcessorTest {
 
     final EmailConfiguration emailConfiguration = mock(EmailConfiguration.class);
 
+    final EmailTemplate emailTemplate = mock(EmailTemplate.class);
+
     final EmailConfiguration.MailTypeConfig config = mock(EmailConfiguration.MailTypeConfig.class);
 
     @BeforeEach
@@ -164,7 +165,7 @@ class JudicialOfficeAppointmentProcessorTest {
         setField(judicialOfficeAppointmentProcessor, "fetchBaseLocations", "baseLocations");
 
         setField(judicialOfficeAppointmentProcessor, "jdbcTemplate", jdbcTemplate);
-
+        setField(judicialOfficeAppointmentProcessor, "emailTemplate", emailTemplate);
         when(jdbcTemplate.queryForList("locations", String.class)).thenReturn(ImmutableList.of("regionId_1",
             "regionId_2"));
 
@@ -390,10 +391,11 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
         when(emailConfiguration.getMailTypes()).thenReturn(Map.of(JrdConstants.REGION, config,
                 JrdConstants.BASE_LOCATION, config,"TEST1",config));
+        when(emailTemplate.getEmailBody(anyString(), any())).thenReturn("email template");
         when(config.isEnabled()).thenReturn(true);
         when(config.getBody()).thenReturn("email sample body");
         when(config.getSubject()).thenReturn("email sample subject");
-
+        when(config.getTemplate()).thenReturn("email sample template");
         for (String key: List.of(JrdMappingConstants.LOCATION_ID, JrdMappingConstants.BASE_LOCATION_ID)) {
             int result = judicialOfficeAppointmentProcessor.sendEmail(judicialOfficeAppointments, key);
             assertEquals(1, result);
@@ -422,25 +424,4 @@ class JudicialOfficeAppointmentProcessorTest {
         verify(emailService, times(0)).sendEmail(any());
         assertEquals(-1,result);
     }
-
-    @Test
-    void testCreateLocationEmailBody() {
-        Set<JudicialOfficeAppointment> judicialOfficeAppointments = new HashSet<>();
-        judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
-        judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
-        String result = invokeMethod(judicialOfficeAppointmentProcessor, "createLocationEmailBody",
-                judicialOfficeAppointments);
-        MatcherAssert.assertThat(result, CoreMatchers.containsString("779321b3-3170-44a0-bc7d-b4decc2aea10"));
-    }
-
-    @Test
-    void testCreateRegionEmailBody() {
-        Set<JudicialOfficeAppointment> judicialOfficeAppointments = new HashSet<>();
-        judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
-        judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
-        String result = invokeMethod(judicialOfficeAppointmentProcessor, "createRegionEmailBody",
-                judicialOfficeAppointments);
-        MatcherAssert.assertThat(result, CoreMatchers.containsString("779321b3-3170-44a0-bc7d-b4decc2aea10"));
-    }
-
 }
