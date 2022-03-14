@@ -28,12 +28,12 @@ public class JudicialOfficeAuthorisationRowMapper {
         judOfficeAuthorizationRow.put("lower_level", judicialOfficeAuthorisation.getLowerLevel());
         judOfficeAuthorizationRow.put("personal_code", judicialOfficeAuthorisation.getPersonalCode());
         judOfficeAuthorizationRow.put("object_id", judicialOfficeAuthorisation.getObjectId());
-        judOfficeAuthorizationRow.put("mrd_created_time", getDateTimeStamp(judicialOfficeAuthorisation
-            .getMrdCreatedTime()));
-        judOfficeAuthorizationRow.put("mrd_updated_time", getDateTimeStamp(judicialOfficeAuthorisation
-            .getMrdUpdatedTime()));
-        judOfficeAuthorizationRow.put("mrd_deleted_time", getDateTimeStamp(judicialOfficeAuthorisation
-            .getMrdDeletedTime()));
+        judOfficeAuthorizationRow.put("mrd_created_time", judicialOfficeAuthorisation
+            .getMrdCreatedTime());
+        judOfficeAuthorizationRow.put("mrd_updated_time", judicialOfficeAuthorisation
+            .getMrdUpdatedTime());
+        judOfficeAuthorizationRow.put("mrd_deleted_time", judicialOfficeAuthorisation
+            .getMrdDeletedTime());
         return  judOfficeAuthorizationRow;
     }
 
