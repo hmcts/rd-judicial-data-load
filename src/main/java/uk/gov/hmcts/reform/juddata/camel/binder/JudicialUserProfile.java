@@ -30,7 +30,6 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
     @NotEmpty
     String personalCode;
 
-
     @DataField(pos = 3, columnName = "known_As")
     String knownAs;
 
@@ -71,5 +70,23 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
 
     @DataField(pos = 13, columnName = "object_id")
     String objectId;
+
+    @DataField(pos = 14, columnName = "Is_Judge")
+    String isJudge;
+
+    @DataField(pos = 15, columnName = "Is_Panel_Member")
+    String isPanelMember;
+
+    @DataField(pos = 16, columnName = "Is_Magistrate")
+    String isMagistrate;
+
+    @DataField(pos = 17, columnName = "MRD_Created_Time")
+    String mrdCreatedTime;
+
+    @DataField(pos = 18, columnName = "MRD_Updated_Time")
+    String mrdUpdatedTime;
+
+    @DataField(pos = 19, columnName = "MRD_Deleted_Time")
+    String mrdDeletedTime;
 
 }

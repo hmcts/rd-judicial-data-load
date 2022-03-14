@@ -34,6 +34,12 @@ public class JudicialUserProfileRowMapper implements IMapper {
         judUserProfileRow.put("active_flag", judicialUserProfile.isActiveFlag());
         judUserProfileRow.put("extracted_date", judicialUserProfile.getExtractedDate());
         judUserProfileRow.put("object_id", judicialUserProfile.getObjectId());
+        judUserProfileRow.put("is_judge", judicialUserProfile.getIsJudge());
+        judUserProfileRow.put("is_panel_member", judicialUserProfile.getIsPanelMember());
+        judUserProfileRow.put("is_magistrate", judicialUserProfile.getIsMagistrate());
+        judUserProfileRow.put("mrd_created_time", judicialUserProfile.getMrdCreatedTime());
+        judUserProfileRow.put("mrd_updated_time", judicialUserProfile.getMrdUpdatedTime());
+        judUserProfileRow.put("mrd_deleted_time", judicialUserProfile.getMrdDeletedTime());
         return  judUserProfileRow;
     }
 

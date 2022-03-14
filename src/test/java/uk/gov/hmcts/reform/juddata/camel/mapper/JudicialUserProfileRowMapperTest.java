@@ -39,6 +39,12 @@ class JudicialUserProfileRowMapperTest {
         assertEquals(true, response.get("active_flag"));
         assertEquals(getDateTimeWithFormat(dateTime), response.get("extracted_date"));
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", response.get("object_id"));
+        assertEquals("True", response.get("is_judge"));
+        assertEquals("True", response.get("is_panel_member"));
+        assertEquals("False", response.get("is_magistrate"));
+        assertEquals("2008-07-18 00:00:00", response.get("mrd_created_time"));
+        assertEquals("2008-07-19 00:00:00", response.get("mrd_updated_time"));
+        assertEquals("2008-07-20 00:00:00", response.get("mrd_deleted_time"));
     }
 
     @Test
@@ -65,6 +71,12 @@ class JudicialUserProfileRowMapperTest {
         assertEquals(true, response.get("active_flag"));
         assertEquals(getDateTimeWithFormat(dateTime), response.get("extracted_date"));
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", response.get("object_id"));
+        assertEquals("True", response.get("is_judge"));
+        assertEquals("True", response.get("is_panel_member"));
+        assertEquals("False", response.get("is_magistrate"));
+        assertEquals("2008-07-18 00:00:00", response.get("mrd_created_time"));
+        assertEquals("2008-07-19 00:00:00", response.get("mrd_updated_time"));
+        assertEquals("2008-07-20 00:00:00", response.get("mrd_deleted_time"));
     }
 }
          
