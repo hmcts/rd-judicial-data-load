@@ -11,6 +11,8 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 @Component
 @Setter
@@ -35,17 +37,17 @@ public class JudicialBaseLocationType extends CommonCsvField {
     String area;
 
     @DataField(pos = 6, columnName = "mrd_created_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdCreatedTime;
 
     @DataField(pos = 7, columnName = "mrd_updated_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdUpdatedTime;
 
     @DataField(pos = 8, columnName = "mrd_deleted_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdDeletedTime;
 }
