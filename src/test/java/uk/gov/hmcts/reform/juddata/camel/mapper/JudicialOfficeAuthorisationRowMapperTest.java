@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
+import uk.gov.hmcts.reform.juddata.camel.util.CommonUtils;
 
 import java.sql.Timestamp;
 import java.util.Map;
@@ -33,11 +34,11 @@ class JudicialOfficeAuthorisationRowMapperTest {
         assertEquals("lowerLevel", authMap.get("lower_level"));
         assertEquals("111", authMap.get("personal_code"));
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", authMap.get("object_id"));
-        assertEquals(judicialOfficeAuthorisation.getMrdCreatedTime(),authMap
+        assertEquals(CommonUtils.getDateTimeStamp("2020-01-02 00:00:00"),authMap
             .get("mrd_created_time"));
-        assertEquals(judicialOfficeAuthorisation.getMrdUpdatedTime(),authMap
+        assertEquals(CommonUtils.getDateTimeStamp("2020-01-03 00:00:00"),authMap
             .get("mrd_updated_time"));
-        assertEquals(judicialOfficeAuthorisation.getMrdDeletedTime(),authMap
+        assertEquals(CommonUtils.getDateTimeStamp("2020-01-04 00:00:00"),authMap
             .get("mrd_deleted_time"));
     }
 

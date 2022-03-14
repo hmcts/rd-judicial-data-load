@@ -84,7 +84,7 @@ route:
       sql:TRUNCATE TABLE judicial_office_authorisation RESTART IDENTITY?dataSource=dataSource
     insert-sql:
       sql:INSERT INTO judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
-      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id ,TO_TIMESTAMP(NULLIF(:#mrd_created_time,''), 'YYYY-MM-DD HH24:MI:SS') ,TO_TIMESTAMP(NULLIF(:#mrd_updated_time,''), 'YYYY-MM-DD HH24:MI:SS') ,TO_TIMESTAMP(NULLIF(:#mrd_deleted_time,''), 'YYYY-MM-DD HH24:MI:SS'))?batch=true&dataSource=dataSource
+      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id ,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?batch=true&dataSource=dataSource
     blob-path: ${child1.file.path}
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
