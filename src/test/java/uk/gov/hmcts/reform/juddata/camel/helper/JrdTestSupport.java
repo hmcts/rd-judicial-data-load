@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.Map;
 
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
 
 public class JrdTestSupport {
 
@@ -62,8 +61,7 @@ public class JrdTestSupport {
     }
 
     public static JudicialBaseLocationType createJudicialBaseLocationMock(
-            String mrdCreatedTimeValue,String mrdUpdatedTimeValue, String mrdDeletedTimeValue
-            ) {
+            String mrdCreatedTimeValue, String mrdUpdatedTimeValue, String mrdDeletedTimeValue) {
         JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
 
         judicialBaseLocationType.setArea("area");

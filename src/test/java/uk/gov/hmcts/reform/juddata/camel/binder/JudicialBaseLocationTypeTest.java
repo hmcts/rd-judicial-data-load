@@ -14,7 +14,7 @@ class JudicialBaseLocationTypeTest {
     private static String mrdDeletedTimeValue;
 
     @BeforeAll
-    public static void init(){
+    public static void init() {
         mrdCreatedTimeValue = getDateWithMillisValue();
         mrdUpdatedTimeValue = getDateWithMillisValue();
         mrdDeletedTimeValue = getDateWithMillisValue();

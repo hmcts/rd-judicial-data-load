@@ -8,7 +8,6 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialBaseLocationMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithMillisValue;
 
 class JudicialBaseLocationRowTypeMapperTest {
@@ -17,7 +16,7 @@ class JudicialBaseLocationRowTypeMapperTest {
     private static String mrdDeletedTimeValue;
 
     @BeforeAll
-    public static void init(){
+    public static void init() {
         mrdCreatedTimeValue = getDateWithMillisValue();
         mrdUpdatedTimeValue = getDateWithMillisValue();
         mrdDeletedTimeValue = getDateWithMillisValue();

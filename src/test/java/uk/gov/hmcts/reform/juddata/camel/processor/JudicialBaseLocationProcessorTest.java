@@ -14,11 +14,11 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialBaseLocationMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithMillisValue;
 
 class JudicialBaseLocationProcessorTest {
@@ -38,18 +37,14 @@ class JudicialBaseLocationProcessorTest {
     private static String mrdUpdatedTimeValue;
     private static String mrdDeletedTimeValue;
 
-    @BeforeAll
-    public static void init(){
-        mrdCreatedTimeValue = getDateWithMillisValue();
-        mrdUpdatedTimeValue = getDateWithMillisValue();
-        mrdDeletedTimeValue = getDateWithMillisValue();
-    }
+
+
     JudicialBaseLocationProcessor judicialBaseLocationProcessor = spy(new JudicialBaseLocationProcessor());
 
     List<JudicialBaseLocationType> judicialBaseLocationTypes = new ArrayList<>();
 
-    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock(
-            mrdCreatedTimeValue,mrdUpdatedTimeValue,mrdDeletedTimeValue);
+    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock(mrdCreatedTimeValue,
+            mrdUpdatedTimeValue,mrdDeletedTimeValue);
 
     JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock(
             null,null,null);
@@ -64,6 +59,13 @@ class JudicialBaseLocationProcessorTest {
     ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
 
+
+    @BeforeAll
+    public static void init() {
+        mrdCreatedTimeValue = getDateWithMillisValue();
+        mrdUpdatedTimeValue = getDateWithMillisValue();
+        mrdDeletedTimeValue = getDateWithMillisValue();
+    }
 
     @BeforeEach
     public void setup() {
