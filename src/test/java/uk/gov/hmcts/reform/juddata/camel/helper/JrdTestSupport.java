@@ -143,6 +143,9 @@ public class JrdTestSupport {
         judicialRegionType.setRegionDescCy("region_desc_cy");
         judicialRegionType.setRegionDescEn("region_desc_en");
         judicialRegionType.setRegionId("regionId");
+        judicialRegionType.setMrdCreatedTime("2022-05-03 00:00:00");
+        judicialRegionType.setMrdUpdatedTime("2022-05-01 00:00:00");
+        judicialRegionType.setMrdDeletedTime("2022-05-04 00:00:00");
         return judicialRegionType;
     }
 
