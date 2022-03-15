@@ -1,0 +1,127 @@
+server:
+  port: ${PORT:8094}
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+
+  endpoint:
+    health:
+      show-details: "always"
+
+spring:
+  application:
+    name: Judicial reference data blob store sync API
+
+  batch:
+    initialize-schema: always
+    #run spring batch job manually as need to validate idempotent condition in code
+    #rather than giving control to spring
+    job:
+      enabled: false
+  jackson.date-format: yyyy-MM-dd
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    locations: classpath:db/migration,classpath:db/postgres
+    schemas: dbjuddata
+
+  cloud:
+    bootstrap:
+      enabled: true
+
+  ### database configuration
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
+    username: ${POSTGRES_USERNAME:dbjuddata}
+    password: ${POSTGRES_PASSWORD:dbjuddata}
+    properties:
+      charSet: UTF-8
+    hikari:
+      max-lifetime: 600000
+      maximum-pool-size: 5
+      idle-timeout: 30000
+      minimum-idle: 1
+
+  profiles:
+    include:
+      - jrd-router-orchestartion
+      - jrd-leaf-router
+      - lib
+      - camel-routes-common
+  mail:
+    enabled: false
+
+email:
+  mailTypes:
+    asb:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "%s :: Publishing of JRD messages to ASB failed"
+      body: "Publishing of JRD messages to ASB failed for Job Id %s"
+    report:
+      enabled: false
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "%s :: JRD - Execution Failed"
+      body: "Execution Failed for files - %s"
+    userprofile:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
+      body: "Following JO profiles were deleted : \n %s"
+    region:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - New Region ID in Appointment file - %s"
+      body: "Following JO profiles where with RegionID's newly found : \n %s"
+    baselocation:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - New Base Location in Appointment file - %s"
+      body: "Following JO profiles where with Base Location Id's newly found : \n %s"
+    lowerLevelAuth:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - pradipta.dey@hmcts.net
+        - candyliyen.kuek@hmcts.net
+      subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
+      template: lower-level-auth.ftl
+
+
+sendgrid:
+  key: ${RD_SENDGRID_API_KEY}
+
+launchdarkly:
+  sdk:
+    key: ${LD_SDK_KEY:}
+    environment: ${ENV_NAME:local}
+    user: rd
+
+elastic:
+  search:
+    query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
+    recordsPerPage: 500
+
+idam:
+  api:
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
+    client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
+    redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
+    authorization: ${OAUTH2_AUTH:}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:}
+
