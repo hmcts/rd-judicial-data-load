@@ -8,7 +8,7 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 import java.util.HashMap;
 import java.util.Map;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getDateTimeStamp;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 
 
 @Slf4j

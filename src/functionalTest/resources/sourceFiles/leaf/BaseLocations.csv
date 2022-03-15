@@ -1,7 +1,7 @@
 CourtID,Court/Bench,CourtType,Circuit,Area,mrd_created_time,mrd_updated_time,mrd_deleted_time
-1,"Aberconwy","Old Gwynedd","Gwynedd","LJA",2022-03-14 01:57:04,2022-03-14 01:57:04,2022-03-14 01:57:04
-2,"Aldridge and Brownhills","Nottinghamshire","Nottinghamshire","LJA",2022-03-14 01:57:04,2022-03-14 01:57:04,2022-03-14 01:57:04
-3,"Alnwick","Northumbria","Northumberland","LJA",2022-03-14 01:57:04,2022-03-14 01:57:04,2022-03-14 01:57:04
+1,"Aberconwy","Old Gwynedd","Gwynedd","LJA",,,
+2,"Aldridge and Brownhills","Nottinghamshire","Nottinghamshire","LJA",,,
+3,"Alnwick","Northumbria","Northumberland","LJA",,,
 4,"Ampthill","Bedfordshire","Bedfordshire","LJA",2022-03-14 01:57:04,2022-03-14 01:57:04,2022-03-14 01:57:04
 5,"Appleby","Cumbria","Cumbria","LJA",2022-03-14 01:57:04,2022-03-14 01:57:04,2022-03-14 01:57:04
 747,"Royal Courts of Justice - High Court - Chancery","High Court Chancery","London","Courts",2022-03-14 01:57:04,2022-03-14 01:57:04,2022-03-14 01:57:04
