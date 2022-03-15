@@ -29,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.util.ResourceUtils.getFile;
 
 public interface ParentIntegrationTestSupport {
@@ -149,6 +150,11 @@ public interface ParentIntegrationTestSupport {
 
     static void validateDbRecordCountFor(JdbcTemplate jdbcTemplate, String queryName, int expectedCount) {
         assertEquals(expectedCount, jdbcTemplate.queryForList(queryName).size());
+    }
+
+    static void validateDbRecordValuesFor(JdbcTemplate jdbcTemplate, String queryName, String columnName) {
+        Map<String, Object> hmValue = jdbcTemplate.queryForList(queryName).get(0);
+        assertNull(hmValue.get(columnName));
     }
 
     static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate,
