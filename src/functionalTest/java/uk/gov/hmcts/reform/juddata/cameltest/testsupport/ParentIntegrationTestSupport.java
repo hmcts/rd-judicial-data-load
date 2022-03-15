@@ -219,9 +219,12 @@ public interface ParentIntegrationTestSupport {
                 judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
                 judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp) authorisationMap.get("end_date")));
                 judicialOfficeAuthorisation.setLowerLevel((String) authorisationMap.get("lower_level"));
-                judicialOfficeAuthorisation.setMrdCreatedTime(handleNull((Timestamp) authorisationMap.get("mrd_created_time")));
-                judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull((Timestamp)authorisationMap.get("mrd_updated_time")));
-                judicialOfficeAuthorisation.setMrdDeletedTime(handleNull((Timestamp)authorisationMap.get("mrd_deleted_time")));
+                judicialOfficeAuthorisation.setMrdCreatedTime(handleNull((Timestamp) authorisationMap
+                    .get("mrd_created_time")));
+                judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_updated_time")));
+                judicialOfficeAuthorisation.setMrdDeletedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_deleted_time")));
                 return judicialOfficeAuthorisation;
             }).collect(Collectors.toList());
 
@@ -235,7 +238,7 @@ public interface ParentIntegrationTestSupport {
         assertTrue(actualAuthorisations.get(1).getMrdUpdatedTime().contains("2021-02-01 10:15:20"));
         assertTrue(actualAuthorisations.get(1).getMrdDeletedTime().contains("2022-03-01 01:02:03"));
 
-       // assertEquals(judicialAuthorisationList.get());
+        // assertEquals(judicialAuthorisationList.get());
     }
 
     static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath) {
