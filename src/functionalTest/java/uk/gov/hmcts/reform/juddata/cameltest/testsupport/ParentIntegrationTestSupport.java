@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
 
 public interface ParentIntegrationTestSupport {
@@ -227,6 +229,27 @@ public interface ParentIntegrationTestSupport {
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
+    }
+
+    static void validateAdditionalInfoRolesFile(JdbcTemplate jdbcTemplate, String roleSql) {
+        List<Map<String, Object>> judicialUserRoleTypeList = jdbcTemplate.queryForList(roleSql);
+        List<JudicialUserRoleType> actualRoleTypes =
+            judicialUserRoleTypeList.stream().map(roleTypeMap -> {
+                JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
+                judicialUserRoleType.setPerId((String) roleTypeMap.get("per_Id"));
+                judicialUserRoleType.setTitle((String) roleTypeMap.get("title"));
+                judicialUserRoleType.setLocation((String) roleTypeMap.get("location"));
+                judicialUserRoleType.setStartDate(handleNull((Timestamp) roleTypeMap.get("start_date")));
+                judicialUserRoleType.setEndDate(handleNull((Timestamp) roleTypeMap.get("end_date")));
+                judicialUserRoleType.setMrdCreatedTime(handleNull((Timestamp) roleTypeMap.get("mrd_created_time")));
+                judicialUserRoleType.setMrdUpdatedTime(handleNull((Timestamp) roleTypeMap.get("mrd_updated_time")));
+                judicialUserRoleType.setMrdDeletedTime(handleNull((Timestamp) roleTypeMap.get("mrd_deleted_time")));
+                return judicialUserRoleType;
+            }).collect(Collectors.toList());
+
+        assertTrue(actualRoleTypes.get(0).getMrdCreatedTime().contains("2018-05-02"));
+        assertTrue(actualRoleTypes.get(0).getMrdUpdatedTime().contains("2018-05-02"));
+        assertTrue(actualRoleTypes.get(0).getMrdDeletedTime().contains("2018-05-02"));
     }
 
     static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath) {
