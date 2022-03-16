@@ -164,6 +164,9 @@ public class JrdTestSupport {
         judicialUserRoleType.setLocation("Nationwide");
         judicialUserRoleType.setStartDate("2018-05-02 00:00:00.000");
         judicialUserRoleType.setEndDate("2022-05-01 00:00:00");
+        judicialUserRoleType.setMrdCreatedTime("2022-05-03 00:00:00");
+        judicialUserRoleType.setMrdUpdatedTime("2022-05-04 00:00:00");
+        judicialUserRoleType.setMrdDeletedTime("2022-05-05 00:00:00");
         return judicialUserRoleType;
     }
 }
