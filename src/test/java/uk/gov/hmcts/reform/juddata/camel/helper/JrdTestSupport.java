@@ -60,7 +60,7 @@ public class JrdTestSupport {
         return judicialUserProfileMock;
     }
 
-    public static JudicialBaseLocationType createJudicialOfficeAppointmentMock() {
+    public static JudicialBaseLocationType createJudicialBaseLocationMock() {
         JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
 
         judicialBaseLocationType.setArea("area");
@@ -68,8 +68,13 @@ public class JrdTestSupport {
         judicialBaseLocationType.setCircuit("circuit");
         judicialBaseLocationType.setCourtName("courtName");
         judicialBaseLocationType.setCourtType("courtType");
+        judicialBaseLocationType.setMrdCreatedTime("2020-01-01 00:00:00");
+        judicialBaseLocationType.setMrdUpdatedTime("2020-01-01 00:00:00");
+        judicialBaseLocationType.setMrdDeletedTime("2020-01-01 00:00:00");
         return judicialBaseLocationType;
     }
+
+
 
     public static JudicialOfficeAppointment createJudicialOfficeAppointmentMock(Date currentDate,
                                                                                 LocalDateTime dateTime,
@@ -129,6 +134,7 @@ public class JrdTestSupport {
         DateTimeFormatter formatter = getDateFormatter();
         return date.format(formatter);
     }
+
 
     public static DateTimeFormatter getDateFormatter() {
         return DateTimeFormatter.ofPattern(DATE_FORMAT);

@@ -153,6 +153,11 @@ public interface ParentIntegrationTestSupport {
         assertEquals(expectedCount, jdbcTemplate.queryForList(queryName).size());
     }
 
+    static void validateDbRecordValuesFor(JdbcTemplate jdbcTemplate, String queryName, String columnName) {
+        Map<String, Object> hmValue = jdbcTemplate.queryForList(queryName).get(4);
+        assertNotNull(hmValue.get(columnName));
+    }
+
     static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate,
                                                String queryName, int expectedCount,
                                                boolean isPartialSuccessValidation) {
