@@ -103,6 +103,9 @@ public class JrdTestSupport {
         judicialOfficeAuthorisation.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAuthorisation.setTicketId(12345L);
         judicialOfficeAuthorisation.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
+        judicialOfficeAuthorisation.setMrdCreatedTime("2020-01-02 00:00:00");
+        judicialOfficeAuthorisation.setMrdUpdatedTime("2020-01-03 00:00:00");
+        judicialOfficeAuthorisation.setMrdDeletedTime("2020-01-04 00:00:00");
         return judicialOfficeAuthorisation;
     }
 
