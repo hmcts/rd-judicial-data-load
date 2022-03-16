@@ -72,13 +72,13 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
     String objectId;
 
     @DataField(pos = 14, columnName = "Is_Judge")
-    String isJudge;
+    boolean judge;
 
     @DataField(pos = 15, columnName = "Is_Panel_Member")
-    String isPanelMember;
+    boolean panelMember;
 
     @DataField(pos = 16, columnName = "Is_Magistrate")
-    String isMagistrate;
+    boolean magistrate;
 
     @DataField(pos = 17, columnName = "MRD_Created_Time")
     @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN,

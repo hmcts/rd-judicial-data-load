@@ -33,9 +33,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
@@ -189,7 +189,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         assertTrue(epimmsId.contains("20262"));
     }
 
-
     @Test
     void testServiceCodeMappingInJudicialOfficeAppointmentTable() throws Exception {
         uploadBlobs(jrdBlobSupport, parentFiles, file);
@@ -286,5 +285,25 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     }
 
+    @Test
+    void testIfTheUserIsJudgeOrPanelMemberOrMagistrateAndMRDTime() throws Exception {
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .addString(START_ROUTE, DIRECT_JRD)
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+
+        List<Map<String, Object>> userProfiles = jdbcTemplate.queryForList(userProfileSql);
+        userProfiles.forEach(map -> {
+            assertTrue((Boolean)map.get("is_judge"));
+            assertTrue((Boolean)map.get("is_panel_member"));
+            assertFalse((Boolean)map.get("is_magistrate"));
+            assertEquals(Timestamp.valueOf("2008-07-18 00:00:00"), map.get("mrd_created_time"));
+            assertEquals(Timestamp.valueOf("2008-07-19 00:00:00"), map.get("mrd_updated_time"));
+            assertEquals(Timestamp.valueOf("2008-07-20 00:00:00"), map.get("mrd_deleted_time"));
+        });
+    }
 
 }
