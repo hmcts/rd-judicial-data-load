@@ -220,6 +220,12 @@ public interface ParentIntegrationTestSupport {
                 judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
                 judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp) authorisationMap.get("end_date")));
                 judicialOfficeAuthorisation.setLowerLevel((String) authorisationMap.get("lower_level"));
+                judicialOfficeAuthorisation.setMrdCreatedTime(handleNull((Timestamp) authorisationMap
+                    .get("mrd_created_time")));
+                judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_updated_time")));
+                judicialOfficeAuthorisation.setMrdDeletedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_deleted_time")));
                 return judicialOfficeAuthorisation;
             }).collect(Collectors.toList());
 
@@ -229,6 +235,11 @@ public interface ParentIntegrationTestSupport {
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
+        assertTrue(actualAuthorisations.get(1).getMrdCreatedTime().contains("2020-01-01 00:00:00"));
+        assertTrue(actualAuthorisations.get(1).getMrdUpdatedTime().contains("2021-02-01 10:15:20"));
+        assertTrue(actualAuthorisations.get(1).getMrdDeletedTime().contains("2022-03-01 01:02:03"));
+
+        // assertEquals(judicialAuthorisationList.get());
     }
 
     static void validateAdditionalInfoRolesFile(JdbcTemplate jdbcTemplate, String roleSql) {
@@ -276,6 +287,10 @@ public interface ParentIntegrationTestSupport {
         judicialOfficeAuthorisation.setStartDate(handleNull(columns.get(3), true));
         judicialOfficeAuthorisation.setEndDate(handleNull(columns.get(4), true));
         judicialOfficeAuthorisation.setLowerLevel(handleNull(columns.get(5), false));
+        judicialOfficeAuthorisation.setMrdCreatedTime(handleNull(columns.get(8),true));
+        judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull(columns.get(9),true));
+        judicialOfficeAuthorisation.setMrdDeletedTime(handleNull(columns.get(10),true));
+
         return judicialOfficeAuthorisation;
     }
 
