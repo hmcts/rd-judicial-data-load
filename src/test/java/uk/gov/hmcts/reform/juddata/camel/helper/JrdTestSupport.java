@@ -68,7 +68,7 @@ public class JrdTestSupport {
         return judicialUserProfileMock;
     }
 
-    public static JudicialBaseLocationType createJudicialOfficeAppointmentMock() {
+    public static JudicialBaseLocationType createJudicialBaseLocationMock() {
         JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
 
         judicialBaseLocationType.setArea("area");
@@ -76,8 +76,13 @@ public class JrdTestSupport {
         judicialBaseLocationType.setCircuit("circuit");
         judicialBaseLocationType.setCourtName("courtName");
         judicialBaseLocationType.setCourtType("courtType");
+        judicialBaseLocationType.setMrdCreatedTime("2020-01-01 00:00:00");
+        judicialBaseLocationType.setMrdUpdatedTime("2020-01-01 00:00:00");
+        judicialBaseLocationType.setMrdDeletedTime("2020-01-01 00:00:00");
         return judicialBaseLocationType;
     }
+
+
 
     public static JudicialOfficeAppointment createJudicialOfficeAppointmentMock(Date currentDate,
                                                                                 LocalDateTime dateTime,
@@ -117,6 +122,9 @@ public class JrdTestSupport {
         judicialOfficeAuthorisation.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAuthorisation.setTicketId(12345L);
         judicialOfficeAuthorisation.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
+        judicialOfficeAuthorisation.setMrdCreatedTime("2020-01-02 00:00:00");
+        judicialOfficeAuthorisation.setMrdUpdatedTime("2020-01-03 00:00:00");
+        judicialOfficeAuthorisation.setMrdDeletedTime("2020-01-04 00:00:00");
         return judicialOfficeAuthorisation;
     }
 
@@ -141,6 +149,7 @@ public class JrdTestSupport {
         return date.format(formatter);
     }
 
+
     public static DateTimeFormatter getDateFormatter() {
         return DateTimeFormatter.ofPattern(DATE_FORMAT);
     }
@@ -151,6 +160,9 @@ public class JrdTestSupport {
         judicialRegionType.setRegionDescCy("region_desc_cy");
         judicialRegionType.setRegionDescEn("region_desc_en");
         judicialRegionType.setRegionId("regionId");
+        judicialRegionType.setMrdCreatedTime("2022-05-03 00:00:00");
+        judicialRegionType.setMrdUpdatedTime("2022-05-01 00:00:00");
+        judicialRegionType.setMrdDeletedTime("2022-05-04 00:00:00");
         return judicialRegionType;
     }
 
@@ -172,6 +184,9 @@ public class JrdTestSupport {
         judicialUserRoleType.setLocation("Nationwide");
         judicialUserRoleType.setStartDate("2018-05-02 00:00:00.000");
         judicialUserRoleType.setEndDate("2022-05-01 00:00:00");
+        judicialUserRoleType.setMrdCreatedTime("2022-05-03 00:00:00");
+        judicialUserRoleType.setMrdUpdatedTime("2022-05-04 00:00:00");
+        judicialUserRoleType.setMrdDeletedTime("2022-05-05 00:00:00");
         return judicialUserRoleType;
     }
 }

@@ -5,7 +5,8 @@ route:
     file-name: Locations
     table-name: region_type
     insert-sql:
-      sql:INSERT INTO region_type (region_id,region_desc_en,region_desc_cy) VALUES(:#region_id,:#region_desc_en,:#region_desc_cy)
+      sql:INSERT INTO region_type (region_id,region_desc_en,region_desc_cy,mrd_created_time,mrd_updated_time,mrd_deleted_time) 
+      VALUES(:#region_id,:#region_desc_en,:#region_desc_cy,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)
       ON CONFLICT (region_id) DO UPDATE SET region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy?dataSource=dataSource&batch=true
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Locations?credentials=#credsreg&operation=updateBlockBlob
@@ -18,8 +19,9 @@ route:
     file-name: BaseLocations
     table-name: base_location_type
     insert-sql:
-      sql:INSERT INTO base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise) VALUES(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise)
-      ON CONFLICT (base_location_id) DO UPDATE SET court_name = :#court_name,court_type = :#court_type,circuit = :#circuit,area_of_expertise = :#area_of_expertise?dataSource=dataSource&batch=true
+      sql:INSERT INTO base_location_type (base_location_id,court_name,court_type,circuit,area_of_expertise,mrd_created_time,mrd_updated_time,mrd_deleted_time)
+      VALUES(:#base_location_id,:#court_name, :#court_type,:#circuit, :#area_of_expertise, :#mrd_created_time, :#mrd_updated_time, :#mrd_deleted_time)
+      ON CONFLICT (base_location_id) DO UPDATE SET court_name = :#court_name,court_type = :#court_type,circuit = :#circuit,area_of_expertise = :#area_of_expertise,mrd_created_time = :#mrd_created_time,mrd_updated_time = :#mrd_updated_time,mrd_deleted_time = :#mrd_deleted_time?dataSource=dataSource&batch=true
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/BaseLocations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialBaseLocationProcessor

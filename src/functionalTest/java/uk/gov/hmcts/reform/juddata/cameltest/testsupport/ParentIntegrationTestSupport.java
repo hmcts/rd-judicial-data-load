@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
 
 public interface ParentIntegrationTestSupport {
@@ -151,6 +153,11 @@ public interface ParentIntegrationTestSupport {
         assertEquals(expectedCount, jdbcTemplate.queryForList(queryName).size());
     }
 
+    static void validateDbRecordValuesFor(JdbcTemplate jdbcTemplate, String queryName, String columnName) {
+        Map<String, Object> hmValue = jdbcTemplate.queryForList(queryName).get(4);
+        assertNotNull(hmValue.get(columnName));
+    }
+
     static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate,
                                                String queryName, int expectedCount,
                                                boolean isPartialSuccessValidation) {
@@ -218,6 +225,12 @@ public interface ParentIntegrationTestSupport {
                 judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
                 judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp) authorisationMap.get("end_date")));
                 judicialOfficeAuthorisation.setLowerLevel((String) authorisationMap.get("lower_level"));
+                judicialOfficeAuthorisation.setMrdCreatedTime(handleNull((Timestamp) authorisationMap
+                    .get("mrd_created_time")));
+                judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_updated_time")));
+                judicialOfficeAuthorisation.setMrdDeletedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_deleted_time")));
                 return judicialOfficeAuthorisation;
             }).collect(Collectors.toList());
 
@@ -227,6 +240,32 @@ public interface ParentIntegrationTestSupport {
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
+        assertTrue(actualAuthorisations.get(1).getMrdCreatedTime().contains("2020-01-01 00:00:00"));
+        assertTrue(actualAuthorisations.get(1).getMrdUpdatedTime().contains("2021-02-01 10:15:20"));
+        assertTrue(actualAuthorisations.get(1).getMrdDeletedTime().contains("2022-03-01 01:02:03"));
+
+        // assertEquals(judicialAuthorisationList.get());
+    }
+
+    static void validateAdditionalInfoRolesFile(JdbcTemplate jdbcTemplate, String roleSql) {
+        List<Map<String, Object>> judicialUserRoleTypeList = jdbcTemplate.queryForList(roleSql);
+        List<JudicialUserRoleType> actualRoleTypes =
+            judicialUserRoleTypeList.stream().map(roleTypeMap -> {
+                JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
+                judicialUserRoleType.setPerId((String) roleTypeMap.get("per_Id"));
+                judicialUserRoleType.setTitle((String) roleTypeMap.get("title"));
+                judicialUserRoleType.setLocation((String) roleTypeMap.get("location"));
+                judicialUserRoleType.setStartDate(handleNull((Timestamp) roleTypeMap.get("start_date")));
+                judicialUserRoleType.setEndDate(handleNull((Timestamp) roleTypeMap.get("end_date")));
+                judicialUserRoleType.setMrdCreatedTime(handleNull((Timestamp) roleTypeMap.get("mrd_created_time")));
+                judicialUserRoleType.setMrdUpdatedTime(handleNull((Timestamp) roleTypeMap.get("mrd_updated_time")));
+                judicialUserRoleType.setMrdDeletedTime(handleNull((Timestamp) roleTypeMap.get("mrd_deleted_time")));
+                return judicialUserRoleType;
+            }).collect(Collectors.toList());
+
+        assertTrue(actualRoleTypes.get(0).getMrdCreatedTime().contains("2018-05-02"));
+        assertTrue(actualRoleTypes.get(0).getMrdUpdatedTime().contains("2018-05-02"));
+        assertTrue(actualRoleTypes.get(0).getMrdDeletedTime().contains("2018-05-02"));
     }
 
     static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath) {
@@ -253,6 +292,10 @@ public interface ParentIntegrationTestSupport {
         judicialOfficeAuthorisation.setStartDate(handleNull(columns.get(3), true));
         judicialOfficeAuthorisation.setEndDate(handleNull(columns.get(4), true));
         judicialOfficeAuthorisation.setLowerLevel(handleNull(columns.get(5), false));
+        judicialOfficeAuthorisation.setMrdCreatedTime(handleNull(columns.get(8),true));
+        judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull(columns.get(9),true));
+        judicialOfficeAuthorisation.setMrdDeletedTime(handleNull(columns.get(10),true));
+
         return judicialOfficeAuthorisation;
     }
 
