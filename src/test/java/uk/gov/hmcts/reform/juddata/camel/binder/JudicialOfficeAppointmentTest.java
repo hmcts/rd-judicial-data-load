@@ -39,6 +39,13 @@ class JudicialOfficeAppointmentTest {
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialOfficeAppointment.getObjectId());
         assertEquals("Magistrate", judicialOfficeAppointment.getAppointment());
         assertEquals("1", judicialOfficeAppointment.getAppointmentType());
+        assertEquals("primary_location_1", judicialOfficeAppointment.getPrimaryLocation());
+        assertEquals("secondary_location_1", judicialOfficeAppointment.getSecondaryLocation());
+        assertEquals("tertiary_location_1", judicialOfficeAppointment.getTertiaryLocation());
+        assertEquals("2020-01-02 00:00:00",judicialOfficeAppointment.getMrdCreatedTime());
+        assertEquals("2020-01-03 00:00:00",judicialOfficeAppointment.getMrdUpdatedTime());
+        assertEquals("2020-01-04 00:00:00",judicialOfficeAppointment.getMrdDeletedTime());
+
 
     }
 }

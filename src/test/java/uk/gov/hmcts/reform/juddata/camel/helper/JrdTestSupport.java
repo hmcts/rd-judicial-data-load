@@ -93,6 +93,12 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         judicialOfficeAppointmentMock.setAppointment("Magistrate");
         judicialOfficeAppointmentMock.setAppointmentType("1");
+        judicialOfficeAppointmentMock.setPrimaryLocation("primary_location_1");
+        judicialOfficeAppointmentMock.setSecondaryLocation("secondary_location_1");
+        judicialOfficeAppointmentMock.setTertiaryLocation("tertiary_location_1");
+        judicialOfficeAppointmentMock.setMrdCreatedTime("2020-01-02 00:00:00");
+        judicialOfficeAppointmentMock.setMrdUpdatedTime("2020-01-03 00:00:00");
+        judicialOfficeAppointmentMock.setMrdDeletedTime("2020-01-04 00:00:00");
 
         return judicialOfficeAppointmentMock;
     }
