@@ -37,12 +37,6 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         judOfficeAppointmentRow.put("appointment_type", officeAppointment.getAppointmentType());
         judOfficeAppointmentRow.put("object_id", officeAppointment.getObjectId());
         judOfficeAppointmentRow.put("appointment", officeAppointment.getAppointment());
-        judOfficeAppointmentRow.put("primary_location", officeAppointment.getPrimaryLocation());
-        judOfficeAppointmentRow.put("secondary_location", officeAppointment.getSecondaryLocation());
-        judOfficeAppointmentRow.put("tertiary_location", officeAppointment.getTertiaryLocation());
-        judOfficeAppointmentRow.put("mrd_created_time", officeAppointment.getMrdCreatedTime());
-        judOfficeAppointmentRow.put("mrd_updated_time", officeAppointment.getMrdUpdatedTime());
-        judOfficeAppointmentRow.put("mrd_deleted_time", officeAppointment.getMrdDeletedTime());
 
 
         return  judOfficeAppointmentRow;

@@ -19,10 +19,9 @@ class JudicialOfficeAppointmentTest {
     @Test
     void test_objects_JudicialOfficeAppointment_correctly() {
         Date currentDate = new Date();
-        String date = "2017-10-01 00:00:00.000";
         LocalDateTime dateTime = LocalDateTime.now();
         JudicialOfficeAppointment judicialOfficeAppointment = createJudicialOfficeAppointmentMock(currentDate,
-            dateTime, PERID_1);
+                dateTime, PERID_1);
         assertEquals(PERID_1, judicialOfficeAppointment.getPerId());
         assertEquals("baseLocationId_1", judicialOfficeAppointment.getBaseLocationId());
         assertEquals("regionId_1", judicialOfficeAppointment.getRegionId());
@@ -40,12 +39,6 @@ class JudicialOfficeAppointmentTest {
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialOfficeAppointment.getObjectId());
         assertEquals("Magistrate", judicialOfficeAppointment.getAppointment());
         assertEquals("1", judicialOfficeAppointment.getAppointmentType());
-        assertEquals("primaryLocationId_1", judicialOfficeAppointment.getPrimaryLocation());
-        assertEquals("secondaryLocationId_1", judicialOfficeAppointment.getSecondaryLocation());
-        assertEquals("tertiaryLocationId_1", judicialOfficeAppointment.getTertiaryLocation());
-        assertEquals("2022-05-03 00:00:00", judicialOfficeAppointment.getMrdCreatedTime());
-        assertEquals("2022-05-04 00:00:00", judicialOfficeAppointment.getMrdUpdatedTime());
-        assertEquals("2022-05-05 00:00:00", judicialOfficeAppointment.getMrdDeletedTime());
 
     }
 }

@@ -1,5 +1,14 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
+
+import java.io.Serializable;
+
+import javax.validation.constraints.NotEmpty;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
@@ -8,16 +17,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 import uk.gov.hmcts.reform.juddata.validators.Appointment;
-
-import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
-
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_ERROR_MESSAGE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 @Setter
 @Getter
@@ -70,28 +69,5 @@ public class JudicialOfficeAppointment extends CommonCsvField implements Seriali
     @Appointment
     String appointment;
 
-    @DataField(pos = 13, columnName = "primary_location", defaultValue = "0")
-    String primaryLocation;
-
-    @DataField(pos = 14, columnName = "secondary_location", defaultValue = "0")
-    String secondaryLocation;
-
-    @DataField(pos = 15, columnName = "tertiary_location", defaultValue = "0")
-    String tertiaryLocation;
-
-    @DataField(pos = 16, columnName = "mrd_created_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
-    String mrdCreatedTime;
-
-    @DataField(pos = 17, columnName = "mrd_updated_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
-    String mrdUpdatedTime;
-
-    @DataField(pos = 18, columnName = "mrd_deleted_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
-            message = DATE_FORMAT_ERROR_MESSAGE)
-    String mrdDeletedTime;
 
 }
