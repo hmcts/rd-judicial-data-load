@@ -13,7 +13,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'pmd'
-    id "com.github.ben-manes.versions" version "0.28.0"
+    id "com.github.ben-manes.versions" version "0.41.0"
     id 'info.solidsoft.pitest' version '1.6.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '2.8'
@@ -37,7 +37,7 @@ def versions = [
         springBoot         : '2.4.13',
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
-        jackson            : '2.11.4',
+        jackson            : '2.13.1',
         launchDarklySdk    : "5.2.2",
         camel              : '3.8.0',
         log4j              : '2.17.1'
@@ -251,13 +251,15 @@ dependencies {
             strictly versions.jackson
         }
     }
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
     implementation 'com.github.hmcts:idam-java-client:2.0.1'
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.glassfish', module: 'jakarta.el'
     }
 
-    implementation "io.github.openfeign:feign-httpclient:11.0"
+    implementation "io.github.openfeign:feign-httpclient:11.8"
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
@@ -274,14 +276,14 @@ dependencies {
     }
 
     //Fix for CVE-2021-29425
-    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'commons-io:commons-io:2.11.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
     testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
 
     implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
 
@@ -299,7 +301,7 @@ dependencies {
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.2.0'
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.6'
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
-    implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.5'
+    implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.14'
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.15'
     
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
@@ -332,12 +334,12 @@ dependencies {
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.2.0'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.2'
-    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.4'
+    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
-    testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.1'
+    testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.4'
 
     testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
     testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
