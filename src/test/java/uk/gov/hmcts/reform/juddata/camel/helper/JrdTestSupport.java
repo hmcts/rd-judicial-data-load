@@ -57,6 +57,12 @@ public class JrdTestSupport {
         judicialUserProfileMock.setActiveFlag(true);
         judicialUserProfileMock.setExtractedDate(getDateTimeWithFormat(dateTime));
         judicialUserProfileMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
+        judicialUserProfileMock.setJudge(true);
+        judicialUserProfileMock.setPanelMember(true);
+        judicialUserProfileMock.setMagistrate(false);
+        judicialUserProfileMock.setMrdCreatedTime("2008-07-18 00:00:00");
+        judicialUserProfileMock.setMrdUpdatedTime("2008-07-19 00:00:00");
+        judicialUserProfileMock.setMrdDeletedTime("2008-07-20 00:00:00");
         return judicialUserProfileMock;
     }
 
