@@ -78,20 +78,19 @@ public class JudicialOfficeAppointment extends CommonCsvField implements Seriali
     @DataField(pos = 15, columnName = "tertiary_location", defaultValue = "0")
     String tertiaryLocation;
 
-    @DataField(pos = 6, columnName = "mrd_created_time")
+    @DataField(pos = 16, columnName = "mrd_created_time")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdCreatedTime;
 
-    @DataField(pos = 7, columnName = "mrd_updated_time")
+    @DataField(pos = 17, columnName = "mrd_updated_time")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdUpdatedTime;
 
-    @DataField(pos = 8, columnName = "mrd_deleted_time")
+    @DataField(pos = 18, columnName = "mrd_deleted_time")
     @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdDeletedTime;
-
 
 }
