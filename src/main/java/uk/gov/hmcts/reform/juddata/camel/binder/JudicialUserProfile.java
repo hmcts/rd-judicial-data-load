@@ -81,17 +81,17 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
     boolean magistrate;
 
     @DataField(pos = 17, columnName = "MRD_Created_Time")
-    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN,
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdCreatedTime;
 
     @DataField(pos = 18, columnName = "MRD_Updated_Time")
-    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN,
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdUpdatedTime;
 
     @DataField(pos = 19, columnName = "MRD_Deleted_Time")
-    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN,
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = "date pattern should be " + DATE_TIME_FORMAT)
     String mrdDeletedTime;
 

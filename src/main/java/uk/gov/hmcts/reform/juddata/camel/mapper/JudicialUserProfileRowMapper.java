@@ -5,6 +5,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +40,19 @@ public class JudicialUserProfileRowMapper implements IMapper {
         judUserProfileRow.put("is_judge", judicialUserProfile.isJudge());
         judUserProfileRow.put("is_panel_member", judicialUserProfile.isPanelMember());
         judUserProfileRow.put("is_magistrate", judicialUserProfile.isMagistrate());
-        judUserProfileRow.put("mrd_created_time", Timestamp.valueOf(judicialUserProfile.getMrdCreatedTime()));
-        judUserProfileRow.put("mrd_updated_time", Timestamp.valueOf(judicialUserProfile.getMrdUpdatedTime()));
-        judUserProfileRow.put("mrd_deleted_time", Timestamp.valueOf(judicialUserProfile.getMrdDeletedTime()));
+
+        Optional<String> mrdCreatedTimeOptional =
+                Optional.ofNullable(judicialUserProfile.getMrdCreatedTime()).filter(Predicate.not(String::isEmpty));
+        judUserProfileRow.put("mrd_created_time", mrdCreatedTimeOptional.map(Timestamp::valueOf).orElse(null));
+
+        Optional<String> mrdUpdatedTimeOptional =
+                Optional.ofNullable(judicialUserProfile.getMrdUpdatedTime()).filter(Predicate.not(String::isEmpty));
+        judUserProfileRow.put("mrd_updated_time", mrdUpdatedTimeOptional.map(Timestamp::valueOf).orElse(null));
+
+        Optional<String> mrdDeletedTimeOptional =
+                Optional.ofNullable(judicialUserProfile.getMrdDeletedTime()).filter(Predicate.not(String::isEmpty));
+        judUserProfileRow.put("mrd_deleted_time", mrdDeletedTimeOptional.map(Timestamp::valueOf).orElse(null));
+
         return  judUserProfileRow;
     }
 

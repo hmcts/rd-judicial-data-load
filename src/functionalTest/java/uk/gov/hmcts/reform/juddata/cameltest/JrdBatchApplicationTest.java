@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
@@ -326,13 +327,21 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
 
         List<Map<String, Object>> userProfiles = jdbcTemplate.queryForList(userProfileSql);
-        userProfiles.forEach(map -> {
-            assertTrue((Boolean)map.get("is_judge"));
-            assertTrue((Boolean)map.get("is_panel_member"));
-            assertFalse((Boolean)map.get("is_magistrate"));
-            assertEquals(Timestamp.valueOf("2008-07-18 00:00:00"), map.get("mrd_created_time"));
-            assertEquals(Timestamp.valueOf("2008-07-19 00:00:00"), map.get("mrd_updated_time"));
-            assertEquals(Timestamp.valueOf("2008-07-20 00:00:00"), map.get("mrd_deleted_time"));
-        });
+
+        var userProfile1 = userProfiles.get(0);
+        assertTrue((Boolean)userProfile1.get("is_judge"));
+        assertTrue((Boolean)userProfile1.get("is_panel_member"));
+        assertFalse((Boolean)userProfile1.get("is_magistrate"));
+        assertEquals(Timestamp.valueOf("2008-07-18 00:00:00"), userProfile1.get("mrd_created_time"));
+        assertEquals(Timestamp.valueOf("2008-07-19 00:00:00"), userProfile1.get("mrd_updated_time"));
+        assertEquals(Timestamp.valueOf("2008-07-20 00:00:00"), userProfile1.get("mrd_deleted_time"));
+
+        var userProfile2 = userProfiles.get(1);
+        assertTrue((Boolean)userProfile2.get("is_judge"));
+        assertTrue((Boolean)userProfile2.get("is_panel_member"));
+        assertFalse((Boolean)userProfile2.get("is_magistrate"));
+        assertNull(userProfile2.get("mrd_created_time"));
+        assertNull(userProfile2.get("mrd_updated_time"));
+        assertNull(userProfile2.get("mrd_deleted_time"));
     }
 }
