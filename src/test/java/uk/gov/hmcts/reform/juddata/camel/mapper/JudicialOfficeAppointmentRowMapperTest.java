@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.util.CommonUtils;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -43,6 +44,16 @@ class JudicialOfficeAppointmentRowMapperTest {
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", response.get("object_id"));
         assertEquals("Magistrate", response.get("appointment"));
         assertEquals("1", response.get("appointment_type"));
+        assertEquals("primary_location_1", response.get("primary_location"));
+        assertEquals("secondary_location_1", response.get("secondary_location"));
+        assertEquals("tertiary_location_1", response.get("tertiary_location"));
+        assertEquals(CommonUtils.getDateTimeStamp("2020-01-02 00:00:00"),response
+                .get("mrd_created_time"));
+        assertEquals(CommonUtils.getDateTimeStamp("2020-01-03 00:00:00"),response
+                .get("mrd_updated_time"));
+        assertEquals(CommonUtils.getDateTimeStamp("2020-01-04 00:00:00"),response
+                .get("mrd_deleted_time"));
+
     }
 
     @Test

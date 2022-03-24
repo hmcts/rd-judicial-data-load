@@ -34,10 +34,10 @@ route:
       sql:TRUNCATE judicial_office_appointment RESTART IDENTITY?dataSource=dataSource
     insert-sql:
       sql:INSERT INTO judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id,
-      appointment,appointment_type)
+      appointment,appointment_type,primary_location,secondary_location,tertiary_location,mrd_created_time,mrd_updated_time,mrd_deleted_time)
       VALUES(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
       TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc', :#personal_code, :#object_id,
-      :#appointment, :#appointment_type)?batch=true&dataSource=dataSource
+      :#appointment, :#appointment_type, :#primary_location, :#secondary_location, :#tertiary_location, :#mrd_created_time, :#mrd_updated_time, :#mrd_deleted_time)?batch=true&dataSource=dataSource
     update-sql:
       sql:UPDATE judicial_office_appointment appt SET epimms_id=jlm.epimms_id,service_code=jlm.service_code FROM (SELECT judicial_base_location_id,base_location_name,epimms_id,service_code FROM judicial_location_mapping) AS jlm WHERE jlm.judicial_base_location_id = appt.base_location_id?dataSource=dataSource
     blob-path:
@@ -80,6 +80,5 @@ route:
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper
     csv-binder-object: JudicialUserRoleType
-
 
 

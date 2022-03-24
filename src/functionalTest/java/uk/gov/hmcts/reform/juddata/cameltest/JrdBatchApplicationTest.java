@@ -344,4 +344,32 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         assertNull(userProfile2.get("mrd_updated_time"));
         assertNull(userProfile2.get("mrd_deleted_time"));
     }
+
+    @Test
+    void testMappingInJudicialOfficeAppointmentWithLocationAndMRDTime() throws Exception {
+        uploadBlobs(jrdBlobSupport, parentFiles, file);
+        uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
+        final JobParameters params = new JobParametersBuilder()
+                .addString(jobLauncherTestUtils.getJob().getName(), String.valueOf(System.currentTimeMillis()))
+                .addString(START_ROUTE, DIRECT_JRD)
+                .toJobParameters();
+        dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
+        validateDbRecordCountFor(jdbcTemplate, appointmentSql, 2);
+
+        final List<Object> primaryLocation = retrieveColumnValues(jdbcTemplate, appointmentSql, "primary_location");
+        assertEquals("primary_01", primaryLocation.get(0));
+
+        final List<Object> secondaryLocation = retrieveColumnValues(jdbcTemplate, appointmentSql, "secondary_location");
+        assertEquals("secondary_01", secondaryLocation.get(0));
+
+        final List<Object> tertiaryLocation = retrieveColumnValues(jdbcTemplate, appointmentSql, "tertiary_location");
+        assertEquals("tertiary_01", tertiaryLocation.get(0));
+
+        final List<Object> mrdCreatedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_created_time");
+        assertEquals(Timestamp.valueOf("2008-07-18 00:00:00"), mrdCreatedTime.get(0));
+        final List<Object> mrdUpdatedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_updated_time");
+        assertEquals(Timestamp.valueOf("2008-07-19 00:00:00"), mrdUpdatedTime.get(0));
+        final List<Object> mrdDeletedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_deleted_time");
+        assertEquals(Timestamp.valueOf("2008-07-20 00:00:00"), mrdDeletedTime.get(0));
+    }
 }
