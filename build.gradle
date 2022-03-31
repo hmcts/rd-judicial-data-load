@@ -280,7 +280,7 @@ dependencies {
     testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
 
     implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
 
@@ -362,7 +362,7 @@ dependencies {
     testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
     testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.2'
-    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
     testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation(group: 'org.yaml', name: 'snakeyaml') {
