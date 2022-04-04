@@ -17,6 +17,9 @@ class JudicialUserRoleTypeTest {
         assertEquals("Nationwide", judicialUserRoleType.getLocation());
         assertEquals("2018-05-02 00:00:00.000", judicialUserRoleType.getStartDate());
         assertEquals("2022-05-01 00:00:00", judicialUserRoleType.getEndDate());
+        assertEquals("2022-05-03 00:00:00", judicialUserRoleType.getMrdCreatedTime());
+        assertEquals("2022-05-04 00:00:00", judicialUserRoleType.getMrdUpdatedTime());
+        assertEquals("2022-05-05 00:00:00", judicialUserRoleType.getMrdDeletedTime());
     }
 
 }

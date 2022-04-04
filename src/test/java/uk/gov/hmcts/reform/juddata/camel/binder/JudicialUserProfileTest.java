@@ -35,6 +35,12 @@ class JudicialUserProfileTest {
         assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getLastWorkingDate());
         assertEquals(getDateTimeWithFormat(dateTime), judicialUserProfile.getExtractedDate());
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialUserProfile.getObjectId());
+        assertEquals(true, judicialUserProfile.isJudge());
+        assertEquals(true, judicialUserProfile.isPanelMember());
+        assertEquals(false, judicialUserProfile.isMagistrate());
+        assertEquals("2008-07-18 00:00:00", judicialUserProfile.getMrdCreatedTime());
+        assertEquals("2008-07-19 00:00:00", judicialUserProfile.getMrdUpdatedTime());
+        assertEquals("2008-07-20 00:00:00", judicialUserProfile.getMrdDeletedTime());
         assertTrue(judicialUserProfile.isActiveFlag());
 
         judicialUserProfile.setActiveFlag(false);
