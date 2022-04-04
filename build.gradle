@@ -330,8 +330,6 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }
     testImplementation group: 'com.h2database', name: 'h2'
-    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
-    // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testImplementation ("org.mockito:mockito-core:4.3.1") {
         exclude group: "net.bytebuddy", module: "byte-buddy"
         exclude group: "net.bytebuddy", module: "byte-buddy-agent"
