@@ -35,7 +35,6 @@ def versions = [
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
         springBoot         : '2.6.6',
-        springCore         : '5.3.18',
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.13.1',
@@ -243,7 +242,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
-    implementation group: 'org.springframework', name: 'spring-core', version: versions.springCore
+    implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
 
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
