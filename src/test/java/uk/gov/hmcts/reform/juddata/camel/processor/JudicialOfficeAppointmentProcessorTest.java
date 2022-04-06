@@ -302,8 +302,7 @@ class JudicialOfficeAppointmentProcessorTest {
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .containsAll(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).setFileStatus(any(), any());
-        verify(judicialOfficeAppointmentJsrValidatorInitializer)
-            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
+
     }
 
     @Test
