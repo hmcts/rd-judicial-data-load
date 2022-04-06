@@ -33,7 +33,6 @@ def versions = [
         lombok             : '1.18.22',
         reformLogging      : '5.1.9',
         serenity           : '2.0.23',
-        sonarPitest        : '0.5',
         springBoot         : '2.6.6',
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
@@ -348,6 +347,8 @@ dependencies {
     testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.12.7'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
+    testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
+
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
