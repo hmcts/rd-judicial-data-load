@@ -109,8 +109,31 @@ class JudicialUserProfileProcessorTest {
 
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    void should_return_JudicialUserProfileRow_response() {
 
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock1);
+        judicialUserProfiles.add(judicialUserProfileMock2);
+        when(messageMock.getBody()).thenReturn(judicialUserProfiles);
+        judicialUserProfileProcessor.process(exchangeMock);
+        assertThat((ArrayList)exchangeMock.getMessage().getBody()).hasSize(2);
+        when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
 
+    }
+
+    @Test
+    void should_return_JudicialUserProfileRow_with_single_record_response() {
+
+        when(messageMock.getBody()).thenReturn(judicialUserProfileMock1);
+
+        judicialUserProfileProcessor.process(exchangeMock);
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock1);
+
+        assertThat(((JudicialUserProfile) exchangeMock.getMessage().getBody())).isSameAs(judicialUserProfileMock1);
+    }
 
     @Test
     @SuppressWarnings("unchecked")
