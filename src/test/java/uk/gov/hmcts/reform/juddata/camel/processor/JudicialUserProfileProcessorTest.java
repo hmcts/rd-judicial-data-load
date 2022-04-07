@@ -113,6 +113,7 @@ class JudicialUserProfileProcessorTest {
     @SuppressWarnings("unchecked")
     void should_return_JudicialUserProfileRow_response() {
 
+        exchangeMock = mock(Exchange.class);
         List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
         judicialUserProfiles.add(judicialUserProfileMock1);
         judicialUserProfiles.add(judicialUserProfileMock2);
@@ -126,6 +127,7 @@ class JudicialUserProfileProcessorTest {
     @Test
     void should_return_JudicialUserProfileRow_with_single_record_response() {
 
+        exchangeMock = mock(Exchange.class);
         when(messageMock.getBody()).thenReturn(judicialUserProfileMock1);
 
         judicialUserProfileProcessor.process(exchangeMock);
