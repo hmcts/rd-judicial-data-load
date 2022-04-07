@@ -67,7 +67,6 @@ compileTestJava {
     options.compilerArgs << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
 }
 
-
 sourceSets {
 
     functionalTest {
