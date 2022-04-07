@@ -195,8 +195,6 @@ class JudicialOfficeAppointmentProcessorTest {
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
-        verify(judicialOfficeAppointmentJsrValidatorInitializer)
-            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
         verify(judicialOfficeAppointmentProcessor).audit(any(), any());
         verify(messageMock).setBody(any());
         verify(exchangeMock, times(4)).getMessage();
@@ -304,8 +302,7 @@ class JudicialOfficeAppointmentProcessorTest {
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .containsAll(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).setFileStatus(any(), any());
-        verify(judicialOfficeAppointmentJsrValidatorInitializer)
-            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
+
     }
 
     @Test
