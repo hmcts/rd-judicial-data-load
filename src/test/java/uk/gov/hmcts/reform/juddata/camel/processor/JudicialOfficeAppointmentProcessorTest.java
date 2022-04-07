@@ -305,7 +305,7 @@ class JudicialOfficeAppointmentProcessorTest {
             .containsAll(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).setFileStatus(any(), any());
         verify(judicialOfficeAppointmentJsrValidatorInitializer)
-            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
+            .auditJsrExceptions(any(), any(), any(), any());
     }
 
     @Test
@@ -336,7 +336,7 @@ class JudicialOfficeAppointmentProcessorTest {
         verify(judicialOfficeAppointmentProcessor, times(3))
                 .removeForeignKeyElements(anyList(), any(), anyString(), any(), any(), anyString());
         verify(judicialOfficeAppointmentJsrValidatorInitializer, times(1))
-            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
+            .auditJsrExceptions(any(), any(), any(), any());
         assertEquals(1, judicialOfficeAppointments.size());
     }
 
