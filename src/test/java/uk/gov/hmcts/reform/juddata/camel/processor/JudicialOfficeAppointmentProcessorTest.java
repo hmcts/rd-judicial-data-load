@@ -195,6 +195,8 @@ class JudicialOfficeAppointmentProcessorTest {
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
+        verify(judicialOfficeAppointmentJsrValidatorInitializer)
+            .auditJsrExceptions(any(List.class), any(String.class), any(String.class), any(Exchange.class));
         verify(judicialOfficeAppointmentProcessor).audit(any(), any());
         verify(messageMock).setBody(any());
         verify(exchangeMock, times(4)).getMessage();
