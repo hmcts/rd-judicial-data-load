@@ -196,7 +196,7 @@ class JudicialOfficeAppointmentProcessorTest {
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
         verify(judicialOfficeAppointmentJsrValidatorInitializer)
-            .auditJsrExceptions(any(List.class), any(String.class), any(String.class), any(Exchange.class));
+            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
         verify(judicialOfficeAppointmentProcessor).audit(any(), any());
         verify(messageMock).setBody(any());
         verify(exchangeMock, times(4)).getMessage();
