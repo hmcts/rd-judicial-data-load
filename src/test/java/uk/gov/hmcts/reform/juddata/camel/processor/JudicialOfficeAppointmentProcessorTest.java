@@ -61,6 +61,8 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_2;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_3;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_4;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_5;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_6;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.regions;
@@ -185,17 +187,20 @@ class JudicialOfficeAppointmentProcessorTest {
 
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
-        judicialOfficeAppointments.add(judicialOfficeAppointmentMock3);
+        judicialOfficeAppointments.add(createJudicialOfficeAppointmentMock(currentDate,
+            dateTime, PERID_5));
+        judicialOfficeAppointments.add(createJudicialOfficeAppointmentMock(currentDate,
+            dateTime, PERID_6));
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(3);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
         verify(judicialOfficeAppointmentJsrValidatorInitializer)
-            .auditJsrExceptions(any(List.class), any(String.class), any(String.class), any(Exchange.class));
+            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
         verify(judicialOfficeAppointmentProcessor).audit(any(), any());
         verify(messageMock).setBody(any());
         verify(exchangeMock, times(4)).getMessage();

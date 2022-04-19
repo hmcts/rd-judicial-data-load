@@ -23,6 +23,8 @@ public class JrdTestSupport {
     public static final String PERID_2 = "perid_2";
     public static final String PERID_3 = "perid_3";
     public static final String PERID_4 = "perid_4";
+    public static final String PERID_5 = "perid_5";
+    public static final String PERID_6 = "perid_6";
 
     public static final Map<String, String> baseLocations = ImmutableMap.of("perid_1", "baseLocationId_1",
         "perid_2", "baseLocationId_2", "perid_3", "baseLocationId_3");
