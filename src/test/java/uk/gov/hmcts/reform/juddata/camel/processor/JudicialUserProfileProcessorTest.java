@@ -61,6 +61,8 @@ class JudicialUserProfileProcessorTest {
 
     private JsrValidatorInitializer<JudicialUserProfile> judicialUserProfileJsrValidatorInitializer;
 
+    final PlatformTransactionManager platformTransactionManager = mock(PlatformTransactionManager.class);
+
     private JrdUserProfileUtil judicialUserProfileUtil;
 
     private Validator validator;
@@ -93,6 +95,9 @@ class JudicialUserProfileProcessorTest {
         validator = factory.getValidator();
         setField(judicialUserProfileJsrValidatorInitializer, "validator", validator);
         setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
+        setField(judicialUserProfileJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
+        setField(judicialUserProfileJsrValidatorInitializer, "platformTransactionManager",
+            platformTransactionManager);
         messageMock = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
