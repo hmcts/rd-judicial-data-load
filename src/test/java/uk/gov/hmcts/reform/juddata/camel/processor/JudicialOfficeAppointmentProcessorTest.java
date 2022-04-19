@@ -185,13 +185,12 @@ class JudicialOfficeAppointmentProcessorTest {
 
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
-        judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
         judicialOfficeAppointments.add(judicialOfficeAppointmentMock3);
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(3);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
