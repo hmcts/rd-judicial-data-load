@@ -92,6 +92,7 @@ class JudicialUserProfileProcessorTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         setField(judicialUserProfileJsrValidatorInitializer, "validator", validator);
+        setField(judicialUserProfileJsrValidatorInitializer, "camelContext", camelContext);
         messageMock = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
