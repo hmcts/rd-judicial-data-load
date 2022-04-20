@@ -61,8 +61,6 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_2;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_3;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_4;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_5;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_6;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.regions;
@@ -74,6 +72,7 @@ class JudicialOfficeAppointmentProcessorTest {
     Date currentDate = new Date();
 
     LocalDateTime dateTime = LocalDateTime.now();
+    final String logComponentName = "data_ingestion";
 
     JudicialOfficeAppointment judicialOfficeAppointmentMock1 = createJudicialOfficeAppointmentMock(currentDate,
         dateTime, PERID_1);
@@ -130,7 +129,8 @@ class JudicialOfficeAppointmentProcessorTest {
         judicialOfficeAppointmentProcessor = spy(new JudicialOfficeAppointmentProcessor());
         judicialOfficeAppointmentMock3.setRegionId("0");
         judicialOfficeAppointmentMock3.setBaseLocationId("0");
-        judicialOfficeAppointmentJsrValidatorInitializer = spy(new JsrValidatorInitializer<>());
+        judicialOfficeAppointmentJsrValidatorInitializer =
+            spy(new JsrValidatorInitializer<JudicialOfficeAppointment>());
 
         setField(judicialOfficeAppointmentProcessor,
             "judicialOfficeAppointmentJsrValidatorInitializer", judicialOfficeAppointmentJsrValidatorInitializer);
@@ -146,6 +146,8 @@ class JudicialOfficeAppointmentProcessorTest {
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(judicialOfficeAppointmentJsrValidatorInitializer, "platformTransactionManager",
             platformTransactionManager);
+        setField(judicialOfficeAppointmentJsrValidatorInitializer, "logComponentName",
+            "data_ingestion");
 
         messageMock = mock(Message.class);
         RouteProperties routeProperties = new RouteProperties();
@@ -186,21 +188,16 @@ class JudicialOfficeAppointmentProcessorTest {
     void should_return_JudicialOfficeAppointmentRow_response() {
 
         List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
-        //judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
-        judicialOfficeAppointments.add(createJudicialOfficeAppointmentMock(currentDate,
-            dateTime, PERID_5));
-        judicialOfficeAppointments.add(createJudicialOfficeAppointmentMock(currentDate,
-            dateTime, PERID_6));
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
 
         when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
         judicialUserProfileProcessor = new JudicialUserProfileProcessor();
         judicialOfficeAppointmentProcessor.process(exchangeMock);
-        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(2);
+        assertThat(((List) exchangeMock.getMessage().getBody())).hasSize(1);
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .isSameAs(judicialOfficeAppointments);
         verify(judicialOfficeAppointmentProcessor).filterInvalidUserProfileRecords(any(), any(), any(), any(), any());
-        verify(judicialOfficeAppointmentJsrValidatorInitializer)
-            .auditJsrExceptions(anyList(), anyString(), anyString(), any());
+
         verify(judicialOfficeAppointmentProcessor).audit(any(), any());
         verify(messageMock).setBody(any());
         verify(exchangeMock, times(4)).getMessage();
