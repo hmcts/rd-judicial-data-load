@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidAppointmentsEntry;
@@ -311,9 +312,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
                     return judicialRegionType;
                 })
                 .collect(Collectors.toList());
-        assertTrue(judicialRegionTypes.get(2).getMrdCreatedTime().contains("2018-05-02"));
-        assertTrue(judicialRegionTypes.get(2).getMrdUpdatedTime().contains("2022-05-01"));
-        assertTrue(judicialRegionTypes.get(2).getMrdDeletedTime().contains("2022-05-01"));
+        assertTrue(judicialRegionTypes.get(2).getMrdCreatedTime().contains("2022-04-28"));
+        assertTrue(judicialRegionTypes.get(2).getMrdUpdatedTime().contains("2022-04-28"));
+        assertTrue(judicialRegionTypes.get(2).getMrdDeletedTime().contains("2022-04-28"));
     }
 
     @Test
@@ -332,9 +333,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         assertTrue((Boolean)userProfile1.get("is_judge"));
         assertTrue((Boolean)userProfile1.get("is_panel_member"));
         assertFalse((Boolean)userProfile1.get("is_magistrate"));
-        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), userProfile1.get("mrd_created_time"));
-        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), userProfile1.get("mrd_updated_time"));
-        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), userProfile1.get("mrd_deleted_time"));
+        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), userProfile1.get("mrd_created_time"));
+        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), userProfile1.get("mrd_updated_time"));
+        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), userProfile1.get("mrd_deleted_time"));
 
         var userProfile2 = userProfiles.get(1);
         assertTrue((Boolean)userProfile2.get("is_judge"));
@@ -366,10 +367,10 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         assertEquals("tertiary_01", tertiaryLocation.get(0));
 
         final List<Object> mrdCreatedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_created_time");
-        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), mrdCreatedTime.get(0));
+        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), mrdCreatedTime.get(0));
         final List<Object> mrdUpdatedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_updated_time");
-        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), mrdUpdatedTime.get(0));
+        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), mrdUpdatedTime.get(0));
         final List<Object> mrdDeletedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_deleted_time");
-        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), mrdDeletedTime.get(0));
+        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), mrdDeletedTime.get(0));
     }
 }

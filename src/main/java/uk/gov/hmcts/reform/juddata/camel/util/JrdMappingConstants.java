@@ -8,7 +8,7 @@ public class JrdMappingConstants {
 
     public static final String DATE_PATTERN = "\\d{2}-\\d{2}-\\d{4}\\s\\d{2}:\\d{2}:\\d{2}";
 
-    public static final String DATE_TIME_FORMAT = "dd-MM-yyyy hh:mm:ss";
+    public static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
     public static final String ORCHESTRATED_ROUTE = "parent-route";
 

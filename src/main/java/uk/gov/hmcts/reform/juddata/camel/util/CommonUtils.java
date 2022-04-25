@@ -6,9 +6,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class CommonUtils {
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
-    private static final String DATETIME_PATTERN = "dd-MM-yyyy HH:mm:ss";
+public class CommonUtils {
 
     private  CommonUtils() {
     }
@@ -18,7 +18,7 @@ public class CommonUtils {
             return null;
         } else {
             LocalDateTime ldt = LocalDateTime.parse(dateTime,
-                    DateTimeFormatter.ofPattern(DATETIME_PATTERN));
+                    DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
             return Timestamp.valueOf(ldt);
         }
     }
