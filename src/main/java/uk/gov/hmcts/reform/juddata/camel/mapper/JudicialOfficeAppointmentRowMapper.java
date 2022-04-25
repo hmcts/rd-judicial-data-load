@@ -28,10 +28,10 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         judOfficeAppointmentRow.put("base_location_id", returnNullIfBlank(officeAppointment.getBaseLocationId()));
         judOfficeAppointmentRow.put("region_id", returnNullIfBlank(officeAppointment.getRegionId()));
         judOfficeAppointmentRow.put("is_prinicple_appointment", officeAppointment.getIsPrincipalAppointment());
-        judOfficeAppointmentRow.put("start_date", officeAppointment.getStartDate());
-        judOfficeAppointmentRow.put("end_date", officeAppointment.getEndDate());
+        judOfficeAppointmentRow.put("start_date", getDateTimeStamp(officeAppointment.getStartDate()));
+        judOfficeAppointmentRow.put("end_date", getDateTimeStamp(officeAppointment.getEndDate()));
         judOfficeAppointmentRow.put("active_flag", officeAppointment.isActiveFlag());
-        judOfficeAppointmentRow.put("extracted_date", officeAppointment.getExtractedDate());
+        judOfficeAppointmentRow.put("extracted_date", getDateTimeStamp(officeAppointment.getExtractedDate()));
         judOfficeAppointmentRow.put("created_date", getCurrentTimeStamp());
         judOfficeAppointmentRow.put("last_loaded_date", getCurrentTimeStamp());
         judOfficeAppointmentRow.put("personal_code", officeAppointment.getPersonalCode());

@@ -1,12 +1,10 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,26 +30,18 @@ public class JudicialUserProfileRowMapper implements IMapper {
         judUserProfileRow.put("post_nominals", judicialUserProfile.getPostNominals());
         judUserProfileRow.put("work_pattern", judicialUserProfile.getWorkPattern());
         judUserProfileRow.put("ejudiciary_email", judicialUserProfile.getEjudiciaryEmail());
-        judUserProfileRow.put("joining_date", judicialUserProfile.getJoiningDate());
-        judUserProfileRow.put("last_working_date", judicialUserProfile.getLastWorkingDate());
+        judUserProfileRow.put("joining_date", getDateTimeStamp(judicialUserProfile.getJoiningDate()));
+        judUserProfileRow.put("last_working_date", getDateTimeStamp(judicialUserProfile.getLastWorkingDate()));
         judUserProfileRow.put("active_flag", judicialUserProfile.isActiveFlag());
-        judUserProfileRow.put("extracted_date", judicialUserProfile.getExtractedDate());
+        judUserProfileRow.put("extracted_date", getDateTimeStamp(judicialUserProfile.getExtractedDate()));
         judUserProfileRow.put("object_id", judicialUserProfile.getObjectId());
         judUserProfileRow.put("is_judge", judicialUserProfile.isJudge());
         judUserProfileRow.put("is_panel_member", judicialUserProfile.isPanelMember());
         judUserProfileRow.put("is_magistrate", judicialUserProfile.isMagistrate());
+        judUserProfileRow.put("mrd_created_time", getDateTimeStamp(judicialUserProfile.getMrdCreatedTime()));
+        judUserProfileRow.put("mrd_updated_time", getDateTimeStamp(judicialUserProfile.getMrdUpdatedTime()));
+        judUserProfileRow.put("mrd_deleted_time", getDateTimeStamp(judicialUserProfile.getMrdDeletedTime()));
 
-        Optional<String> mrdCreatedTimeOptional =
-                Optional.ofNullable(judicialUserProfile.getMrdCreatedTime()).filter(Predicate.not(String::isEmpty));
-        judUserProfileRow.put("mrd_created_time", mrdCreatedTimeOptional.map(Timestamp::valueOf).orElse(null));
-
-        Optional<String> mrdUpdatedTimeOptional =
-                Optional.ofNullable(judicialUserProfile.getMrdUpdatedTime()).filter(Predicate.not(String::isEmpty));
-        judUserProfileRow.put("mrd_updated_time", mrdUpdatedTimeOptional.map(Timestamp::valueOf).orElse(null));
-
-        Optional<String> mrdDeletedTimeOptional =
-                Optional.ofNullable(judicialUserProfile.getMrdDeletedTime()).filter(Predicate.not(String::isEmpty));
-        judUserProfileRow.put("mrd_deleted_time", mrdDeletedTimeOptional.map(Timestamp::valueOf).orElse(null));
 
         return  judUserProfileRow;
     }

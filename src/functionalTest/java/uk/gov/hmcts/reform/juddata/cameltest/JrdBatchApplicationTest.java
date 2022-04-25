@@ -332,9 +332,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         assertTrue((Boolean)userProfile1.get("is_judge"));
         assertTrue((Boolean)userProfile1.get("is_panel_member"));
         assertFalse((Boolean)userProfile1.get("is_magistrate"));
-        assertEquals(Timestamp.valueOf("2008-07-18 00:00:00"), userProfile1.get("mrd_created_time"));
-        assertEquals(Timestamp.valueOf("2008-07-19 00:00:00"), userProfile1.get("mrd_updated_time"));
-        assertEquals(Timestamp.valueOf("2008-07-20 00:00:00"), userProfile1.get("mrd_deleted_time"));
+        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), userProfile1.get("mrd_created_time"));
+        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), userProfile1.get("mrd_updated_time"));
+        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), userProfile1.get("mrd_deleted_time"));
 
         var userProfile2 = userProfiles.get(1);
         assertTrue((Boolean)userProfile2.get("is_judge"));
@@ -366,10 +366,10 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         assertEquals("tertiary_01", tertiaryLocation.get(0));
 
         final List<Object> mrdCreatedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_created_time");
-        assertEquals(Timestamp.valueOf("2008-07-18 00:00:00"), mrdCreatedTime.get(0));
+        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), mrdCreatedTime.get(0));
         final List<Object> mrdUpdatedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_updated_time");
-        assertEquals(Timestamp.valueOf("2008-07-19 00:00:00"), mrdUpdatedTime.get(0));
+        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), mrdUpdatedTime.get(0));
         final List<Object> mrdDeletedTime = retrieveColumnValues(jdbcTemplate, appointmentSql, "mrd_deleted_time");
-        assertEquals(Timestamp.valueOf("2008-07-20 00:00:00"), mrdDeletedTime.get(0));
+        assertEquals(Timestamp.valueOf("28-04-2022 00:00:00"), mrdDeletedTime.get(0));
     }
 }
