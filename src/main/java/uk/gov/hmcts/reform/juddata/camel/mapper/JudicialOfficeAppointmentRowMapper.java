@@ -5,9 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.mapper.IMapper;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAppointment;
+import uk.gov.hmcts.reform.juddata.camel.util.CommonUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getCurrentTimeStamp;
@@ -41,9 +44,21 @@ public class JudicialOfficeAppointmentRowMapper implements IMapper {
         judOfficeAppointmentRow.put("primary_location", officeAppointment.getPrimaryLocation());
         judOfficeAppointmentRow.put("secondary_location", officeAppointment.getSecondaryLocation());
         judOfficeAppointmentRow.put("tertiary_location", officeAppointment.getTertiaryLocation());
-        judOfficeAppointmentRow.put("mrd_created_time", getDateTimeStamp(officeAppointment.getMrdCreatedTime()));
-        judOfficeAppointmentRow.put("mrd_updated_time", getDateTimeStamp(officeAppointment.getMrdUpdatedTime()));
-        judOfficeAppointmentRow.put("mrd_deleted_time", getDateTimeStamp(officeAppointment.getMrdDeletedTime()));
+
+        Optional<String> mrdCreatedTimeOptional =
+                Optional.ofNullable(officeAppointment.getMrdCreatedTime()).filter(Predicate.not(String::isEmpty));
+        judOfficeAppointmentRow.put("mrd_created_time", mrdCreatedTimeOptional.map(CommonUtils::getDateTimeStamp)
+                .orElse(null));
+
+        Optional<String> mrdUpdatedTimeOptional =
+                Optional.ofNullable(officeAppointment.getMrdUpdatedTime()).filter(Predicate.not(String::isEmpty));
+        judOfficeAppointmentRow.put("mrd_updated_time", mrdUpdatedTimeOptional.map(CommonUtils::getDateTimeStamp)
+                .orElse(null));
+
+        Optional<String> mrdDeletedTimeOptional =
+                Optional.ofNullable(officeAppointment.getMrdDeletedTime()).filter(Predicate.not(String::isEmpty));
+        judOfficeAppointmentRow.put("mrd_deleted_time", mrdDeletedTimeOptional.map(CommonUtils::getDateTimeStamp)
+                .orElse(null));
 
         return  judOfficeAppointmentRow;
     }
