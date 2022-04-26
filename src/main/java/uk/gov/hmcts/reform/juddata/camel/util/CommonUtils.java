@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +15,7 @@ public class CommonUtils {
 
     public static Timestamp getDateTimeStamp(String dateTime) {
 
-        if (!dateTime.isBlank()) {
+        if (!StringUtils.isBlank(dateTime)) {
             LocalDateTime ldt = LocalDateTime.parse(dateTime,
                     DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
             return Timestamp.valueOf(ldt);
