@@ -32,3 +32,5 @@ The project uses Gradle as a build tool. It already contains ./gradlew wrapper s
 
 To build the project execute the following command:
   ./gradlew build 
+
+
