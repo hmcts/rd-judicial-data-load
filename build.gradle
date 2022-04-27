@@ -14,7 +14,7 @@ plugins {
     id 'jacoco'
     id 'pmd'
     id "com.github.ben-manes.versions" version "0.41.0"
-    id 'info.solidsoft.pitest' version '1.6.0'
+    id 'info.solidsoft.pitest' version '1.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '2.8'
     id "org.flywaydb.flyway" version "6.2.0"
@@ -30,7 +30,7 @@ apply plugin: "io.spring.dependency-management"
 
 
 def versions = [
-        lombok             : '1.18.6',
+        lombok             : '1.18.22',
         reformLogging      : '5.1.9',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
@@ -49,8 +49,15 @@ def jarName = 'rd-judicial-data-load.jar'
 group = 'uk.gov.hmcts.reform.juddata'
 version = '0.0.1'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+tasks.withType(JavaExec).configureEach {
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 compileJava {
     options.compilerArgs << '-parameters' << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
@@ -59,7 +66,6 @@ compileJava {
 compileTestJava {
     options.compilerArgs << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
 }
-
 
 sourceSets {
 
@@ -156,15 +162,15 @@ task fortifyScan(type: JavaExec)  {
 }
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.7"
 }
 
 jacocoTestReport {
     executionData(test)
     reports {
-        xml.enabled = true
-        csv.enabled = false
-        xml.destination = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        xml.required = true
+        csv.required = false
+        xml.outputLocation = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
@@ -192,7 +198,7 @@ pitest {
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
-    mutationThreshold = 85
+    mutationThreshold = 84
     useClasspathFile = true
 }
 
@@ -253,7 +259,7 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.2'
     implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
     implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-core') {
         version {
@@ -284,6 +290,8 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.11.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
@@ -340,11 +348,21 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }
     testImplementation group: 'com.h2database', name: 'h2'
-    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
-    // https://mvnrepository.com/artifact/org.mockito/mockito-core
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.2.0'
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.2'
-    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
+    testImplementation ("org.mockito:mockito-core:4.3.1") {
+        exclude group: "net.bytebuddy", module: "byte-buddy"
+        exclude group: "net.bytebuddy", module: "byte-buddy-agent"
+    }
+    testImplementation ("org.mockito:mockito-inline:4.3.1") {
+        exclude group: "net.bytebuddy", module: "byte-buddy"
+        exclude group: "net.bytebuddy", module: "byte-buddy-agent"
+    }
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.7'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.12.7'
+
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.3.1'
+
+
+    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
