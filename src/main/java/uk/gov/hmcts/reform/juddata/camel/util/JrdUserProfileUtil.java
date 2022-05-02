@@ -53,11 +53,6 @@ import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_H
 @Component
 public class JrdUserProfileUtil {
 
-    private static final String ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
-            = "Profiles with one Object ID having multiple Personal Codes";
-    private static final String ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
-            = "Profiles with one Personal Code having multiple Object IDs";
-
     @Autowired
     @Qualifier("springJdbcTransactionManager")
     PlatformTransactionManager platformTransactionManager;
