@@ -63,6 +63,8 @@ class JrdUserProfileUtilTest {
     @Mock
     EmailServiceImpl emailService;
 
+    final EmailTemplate emailTemplate = mock(EmailTemplate.class);
+
     ApplicationContext applicationContext = mock(ConfigurableApplicationContext.class);
     ConfigurableListableBeanFactory configurableListableBeanFactory = mock(ConfigurableListableBeanFactory.class);
     EmailConfiguration.MailTypeConfig mailTypeConfig = new EmailConfiguration.MailTypeConfig();
@@ -84,6 +86,7 @@ class JrdUserProfileUtilTest {
 
         setField(jrdUserProfileUtil, "applicationContext", applicationContext);
 
+        setField(jrdUserProfileUtil, "emailTemplate", emailTemplate);
         when(exchangeMock.getIn()).thenReturn(messageMock);
         lenient().when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
         lenient().when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
@@ -255,7 +258,7 @@ class JrdUserProfileUtilTest {
     @Test
     void test_sendEmail_when_invalid_records() {
         when(emailService.sendEmail(any(Email.class))).thenReturn(202);
-
+        when(emailTemplate.getEmailBody(anyString(), any())).thenReturn("email template");
         assertEquals(202, jrdUserProfileUtil
                 .sendEmail(judicialUserProfiles));
         verify(emailService, times(1)).sendEmail(any(Email.class));

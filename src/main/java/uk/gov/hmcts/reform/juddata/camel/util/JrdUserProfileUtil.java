@@ -45,19 +45,13 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LINE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_FIELD;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.USERPROFILE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_PLAIN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_HTML;
 
 @Component
 public class JrdUserProfileUtil {
-
-    private static final String ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE
-            = "Profiles with one Object ID having multiple Personal Codes";
-    private static final String ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE
-            = "Profiles with one Personal Code having multiple Object IDs";
 
     @Autowired
     @Qualifier("springJdbcTransactionManager")
@@ -68,6 +62,9 @@ public class JrdUserProfileUtil {
 
     @Autowired
     CamelContext camelContext;
+
+    @Autowired
+    EmailTemplate emailTemplate;
 
     @Autowired
     @Qualifier("springJdbcTemplate")
@@ -225,10 +222,11 @@ public class JrdUserProfileUtil {
 
         if (mailTypeConfig.isEnabled()) {
             Email email = Email.builder()
-                    .contentType(CONTENT_TYPE_PLAIN)
+                    .contentType(CONTENT_TYPE_HTML)
                     .from(mailTypeConfig.getFrom())
                     .to(mailTypeConfig.getTo())
-                    .messageBody(String.format(mailTypeConfig.getBody(), createMessageBody(userProfiles)))
+                    .messageBody(emailTemplate.getEmailBody(mailTypeConfig.getTemplate(),Map.of("objectIds",
+                            filterByObjectId(userProfiles),"personalCodes",filterByPersonalCode(userProfiles))))
                     .subject(String.format(mailTypeConfig.getSubject(), LocalDate.now()
                             .format(DateTimeFormatter.ofPattern(DATE_PATTERN))))
                     .build();
@@ -236,37 +234,4 @@ public class JrdUserProfileUtil {
         }
         return -1;
     }
-
-    private String createMessageBody(List<JudicialUserProfile> userProfiles) {
-        var messageBody = new StringBuilder();
-        var invalidObjectIdRows =  new StringBuilder();
-        var invalidPersonalCodeRows =  new StringBuilder();
-
-        messageBody.append(NEW_LINE);
-        messageBody.append(ONE_OBJECT_ID_HAVING_MULTIPLE_PERSONAL_CODES_MESSAGE);
-        messageBody.append(NEW_LINE);
-        messageBody.append(createRows(invalidObjectIdRows, filterByObjectId(userProfiles)));
-        messageBody.append(NEW_LINE);
-        messageBody.append("\n=====================================================================================\n");
-        messageBody.append(NEW_LINE);
-        messageBody.append(ONE_PERSONAL_CODE_HAVING_MULTIPLE_OBJECT_IDS_MESSAGE);
-        messageBody.append(NEW_LINE);
-        messageBody.append(createRows(invalidPersonalCodeRows, filterByPersonalCode(userProfiles)));
-        messageBody.append(NEW_LINE);
-
-        return messageBody.toString();
-    }
-
-    private String createRows(StringBuilder messageBody, List<JudicialUserProfile> userProfiles) {
-        messageBody.append(String.format("%-30s %50s %70s %n", "Per Code", "Object ID", "Per Id"));
-
-        userProfiles.forEach(judicialUserProfile ->
-                messageBody.append(String.format("%-30s ",judicialUserProfile.getPersonalCode()))
-                        .append(String.format("%50s ",judicialUserProfile.getObjectId()))
-                        .append(String.format("%40s",judicialUserProfile.getPerId()))
-                        .append("\n"));
-
-        return messageBody.toString();
-    }
-
 }
