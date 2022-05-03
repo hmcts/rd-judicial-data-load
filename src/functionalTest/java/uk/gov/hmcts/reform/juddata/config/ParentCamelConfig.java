@@ -4,6 +4,7 @@ import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import com.launchdarkly.sdk.server.LDClient;
+import freemarker.cache.ClassTemplateLoader;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
@@ -380,7 +381,10 @@ public class ParentCamelConfig {
 
     @Bean(name = "emailConfigBean")
     freemarker.template.Configuration configuration() {
-        return new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_31);
+        freemarker.template.Configuration configuration =
+                new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_31);
+        configuration.setTemplateLoader(new ClassTemplateLoader(ParentCamelConfig.class, "/"));
+        return configuration;
     }
 
     @Bean

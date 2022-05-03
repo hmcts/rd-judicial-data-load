@@ -1,6 +1,7 @@
 
 package uk.gov.hmcts.reform.juddata.cameltest;
 
+import freemarker.template.Configuration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
@@ -102,6 +103,9 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
 
     @Mock
     EmailServiceImpl emailService;
+
+    @Mock
+    Configuration emailConfigBean;
 
     @Test
     void testTaskletException() throws Exception {
@@ -365,6 +369,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
     void testUserProfileWithInvalidPersonalCodeObjectId() throws Exception {
         setField(jrdUserProfileUtil, "emailService", emailService);
         Mockito.when(emailService.sendEmail(ArgumentMatchers.any(Email.class))).thenReturn(200);
+        Mockito.when(emailConfigBean.getTemplate(ArgumentMatchers.anyString())).thenReturn(null);
 
         uploadBlobs(jrdBlobSupport, parentFiles, fileWithInvalidPerCodeObjectIds);
         uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
