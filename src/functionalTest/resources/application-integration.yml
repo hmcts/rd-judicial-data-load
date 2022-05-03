@@ -231,7 +231,7 @@ email:
         - pradipta.dey@hmcts.net
         - candyliyen.kuek@hmcts.net
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
-      body: "Following JO profiles were deleted : \n %s"
+      template: simple-template-userProfile.ftl
     lowerLevelAuth:
       enabled: true
       from: ${MAIL_FROM:no-reply@mail-rd-nonprod.platform.hmcts.net}
