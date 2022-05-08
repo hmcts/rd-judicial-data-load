@@ -183,6 +183,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         var ticketCodes = retrieveColumnValues(jdbcTemplate, ticketCodeSql, "ticket_code");
         assertTrue(ticketCodes.containsAll(List.of("366","373","289")));
+        assertFalse(ticketCodes.containsAll(List.of("300","396")));
     }
 
     @Test
