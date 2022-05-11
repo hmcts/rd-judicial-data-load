@@ -243,9 +243,9 @@ public interface ParentIntegrationTestSupport {
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
-        assertTrue(actualAuthorisations.get(1).getMrdCreatedTime().contains("2022-04-28"));
-        assertTrue(actualAuthorisations.get(1).getMrdUpdatedTime().contains("2022-04-28"));
-        assertTrue(actualAuthorisations.get(1).getMrdDeletedTime().contains("2022-04-28"));
+        assertTrue(actualAuthorisations.get(3).getMrdCreatedTime().contains("2022-04-28"));
+        assertTrue(actualAuthorisations.get(3).getMrdUpdatedTime().contains("2022-04-28"));
+        assertTrue(actualAuthorisations.get(3).getMrdDeletedTime().contains("2022-04-28"));
 
         // assertEquals(judicialAuthorisationList.get());
     }
