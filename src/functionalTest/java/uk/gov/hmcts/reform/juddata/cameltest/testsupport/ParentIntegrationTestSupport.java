@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,10 +30,11 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 public interface ParentIntegrationTestSupport {
 
@@ -240,9 +243,9 @@ public interface ParentIntegrationTestSupport {
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
-        assertTrue(actualAuthorisations.get(1).getMrdCreatedTime().contains("2020-01-01 00:00:00"));
-        assertTrue(actualAuthorisations.get(1).getMrdUpdatedTime().contains("2021-02-01 10:15:20"));
-        assertTrue(actualAuthorisations.get(1).getMrdDeletedTime().contains("2022-03-01 01:02:03"));
+        assertTrue(actualAuthorisations.get(3).getMrdCreatedTime().contains("2022-04-28"));
+        assertTrue(actualAuthorisations.get(3).getMrdUpdatedTime().contains("2022-04-28"));
+        assertTrue(actualAuthorisations.get(3).getMrdDeletedTime().contains("2022-04-28"));
 
         // assertEquals(judicialAuthorisationList.get());
     }
@@ -305,7 +308,9 @@ public interface ParentIntegrationTestSupport {
         } else if (timeStampField && isBlank(fieldValue)) {
             return null;
         } else if (timeStampField && !isBlank(fieldValue)) {
-            return Timestamp.valueOf(fieldValue).toString();
+            LocalDateTime ldt = LocalDateTime.parse(fieldValue,
+                    DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
+            return Timestamp.valueOf(ldt).toString();
         } else {
             return fieldValue;
         }

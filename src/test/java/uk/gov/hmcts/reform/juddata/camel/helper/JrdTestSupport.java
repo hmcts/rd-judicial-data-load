@@ -52,17 +52,17 @@ public class JrdTestSupport {
         judicialUserProfileMock.setPostNominals("postNominals");
         judicialUserProfileMock.setWorkPattern("workpatterns");
         judicialUserProfileMock.setEjudiciaryEmail("some@hmcts.net");
-        judicialUserProfileMock.setJoiningDate(getDateWithFormat(currentDate, DATE_FORMAT));
-        judicialUserProfileMock.setLastWorkingDate(getDateWithFormat(currentDate, DATE_FORMAT));
+        judicialUserProfileMock.setJoiningDate("28-04-2022 00:00:00");
+        judicialUserProfileMock.setLastWorkingDate("28-06-2022 00:00:00");
         judicialUserProfileMock.setActiveFlag(true);
-        judicialUserProfileMock.setExtractedDate(getDateTimeWithFormat(dateTime));
+        judicialUserProfileMock.setExtractedDate("28-05-2022 00:00:00");
         judicialUserProfileMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         judicialUserProfileMock.setJudge(true);
         judicialUserProfileMock.setPanelMember(true);
         judicialUserProfileMock.setMagistrate(false);
-        judicialUserProfileMock.setMrdCreatedTime("2008-07-18 00:00:00");
-        judicialUserProfileMock.setMrdUpdatedTime("2008-07-19 00:00:00");
-        judicialUserProfileMock.setMrdDeletedTime("2008-07-20 00:00:00");
+        judicialUserProfileMock.setMrdCreatedTime("28-04-2022 00:00:00");
+        judicialUserProfileMock.setMrdUpdatedTime("28-05-2022 00:00:00");
+        judicialUserProfileMock.setMrdDeletedTime("28-06-2022 00:00:00");
         return judicialUserProfileMock;
     }
 
@@ -74,9 +74,9 @@ public class JrdTestSupport {
         judicialBaseLocationType.setCircuit("circuit");
         judicialBaseLocationType.setCourtName("courtName");
         judicialBaseLocationType.setCourtType("courtType");
-        judicialBaseLocationType.setMrdCreatedTime("2020-01-01 00:00:00");
-        judicialBaseLocationType.setMrdUpdatedTime("2020-01-01 00:00:00");
-        judicialBaseLocationType.setMrdDeletedTime("2020-01-01 00:00:00");
+        judicialBaseLocationType.setMrdCreatedTime("28-04-2022 00:00:00");
+        judicialBaseLocationType.setMrdUpdatedTime("28-05-2022 00:00:00");
+        judicialBaseLocationType.setMrdDeletedTime("28-06-2022 00:00:00");
         return judicialBaseLocationType;
     }
 
@@ -91,20 +91,20 @@ public class JrdTestSupport {
         judicialOfficeAppointmentMock.setBaseLocationId(baseLocations.get(perId));
         judicialOfficeAppointmentMock.setRegionId(regions.get(perId));
         judicialOfficeAppointmentMock.setIsPrincipalAppointment(true);
-        judicialOfficeAppointmentMock.setStartDate(getDateWithFormat(currentDate, DATE_FORMAT));
-        judicialOfficeAppointmentMock.setEndDate(getDateWithFormat(currentDate, DATE_FORMAT));
+        judicialOfficeAppointmentMock.setStartDate("28-04-2022 00:00:00");
+        judicialOfficeAppointmentMock.setEndDate("28-04-2022 00:00:00");
         judicialOfficeAppointmentMock.setActiveFlag(true);
         judicialOfficeAppointmentMock.setPersonalCode(PERSONAL_CODE);
-        judicialOfficeAppointmentMock.setExtractedDate(getDateTimeWithFormat(dateTime));
+        judicialOfficeAppointmentMock.setExtractedDate("28-04-2022 00:00:00");
         judicialOfficeAppointmentMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
         judicialOfficeAppointmentMock.setAppointment("Magistrate");
         judicialOfficeAppointmentMock.setAppointmentType("1");
         judicialOfficeAppointmentMock.setPrimaryLocation("primary_location_1");
         judicialOfficeAppointmentMock.setSecondaryLocation("secondary_location_1");
         judicialOfficeAppointmentMock.setTertiaryLocation("tertiary_location_1");
-        judicialOfficeAppointmentMock.setMrdCreatedTime("2020-01-02 00:00:00");
-        judicialOfficeAppointmentMock.setMrdUpdatedTime("2020-01-03 00:00:00");
-        judicialOfficeAppointmentMock.setMrdDeletedTime("2020-01-04 00:00:00");
+        judicialOfficeAppointmentMock.setMrdCreatedTime("28-04-2022 00:00:00");
+        judicialOfficeAppointmentMock.setMrdUpdatedTime("28-05-2022 00:00:00");
+        judicialOfficeAppointmentMock.setMrdDeletedTime("28-06-2022 00:00:00");
 
         return judicialOfficeAppointmentMock;
     }
@@ -120,9 +120,9 @@ public class JrdTestSupport {
         judicialOfficeAuthorisation.setPersonalCode(PERSONAL_CODE);
         judicialOfficeAuthorisation.setTicketId(12345L);
         judicialOfficeAuthorisation.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
-        judicialOfficeAuthorisation.setMrdCreatedTime("2020-01-02 00:00:00");
-        judicialOfficeAuthorisation.setMrdUpdatedTime("2020-01-03 00:00:00");
-        judicialOfficeAuthorisation.setMrdDeletedTime("2020-01-04 00:00:00");
+        judicialOfficeAuthorisation.setMrdCreatedTime("28-04-2022 00:00:00");
+        judicialOfficeAuthorisation.setMrdUpdatedTime("28-05-2022 00:00:00");
+        judicialOfficeAuthorisation.setMrdDeletedTime("28-06-2022 00:00:00");
         return judicialOfficeAuthorisation;
     }
 
@@ -158,9 +158,9 @@ public class JrdTestSupport {
         judicialRegionType.setRegionDescCy("region_desc_cy");
         judicialRegionType.setRegionDescEn("region_desc_en");
         judicialRegionType.setRegionId("regionId");
-        judicialRegionType.setMrdCreatedTime("2022-05-03 00:00:00");
-        judicialRegionType.setMrdUpdatedTime("2022-05-01 00:00:00");
-        judicialRegionType.setMrdDeletedTime("2022-05-04 00:00:00");
+        judicialRegionType.setMrdCreatedTime("28-04-2022 00:00:00");
+        judicialRegionType.setMrdUpdatedTime("28-05-2022 00:00:00");
+        judicialRegionType.setMrdDeletedTime("28-06-2022 00:00:00");
         return judicialRegionType;
     }
 
@@ -180,11 +180,11 @@ public class JrdTestSupport {
         judicialUserRoleType.setPerId("46804");
         judicialUserRoleType.setTitle("Family Course Tutor (JC)");
         judicialUserRoleType.setLocation("Nationwide");
-        judicialUserRoleType.setStartDate("2018-05-02 00:00:00.000");
-        judicialUserRoleType.setEndDate("2022-05-01 00:00:00");
-        judicialUserRoleType.setMrdCreatedTime("2022-05-03 00:00:00");
-        judicialUserRoleType.setMrdUpdatedTime("2022-05-04 00:00:00");
-        judicialUserRoleType.setMrdDeletedTime("2022-05-05 00:00:00");
+        judicialUserRoleType.setStartDate("28-04-2022 00:00:00");
+        judicialUserRoleType.setEndDate("28-06-2022 00:00:00");
+        judicialUserRoleType.setMrdCreatedTime("28-04-2022 00:00:00");
+        judicialUserRoleType.setMrdUpdatedTime("28-05-2022 00:00:00");
+        judicialUserRoleType.setMrdDeletedTime("28-06-2022 00:00:00");
         return judicialUserRoleType;
     }
 }

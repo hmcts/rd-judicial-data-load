@@ -14,8 +14,8 @@ class JudicialRegionTypeTest {
         assertEquals("regionId", judicialRegionType.getRegionId());
         assertEquals("region_desc_en", judicialRegionType.getRegionDescEn());
         assertEquals("region_desc_cy", judicialRegionType.getRegionDescCy());
-        assertEquals("2022-05-03 00:00:00", judicialRegionType.getMrdCreatedTime());
-        assertEquals("2022-05-01 00:00:00", judicialRegionType.getMrdUpdatedTime());
-        assertEquals("2022-05-04 00:00:00", judicialRegionType.getMrdDeletedTime());
+        assertEquals("28-04-2022 00:00:00", judicialRegionType.getMrdCreatedTime());
+        assertEquals("28-05-2022 00:00:00", judicialRegionType.getMrdUpdatedTime());
+        assertEquals("28-06-2022 00:00:00", judicialRegionType.getMrdDeletedTime());
     }
 }
