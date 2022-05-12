@@ -38,7 +38,7 @@ def versions = [
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.13.1',
-        launchDarklySdk    : "5.2.2",
+        launchDarklySdk    : "5.8.1",
         camel              : '3.8.0',
         log4j              : '2.17.1'
 ]
@@ -157,7 +157,7 @@ task fortifyScan(type: JavaExec)  {
   main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
   classpath += sourceSets.test.runtimeClasspath
   jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
-  // This is a temporary fix to prevent the nightly build from failing if the Fortify scan detects issues
+  // This is a temporary fix to prevent the nightly build from failing if the Fortify scan detects issues 
   ignoreExitValue = true
 }
 
