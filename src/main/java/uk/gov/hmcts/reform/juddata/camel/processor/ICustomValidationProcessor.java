@@ -163,10 +163,10 @@ public interface ICustomValidationProcessor<T> {
         return p.getActualTypeArguments()[0];
     }
 
-    default void setFileStatus(Exchange exchange, ApplicationContext applicationContext) {
+    default void setFileStatus(Exchange exchange, ApplicationContext applicationContext, String auditStatus) {
         RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         FileStatus fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
-        fileStatus.setAuditStatus(PARTIAL_SUCCESS);
+        fileStatus.setAuditStatus(auditStatus);
         registerFileStatusBean(applicationContext, routeProperties.getFileName(), fileStatus,
             exchange.getContext());
     }
