@@ -626,13 +626,13 @@ INSERT INTO judicial_ticket_code_mapping (ticket_code,jurisdiction,lower_level,m
 UPDATE judicial_location_mapping  SET service_code = NULL WHERE service_code = '';
 
 INSERT INTO judicial_location_mapping (epimms_id,judicial_base_location_id,building_location_name,base_location_name,service_code,mrd_created_time,mrd_updated_time,mrd_deleted_time) VALUES
-	 ('736719','916','LEAMINGTON SPA MAGISTRATES'' COURT','Warwick Combined Court - County',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('232580','981','PRESTON COMBINED COURT CENTRE','Preston Combined Court - Crown',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('415903','1191','LEYLAND FAMILY COURT','Leyland Family Hearing Centre',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('450049','1447','ALDERSHOT JUSTICE CENTRE','Aldershot Justice Centre - Crown',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('450049','1448','ALDERSHOT JUSTICE CENTRE','Aldershot Justice Centre - County',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('640119','1449','DONCASTER JUSTICE CENTRE NORTH','Doncaster Justice Centre North',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('45900','1450','DONCASTER JUSTICE CENTRE SOUTH','Doncaster Justice Centre South',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('490237','1451','POOLE MAGISTRATES COURT','Poole Magistrates Court',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL),
-	 ('366796','1452','NEWCASTLE CIVIL & FAMILY COURTS AND TRIBUNALS CENTRE','Newcastle Civil & Family Courts & Tribunals Centre',NULL,'2022-04-04 00:00:00','2022-04-04 00:00:00',NULL);
-commit;
+('736719','916','LEAMINGTON SPA MAGISTRATES'' COURT','Warwick Combined Court - County',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('232580','981','PRESTON COMBINED COURT CENTRE','Preston Combined Court - Crown',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('415903','1191','LEYLAND FAMILY COURT','Leyland Family Hearing Centre',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('450049','1447','ALDERSHOT JUSTICE CENTRE','Aldershot Justice Centre - Crown',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('450049','1448','ALDERSHOT JUSTICE CENTRE','Aldershot Justice Centre - County',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('640119','1449','DONCASTER JUSTICE CENTRE NORTH','Doncaster Justice Centre North',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('45900','1450','DONCASTER JUSTICE CENTRE SOUTH','Doncaster Justice Centre South',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('490237','1451','POOLE MAGISTRATES COURT','Poole Magistrates Court',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
+('366796','1452','NEWCASTLE CIVIL & FAMILY COURTS AND TRIBUNALS CENTRE','Newcastle Civil & Family Courts & Tribunals Centre',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL);
+COMMIT;
