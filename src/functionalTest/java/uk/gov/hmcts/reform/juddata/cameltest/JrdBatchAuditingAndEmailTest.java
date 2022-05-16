@@ -29,7 +29,7 @@ import uk.gov.hmcts.reform.juddata.configuration.BatchConfig;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.JUDICIAL_REF_DATA_ORCHESTRATION;
