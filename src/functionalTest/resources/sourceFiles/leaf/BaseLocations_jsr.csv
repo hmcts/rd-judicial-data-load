@@ -1,8 +1,8 @@
-CourtID,Court/Bench,CourtType,Circuit,Area
-1,"Aberconwy","Old Gwynedd","Gwynedd","LJA"
-2,"Aldridge and Brownhills","Nottinghamshire","Nottinghamshire","LJA"
-,"Alnwick","Northumbria","Northumberland","LJA"
-,"Ampthill","Bedfordshire","Bedfordshire","LJA"
-5,,"Cumbria","Cumbria","LJA"
-747,"Royal Courts of Justice - High Court - Chancery","High Court Chancery","London","Courts"
-1030,"Immigration and Asylum First Tier","First Tier Tribunal","First Tier Tribunal","Tribunals"
+CourtID,Court/Bench,CourtType,Circuit,Area,mrd_created_time,mrd_updated_time,mrd_deleted_time
+1,"Aberconwy","Old Gwynedd","Gwynedd","LJA",28-04-2022 01:57:04,28-04-2022 01:57:04,28-04-2022 01:57:04
+2,"Aldridge and Brownhills","Nottinghamshire","Nottinghamshire","LJA",28-04-2022 01:57:04,28-04-2022 01:57:04,28-04-2022 01:57:04
+,"Alnwick","Northumbria","Northumberland","LJA",28-04-2022 01:57:04,28-04-2022 01:57:04,28-04-2022 01:57:04
+,"Ampthill","Bedfordshire","Bedfordshire","LJA",28-04-2022 01:57:04,28-04-2022 01:57:04,28-04-2022 01:57:04
+5,,"Cumbria","Cumbria","LJA",28-04-2022 01:57:04,28-04-2022 01:57:04,28-04-2022 01:57:04
+747,"Royal Courts of Justice - High Court - Chancery","High Court Chancery","London","Courts",28-04-2022 01:57:04,28-04-2022 01:57:04,28-04-2022 01:57:04
+1030,"Immigration and Asylum First Tier","First Tier Tribunal","First Tier Tribunal","Tribunals",28-04-2022 01:57:04,28-04-2022 01:57:04,28-04-2022 01:57:04

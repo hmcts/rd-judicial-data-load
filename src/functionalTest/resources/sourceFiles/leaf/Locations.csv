@@ -1,6 +1,6 @@
-LocationID,LocationDescription
-1,National
-2,National England and Wales
-3,Taylor House (London)
-4,Hatton Cross (London)
-5,Newport (Wales)
+LocationID,LocationDescription,region_desc_cy,mrd_created_time,mrd_updated_time,mrd_deleted_time
+1,National,National cy,28-04-2022 00:00:00,28-04-2022 01:57:04,28-04-2022 01:57:04
+2,National England and Wales,,28-04-2022 00:00:00,28-04-2022 01:57:04,28-04-2022 01:57:04
+3,Taylor House (London),Taylor House (London) cy,28-04-2022 00:00:00,28-04-2022 01:57:04,28-04-2022 01:57:04
+4,Hatton Cross (London),,28-04-2022 00:00:00,28-04-2022 01:57:04,28-04-2022 01:57:04
+5,Newport (Wales),,28-04-2022 00:00:00,28-04-2022 01:57:04,28-04-2022 01:57:04
