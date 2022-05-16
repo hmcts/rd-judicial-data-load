@@ -52,14 +52,17 @@ route:
     table-name: judicial_user_profile
     insert-sql:
       sql:INSERT INTO judicial_user_profile (per_id,personal_code,known_as,surname,full_name,post_nominals,work_pattern,ejudiciary_email,joining_date,last_working_date,
-      active_flag,extracted_date,created_date,last_loaded_date,object_id)
+      active_flag,extracted_date,created_date,last_loaded_date,object_id,is_judge,is_panel_member,is_magistrate,mrd_created_time,mrd_updated_time,mrd_deleted_time)
       VALUES(:#per_id,:#personal_code,:#known_as,:#surname,:#full_name,:#post_nominals,
       :#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
-      TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), NOW() AT TIME ZONE 'utc', NOW() AT TIME ZONE 'utc', :#object_id) ON CONFLICT (per_id) DO UPDATE SET personal_code = :#personal_code,
+      :#extracted_date, NOW() AT TIME ZONE 'utc', NOW() AT TIME ZONE 'utc', :#object_id, :#is_judge, :#is_panel_member, :#is_magistrate,
+      :#mrd_created_time, :#mrd_updated_time, :#mrd_deleted_time) ON CONFLICT (per_id) DO UPDATE SET personal_code = :#personal_code,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
       work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
-      extracted_date = TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'), last_loaded_date = NOW() AT TIME ZONE 'utc', object_id = :#object_id?batch=true&dataSource=dataSource
+      extracted_date = :#extracted_date, last_loaded_date = NOW() AT TIME ZONE 'utc', object_id = :#object_id,
+      is_judge = :#is_judge, is_panel_member = :#is_panel_member, is_magistrate = :#is_magistrate,
+      mrd_created_time = :#mrd_created_time, mrd_updated_time = :#mrd_updated_time, mrd_deleted_time = :#mrd_deleted_time?batch=true&dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Personal-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserProfileProcessor
     mapper-class: JudicialUserProfileRowMapper
@@ -76,10 +79,10 @@ route:
       sql:TRUNCATE judicial_office_appointment RESTART IDENTITY?dataSource=dataSource&batch=true
     insert-sql:
       sql:INSERT INTO judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id,
-      appointment,appointment_type)
+      appointment,appointment_type,primary_location,secondary_location,tertiary_location,mrd_created_time,mrd_updated_time,mrd_deleted_time)
       VALUES(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_Date(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_TIMESTAMP(:#extracted_date, 'yyyy-MM-dd HH24:MI:SS.MSUS'),NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc', :#personal_code, :#object_id,
-      :#appointment, :#appointment_type)?dataSource=dataSource&batch=true
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_Date(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, :#extracted_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc', :#personal_code, :#object_id,
+      :#appointment, :#appointment_type, :#primary_location, :#secondary_location, :#tertiary_location, :#mrd_created_time, :#mrd_updated_time, :#mrd_deleted_time)?dataSource=dataSource&batch=true
     update-sql:
       sql:UPDATE judicial_office_appointment appt SET epimms_id=jlm.epimms_id,service_code=jlm.service_code FROM (SELECT judicial_base_location_id,base_location_name,epimms_id,service_code FROM judicial_location_mapping) AS jlm WHERE jlm.judicial_base_location_id = appt.base_location_id?dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Appointments-Test?credentials=#credsreg&operation=updateBlockBlob
@@ -97,10 +100,10 @@ route:
     truncate-sql:
       sql:TRUNCATE TABLE judicial_office_authorisation RESTART IDENTITY?dataSource=dataSource
     insert-sql:
-      sql:INSERT INTO judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id)
-      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id)?dataSource=dataSource&batch=true
+      sql:INSERT INTO judicial_office_authorisation (judicial_office_auth_id,per_id,jurisdiction,ticket_id,start_date,end_date,created_date,last_updated,lower_level,personal_code,object_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
+      VALUES(:#judicial_office_auth_id,:#per_id,:#jurisdiction,:#ticket_id,:#start_date,:#end_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc',:#lower_level,:#personal_code, :#object_id ,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time )?batch=true&dataSource=dataSource
     update-sql:
-      sql:UPDATE judicial_office_authorisation auth SET ticket_code=jtm.ticket_code FROM (SELECT ticket_code,jurisdiction,lower_level FROM judicial_ticket_code_mapping) AS jtm WHERE jtm.jurisdiction = auth.jurisdiction AND jtm.lower_level = auth.lower_level?dataSource=dataSource
+      sql:UPDATE judicial_office_authorisation auth SET ticket_code=jtm.ticket_code FROM (SELECT ticket_code,jurisdiction,lower_level FROM judicial_ticket_code_mapping WHERE mrd_deleted_time IS NULL) AS jtm WHERE jtm.jurisdiction = auth.jurisdiction AND jtm.lower_level = auth.lower_level?dataSource=dataSource
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Authorisations-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialOfficeAuthorisationProcessor
     mapper-class: JudicialOfficeAuthorisationRowMapper
@@ -115,9 +118,9 @@ route:
     truncate-sql:
       sql:TRUNCATE judicial_role_type RESTART IDENTITY?dataSource=dataSource&batch=true
     insert-sql:
-      sql:INSERT INTO judicial_role_type (per_Id,title,location,start_date,end_date)
-      VALUES(:#per_Id,:#title,:#location,:#start_date,:#end_date)
-      ON CONFLICT (role_id) DO UPDATE SET per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date?dataSource=dataSource&batch=true
+      sql:INSERT INTO judicial_role_type (per_Id,title,location,start_date,end_date,mrd_created_time,mrd_updated_time,mrd_deleted_time)
+      VALUES(:#per_Id,:#title,:#location,:#start_date,:#end_date,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)
+      ON CONFLICT (role_id) DO UPDATE SET per_Id = :#per_Id,title = :#title,location = :#location,start_date = :#start_date,end_date = :#end_date,mrd_created_time = :#mrd_created_time,mrd_updated_time = :#mrd_updated_time,mrd_deleted_time = :#mrd_deleted_time?dataSource=dataSource&batch=true
     blob-path: azure-blob://${azure.storage.account-name}/jud-ref-data/Roles-Test?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialUserRoleTypeProcessor
     mapper-class: JudicialRoleTypeRowMapper
@@ -240,4 +243,3 @@ email:
         - candyliyen.kuek@hmcts.net
       subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
       template: lower-level-auth.ftl
-
