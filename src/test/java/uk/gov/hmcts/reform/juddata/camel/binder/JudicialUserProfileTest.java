@@ -5,14 +5,11 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserProfileMock;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateTimeWithFormat;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.getDateWithFormat;
 
 class JudicialUserProfileTest {
 
@@ -31,10 +28,16 @@ class JudicialUserProfileTest {
         assertEquals("postNominals", judicialUserProfile.getPostNominals());
         assertEquals("workpatterns", judicialUserProfile.getWorkPattern());
         assertEquals("some@hmcts.net", judicialUserProfile.getEjudiciaryEmail());
-        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getJoiningDate());
-        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getLastWorkingDate());
-        assertEquals(getDateTimeWithFormat(dateTime), judicialUserProfile.getExtractedDate());
+        assertEquals("28-04-2022 00:00:00", judicialUserProfile.getJoiningDate());
+        assertEquals("28-06-2022 00:00:00", judicialUserProfile.getLastWorkingDate());
+        assertEquals("28-05-2022 00:00:00", judicialUserProfile.getExtractedDate());
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialUserProfile.getObjectId());
+        assertTrue(judicialUserProfile.isJudge());
+        assertTrue(judicialUserProfile.isPanelMember());
+        assertFalse(judicialUserProfile.isMagistrate());
+        assertEquals("28-04-2022 00:00:00", judicialUserProfile.getMrdCreatedTime());
+        assertEquals("28-05-2022 00:00:00", judicialUserProfile.getMrdUpdatedTime());
+        assertEquals("28-06-2022 00:00:00", judicialUserProfile.getMrdDeletedTime());
         assertTrue(judicialUserProfile.isActiveFlag());
 
         judicialUserProfile.setActiveFlag(false);
