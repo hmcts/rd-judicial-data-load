@@ -7,7 +7,7 @@ route:
     insert-sql:
       sql:INSERT INTO region_type (region_id,region_desc_en,region_desc_cy,mrd_created_time,mrd_updated_time,mrd_deleted_time) 
       VALUES(:#region_id,:#region_desc_en,:#region_desc_cy,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)
-      ON CONFLICT (region_id) DO UPDATE SET region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy?dataSource=dataSource&batch=true
+      ON CONFLICT (region_id) DO UPDATE SET region_desc_en = :#region_desc_en,region_desc_cy = :#region_desc_cy,mrd_created_time = :#mrd_created_time,mrd_updated_time = :#mrd_updated_time,mrd_deleted_time = :#mrd_deleted_time?dataSource=dataSource&batch=true
     blob-path:
       azure-blob://${azure.storage.account-name}/jud-ref-data/Locations?credentials=#credsreg&operation=updateBlockBlob
     processor-class: JudicialRegionTypeProcessor
