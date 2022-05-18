@@ -66,6 +66,32 @@ public class JrdTestSupport {
         return judicialUserProfileMock;
     }
 
+    public static JudicialUserProfile createJudicialUserProfileInactiveMock(Date currentDate, LocalDateTime dateTime,
+                                                                    String perId) {
+
+        JudicialUserProfile judicialUserProfileMock = new JudicialUserProfile();
+        judicialUserProfileMock.setPerId(perId);
+        judicialUserProfileMock.setPersonalCode("personalCode_1");
+        judicialUserProfileMock.setKnownAs("knownAs");
+        judicialUserProfileMock.setSurName("surname");
+        judicialUserProfileMock.setFullName("fullName");
+        judicialUserProfileMock.setPostNominals("postNominals");
+        judicialUserProfileMock.setWorkPattern("workpatterns");
+        judicialUserProfileMock.setEjudiciaryEmail("some@hmcts.net");
+        judicialUserProfileMock.setJoiningDate("28-04-2022 00:00:00");
+        judicialUserProfileMock.setLastWorkingDate("28-06-2022 00:00:00");
+        judicialUserProfileMock.setActiveFlag(false);
+        judicialUserProfileMock.setExtractedDate("28-05-2022 00:00:00");
+        judicialUserProfileMock.setObjectId("779321b3-3170-44a0-bc7d-b4decc2aea10");
+        judicialUserProfileMock.setJudge(false);
+        judicialUserProfileMock.setPanelMember(false);
+        judicialUserProfileMock.setMagistrate(true);
+        judicialUserProfileMock.setMrdCreatedTime("28-04-2022 00:00:00");
+        judicialUserProfileMock.setMrdUpdatedTime("28-05-2022 00:00:00");
+        judicialUserProfileMock.setMrdDeletedTime("28-06-2022 00:00:00");
+        return judicialUserProfileMock;
+    }
+
     public static JudicialBaseLocationType createJudicialBaseLocationMock() {
         JudicialBaseLocationType judicialBaseLocationType = new JudicialBaseLocationType();
 
