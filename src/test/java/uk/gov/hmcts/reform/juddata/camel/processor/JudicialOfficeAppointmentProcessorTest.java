@@ -56,6 +56,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_1;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.PERID_2;
@@ -304,7 +305,7 @@ class JudicialOfficeAppointmentProcessorTest {
 
         assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
             .containsAll(judicialOfficeAppointments);
-        verify(judicialOfficeAppointmentProcessor).setFileStatus(any(), any());
+        verify(judicialOfficeAppointmentProcessor).setFileStatus(any(), any(), any());
 
     }
 
@@ -423,5 +424,58 @@ class JudicialOfficeAppointmentProcessorTest {
                 JrdMappingConstants.LOCATION_ID);
         verify(emailService, times(0)).sendEmail(any());
         assertEquals(-1,result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void should_verify_failure_audit_status() {
+
+        judicialOfficeAppointmentMock4.setPerId("perid_4");
+        List<JudicialOfficeAppointment> judicialOfficeAppointments = new ArrayList<>();
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock1);
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock3);
+
+        RouteProperties routeProperties = new RouteProperties();
+        routeProperties.setFileName("test");
+
+        when(messageMock.getBody()).thenReturn(judicialOfficeAppointments);
+        judicialUserProfileProcessor = mock(JudicialUserProfileProcessor.class);
+
+        setField(judicialOfficeAppointmentProcessor, "judicialUserProfileProcessor",
+                judicialUserProfileProcessor);
+        JudicialUserProfile judicialUserProfileMock = createJudicialUserProfileMock(currentDate, dateTime, PERID_1);
+        JudicialUserProfile judicialUserProfileMock2 = createJudicialUserProfileMock(currentDate, dateTime, PERID_2);
+        JudicialUserProfile judicialUserProfileMock3 = createJudicialUserProfileMock(currentDate, dateTime, PERID_3);
+
+        List<JudicialUserProfile> judicialUserProfiles = new ArrayList<>();
+        judicialUserProfiles.add(judicialUserProfileMock);
+        judicialUserProfiles.add(judicialUserProfileMock2);
+        judicialUserProfiles.add(judicialUserProfileMock3);
+
+        when(judicialUserProfileProcessor.getInvalidRecords()).thenReturn(judicialUserProfiles);
+        when(judicialUserProfileProcessor.getValidPerIdInUserProfile()).thenReturn(Collections.singleton(PERID_2));
+        setField(judicialOfficeAppointmentProcessor, "jsrThresholdLimit", 5);
+        setField(judicialOfficeAppointmentJsrValidatorInitializer, "camelContext", camelContext);
+        setField(judicialOfficeAppointmentJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
+        setField(judicialOfficeAppointmentJsrValidatorInitializer,
+                "platformTransactionManager", platformTransactionManager);
+
+        int[][] intArray = new int[1][];
+        when(jdbcTemplate.batchUpdate(anyString(), anyList(), anyInt(), any())).thenReturn(intArray);
+        when(platformTransactionManager.getTransaction(any())).thenReturn(transactionStatus);
+        when(exchangeMock.getContext()).thenReturn(new DefaultCamelContext());
+        doNothing().when(platformTransactionManager).commit(transactionStatus);
+        when(exchangeMock.getIn().getHeader(ROUTE_DETAILS)).thenReturn(routeProperties);
+
+        judicialOfficeAppointmentProcessor.process(exchangeMock);
+
+        judicialOfficeAppointments = new ArrayList<>();
+        judicialOfficeAppointments.add(judicialOfficeAppointmentMock2);
+
+        assertThat(((List<JudicialOfficeAppointment>) exchangeMock.getMessage().getBody()))
+                .containsAll(judicialOfficeAppointments);
+        verify(judicialOfficeAppointmentProcessor).setFileStatus(exchangeMock, applicationContext, FAILURE);
+
     }
 }
