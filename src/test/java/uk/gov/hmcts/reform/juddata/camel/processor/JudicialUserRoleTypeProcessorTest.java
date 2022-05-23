@@ -215,4 +215,5 @@ class JudicialUserRoleTypeProcessorTest {
         assertEquals(1, judicialUserRoleTypes.size());
     }
 
+    
 }
