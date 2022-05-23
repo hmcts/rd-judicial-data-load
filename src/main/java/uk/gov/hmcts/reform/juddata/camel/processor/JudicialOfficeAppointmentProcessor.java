@@ -23,6 +23,8 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_BASE_LOCATION;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
@@ -105,7 +107,11 @@ public class JudicialOfficeAppointmentProcessor
         audit(judicialOfficeAppointmentJsrValidatorInitializer, exchange);
 
         if (judicialOfficeAppointments.size() != filteredJudicialAppointments.size()) {
-            setFileStatus(exchange, applicationContext);
+            String auditStatus = PARTIAL_SUCCESS;
+            if (filteredJudicialAppointments.isEmpty()) {
+                auditStatus = FAILURE;
+            }
+            setFileStatus(exchange, applicationContext, auditStatus);
         }
 
         log.info("{}:: Judicial Appointment Records count  after JSR and foreign key Validation {}:: ",
