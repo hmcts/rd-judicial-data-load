@@ -14,7 +14,7 @@ plugins {
     id 'jacoco'
     id 'pmd'
     id "com.github.ben-manes.versions" version "0.41.0"
-    id 'info.solidsoft.pitest' version '1.6.0'
+    id 'info.solidsoft.pitest' version '1.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '2.8'
     id "org.flywaydb.flyway" version "6.2.0"
@@ -30,7 +30,7 @@ apply plugin: "io.spring.dependency-management"
 
 
 def versions = [
-        lombok             : '1.18.6',
+        lombok             : '1.18.22',
         reformLogging      : '5.1.9',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
@@ -38,9 +38,10 @@ def versions = [
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.13.1',
-        launchDarklySdk    : "5.2.2",
+        launchDarklySdk    : "5.8.1",
         camel              : '3.8.0',
-        log4j              : '2.17.1'
+        log4j              : '2.17.1',
+        springVersion      : '5.3.20'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
@@ -49,8 +50,15 @@ def jarName = 'rd-judicial-data-load.jar'
 group = 'uk.gov.hmcts.reform.juddata'
 version = '0.0.1'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+tasks.withType(JavaExec).configureEach {
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 compileJava {
     options.compilerArgs << '-parameters' << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
@@ -59,7 +67,6 @@ compileJava {
 compileTestJava {
     options.compilerArgs << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
 }
-
 
 sourceSets {
 
@@ -151,20 +158,20 @@ task fortifyScan(type: JavaExec)  {
   main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
   classpath += sourceSets.test.runtimeClasspath
   jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
-  // This is a temporary fix to prevent the nightly build from failing if the Fortify scan detects issues
+  // This is a temporary fix to prevent the nightly build from failing if the Fortify scan detects issues 
   ignoreExitValue = true
 }
 
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.7"
 }
 
 jacocoTestReport {
     executionData(test)
     reports {
-        xml.enabled = true
-        csv.enabled = false
-        xml.destination = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        xml.required = true
+        csv.required = false
+        xml.outputLocation = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
@@ -192,7 +199,7 @@ pitest {
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
-    mutationThreshold = 85
+    mutationThreshold = 84
     useClasspathFile = true
 }
 
@@ -236,12 +243,26 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: versions.springBoot
 
+    implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-beans', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-aop', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-aspects', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-context', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-context-support', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-expression', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-jcl', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-orm', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-tx', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-web', version: versions.springVersion
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: versions.springVersion
+
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.2'
     implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
     implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-core') {
         version {
@@ -268,10 +289,9 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.2') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.4') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
-
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.11.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
@@ -299,8 +319,6 @@ dependencies {
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.6'
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
     implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.14'
-    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.18'
-    implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
     
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
@@ -328,11 +346,21 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }
     testImplementation group: 'com.h2database', name: 'h2'
-    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
-    // https://mvnrepository.com/artifact/org.mockito/mockito-core
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.2.0'
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.2'
-    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
+    testImplementation ("org.mockito:mockito-core:4.3.1") {
+        exclude group: "net.bytebuddy", module: "byte-buddy"
+        exclude group: "net.bytebuddy", module: "byte-buddy-agent"
+    }
+    testImplementation ("org.mockito:mockito-inline:4.3.1") {
+        exclude group: "net.bytebuddy", module: "byte-buddy"
+        exclude group: "net.bytebuddy", module: "byte-buddy-agent"
+    }
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.7'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.12.7'
+
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.3.1'
+
+
+    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
@@ -398,7 +426,7 @@ dependencyManagement {
 
     dependencies {
         // CVE-2021-42340
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.58') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.63') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -443,7 +471,7 @@ configurations.all {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'io.netty'
                 && details.requested.name != 'netty-tcnative-boringssl-static' ) {
-            details.useVersion "4.1.69.Final"
+            details.useVersion "4.1.77.Final"
         }
 
         // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library

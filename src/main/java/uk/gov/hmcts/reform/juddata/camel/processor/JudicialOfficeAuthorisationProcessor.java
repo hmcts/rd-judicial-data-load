@@ -27,6 +27,8 @@ import java.util.function.Predicate;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOWER_LEVEL;
@@ -94,7 +96,11 @@ public class JudicialOfficeAuthorisationProcessor
         filterAuthorizationsRecordsForForeignKeyViolation(filteredJudicialAuthorisations, exchange);
 
         if (judicialOfficeAuthorisations.size() != filteredJudicialAuthorisations.size()) {
-            setFileStatus(exchange, applicationContext);
+            String auditStatus = PARTIAL_SUCCESS;
+            if (filteredJudicialAuthorisations.isEmpty()) {
+                auditStatus = FAILURE;
+            }
+            setFileStatus(exchange, applicationContext, auditStatus);
         }
 
         log.info("{}:: Judicial Authorisation Records count after JSR and foreign key Validation {}:: ",
@@ -106,8 +112,6 @@ public class JudicialOfficeAuthorisationProcessor
     private void filterAuthorizationsRecordsForForeignKeyViolation(List<JudicialOfficeAuthorisation>
                                                                        filteredJudicialAuthorisations,
                                                                    Exchange exchange) {
-        log.info("{} : filter Authorizations Records For ForeignKey Violation",logComponentName);
-
         Predicate<JudicialOfficeAuthorisation> perViolations = c ->
             isFalse(judicialUserProfileProcessor.getValidPerIdInUserProfile().contains(c.getPerId()));
 
@@ -125,7 +129,6 @@ public class JudicialOfficeAuthorisationProcessor
 
     public List<JudicialOfficeAuthorisation> retrieveNewLowerLevelAuthorisations(List<JudicialOfficeAuthorisation>
                                                             filteredJudicialAuthorisations) {
-        log.info("{} : retrieve New Lower Level Authorisations",logComponentName);
         List<String> lowerLevels = jdbcTemplate.queryForList(fetchLowerLevels, String.class);
 
         Predicate<JudicialOfficeAuthorisation> lowerLevelPredicate =
@@ -138,7 +141,6 @@ public class JudicialOfficeAuthorisationProcessor
 
     public void flagNewLowerLevelAuths(List<JudicialOfficeAuthorisation> newLowerLevelAuths,
                                        Exchange exchange) {
-        log.info("{} : flag New Lower Level Auths",logComponentName);
         List<Pair<String, Long>> pairs = newLowerLevelAuths.stream()
                 .map(auth -> Pair.of(auth.getPerId(), auth.getRowId()))
                 .collect(toUnmodifiableList());
@@ -150,7 +152,6 @@ public class JudicialOfficeAuthorisationProcessor
     }
 
     public int sendEmail(EmailConfiguration.MailTypeConfig mailConfig) {
-        log.info("{} : sendEmail",logComponentName);
         if (mailConfig.isEnabled()) {
             Email email = Email.builder()
                     .contentType(CONTENT_TYPE_HTML)
@@ -168,12 +169,10 @@ public class JudicialOfficeAuthorisationProcessor
 
     private EmailConfiguration.MailTypeConfig getLowerLevelAuthMailTypeConfig(
             List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
-        log.info("{} : get Lower Level Auth Mail Type Config",logComponentName);
         return emailTemplate.getMailTypeConfig(getLowerLevelAuthModel(newLowerLevelAuths), LOWER_LEVEL_AUTH);
     }
 
     private Map<String, Object> getLowerLevelAuthModel(List<JudicialOfficeAuthorisation> newLowerLevelAuths) {
-        log.info("{} : get Lower Level Auth Model",logComponentName);
         Map<String, Object> model = new HashMap<>();
         model.put("newLowerLevelAuths", newLowerLevelAuths);
         return model;
