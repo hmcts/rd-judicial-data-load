@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfig
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.SqlConfig;
@@ -20,6 +21,7 @@ import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
@@ -32,17 +34,21 @@ import uk.gov.hmcts.reform.juddata.configuration.FeignConfiguration;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidAppointmentsEntry;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithSingleRecord;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAdditionalInfoRolesFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAppointmentFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAuthorisationFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordCountFor;
@@ -68,7 +74,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Autowired
     DataIngestionLibraryRunner dataIngestionLibraryRunner;
 
-
     @Test
     void testTasklet() throws Exception {
         uploadBlobs(jrdBlobSupport, parentFiles, file);
@@ -80,6 +85,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
+        validateAdditionalInfoRolesFile(jdbcTemplate, roleSql);
     }
 
     @Test
@@ -130,8 +136,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 0);
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 8);
+        validateDbRecordCountFor(jdbcTemplate,
+                schedulerInsertJrdSqlFailure + " and file_name='Appointments-Test'", 1);
     }
-
 
     @Test
     void testParentOrchestrationSingleRecord() throws Exception {
@@ -144,7 +151,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 1);
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 1);
     }
-
 
     @Test
     void testAllLeafs() throws Exception {
@@ -172,6 +178,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         var ticketCodes = retrieveColumnValues(jdbcTemplate, ticketCodeSql, "ticket_code");
         assertTrue(ticketCodes.containsAll(List.of("366","373","289")));
+        assertFalse(ticketCodes.containsAll(List.of("363","376")));
     }
 
     @Test
@@ -188,7 +195,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         final List<Object> epimmsId = retrieveColumnValues(jdbcTemplate, epimmsIdSql, "epimms_id");
         assertTrue(epimmsId.contains("20262"));
     }
-
 
     @Test
     void testServiceCodeMappingInJudicialOfficeAppointmentTable() throws Exception {
@@ -220,7 +226,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         final List<Object> objectIds = retrieveColumnValues(jdbcTemplate, authorizationSql, "object_id");
         assertTrue(objectIds.contains("578256875287452"));
     }
-
 
     @Test
     void testMappingInJudicialOfficeAppointmentTable() throws Exception {
@@ -260,6 +265,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         final List<Object> appointmentsError = retrieveColumnValues(jdbcTemplate, exceptionQuery, "field_in_error");
         assertTrue(appointmentsError.contains("appointment"));
 
+        validateDbRecordCountFor(jdbcTemplate,
+                schedulerInsertJrdSqlPartialSuccess + " and file_name='Appointments-Test'", 1);
+
     }
 
     @Test
@@ -286,5 +294,16 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     }
 
-
+    private void validateLocationLeafFile(JdbcTemplate jdbcTemplate, String regionSql) {
+        final List<Map<String, Object>> locations = jdbcTemplate.queryForList(regionSql);
+        var judicialRegionTypes = locations.stream()
+                .map(l -> {
+                    JudicialRegionType judicialRegionType = new JudicialRegionType();
+                    judicialRegionType.setRegionId((String) l.get("region_id"));
+                    judicialRegionType.setRegionDescCy((String) l.get("region_desc_cy"));
+                    judicialRegionType.setRegionDescEn((String) l.get("region_desc_en"));
+                    return judicialRegionType;
+                })
+                .collect(Collectors.toList());
+    }
 }

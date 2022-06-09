@@ -27,7 +27,6 @@ import static java.util.stream.Collectors.toSet;
 import static org.apache.camel.util.ObjectHelper.isNotEmpty;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registerFileStatusBean;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
@@ -163,10 +162,10 @@ public interface ICustomValidationProcessor<T> {
         return p.getActualTypeArguments()[0];
     }
 
-    default void setFileStatus(Exchange exchange, ApplicationContext applicationContext) {
+    default void setFileStatus(Exchange exchange, ApplicationContext applicationContext, String auditStatus) {
         RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         FileStatus fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
-        fileStatus.setAuditStatus(PARTIAL_SUCCESS);
+        fileStatus.setAuditStatus(auditStatus);
         registerFileStatusBean(applicationContext, routeProperties.getFileName(), fileStatus,
             exchange.getContext());
     }

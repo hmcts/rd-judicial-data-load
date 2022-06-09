@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
+import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.util.ResourceUtils.getFile;
 
@@ -151,6 +152,11 @@ public interface ParentIntegrationTestSupport {
         assertEquals(expectedCount, jdbcTemplate.queryForList(queryName).size());
     }
 
+    static void validateDbRecordValuesFor(JdbcTemplate jdbcTemplate, String queryName, String columnName) {
+        Map<String, Object> hmValue = jdbcTemplate.queryForList(queryName).get(4);
+        assertNotNull(hmValue.get(columnName));
+    }
+
     static void validateExceptionDbRecordCount(JdbcTemplate jdbcTemplate,
                                                String queryName, int expectedCount,
                                                boolean isPartialSuccessValidation) {
@@ -227,6 +233,22 @@ public interface ParentIntegrationTestSupport {
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
+
+        // assertEquals(judicialAuthorisationList.get());
+    }
+
+    static void validateAdditionalInfoRolesFile(JdbcTemplate jdbcTemplate, String roleSql) {
+        List<Map<String, Object>> judicialUserRoleTypeList = jdbcTemplate.queryForList(roleSql);
+        List<JudicialUserRoleType> actualRoleTypes =
+            judicialUserRoleTypeList.stream().map(roleTypeMap -> {
+                JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
+                judicialUserRoleType.setPerId((String) roleTypeMap.get("per_Id"));
+                judicialUserRoleType.setTitle((String) roleTypeMap.get("title"));
+                judicialUserRoleType.setLocation((String) roleTypeMap.get("location"));
+                judicialUserRoleType.setStartDate(handleNull((Timestamp) roleTypeMap.get("start_date")));
+                judicialUserRoleType.setEndDate(handleNull((Timestamp) roleTypeMap.get("end_date")));
+                return judicialUserRoleType;
+            }).collect(Collectors.toList());
     }
 
     static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath) {
