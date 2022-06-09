@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -41,7 +41,7 @@ class ParentRouteTaskTest {
     ChunkContext chunkContext = mock(ChunkContext.class);
 
     @Test
-    void testInit() throws Exception {
+    void testInit() {
         parentRouteTask.init();
         verify(dataLoadRoute).startRoute(any(), any());
     }
