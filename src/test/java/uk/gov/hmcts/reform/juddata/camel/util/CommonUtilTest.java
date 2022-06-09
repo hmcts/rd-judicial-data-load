@@ -10,21 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class CommonUtilTest {
 
 
-    @Test()
+    @Test
     void testEmptyDate() {
 
         var date = CommonUtils.getDateTimeStamp(" ");
         assertNull(date);
     }
 
-    @Test()
+    @Test
     void testNullDate() {
 
         var date = CommonUtils.getDateTimeStamp(null);
         assertNull(date);
     }
 
-    @Test()
+    @Test
     void testValidDate() {
 
         var date = CommonUtils.getDateTimeStamp("2022-06-09 12:00:40");
