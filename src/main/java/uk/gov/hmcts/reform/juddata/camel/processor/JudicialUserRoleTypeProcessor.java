@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.juddata.camel.processor;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 
@@ -64,7 +66,11 @@ public class JudicialUserRoleTypeProcessor
         filterAuthorizationsRecordsForForeignKeyViolation(filteredJudicialRoleTypes, exchange);
 
         if (judicialUserRoleTypes.size() != filteredJudicialRoleTypes.size()) {
-            setFileStatus(exchange, applicationContext);
+            String auditStatus = PARTIAL_SUCCESS;
+            if (filteredJudicialRoleTypes.isEmpty()) {
+                auditStatus = FAILURE;
+            }
+            setFileStatus(exchange, applicationContext, auditStatus);
         }
 
         log.info("{}:: Judicial Role type Records after JSR and foreign key Validation {}:: ",

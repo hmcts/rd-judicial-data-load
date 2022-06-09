@@ -6,7 +6,7 @@ import uk.gov.hmcts.reform.juddata.camel.util.CommonUtils;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserRoleType;
 
 class JudicialRoleTypeRowMapperTest {

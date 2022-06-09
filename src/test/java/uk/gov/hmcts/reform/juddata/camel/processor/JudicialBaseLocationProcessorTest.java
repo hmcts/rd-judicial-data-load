@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
-import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAppointmentMock;
+import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialBaseLocationMock;
 
 class JudicialBaseLocationProcessorTest {
 
@@ -36,9 +36,9 @@ class JudicialBaseLocationProcessorTest {
 
     List<JudicialBaseLocationType> judicialBaseLocationTypes = new ArrayList<>();
 
-    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialOfficeAppointmentMock();
+    JudicialBaseLocationType judicialBaseLocationType1 = createJudicialBaseLocationMock();
 
-    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialOfficeAppointmentMock();
+    JudicialBaseLocationType judicialBaseLocationType2 = createJudicialBaseLocationMock();
 
     JsrValidatorInitializer<JudicialBaseLocationType> judicialBaseLocationTypeJsrValidatorInitializer;
 
