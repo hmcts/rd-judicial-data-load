@@ -5,10 +5,13 @@ import uk.gov.hmcts.reform.juddata.camel.binder.JudicialBaseLocationType;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialBaseLocationMock;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
+
 
 class JudicialBaseLocationRowTypeMapperTest {
+
 
     @Test
     void should_return_JudicialBaseLocationType_response() {
@@ -23,6 +26,7 @@ class JudicialBaseLocationRowTypeMapperTest {
         assertEquals("circuit", response.get("circuit"));
         assertEquals("courtName", response.get("court_name"));
         assertEquals("courtType", response.get("court_type"));
+        
     }
 
 }
