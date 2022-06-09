@@ -130,8 +130,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, appointmentSql, 0);
         validateDbRecordCountFor(jdbcTemplate, authorizationSql, 8);
+        validateDbRecordCountFor(jdbcTemplate,
+                schedulerInsertJrdSqlFailure + " and file_name='Appointments-Test'", 1);
     }
-
 
     @Test
     void testParentOrchestrationSingleRecord() throws Exception {
@@ -259,6 +260,9 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
         final List<Object> appointmentsError = retrieveColumnValues(jdbcTemplate, exceptionQuery, "field_in_error");
         assertTrue(appointmentsError.contains("appointment"));
+
+        validateDbRecordCountFor(jdbcTemplate,
+                schedulerInsertJrdSqlPartialSuccess + " and file_name='Appointments-Test'", 1);
 
     }
 
