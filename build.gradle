@@ -289,7 +289,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.4') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.6') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
     //Fix for CVE-2021-29425
