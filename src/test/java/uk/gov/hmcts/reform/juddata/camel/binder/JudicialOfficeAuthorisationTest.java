@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialOfficeAuthorisation;
 
 class JudicialOfficeAuthorisationTest {
@@ -19,5 +19,8 @@ class JudicialOfficeAuthorisationTest {
         assertEquals("lowerLevel", judicialOfficeAuthorisation.getLowerLevel());
         assertEquals("111", judicialOfficeAuthorisation.getPersonalCode());
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialOfficeAuthorisation.getObjectId());
+        assertEquals("28-04-2022 00:00:00",judicialOfficeAuthorisation.getMrdCreatedTime());
+        assertEquals("28-05-2022 00:00:00",judicialOfficeAuthorisation.getMrdUpdatedTime());
+        assertEquals("28-06-2022 00:00:00",judicialOfficeAuthorisation.getMrdDeletedTime());
     }
 }

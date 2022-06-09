@@ -636,3 +636,4 @@ INSERT INTO judicial_location_mapping (epimms_id,judicial_base_location_id,build
 ('490237','1451','POOLE MAGISTRATES COURT','Poole Magistrates Court',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL),
 ('366796','1452','NEWCASTLE CIVIL & FAMILY COURTS AND TRIBUNALS CENTRE','Newcastle Civil & Family Courts & Tribunals Centre',NULL,'2022-05-16 00:00:00','2022-05-16 00:00:00',NULL);
 COMMIT;
+
