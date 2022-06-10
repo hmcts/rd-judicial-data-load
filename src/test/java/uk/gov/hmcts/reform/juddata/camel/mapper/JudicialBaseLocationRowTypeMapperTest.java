@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudi
 
 class JudicialBaseLocationRowTypeMapperTest {
 
+
     @Test
     void should_return_JudicialBaseLocationType_response() {
 
@@ -23,6 +24,12 @@ class JudicialBaseLocationRowTypeMapperTest {
         assertEquals("circuit", response.get("circuit"));
         assertEquals("courtName", response.get("court_name"));
         assertEquals("courtType", response.get("court_type"));
+        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"),response
+                .get("mrd_created_time"));
+        assertEquals(getDateTimeStamp("28-05-2022 00:00:00"),response
+                .get("mrd_updated_time"));
+        assertEquals(getDateTimeStamp("28-06-2022 00:00:00"),response
+                .get("mrd_deleted_time"));
     }
 
 }

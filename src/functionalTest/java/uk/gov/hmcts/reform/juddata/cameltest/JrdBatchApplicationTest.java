@@ -36,20 +36,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
+import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.file;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithError;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithInvalidAppointmentsEntry;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.fileWithSingleRecord;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.handleNull;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.uploadBlobs;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAdditionalInfoRolesFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAppointmentFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateAuthorisationFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordCountFor;
+import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateDbRecordValuesFor;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.validateUserProfileFile;
 import static uk.gov.hmcts.reform.juddata.cameltest.testsupport.ParentIntegrationTestSupport.retrieveColumnValues;
 
@@ -71,7 +75,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Autowired
     DataIngestionLibraryRunner dataIngestionLibraryRunner;
-
 
     @Test
     void testTasklet() throws Exception {
@@ -305,6 +308,10 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
                     return judicialRegionType;
                 })
                 .collect(Collectors.toList());
+    }
+        assertTrue(judicialRegionTypes.get(2).getMrdCreatedTime().contains("2022-04-28"));
+        assertTrue(judicialRegionTypes.get(2).getMrdUpdatedTime().contains("2022-04-28"));
+        assertTrue(judicialRegionTypes.get(2).getMrdDeletedTime().contains("2022-04-28"));
     }
 
 }

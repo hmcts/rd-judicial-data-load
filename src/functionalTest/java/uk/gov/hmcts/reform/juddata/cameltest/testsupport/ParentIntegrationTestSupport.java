@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +32,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 public interface ParentIntegrationTestSupport {
 
@@ -224,6 +228,12 @@ public interface ParentIntegrationTestSupport {
                 judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
                 judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp) authorisationMap.get("end_date")));
                 judicialOfficeAuthorisation.setLowerLevel((String) authorisationMap.get("lower_level"));
+                judicialOfficeAuthorisation.setMrdCreatedTime(handleNull((Timestamp) authorisationMap
+                    .get("mrd_created_time")));
+                judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_updated_time")));
+                judicialOfficeAuthorisation.setMrdDeletedTime(handleNull((Timestamp)authorisationMap
+                    .get("mrd_deleted_time")));
                 return judicialOfficeAuthorisation;
             }).collect(Collectors.toList());
 
@@ -247,9 +257,9 @@ public interface ParentIntegrationTestSupport {
                 judicialUserRoleType.setLocation((String) roleTypeMap.get("location"));
                 judicialUserRoleType.setStartDate(handleNull((Timestamp) roleTypeMap.get("start_date")));
                 judicialUserRoleType.setEndDate(handleNull((Timestamp) roleTypeMap.get("end_date")));
+
                 return judicialUserRoleType;
             }).collect(Collectors.toList());
-
     }
 
     static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath) {
@@ -276,6 +286,10 @@ public interface ParentIntegrationTestSupport {
         judicialOfficeAuthorisation.setStartDate(handleNull(columns.get(3), true));
         judicialOfficeAuthorisation.setEndDate(handleNull(columns.get(4), true));
         judicialOfficeAuthorisation.setLowerLevel(handleNull(columns.get(5), false));
+        judicialOfficeAuthorisation.setMrdCreatedTime(handleNull(columns.get(8),true));
+        judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull(columns.get(9),true));
+        judicialOfficeAuthorisation.setMrdDeletedTime(handleNull(columns.get(10),true));
+
         return judicialOfficeAuthorisation;
     }
 
@@ -285,7 +299,9 @@ public interface ParentIntegrationTestSupport {
         } else if (timeStampField && isBlank(fieldValue)) {
             return null;
         } else if (timeStampField && !isBlank(fieldValue)) {
-            return Timestamp.valueOf(fieldValue).toString();
+            LocalDateTime ldt = LocalDateTime.parse(fieldValue,
+                    DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
+            return Timestamp.valueOf(ldt).toString();
         } else {
             return fieldValue;
         }

@@ -32,10 +32,13 @@ class JudicialUserProfileTest {
         assertEquals("postNominals", judicialUserProfile.getPostNominals());
         assertEquals("workpatterns", judicialUserProfile.getWorkPattern());
         assertEquals("some@hmcts.net", judicialUserProfile.getEjudiciaryEmail());
-        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getJoiningDate());
-        assertEquals(getDateWithFormat(currentDate, DATE_FORMAT), judicialUserProfile.getLastWorkingDate());
-        assertEquals(getDateTimeWithFormat(dateTime), judicialUserProfile.getExtractedDate());
+        assertEquals("28-04-2022 00:00:00", judicialUserProfile.getJoiningDate());
+        assertEquals("28-06-2022 00:00:00", judicialUserProfile.getLastWorkingDate());
+        assertEquals("28-05-2022 00:00:00", judicialUserProfile.getExtractedDate());
         assertEquals("779321b3-3170-44a0-bc7d-b4decc2aea10", judicialUserProfile.getObjectId());
+        assertTrue(judicialUserProfile.isJudge());
+        assertTrue(judicialUserProfile.isPanelMember());
+        assertFalse(judicialUserProfile.isMagistrate());
         assertTrue(judicialUserProfile.isActiveFlag());
 
         judicialUserProfile.setActiveFlag(false);
