@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.juddata.camel.binder;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_ERROR_MESSAGE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
 
 import java.io.Serializable;
 
@@ -32,12 +31,12 @@ public class JudicialOfficeAuthorisation extends CommonCsvField implements Seria
     Long ticketId;
 
     @DataField(pos = 4, columnName = "startdate")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
             message = DATE_FORMAT_ERROR_MESSAGE)
     String startDate;
 
     @DataField(pos = 5, columnName = "enddate")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
             message = DATE_FORMAT_ERROR_MESSAGE)
     String endDate;
 
@@ -49,21 +48,4 @@ public class JudicialOfficeAuthorisation extends CommonCsvField implements Seria
 
     @DataField(pos = 8, columnName = "object_id")
     String objectId;
-
-    @DataField(pos = 9, columnName = "mrd_created_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-        message = "date pattern should be " + DATE_TIME_FORMAT)
-    String mrdCreatedTime;
-
-    @DataField(pos = 10, columnName = "mrd_updated_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-        message = "date pattern should be " + DATE_TIME_FORMAT)
-    String mrdUpdatedTime;
-
-    @DataField(pos = 11, columnName = "mrd_deleted_time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-        message = "date pattern should be " + DATE_TIME_FORMAT)
-    String mrdDeletedTime;
-
-
 }
