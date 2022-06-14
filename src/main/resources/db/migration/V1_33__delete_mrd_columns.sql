@@ -55,7 +55,7 @@ truncate table  judicial_location_mapping  cascade;
 INSERT INTO judicial_location_mapping (epimms_id,judicial_base_location_id,building_location_name,base_location_name,service_code) VALUES
 ('29096','754','HARROW CROWN COURT','Harrow Crown Court',NULL),
 ('425094','893','LEICESTER CROWN COURT','Leicester Crown Court',NULL),
-('','1030','','','BFA1'),
+('','1030','','Immigration and Asylum First Tier','BFA1'),
 ('','1032','','Social Entitlement','BBA3'),
 ('20262','747','ROYAL COURTS OF JUSTICE','Royal Courts of Justice - High Court - Chancery',NULL),
 ('20262','748','ROYAL COURTS OF JUSTICE','Royal Courts of Justice - High Court - Family',NULL),
