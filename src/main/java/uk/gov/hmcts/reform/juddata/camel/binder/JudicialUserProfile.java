@@ -12,6 +12,8 @@ import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 @Getter
@@ -27,6 +29,7 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
     @DataField(pos = 2, columnName = "personal_Code")
     @NotEmpty
     String personalCode;
+
 
     @DataField(pos = 3, columnName = "known_As")
     String knownAs;
@@ -62,35 +65,11 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
     boolean activeFlag;
 
     @DataField(pos = 12)
-    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN,
-            message = "date pattern should be " + DATE_TIME_FORMAT)
+    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
+            message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
     String extractedDate;
 
     @DataField(pos = 13, columnName = "object_id")
     String objectId;
-
-    @DataField(pos = 14, columnName = "Is_Judge")
-    boolean judge;
-
-    @DataField(pos = 15, columnName = "Is_Panel_Member")
-    boolean panelMember;
-
-    @DataField(pos = 16, columnName = "Is_Magistrate")
-    boolean magistrate;
-
-    @DataField(pos = 17, columnName = "MRD_Created_Time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-            message = "date pattern should be " + DATE_TIME_FORMAT)
-    String mrdCreatedTime;
-
-    @DataField(pos = 18, columnName = "MRD_Updated_Time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-            message = "date pattern should be " + DATE_TIME_FORMAT)
-    String mrdUpdatedTime;
-
-    @DataField(pos = 19, columnName = "MRD_Deleted_Time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
-            message = "date pattern should be " + DATE_TIME_FORMAT)
-    String mrdDeletedTime;
 
 }
