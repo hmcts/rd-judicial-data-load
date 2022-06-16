@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,9 +30,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
+
 
 public interface ParentIntegrationTestSupport {
 
@@ -228,12 +225,6 @@ public interface ParentIntegrationTestSupport {
                 judicialOfficeAuthorisation.setStartDate(handleNull((Timestamp) authorisationMap.get("start_date")));
                 judicialOfficeAuthorisation.setEndDate(handleNull((Timestamp) authorisationMap.get("end_date")));
                 judicialOfficeAuthorisation.setLowerLevel((String) authorisationMap.get("lower_level"));
-                judicialOfficeAuthorisation.setMrdCreatedTime(handleNull((Timestamp) authorisationMap
-                    .get("mrd_created_time")));
-                judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull((Timestamp)authorisationMap
-                    .get("mrd_updated_time")));
-                judicialOfficeAuthorisation.setMrdDeletedTime(handleNull((Timestamp)authorisationMap
-                    .get("mrd_deleted_time")));
                 return judicialOfficeAuthorisation;
             }).collect(Collectors.toList());
 
@@ -243,32 +234,6 @@ public interface ParentIntegrationTestSupport {
         //exact field checks
         Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
-        assertTrue(actualAuthorisations.get(3).getMrdCreatedTime().contains("2022-04-28"));
-        assertTrue(actualAuthorisations.get(3).getMrdUpdatedTime().contains("2022-04-28"));
-        assertTrue(actualAuthorisations.get(3).getMrdDeletedTime().contains("2022-04-28"));
-
-        // assertEquals(judicialAuthorisationList.get());
-    }
-
-    static void validateAdditionalInfoRolesFile(JdbcTemplate jdbcTemplate, String roleSql) {
-        List<Map<String, Object>> judicialUserRoleTypeList = jdbcTemplate.queryForList(roleSql);
-        List<JudicialUserRoleType> actualRoleTypes =
-            judicialUserRoleTypeList.stream().map(roleTypeMap -> {
-                JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
-                judicialUserRoleType.setPerId((String) roleTypeMap.get("per_Id"));
-                judicialUserRoleType.setTitle((String) roleTypeMap.get("title"));
-                judicialUserRoleType.setLocation((String) roleTypeMap.get("location"));
-                judicialUserRoleType.setStartDate(handleNull((Timestamp) roleTypeMap.get("start_date")));
-                judicialUserRoleType.setEndDate(handleNull((Timestamp) roleTypeMap.get("end_date")));
-                judicialUserRoleType.setMrdCreatedTime(handleNull((Timestamp) roleTypeMap.get("mrd_created_time")));
-                judicialUserRoleType.setMrdUpdatedTime(handleNull((Timestamp) roleTypeMap.get("mrd_updated_time")));
-                judicialUserRoleType.setMrdDeletedTime(handleNull((Timestamp) roleTypeMap.get("mrd_deleted_time")));
-                return judicialUserRoleType;
-            }).collect(Collectors.toList());
-
-        assertTrue(actualRoleTypes.get(0).getMrdCreatedTime().contains("2018-05-02"));
-        assertTrue(actualRoleTypes.get(0).getMrdUpdatedTime().contains("2018-05-02"));
-        assertTrue(actualRoleTypes.get(0).getMrdDeletedTime().contains("2018-05-02"));
     }
 
     static List<JudicialOfficeAuthorisation> getFileAuthorisationObjectsFromCsv(String inputFilePath) {
@@ -286,6 +251,21 @@ public interface ParentIntegrationTestSupport {
         return authorisations;
     }
 
+    static void validateAdditionalInfoRolesFile(JdbcTemplate jdbcTemplate, String roleSql) {
+        List<Map<String, Object>> judicialUserRoleTypeList = jdbcTemplate.queryForList(roleSql);
+        List<JudicialUserRoleType> actualRoleTypes =
+                judicialUserRoleTypeList.stream().map(roleTypeMap -> {
+                    JudicialUserRoleType judicialUserRoleType = new JudicialUserRoleType();
+                    judicialUserRoleType.setPerId((String) roleTypeMap.get("per_Id"));
+                    judicialUserRoleType.setTitle((String) roleTypeMap.get("title"));
+                    judicialUserRoleType.setLocation((String) roleTypeMap.get("location"));
+                    judicialUserRoleType.setStartDate(handleNull((Timestamp) roleTypeMap.get("start_date")));
+                    judicialUserRoleType.setEndDate(handleNull((Timestamp) roleTypeMap.get("end_date")));
+                    return judicialUserRoleType;
+                }).toList();
+
+    }
+
     static JudicialOfficeAuthorisation mapJudicialOfficeAuthorisation(String line) {
         List<String> columns = Arrays.asList(line.split("\\,", -1));
         JudicialOfficeAuthorisation judicialOfficeAuthorisation = new JudicialOfficeAuthorisation();
@@ -295,10 +275,6 @@ public interface ParentIntegrationTestSupport {
         judicialOfficeAuthorisation.setStartDate(handleNull(columns.get(3), true));
         judicialOfficeAuthorisation.setEndDate(handleNull(columns.get(4), true));
         judicialOfficeAuthorisation.setLowerLevel(handleNull(columns.get(5), false));
-        judicialOfficeAuthorisation.setMrdCreatedTime(handleNull(columns.get(8),true));
-        judicialOfficeAuthorisation.setMrdUpdatedTime(handleNull(columns.get(9),true));
-        judicialOfficeAuthorisation.setMrdDeletedTime(handleNull(columns.get(10),true));
-
         return judicialOfficeAuthorisation;
     }
 
@@ -308,9 +284,7 @@ public interface ParentIntegrationTestSupport {
         } else if (timeStampField && isBlank(fieldValue)) {
             return null;
         } else if (timeStampField && !isBlank(fieldValue)) {
-            LocalDateTime ldt = LocalDateTime.parse(fieldValue,
-                    DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
-            return Timestamp.valueOf(ldt).toString();
+            return Timestamp.valueOf(fieldValue).toString();
         } else {
             return fieldValue;
         }
@@ -331,11 +305,11 @@ public interface ParentIntegrationTestSupport {
                         .filter(e -> e.getKey().equals(columnName))
                         .map(Map.Entry::getValue)
                         .findFirst())
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
 
         return optional_values.stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 }
