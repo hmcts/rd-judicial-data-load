@@ -7,7 +7,6 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialRegionType;
-import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 
 class JudicialRegionTypeRowMapperTest {
 
@@ -22,12 +21,6 @@ class JudicialRegionTypeRowMapperTest {
         assertEquals("regionId", response.get("region_id"));
         assertEquals("region_desc_en", response.get("region_desc_en"));
         assertEquals("region_desc_cy", response.get("region_desc_cy"));
-        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"),response
-               .get("mrd_created_time"));
-        assertEquals(getDateTimeStamp("28-05-2022 00:00:00"),response
-                .get("mrd_updated_time"));
-        assertEquals(getDateTimeStamp("28-06-2022 00:00:00"),response
-                .get("mrd_deleted_time"));
     }
 
 
