@@ -1,2 +1,2 @@
-per_id,Personal_Code,Known_As,Surname,Full_Name,Post_Nominals,Work_Pattern,Email_Id,Joining_Date,Last_Working_Date,Active_Flag,Extracted_Date,Object_Id,Is_Judge,Is_Panel_Member,Is_Magistrate,MRD_Created_Time,MRD_Updated_Time,MRD_Deleted_Time
-1,Emp1,Joe,Bloggs,Joe Bloggs,Baroness,No Work Pattern (M to F),joe.bloggs@ejudiciary.net,28-04-2022 00:00:00,28-04-2022 00:00:00,True,28-04-2022 00:00:00,787878,TRUE,TRUE,FALSE,28-04-2022 00:00:00,28-04-2022 00:00:00,28-04-2022 00:00:00
+per_id,Personal_Code,Known_As,Surname,Full_Name,Post_Nominals,Work_Pattern,Email_Id,Joining_Date,Last_Working_Date,Active_Flag,Extracted_Date,Object_Id
+1,Emp1,Joe,Bloggs,Joe Bloggs,Baroness,No Work Pattern (M to F),joe.bloggs@ejudiciary.net,2008-07-18 00:00:00,1900-01-01 00:00:00,True,2019-12-04 11:29:43.480000000,787878
