@@ -2,12 +2,12 @@ package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserRoleType;
+import uk.gov.hmcts.reform.juddata.camel.util.CommonUtils;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createJudicialUserRoleType;
-import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 
 class JudicialRoleTypeRowMapperTest {
 
@@ -21,11 +21,8 @@ class JudicialRoleTypeRowMapperTest {
         assertEquals("46804", response.get("per_Id"));
         assertEquals("Family Course Tutor (JC)", response.get("title"));
         assertEquals("Nationwide", response.get("location"));
-        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), response.get("start_date"));
-        assertEquals(getDateTimeStamp("28-06-2022 00:00:00"), response.get("end_date"));
-        assertEquals(getDateTimeStamp("28-04-2022 00:00:00"), response.get("mrd_created_time"));
-        assertEquals(getDateTimeStamp("28-05-2022 00:00:00"), response.get("mrd_updated_time"));
-        assertEquals(getDateTimeStamp("28-06-2022 00:00:00"), response.get("mrd_deleted_time"));
+        assertEquals(CommonUtils.getDateTimeStamp("2018-05-02 00:00:00.0"), response.get("start_date"));
+        assertEquals(CommonUtils.getDateTimeStamp("2022-05-01 00:00:00"), response.get("end_date"));
 
     }
 }

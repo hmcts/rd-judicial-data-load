@@ -1,16 +1,13 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialOfficeAuthorisation;
-import uk.gov.hmcts.reform.juddata.camel.util.CommonUtils;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import static uk.gov.hmcts.reform.juddata.camel.util.CommonUtils.getDateTimeStamp;
 
 @Slf4j
 @Component
@@ -31,23 +28,15 @@ public class JudicialOfficeAuthorisationRowMapper {
         judOfficeAuthorizationRow.put("lower_level", judicialOfficeAuthorisation.getLowerLevel());
         judOfficeAuthorizationRow.put("personal_code", judicialOfficeAuthorisation.getPersonalCode());
         judOfficeAuthorizationRow.put("object_id", judicialOfficeAuthorisation.getObjectId());
-
-        Optional<String> mrdCreatedTimeOptional = Optional.ofNullable(judicialOfficeAuthorisation.getMrdCreatedTime())
-                .filter(Predicate.not(String::isEmpty));
-        judOfficeAuthorizationRow.put("mrd_created_time", mrdCreatedTimeOptional.map(CommonUtils::getDateTimeStamp)
-                .orElse(null));
-
-        Optional<String> mrdUpdatedTimeOptional = Optional.ofNullable(judicialOfficeAuthorisation.getMrdUpdatedTime())
-                .filter(Predicate.not(String::isEmpty));
-        judOfficeAuthorizationRow.put("mrd_updated_time", mrdUpdatedTimeOptional.map(CommonUtils::getDateTimeStamp)
-                .orElse(null));
-
-        Optional<String> mrdDeletedTimeOptional = Optional.ofNullable(judicialOfficeAuthorisation.getMrdDeletedTime())
-                .filter(Predicate.not(String::isEmpty));
-        judOfficeAuthorizationRow.put("mrd_deleted_time", mrdDeletedTimeOptional.map(CommonUtils::getDateTimeStamp)
-                .orElse(null));
-
         return  judOfficeAuthorizationRow;
+    }
+
+    private Timestamp getDateTimeStamp(String date) {
+        if (StringUtils.isBlank(date)) {
+            return null;
+        } else {
+            return Timestamp.valueOf(date);
+        }
     }
 
     public int generateId() {
