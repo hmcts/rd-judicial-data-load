@@ -14,11 +14,8 @@ class JudicialUserRoleTypeTest {
         assertEquals("46804", judicialUserRoleType.getPerId());
         assertEquals("Family Course Tutor (JC)", judicialUserRoleType.getTitle());
         assertEquals("Nationwide", judicialUserRoleType.getLocation());
-        assertEquals("28-04-2022 00:00:00", judicialUserRoleType.getStartDate());
-        assertEquals("28-06-2022 00:00:00", judicialUserRoleType.getEndDate());
-        assertEquals("28-04-2022 00:00:00", judicialUserRoleType.getMrdCreatedTime());
-        assertEquals("28-05-2022 00:00:00", judicialUserRoleType.getMrdUpdatedTime());
-        assertEquals("28-06-2022 00:00:00", judicialUserRoleType.getMrdDeletedTime());
+        assertEquals("2018-05-02 00:00:00.000", judicialUserRoleType.getStartDate());
+        assertEquals("2022-05-01 00:00:00", judicialUserRoleType.getEndDate());
     }
 
 }
