@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.juddata.camel.util;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
