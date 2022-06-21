@@ -7,7 +7,6 @@ import static uk.gov.hmcts.reform.juddata.camel.helper.JrdTestSupport.createCurr
 
 class JudicialBaseLocationTypeTest {
 
-
     @Test
     void  test_objects_JudicialBaseLocationType_correctly() {
 
@@ -18,10 +17,6 @@ class JudicialBaseLocationTypeTest {
         assertEquals("circuit", judicialBaseLocationType.getCircuit());
         assertEquals("courtName", judicialBaseLocationType.getCourtName());
         assertEquals("courtType", judicialBaseLocationType.getCourtType());
-        assertEquals("28-04-2022 00:00:00", judicialBaseLocationType.getMrdCreatedTime());
-        assertEquals("28-05-2022 00:00:00", judicialBaseLocationType.getMrdUpdatedTime());
-        assertEquals("28-06-2022 00:00:00", judicialBaseLocationType.getMrdDeletedTime());
-
     }
 
     public  JudicialBaseLocationType createJudicialBaseLocationTypeMock() {
@@ -32,9 +27,6 @@ class JudicialBaseLocationTypeTest {
         judicialBaseLocationType.setCircuit("circuit");
         judicialBaseLocationType.setCourtName("courtName");
         judicialBaseLocationType.setCourtType("courtType");
-        judicialBaseLocationType.setMrdCreatedTime("28-04-2022 00:00:00");
-        judicialBaseLocationType.setMrdUpdatedTime("28-05-2022 00:00:00");
-        judicialBaseLocationType.setMrdDeletedTime("28-06-2022 00:00:00");
         return  judicialBaseLocationType;
     }
 }
