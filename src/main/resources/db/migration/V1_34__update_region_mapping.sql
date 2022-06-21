@@ -1,4 +1,4 @@
-truncate table  jrd_lrd_region_mapping  cascade;
+truncate table  jrd_lrd_region_mapping;
 
 INSERT INTO jrd_lrd_region_mapping (jrd_region_id,jrd_region,region_id,region) VALUES
 ('1','National','12','National'),
