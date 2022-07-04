@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
