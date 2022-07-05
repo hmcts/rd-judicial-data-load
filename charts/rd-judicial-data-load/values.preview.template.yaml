@@ -53,12 +53,15 @@ global:
 postgresql:
   enabled: true
   image:
-    tag: '11.3.0'
-  postgresqlUsername: dbjuddata
-  postgresqlPassword: dbjuddata
-  postgresqlDatabase: dbjuddata
-  persistence:
-    enabled: false
+    tag: '11.16.0'
+  auth:
+    username: dbjuddata
+    password: dbjuddata
+    database: dbjuddata
+  ## Disable Postgres Persistence
+  primary:
+    persistence:
+      enabled: false
 
 servicebus:
   resourceGroup: rd-aks-pr-test
