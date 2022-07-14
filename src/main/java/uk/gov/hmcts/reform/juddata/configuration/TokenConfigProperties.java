@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.juddata.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
