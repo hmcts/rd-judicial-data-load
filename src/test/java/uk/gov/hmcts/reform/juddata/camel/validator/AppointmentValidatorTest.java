@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.juddata.camel.validator;
 
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.juddata.validators.AppointmentValidator;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

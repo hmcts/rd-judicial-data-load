@@ -22,8 +22,8 @@ import static org.apache.commons.lang.BooleanUtils.isNotTrue;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_PLAIN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.IS_PARENT;
 
 @Slf4j
 @Component
