@@ -1,12 +1,12 @@
 package uk.gov.hmcts.reform.juddata.camel.mapper;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.mapper.IMapper;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
