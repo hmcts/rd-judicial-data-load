@@ -17,8 +17,8 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
 
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DIRECT_JRD;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.START_ROUTE;
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class

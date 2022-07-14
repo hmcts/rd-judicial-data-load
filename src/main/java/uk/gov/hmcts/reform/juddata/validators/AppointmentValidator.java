@@ -2,9 +2,9 @@ package uk.gov.hmcts.reform.juddata.validators;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Set;
 
 public class AppointmentValidator implements ConstraintValidator<Appointment, String> {
 
