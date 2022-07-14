@@ -19,9 +19,9 @@ import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -29,13 +29,13 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOWER_LEVEL;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LOWER_LEVEL;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.LOWER_LEVEL_AUTH;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_HTML;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.LOWER_LEVEL_AUTH;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.MISSING_PER_ID;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.NEW_LOWER_LEVEL;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOWER_LEVEL;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 
 @Slf4j
 @Component
