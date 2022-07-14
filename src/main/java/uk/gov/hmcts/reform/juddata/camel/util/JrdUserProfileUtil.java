@@ -22,7 +22,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.dto.Email;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialUserProfile;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -44,11 +43,11 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PAR
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_NAME;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_HTML;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.PER_CODE_OBJECT_ID_FIELD;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.USERPROFILE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.CONTENT_TYPE_HTML;
 
 @Component
 public class JrdUserProfileUtil {

@@ -28,11 +28,11 @@ import static org.apache.camel.util.ObjectHelper.isNotEmpty;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registerFileStatusBean;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.INVALID_JSR_PARENT_ROW;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.LOCATION_ID;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.PER_ID;
 
 public interface ICustomValidationProcessor<T> {
 
