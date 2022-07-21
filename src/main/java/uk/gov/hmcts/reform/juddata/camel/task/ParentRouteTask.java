@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor;
 
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 
 import static java.lang.Boolean.TRUE;
