@@ -41,7 +41,11 @@ def versions = [
         launchDarklySdk    : "5.8.1",
         camel              : '3.8.0',
         log4j              : '2.17.1',
-        springVersion      : '5.3.20'
+        springVersion      : '5.3.20',
+        feign              : '3.8.0',
+        logback            : '1.2.10',
+        netty              : '1.0.6',
+        bytebuddy          : '1.12.7'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
@@ -278,8 +282,8 @@ dependencies {
     }
 
     implementation "io.github.openfeign:feign-httpclient:11.8"
-    implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
-    implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
+    implementation group: 'io.github.openfeign.form', name: 'feign-form', version: versions.feign
+    implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: versions.feign
 
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.2'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
@@ -316,8 +320,8 @@ dependencies {
 
     implementation group: 'com.azure', name: 'azure-core', version: '1.15.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.2.0'
-    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.6'
-    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
+    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: versions.netty
+    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: versions.netty
     implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.14'
     
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
@@ -325,8 +329,8 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
 
-    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -354,8 +358,8 @@ dependencies {
         exclude group: "net.bytebuddy", module: "byte-buddy"
         exclude group: "net.bytebuddy", module: "byte-buddy-agent"
     }
-    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.7'
-    testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.12.7'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: versions.bytebuddy
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: versions.bytebuddy
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.3.1'
 
