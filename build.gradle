@@ -41,7 +41,7 @@ def versions = [
         launchDarklySdk    : "5.8.1",
         camel              : '3.8.0',
         log4j              : '2.17.1',
-        springVersion      : '5.3.20'
+        springVersion      : '5.3.22'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
