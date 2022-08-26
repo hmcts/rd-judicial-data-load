@@ -262,7 +262,7 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
     implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
     implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-core') {
         version {
@@ -289,7 +289,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.6') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.8') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
     //Fix for CVE-2021-29425
@@ -302,7 +302,7 @@ dependencies {
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
 
-    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 
     implementation group: 'org.apache.commons', name: 'commons-vfs2', version: '2.4.1'
     implementation group: 'com.jcraft', name: 'jsch', version: '0.1.55'
@@ -316,9 +316,9 @@ dependencies {
 
     implementation group: 'com.azure', name: 'azure-core', version: '1.15.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.2.0'
-    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.6'
+    implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: '1.0.19'
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: '1.0.6'
-    implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.14'
+    implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.18'
     
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
@@ -326,7 +326,7 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
 
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -354,7 +354,7 @@ dependencies {
         exclude group: "net.bytebuddy", module: "byte-buddy"
         exclude group: "net.bytebuddy", module: "byte-buddy-agent"
     }
-    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.7'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.10'
     testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.12.7'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.3.1'
