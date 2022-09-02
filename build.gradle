@@ -318,7 +318,7 @@ dependencies {
     implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
 
-    implementation group: 'com.azure', name: 'azure-core', version: '1.15.0'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.32.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.2.0'
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: versions.netty
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: versions.netty
