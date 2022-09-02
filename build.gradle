@@ -400,19 +400,19 @@ dependencies {
 
     testImplementation(group: 'org.yaml', name: 'snakeyaml') {
         version {
-            strictly '1.23'
+            strictly '1.31'
         }
     }
 
     functionalTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
         version {
-            strictly '1.23'
+            strictly '1.31'
         }
     }
 
     integrationTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
         version {
-            strictly '1.23'
+            strictly '1.31'
         }
     }
 
