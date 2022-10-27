@@ -1,0 +1,6 @@
+INSERT INTO judicial_location_mapping (epimms_id, judicial_base_location_id, building_location_name, base_location_name, service_code) VALUES('356855', '768', 'CENTRAL FAMILY COURT (FIRST AVENUE HOUSE)', 'Court of Protection', '');
+INSERT INTO judicial_location_mapping (epimms_id, judicial_base_location_id, building_location_name, base_location_name, service_code) VALUES('541183', '1072', 'WILLESDEN MAGISTRATES COURT', 'Brent Magistrates Court', '');
+INSERT INTO judicial_location_mapping (epimms_id, judicial_base_location_id, building_location_name, base_location_name, service_code) VALUES('317334', '1100', 'PRESTON MAGISTRATES COURT', 'Preston Magistrates Court', '');
+INSERT INTO judicial_location_mapping (epimms_id, judicial_base_location_id, building_location_name, base_location_name, service_code) VALUES('366796', '942', 'NEWCASTLE CIVIL & FAMILY COURTS AND TRIBUNALS CENTRE', 'Newcastle Combined Court - County', '');
+INSERT INTO judicial_location_mapping (epimms_id, judicial_base_location_id, building_location_name, base_location_name, service_code) VALUES('498443', '1159', 'NEWCASTLE UPON TYNE CROWN COURT AND MAGISTRATES COURT', 'Newcastle Upon Tyne Magistrates Court', '');
+COMMIT;
