@@ -51,7 +51,7 @@ CREATE TABLE dbjudicialdata.dataload_schedular_audit (
 
 -- dbjudicialdata.dataload_exception_records definition
 CREATE TABLE dbjudicialdata.dataload_exception_records (
-	id serial4 NOT NULL,
+	id serial NOT NULL,
 	table_name varchar(64) NULL,
 	scheduler_start_time timestamp NOT NULL,
 	scheduler_name varchar(64) NOT NULL,
