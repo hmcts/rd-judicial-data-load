@@ -2,11 +2,11 @@ create schema if not exists dbjudicialdata;
 
 -- dbjudicialdata.judicial_location_mapping definition
 CREATE TABLE dbjudicialdata.judicial_location_mapping (
-	epimms_id varchar(16) NULL,
-	judicial_base_location_id varchar(64) NULL,
-	building_location_name varchar(256) NULL,
-	base_location_name varchar(128) NULL,
-	service_code varchar(16) NULL
+	epimms_id varchar(16),
+	judicial_base_location_id varchar(64),
+	building_location_name varchar(256),
+	base_location_name varchar(128),
+	service_code varchar(16)
 );
 
 
@@ -23,8 +23,8 @@ CREATE TABLE dbjudicialdata.jrd_lrd_region_mapping (
 CREATE TABLE dbjudicialdata.judicial_service_code_mapping (
 	service_id bigint NOT NULL,
 	ticket_code varchar(16) NOT NULL,
-	service_code varchar(64) NULL,
-	service_description varchar(512) NULL,
+	service_code varchar(64),
+	service_description varchar(512),
 	CONSTRAINT service_id PRIMARY KEY (service_id)
 );
 
@@ -42,9 +42,9 @@ CREATE TABLE dbjudicialdata.dataload_schedular_audit (
 	id serial NOT NULL,
 	scheduler_name varchar(64) NOT NULL,
 	scheduler_start_time timestamp NOT NULL,
-	scheduler_end_time timestamp NULL,
-	status varchar(32) NULL,
-	file_name varchar(128) NULL,
+	scheduler_end_time timestamp,
+	status varchar(32),
+	file_name varchar(128),
 	CONSTRAINT dataload_schedular_audit_pk PRIMARY KEY (id)
 );
 
@@ -52,12 +52,12 @@ CREATE TABLE dbjudicialdata.dataload_schedular_audit (
 -- dbjudicialdata.dataload_exception_records definition
 CREATE TABLE dbjudicialdata.dataload_exception_records (
 	id serial NOT NULL,
-	table_name varchar(64) NULL,
+	table_name varchar(64),
 	scheduler_start_time timestamp NOT NULL,
 	scheduler_name varchar(64) NOT NULL,
-	"key" varchar(256) NULL,
-	field_in_error varchar(256) NULL,
-	error_description varchar(512) NULL,
+	"key" varchar(256),
+	field_in_error varchar(256),
+	error_description varchar(512),
 	updated_timestamp timestamp NOT NULL,
 	row_id int8 NULL,
 	CONSTRAINT dataload_exception_records_pk PRIMARY KEY (id)
