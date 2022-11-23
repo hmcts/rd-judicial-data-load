@@ -9,7 +9,7 @@ maintainers:
   - name: Reference Data Team
 dependencies:
   - name: job
-    version: ~0.7.3
+    version: ~0.7.5
     repository: https://hmctspublic.azurecr.io/helm/v1/repo/
   - name: postgresql
     version: 11.6.10
