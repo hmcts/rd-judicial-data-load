@@ -15,6 +15,7 @@ job:
     JRD_MQ_TRUST_ALL_CERTS: false
     IDAM_URL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net
     OAUTH2_REDIRECT_URI: https://rd-professional-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/oauth2redirect
+    ELINKS_URL: https://jo-staging.elinks.judiciary.uk
   postgresql:
     enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-data-load:latest'
@@ -46,6 +47,8 @@ job:
           alias: OAUTH2_CLIENT_AUTH
         - name: rd-sendgrid-api-key
           alias: RD_SENDGRID_API_KEY
+        - name: judicial-api-elinks-api-key
+          alias: judicial_api_elinks_api_key
 postgresql:
   enabled: false
 
