@@ -53,6 +53,11 @@ spring:
   mail:
     enabled: false
 
+  task:
+    scheduling:
+      pool:
+        size: 2
+
 email:
   mailTypes:
     asb:
@@ -124,4 +129,16 @@ idam:
     redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
     authorization: ${OAUTH2_AUTH:}
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
+
+elinks:
+    schedule: "*/30 * * * * *"
+
+file:
+  schedule:  "*/60 * * * * *"
+
+judicialUrl : http://rd-judicial-api-aat.service.core-compute-aat.internal/health
+locationUrl : http://rd-location-ref-api-aat.service.core-compute-aat.internal/health
+loggingComponentName: rd-elink-api
+
+
 

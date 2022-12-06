@@ -222,7 +222,11 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/response/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/camel/binder/**,"
+                "src/main/java/uk/gov/hmcts/reform/juddata/camel/binder/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/controller/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/model/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/service/**," +
+                "src/main/java/uk/gov/hmcts/reform/juddata/schedular/**,"
     }
 }
 
@@ -332,6 +336,9 @@ dependencies {
 
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
+
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
+    implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: '4.1.85.Final', classifier: 'osx-aarch_64'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -494,3 +501,4 @@ rootProject.tasks.named("processFunctionalTestResources") {
 rootProject.tasks.named("processIntegrationTestResources") {
     duplicatesStrategy = 'include'
 }
+
