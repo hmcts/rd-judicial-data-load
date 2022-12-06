@@ -125,3 +125,7 @@ idam:
     authorization: ${OAUTH2_AUTH:}
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
 
+
+elinksApiKey: ${judicial_api_elinks_api_key:}
+#URL not tested , code is for developers reference
+elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk}
