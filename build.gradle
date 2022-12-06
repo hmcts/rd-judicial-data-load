@@ -219,6 +219,7 @@ sonarqube {
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/juddata/configuration/**," +
+                "src/main/java/uk/gov/hmcts/reform/elinks/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/response/**," +
