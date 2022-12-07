@@ -45,11 +45,11 @@ withParameterizedPipeline(type, product, component, 'sandbox', 'sandbox') {
     enableDbMigration()
     enableDockerBuild()
 
-    after('functionalTest:preview') {
+    afterSuccess('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
-    after('functionalTest:aat') {
+    afterSuccess('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 }
