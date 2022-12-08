@@ -34,6 +34,8 @@ job:
           alias: OAUTH2_CLIENT_AUTH
         - name: rd-sendgrid-api-key
           alias: RD_SENDGRID_API_KEY
+        - name: judicial-api-elinks-api-key
+          alias: judicial_api_elinks_api_key
   secrets:
     SB_TOPIC_CONN_STRING:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
