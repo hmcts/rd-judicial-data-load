@@ -301,6 +301,8 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
+
 
     testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
@@ -370,6 +372,7 @@ dependencies {
     testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+
 
     testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.4'
 
