@@ -303,7 +303,6 @@ dependencies {
     implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
 
-
     testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
