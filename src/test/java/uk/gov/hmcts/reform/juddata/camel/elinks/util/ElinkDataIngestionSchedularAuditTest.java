@@ -44,7 +44,7 @@ class ElinkDataIngestionSchedularAuditTest {
 
         when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
         elinkDataIngestionSchedularAudit.auditSchedulerStatus("Test User",
-                                                LocalDateTime.now(),LocalDateTime.now(), "SUCCESS","BaseLocations" );
+            LocalDateTime.now(), LocalDateTime.now(), "SUCCESS", "BaseLocations");
 
         verify(elinkSchedularAuditRepository, times(1))
             .save(any());
