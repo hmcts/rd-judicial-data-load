@@ -1,16 +1,20 @@
 package uk.gov.hmcts.reform.juddata.camel.elinks.util;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.reform.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.elinks.util.ElinkDataIngestionSchedularAudit;
 
 import java.time.LocalDateTime;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.junit.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 
 class ElinkDataIngestionSchedularAuditTest {
@@ -18,8 +22,14 @@ class ElinkDataIngestionSchedularAuditTest {
     @Mock
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
+
     @InjectMocks
-    ElinkDataSchedularAudit elinkDataSchedularAudit;
+    ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     @SuppressWarnings("unchecked")
@@ -32,14 +42,12 @@ class ElinkDataIngestionSchedularAuditTest {
         schedularAudit.setStatus("SUCCESS");
         schedularAudit.setApiName("BaseLocations");
 
-        //when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
-        assertNotNull(schedularAudit);
-        assertThat(schedularAudit.getId(), is(1));
-        assertThat(schedularAudit.getSchedulerName(), is("Test User"));
-        assertNotNull(schedularAudit.getSchedulerStartTime());
-        assertNotNull(schedularAudit.getSchedulerEndTime());
-        assertThat(schedularAudit.getStatus(), is("SUCCESS"));
-        assertThat(schedularAudit.getApiName(), is("BaseLocations"));
+        when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus("Test User",
+                                                LocalDateTime.now(),LocalDateTime.now(), "SUCCESS","BaseLocations" );
+
+        verify(elinkSchedularAuditRepository, times(1))
+            .save(any());
 
     }
 
