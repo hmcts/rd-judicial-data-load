@@ -11,10 +11,9 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 
 
 @Entity(name = "dataload_schedular_audit")
@@ -23,12 +22,10 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(name = "elink_audit_scheduler_id_seq",
-    sequenceName = "elink_audit_scheduler_id_seq", allocationSize = 1)
 public class ElinkDataSchedularAudit implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elink_audit_scheduler_id_seq")
+    @GeneratedValue()
     @Column(name = "id")
     private int id;
 
