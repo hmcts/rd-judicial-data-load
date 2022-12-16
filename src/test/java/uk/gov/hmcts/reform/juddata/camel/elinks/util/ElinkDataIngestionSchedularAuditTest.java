@@ -31,7 +31,7 @@ class ElinkDataIngestionSchedularAuditTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"Location:SUCCESS  ", "BaseLocation:SUCCESS", "People:SUCCESS"}, delimiter = ':')
+    @CsvSource(value = {"Location:SUCCESS", "BaseLocation:SUCCESS", "People:SUCCESS"}, delimiter = ':')
     void testSaveScheduleSuccessAudit(String apiName, String status) {
         ElinkDataSchedularAudit schedularAudit = new ElinkDataSchedularAudit();
         schedularAudit.setId(1);
