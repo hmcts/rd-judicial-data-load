@@ -41,6 +41,10 @@ get-sidam-ids: SELECT DISTINCT sidam_id FROM judicial_user_profile WHERE sidam_i
 scheduler-audit-failure: SELECT COUNT(*) FROM dataload_schedular_audit WHERE DATE(scheduler_start_time) = current_date AND status = 'Failure'
 scheduler-end-time: SELECT max(scheduler_end_time) FROM dataload_schedular_audit WHERE scheduler_end_time < ( SELECT MAX(scheduler_end_time) FROM dataload_schedular_audit WHERE file_name = 'Personal' AND status IN ('PartialSuccess', 'Success')) AND file_name = 'Personal' AND status IN ('PartialSuccess', 'Success')
 
+elink-select-job-status-sql:  SELECT id, publishing_status FROM dbjudicialdata.dataload_schedular_job WHERE DATE(job_start_time) = current_date
+elink-get-sidam-ids: SELECT DISTINCT sidam_id FROM dbjudicialdata.judicial_user_profile WHERE sidam_id IS NOT NULL
+elink-update-job-sql: UPDATE dbjudicialdata.dataload_schedular_job SET job_end_time = NOW() AT TIME ZONE 'utc', publishing_status = ? WHERE id =?
+elink-insert-job-sql: INSERT INTO dbjudicialdata.dataload_schedular_job(job_start_time, publishing_status) VALUES(?, ?)
 jrd:
   publisher:
     azure:
@@ -50,4 +54,15 @@ jrd:
           topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-aat}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
+    jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
+
+elink:
+  publisher:
+    azure:
+      service:
+        bus:
+          connection-string: ${JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING:}
+          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-aat}
+          # DO NOT SET THIS 'true' IN PRODUCTION!
+          trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:true}
     jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}

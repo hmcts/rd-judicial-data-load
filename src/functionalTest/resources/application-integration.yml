@@ -241,3 +241,4 @@ email:
       subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
       template: lower-level-auth.ftl
 
+targetInstance: ${TEST_URL:http://localhost:8094}

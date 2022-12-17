@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: ${DB_URL:jdbc:tc:postgresql:11.1:///dbjuddata-test}
+    username: ${DB_USERNAME:dbjuddata-test}
+    password: ${DB_PASSWORD:dbjuddata-test}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
+elinksApiKey: ${judicial_api_elinks_api_key:}
+#URL not tested , code is for developers reference
+elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk}
