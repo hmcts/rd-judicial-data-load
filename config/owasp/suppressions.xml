@@ -22,4 +22,7 @@
     <cve>CVE-2021-37533</cve>
     <cve>CVE-2022-45046</cve>
 </suppress>
+<suppress until="2024-01-01">
+    <cve>CVE-2022-41881</cve>
+</suppress>
 </suppressions>
