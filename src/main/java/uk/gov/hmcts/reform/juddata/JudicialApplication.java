@@ -8,11 +8,11 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
 import uk.gov.hmcts.reform.juddata.camel.util.JrdDataIngestionLibraryRunner;
@@ -25,7 +25,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.STA
 @Slf4j
 @EnableFeignClients(basePackages = {
     "uk.gov.hmcts.reform.juddata"}, basePackageClasses = {IdamApi.class})
-public class JudicialApplication implements ApplicationRunner {
+@EnableJpaRepositories(basePackages = "uk.gov.hmcts.reform")
+public class JudicialApplication {
 
     @Autowired
     JobLauncher jobLauncher;
@@ -47,13 +48,12 @@ public class JudicialApplication implements ApplicationRunner {
     public static void main(final String[] args) throws Exception {
         ApplicationContext context = SpringApplication.run(JudicialApplication.class);
         //Sleep added to allow app-insights to flush the logs
-        Thread.sleep(7000);
+        Thread.sleep(1000 * 60 * 60 * 10);
         int exitCode = SpringApplication.exit(context);
         log.info("{}:: Judicial Application exiting with exit code {} ", logComponentName, exitCode);
         System.exit(exitCode);
     }
 
-    @Override
     public void run(ApplicationArguments args) throws Exception {
         JobParameters params = new JobParametersBuilder()
             .addString(jobName, String.valueOf(System.currentTimeMillis()))

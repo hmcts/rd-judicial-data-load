@@ -9,7 +9,7 @@ management:
   endpoint:
     health:
       show-details: "always"
-
+loggingComponentName: RD-Judicial-dataload
 spring:
   application:
     name: Judicial reference data blob store sync API

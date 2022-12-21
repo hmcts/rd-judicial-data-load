@@ -3,7 +3,7 @@ buildscript {
         springBootVersion = '2.4.6'
     }
     dependencies {
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.34")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
@@ -32,7 +32,7 @@ apply plugin: "io.spring.dependency-management"
 def versions = [
         lombok             : '1.18.22',
         reformLogging      : '5.1.9',
-        serenity           : '2.0.23',
+        serenity           : '2.0.76',
         sonarPitest        : '0.5',
         springBoot         : '2.6.6',
         springHystrix      : '2.2.8.RELEASE',
@@ -223,7 +223,11 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/juddata/JudicialApplication.java," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/client/**," +
                 "src/main/java/uk/gov/hmcts/reform/juddata/response/**," +
-                "src/main/java/uk/gov/hmcts/reform/juddata/camel/binder/**,"
+                "src/main/java/uk/gov/hmcts/reform/juddata/camel/binder/**," +
+                "src/main/java/uk/gov/hmcts/reform/elinks/configuration/**," +
+                "src/main/java/uk/gov/hmcts/reform/elinks/response/**," +
+                "src/main/java/uk/gov/hmcts/reform/elinks/domain/**," +
+                "src/main/java/uk/gov/hmcts/reform/elinks/util/**,"
     }
 }
 
@@ -301,6 +305,9 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
+
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 
     testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
@@ -347,7 +354,23 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-core"
         exclude group: "org.hamcrest", module: "hamcrest-library"
     }
+    testImplementation ("com.github.tomakehurst:wiremock-jre8:2.32.0") {
+        exclude group: 'com.github.jknack'
+    }
 
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    integrationTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    functionalTestCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    functionalTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+
+    testImplementation ('com.github.hmcts:rd-commons-lib:v0.0.13'){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
+    }
+
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     testImplementation (group: 'io.rest-assured', name: 'rest-assured', version: '4.1.2') {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
     }

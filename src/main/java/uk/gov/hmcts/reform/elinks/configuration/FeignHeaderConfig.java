@@ -12,5 +12,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class FeignHeaderConfig {
+
     private final List<String> headers;
 }
