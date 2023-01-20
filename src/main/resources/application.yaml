@@ -73,32 +73,28 @@ email:
       enabled: true
       from: ${MAIL_FROM}
       to:
-        - pradipta.dey@hmcts.net
-        - candyliyen.kuek@hmcts.net
+        - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
       template: simple-template-userProfile.ftl
     region:
       enabled: true
       from: ${MAIL_FROM}
       to:
-        - pradipta.dey@hmcts.net
-        - candyliyen.kuek@hmcts.net
+        - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - New Region ID in Appointment file - %s"
       template: simple-template-regionId.ftl
     baselocation:
       enabled: true
       from: ${MAIL_FROM}
       to:
-        - pradipta.dey@hmcts.net
-        - candyliyen.kuek@hmcts.net
+        - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - New Base Location in Appointment file - %s"
       template: simple-template-baseLocationId.ftl
     lowerLevelAuth:
       enabled: true
       from: ${MAIL_FROM}
       to:
-        - pradipta.dey@hmcts.net
-        - candyliyen.kuek@hmcts.net
+        - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
       template: lower-level-auth.ftl
 
