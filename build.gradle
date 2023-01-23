@@ -44,7 +44,7 @@ def versions = [
         springVersion      : '5.3.20',
         feign              : '3.8.0',
         logback            : '1.2.10',
-        netty              : '1.0.6',
+        netty              : '1.1.2',
         bytebuddy          : '1.12.7'
 ]
 
@@ -472,7 +472,7 @@ configurations.all {
         if (details.requested.group == 'io.netty'
                 && details.requested.name != 'netty-tcnative-boringssl-static'
                 && details.requested.name != 'netty-tcnative-classes') {
-            details.useVersion "4.1.86.Final"
+            details.useVersion "4.1.87.Final"
         }
 
         // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
