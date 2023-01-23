@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.4.6'
+        springBootVersion = '2.7.7'
     }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
@@ -34,7 +34,7 @@ def versions = [
         reformLogging      : '5.1.9',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
-        springBoot         : '2.6.6',
+        springBoot         : '2.7.7',
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.14.0-rc1',
@@ -294,7 +294,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.6') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.2.2') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
     //Fix for CVE-2021-29425
@@ -333,6 +333,11 @@ dependencies {
 
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.5'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.0'
+    implementation group: 'io.netty', name: 'netty-tcnative-classes', version: '2.0.56.Final'
+
+
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -460,7 +465,8 @@ applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 configurations.all {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'io.netty'
-                && details.requested.name != 'netty-tcnative-boringssl-static' ) {
+                && details.requested.name != 'netty-tcnative-boringssl-static'
+                && details.requested.name != 'netty-tcnative-classes') {
             details.useVersion "4.1.86.Final"
         }
 
