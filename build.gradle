@@ -335,13 +335,8 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.5'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.0'
-
-    // Fix for CVE-2022-45047
-    implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.9.2'
-    implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.9.2'
-    implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.9.2'
-    implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.9.2'
-
+    implementation group: 'io.netty', name: 'netty-tcnative-classes', version: '2.0.56.Final'
+    implementation group: 'io.netty.incubator', name: 'netty-incubator-codec-native-quic', version: '0.0.35.Final'
 
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
