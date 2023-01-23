@@ -337,6 +337,12 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.0'
     implementation group: 'io.netty', name: 'netty-tcnative-classes', version: '2.0.56.Final'
 
+    // Fix for CVE-2022-45047
+    implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.9.2'
+    implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.9.2'
+    implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.9.2'
+    implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.9.2'
+
 
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
