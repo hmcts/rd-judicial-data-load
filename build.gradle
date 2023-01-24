@@ -480,6 +480,15 @@ configurations.all {
     }
       exclude group: 'org.codehaus.jettison', module: 'jettison'
       exclude group: 'io.netty', module:'netty-tcnative-classes'
+
+    //Fix for CVE-2014-3488, CVE-2015-2156, CVE-2019-16869, CVE-2019-20444, CVE-2019-20445,
+    // CVE-2021-21290, CVE-2021-21295, CVE-2021-21409, CVE-2021-37136, CVE-2021-37137,
+    // CVE-2021-43797, CVE-2022-24823, CVE-2022-41881, CVE-2022-41915
+    exclude group: 'io.netty.incubator', module: 'netty-incubator-codec-classes-quic'
+    //Fix for CVE-2014-3488, CVE-2015-2156, CVE-2019-16869, CVE-2019-20444
+    // CVE-2021-21295,CVE-2019-20445, CVE-2021-21290, CVE-2022-41881, CVE-2022-41915
+    // CVE-2021-21409, CVE-2021-37136, CVE-2021-37137, CVE-2021-43797, CVE-2022-24823,
+    exclude group: 'io.netty.incubator', module: 'netty-incubator-codec-native-quic'
 }
 
 test {
