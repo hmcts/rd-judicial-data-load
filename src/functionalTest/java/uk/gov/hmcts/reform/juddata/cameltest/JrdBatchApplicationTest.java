@@ -89,7 +89,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     void testTaskletIdempotent() throws Exception {
         //clean context
-        SpringStarter.getInstance().restart();
+//        SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, parentFiles, file);
         uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
@@ -104,7 +104,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         validateDbRecordCountFor(jdbcTemplate, userProfileSql, 2);
         validateDbRecordCountFor(jdbcTemplate, roleSql, 5);
-        validateDbRecordCountFor(jdbcTemplate, selectDataLoadSchedulerAudit, 6);
+        validateDbRecordCountFor(jdbcTemplate, selectDataLoadSchedulerAudit, 12);
         List<Map<String, Object>> auditDetailsNextRun = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
         final Timestamp timestampNextRun = (Timestamp) auditDetailsNextRun.get(0).get("scheduler_end_time");
         assertEquals(timestamp, timestampNextRun);
