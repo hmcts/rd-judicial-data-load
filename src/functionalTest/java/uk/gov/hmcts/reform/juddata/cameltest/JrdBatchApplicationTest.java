@@ -24,7 +24,6 @@ import uk.gov.hmcts.reform.idam.client.IdamApi;
 import uk.gov.hmcts.reform.juddata.camel.binder.JudicialRegionType;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.JrdBatchIntegrationSupport;
 import uk.gov.hmcts.reform.juddata.cameltest.testsupport.LeafIntegrationTestSupport;
-import uk.gov.hmcts.reform.juddata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.juddata.client.IdamClient;
 import uk.gov.hmcts.reform.juddata.config.LeafCamelConfig;
 import uk.gov.hmcts.reform.juddata.config.ParentCamelConfig;
@@ -89,7 +88,7 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
     @Test
     void testTaskletIdempotent() throws Exception {
         //clean context
-//        SpringStarter.getInstance().restart();
+        //SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, parentFiles, file);
         uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
