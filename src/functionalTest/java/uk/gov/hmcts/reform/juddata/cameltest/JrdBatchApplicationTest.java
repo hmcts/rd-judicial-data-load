@@ -87,8 +87,6 @@ class JrdBatchApplicationTest extends JrdBatchIntegrationSupport {
 
     @Test
     void testTaskletIdempotent() throws Exception {
-        //clean context
-        //SpringStarter.getInstance().restart();
         uploadBlobs(jrdBlobSupport, parentFiles, file);
         uploadBlobs(jrdBlobSupport, leafFiles, LeafIntegrationTestSupport.file);
         JobParameters params = new JobParametersBuilder()
