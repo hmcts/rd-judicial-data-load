@@ -5,5 +5,4 @@ INSERT INTO dbjudicialdata.judicial_service_code_mapping (service_id,ticket_code
 	 (120,'374','BCA4','Special Educational Needs'),
 	 (121,'376','BBA2','Criminal Injuries Compensation');
 
-
 COMMIT;
