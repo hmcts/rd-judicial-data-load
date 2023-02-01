@@ -13,9 +13,12 @@ management:
 spring:
   application:
     name: Judicial reference data blob store sync API
+  main:
+    allow-circular-references: true
 
   batch:
-    initialize-schema: always
+    jdbc:
+     initialize-schema: always
     #run spring batch job manually as need to validate idempotent condition in code
     #rather than giving control to spring
     job:

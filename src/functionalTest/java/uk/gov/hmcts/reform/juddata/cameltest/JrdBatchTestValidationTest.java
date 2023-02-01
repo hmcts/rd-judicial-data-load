@@ -329,7 +329,7 @@ class JrdBatchTestValidationTest extends JrdBatchIntegrationSupport {
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         List<Map<String, Object>> auditList = jdbcTemplate.queryForList(selectDataLoadSchedulerAudit);
-        assertEquals(3, auditList.size()); //Personal, Locations, base-locations only
+        assertEquals(5, auditList.size()); //Personal, Locations, base-locations only
     }
 
     @Test
