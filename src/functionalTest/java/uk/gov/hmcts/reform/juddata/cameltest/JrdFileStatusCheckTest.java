@@ -131,7 +131,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
         validateExceptionDbRecordCount(jdbcTemplate, exceptionQuery, 3, false);
 
-        assertEquals(3, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+        assertEquals(6, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
 
         //validate old day 1 data not gets truncated after day 2 stale file ran
         List<Map<String, Object>> userProfileList = jdbcTemplate.queryForList(userProfileSql);
@@ -186,7 +186,7 @@ class JrdFileStatusCheckTest extends JrdBatchIntegrationSupport {
         ));
 
         validateLrdServiceFileException(jdbcTemplate, exceptionQuery, results);
-        assertEquals(3, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
+        assertEquals(6, jdbcTemplate.queryForList(schedulerInsertJrdSqlFailure).size());
 
         //validate old day 1 data not gets truncated after day 2  file not exist ran
         List<Map<String, Object>> appointmentList = jdbcTemplate.queryForList(appointmentSql);

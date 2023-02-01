@@ -9,7 +9,10 @@ spring:
     locations: classpath:db/testmigration
     enabled: true
   batch:
-    initialize-schema: always
+    jdbc:
+     initialize-schema: always
+  main:
+    allow-circular-references: true
     # set batch false in integration test and run batch manually with batch runner to set dynamic test property values
     # eg. dynamic properties ${parent.file.name}
     job:
@@ -122,6 +125,7 @@ fetch-personal-per-id: SELECT per_id FROM judicial_user_profile
 jdbc-batch-size: 10
 
 logging-component-name: RD_Judicial_Ref_Data
+
 component:
   name: Judicial Reference Data
 mail:
