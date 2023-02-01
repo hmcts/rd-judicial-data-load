@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.4.6'
+        springBootVersion = '2.7.7'
     }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
@@ -34,7 +34,7 @@ def versions = [
         reformLogging      : '5.1.9',
         serenity           : '2.0.23',
         sonarPitest        : '0.5',
-        springBoot         : '2.6.6',
+        springBoot         : '2.7.7',
         springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2',
         jackson            : '2.14.0-rc1',
@@ -44,7 +44,7 @@ def versions = [
         springVersion      : '5.3.20',
         feign              : '3.8.0',
         logback            : '1.2.10',
-        netty              : '1.0.6',
+        netty              : '1.1.2',
         bytebuddy          : '1.12.7'
 ]
 
@@ -294,7 +294,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.6') {
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.2.2') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
     //Fix for CVE-2021-29425
@@ -333,6 +333,15 @@ dependencies {
 
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.5'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.0'
+
+    // Fix for CVE-2022-45047
+    implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.9.2'
+    implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.9.2'
+    implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.9.2'
+    implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.9.2'
+
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -460,7 +469,7 @@ applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 configurations.all {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'io.netty'
-                && details.requested.name != 'netty-tcnative-boringssl-static' ) {
+                && details.requested.name != 'netty-tcnative-boringssl-static') {
             details.useVersion "4.1.86.Final"
         }
 
@@ -470,6 +479,17 @@ configurations.all {
         }
     }
       exclude group: 'org.codehaus.jettison', module: 'jettison'
+      exclude group: 'io.netty', module:'netty-tcnative-classes'
+      exclude group: 'io.projectreactor.netty.incubator', module:'reactor-netty-incubator-quic'
+
+    //Fix for CVE-2014-3488, CVE-2015-2156, CVE-2019-16869, CVE-2019-20444, CVE-2019-20445,
+    // CVE-2021-21290, CVE-2021-21295, CVE-2021-21409, CVE-2021-37136, CVE-2021-37137,
+    // CVE-2021-43797, CVE-2022-24823, CVE-2022-41881, CVE-2022-41915
+    exclude group: 'io.netty.incubator', module: 'netty-incubator-codec-classes-quic'
+    //Fix for CVE-2014-3488, CVE-2015-2156, CVE-2019-16869, CVE-2019-20444
+    // CVE-2021-21295,CVE-2019-20445, CVE-2021-21290, CVE-2022-41881, CVE-2022-41915
+    // CVE-2021-21409, CVE-2021-37136, CVE-2021-37137, CVE-2021-43797, CVE-2022-24823,
+    exclude group: 'io.netty.incubator', module: 'netty-incubator-codec-native-quic'
 }
 
 test {
