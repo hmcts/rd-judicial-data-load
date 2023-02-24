@@ -15,7 +15,7 @@ job:
     rd:
       secrets:
         - judicial-api-POSTGRES-PASS
-        - ApplicationInsightsInstrumentationKey
+        - app-insights-connection-string
         - name: ACCOUNT-NAME
           alias: ACCOUNT_NAME
         - name: ACCOUNT-KEY

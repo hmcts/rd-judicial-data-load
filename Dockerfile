@@ -11,6 +11,7 @@ ENV APPLICATION_SIZE_ON_DISK_IN_MB 48
 ENV JAVA_OPTS ""
 
 #COPY lib/applicationinsights-agent-2.5.1-BETA.jar lib/AI-Agent.xml /opt/app/
+COPY lib/applicationinsights.json /opt/app/
 COPY build/libs/$APP /opt/app/
 
 WORKDIR /opt/app
