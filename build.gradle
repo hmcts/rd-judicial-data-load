@@ -3,7 +3,7 @@ buildscript {
         springBootVersion = '2.7.7'
     }
     dependencies {
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.34")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
@@ -33,14 +33,14 @@ apply plugin: "io.spring.dependency-management"
 def versions = [
         lombok             : '1.18.22',
         reformLogging      : '5.1.9',
-        serenity           : '2.0.23',
+        serenity           : '2.0.76',
         sonarPitest        : '0.5',
         springBoot         : '2.7.7',
         springHystrix      : '2.2.8.RELEASE',
         jackson            : '2.14.0-rc1',
         launchDarklySdk    : "5.10.2",
         camel              : '3.8.0',
-        log4j              : '2.17.1',
+        log4j              : '2.18.0',
         springVersion      : '5.3.20',
         feign              : '3.8.0',
         logback            : '1.2.10',
@@ -264,7 +264,6 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
 
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
@@ -336,7 +335,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.5'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.0'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.5'
 
     // Fix for CVE-2022-45047
     implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.9.2'
@@ -407,6 +406,9 @@ dependencies {
 
     testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
     testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
+
+
+
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.2'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
     testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
@@ -437,6 +439,16 @@ dependencyManagement {
      dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
             entry 'woodstox-core'
      }
+
+        //CVE-2021-22044
+        dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
+            entry 'spring-cloud-starter-openfeign'
+            entry 'spring-cloud-openfeign-core'
+        }
+        //CVE-2023-24998
+        dependencySet(group: 'commons-fileupload', version: '1.5') {
+            entry 'commons-fileupload'
+        }
     }
 }
 
@@ -472,12 +484,12 @@ bootJar {
 // java flag that configures the deployed applications
 applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 
-// Fix for CVE-2021-21295 & need to be removed with new Azure blob version
+// Fix for CVE-2021-21295, CVE-2022-41881 & need to be removed with new Azure blob version
 configurations.all {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'io.netty'
                 && details.requested.name != 'netty-tcnative-boringssl-static') {
-            details.useVersion "4.1.86.Final"
+            details.useVersion "4.1.89.Final"
         }
 
         // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
