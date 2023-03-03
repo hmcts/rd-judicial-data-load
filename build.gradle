@@ -39,7 +39,7 @@ def versions = [
         springHystrix      : '2.2.8.RELEASE',
         jackson            : '2.14.0-rc1',
         launchDarklySdk    : "5.10.2",
-        camel              : '3.8.0',
+        camel              : '3.18.4',
         log4j              : '2.18.0',
         springVersion      : '5.3.20',
         feign              : '3.8.0',
@@ -406,6 +406,8 @@ dependencies {
 
     testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
     testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
+    implementation group: 'org.apache.camel', name: 'camel-spring-ldap', version: '3.18.4'
+
 
 
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.2'
