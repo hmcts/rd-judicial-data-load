@@ -10,4 +10,8 @@
     <suppress>
         <cve>CVE-2022-45688</cve>
     </suppress>
+
+    <suppress until="2024-01-01">
+        <cve>CVE-2022-45046</cve>
+    </suppress>
 </suppressions>
