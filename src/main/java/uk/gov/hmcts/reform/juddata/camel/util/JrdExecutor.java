@@ -15,7 +15,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.util.RouteExecutor;
 import uk.gov.hmcts.reform.juddata.configuration.EmailConfiguration;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.BooleanUtils.isNotTrue;
@@ -61,8 +60,7 @@ public class JrdExecutor extends RouteExecutor {
                 .map(s -> getFileDetails(camelContext, s))
                 .filter(fileStatus -> nonNull(fileStatus.getAuditStatus())
                     && fileStatus.getAuditStatus().equalsIgnoreCase(FAILURE))
-                .map(FileStatus::getFileName)
-                .collect(Collectors.toList());
+                .map(FileStatus::getFileName).toList();
             if (isNotTrue(isEmpty(fileStatuses))) {
                 EmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get("report");
                 if (mailTypeConfig.isEnabled()) {
