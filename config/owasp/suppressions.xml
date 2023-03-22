@@ -19,6 +19,7 @@
         <notes><![CDATA[
    file name: launchDarklySdk-5.10.7.jar
    ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.yaml/launchdarkly-.*$</packageUrl>
         <cve>CVE-2022-1471</cve>
     </suppress>
 </suppressions>
