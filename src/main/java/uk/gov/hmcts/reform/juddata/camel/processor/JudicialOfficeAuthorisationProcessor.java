@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.BooleanUtils.isFalse;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
@@ -136,14 +135,14 @@ public class JudicialOfficeAuthorisationProcessor
 
         return filteredJudicialAuthorisations.stream()
                 .filter(lowerLevelPredicate)
-                .collect(toUnmodifiableList());
+                .toList();
     }
 
     public void flagNewLowerLevelAuths(List<JudicialOfficeAuthorisation> newLowerLevelAuths,
                                        Exchange exchange) {
         List<Pair<String, Long>> pairs = newLowerLevelAuths.stream()
                 .map(auth -> Pair.of(auth.getPerId(), auth.getRowId()))
-                .collect(toUnmodifiableList());
+                .toList();
 
         judicialOfficeAuthorisationJsrValidatorInitializer
                 .auditJsrExceptions(pairs, LOWER_LEVEL, NEW_LOWER_LEVEL, exchange);
