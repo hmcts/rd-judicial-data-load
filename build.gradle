@@ -414,7 +414,7 @@ dependencies {
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
     testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
-	implementation group: 'org.yaml', name: 'snakeyaml', version: '2.0'
+	implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
     functionalTestImplementation sourceSets.main.runtimeClasspath
     functionalTestImplementation sourceSets.test.runtimeClasspath
