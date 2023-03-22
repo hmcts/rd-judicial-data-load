@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.camel.util;
 
+import com.launchdarkly.sdk.LDContext;
 import com.launchdarkly.sdk.server.LDClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,17 +29,17 @@ class FeatureToggleServiceImplTest {
     void testIsFlagEnabled() {
 
         assertFalse(flaFeatureToggleService.isFlagEnabled("test"));
-        verify(ldClient).boolVariation(anyString(),any(),anyBoolean());
-        assertFalse(ldClient.boolVariation(anyString(),any(),anyBoolean()));
+        verify(ldClient).boolVariation(anyString(), (LDContext) any(),anyBoolean());
+        assertFalse(ldClient.boolVariation(anyString(), (LDContext) any(),anyBoolean()));
     }
 
     @Test
     void testIsFlagEnabledTrue() {
         flaFeatureToggleService = spy(new FeatureToggleServiceImpl(ldClient, "rd"));
         flaFeatureToggleService.mapServiceToFlag();
-        when(ldClient.boolVariation(anyString(),any(),anyBoolean())).thenReturn(true);
+        when(ldClient.boolVariation(anyString(), (LDContext) any(),anyBoolean())).thenReturn(true);
         assertTrue(flaFeatureToggleService.isFlagEnabled(JRD_ASB_FLAG));
-        assertTrue(ldClient.boolVariation(anyString(),any(),anyBoolean()));
+        assertTrue(ldClient.boolVariation(anyString(), (LDContext) any(),anyBoolean()));
     }
 
     @Test

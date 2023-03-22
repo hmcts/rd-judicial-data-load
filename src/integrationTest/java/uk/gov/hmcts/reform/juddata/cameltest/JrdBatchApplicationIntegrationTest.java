@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.juddata.cameltest;
 
+import com.launchdarkly.sdk.LDContext;
 import com.launchdarkly.sdk.server.LDClient;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
@@ -108,7 +109,7 @@ class JrdBatchApplicationIntegrationTest extends JrdBatchIntegrationSupport {
         user.setId(UUID.randomUUID().toString());
         Set<IdamClient.User> sidamUsers = ImmutableSet.of(user);
         when(jrdSidamTokenService.getSyncFeed()).thenReturn(sidamUsers);
-        when(ldClient.boolVariation(anyString(), any(), anyBoolean())).thenReturn(true);
+        when(ldClient.boolVariation(anyString(), (LDContext) any(), anyBoolean())).thenReturn(true);
     }
 
 
