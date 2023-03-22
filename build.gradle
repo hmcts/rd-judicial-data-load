@@ -38,7 +38,7 @@ def versions = [
         springBoot         : '2.7.7',
         springHystrix      : '2.2.8.RELEASE',
         jackson            : '2.14.2',
-        launchDarklySdk    : '6.0.6',
+        launchDarklySdk    : '5.10.7',
         camel              : '3.8.0',
         log4j              : '2.18.0',
         springVersion      : '5.3.20',

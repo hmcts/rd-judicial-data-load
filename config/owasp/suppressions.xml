@@ -14,4 +14,11 @@
     <suppress until="2024-01-01">
         <cve>CVE-2022-45046</cve>
     </suppress>
+
+    <suppress>
+        <notes><![CDATA[
+   file name: launchDarklySdk-5.10.7.jar
+   ]]></notes>
+        <cve>CVE-2022-1471</cve>
+    </suppress>
 </suppressions>
