@@ -16,7 +16,7 @@
     </suppress>
 
 
-    <suppress>
+   <suppress>
         <notes><![CDATA[
    file name: launchdarkly-java-server-sdk-5.10.7.jar (shaded: org.yaml:snakeyaml:1.32)
    ]]></notes>
