@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class CommonUtilsTest {
+class CommonUtilsTest {
 
     @Test
     void test_empty_getDateTimeStamp() {
