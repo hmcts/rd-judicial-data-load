@@ -48,12 +48,12 @@ route:
       active_flag,extracted_date,created_date,last_loaded_date,object_id,is_judge,is_panel_member,is_magistrate,mrd_created_time,mrd_updated_time,mrd_deleted_time)
       VALUES(:#per_id,:#personal_code,:#known_as,:#surname,:#full_name,:#post_nominals,
       :#work_pattern, :#ejudiciary_email,TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'),:#active_flag,
-      :#extracted_date, NOW() AT TIME ZONE 'utc', NOW() AT TIME ZONE 'utc', :#object_id, :#is_judge, :#is_panel_member, :#is_magistrate,
+      TO_DATE(NULLIF(:#extracted_date,''), 'yyyy-MM-dd'), NOW() AT TIME ZONE 'utc', NOW() AT TIME ZONE 'utc', :#object_id, :#is_judge, :#is_panel_member, :#is_magistrate,
       :#mrd_created_time, :#mrd_updated_time, :#mrd_deleted_time) ON CONFLICT (per_id) DO UPDATE SET personal_code = :#personal_code,
       known_as = :#known_as, surname = :#surname, full_name = :#full_name, post_nominals =:#post_nominals,
       work_pattern = :#work_pattern, ejudiciary_email = :#ejudiciary_email, joining_date = TO_DATE(NULLIF(:#joining_date,''), 'yyyy-MM-dd'),
       last_working_date = TO_DATE(NULLIF(:#last_working_date,''), 'yyyy-MM-dd'), active_flag = :#active_flag,
-      :#extracted_date, last_loaded_date = NOW() AT TIME ZONE 'utc' ,object_id = :#object_id,
+      TO_DATE(NULLIF(:#extracted_date,''), 'yyyy-MM-dd'), last_loaded_date = NOW() AT TIME ZONE 'utc' ,object_id = :#object_id,
       is_judge = :#is_judge, is_panel_member = :#is_panel_member, is_magistrate = :#is_magistrate,
       mrd_created_time = :#mrd_created_time, mrd_updated_time = :#mrd_updated_time, mrd_deleted_time = :#mrd_deleted_time?batch=true&dataSource=dataSource
     blob-path: ${parent.file.path}
@@ -73,7 +73,7 @@ route:
       sql:INSERT INTO judicial_office_appointment (judicial_office_appointment_id,per_id,base_location_id,region_id,is_prinicple_appointment,start_date,end_date,active_flag,extracted_date,created_date,last_loaded_date,personal_code,object_id,
       appointment,appointment_type)
       VALUES(:#judicial_office_appointment_id, :#per_id, :#base_location_id, :#region_id, :#is_prinicple_appointment,
-      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, :#extracted_date,NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc', :#personal_code, :#object_id,
+      TO_DATE(NULLIF(:#start_date,''), 'yyyy-MM-dd'), TO_DATE(NULLIF(:#end_date,''), 'yyyy-MM-dd'), :#active_flag, TO_DATE(NULLIF(:#extracted_date,''), 'yyyy-MM-dd'),NOW() AT TIME ZONE 'utc',NOW() AT TIME ZONE 'utc', :#personal_code, :#object_id,
       :#appointment, :#appointment_type)?dataSource=dataSource&batch=true
     blob-path: ${child.file.path}
     processor-class: JudicialOfficeAppointmentProcessor
