@@ -1,4 +1,5 @@
 job:
+  kind: CronJob
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
@@ -11,10 +12,10 @@ job:
     CONTAINER_NAME: jud-ref-data
     JRD_MQ_TRUST_ALL_CERTS: false
     MAIL_FROM: no-reply@mail-rd-nonprod.platform.hmcts.net
+    JRD_MQ_TOPIC_NAME: ${SERVICE_NAME}-jrd-aks-topic
   keyVaults:
     rd:
       secrets:
-        - judicial-api-POSTGRES-PASS
         - name: app-insights-connection-string
           alias: app-insights-connection-string
         - name: ACCOUNT-NAME
@@ -23,8 +24,6 @@ job:
           alias: ACCOUNT_KEY
         - name: CONTAINER-NAME
           alias: CONTAINER_NAME
-        - name: judicial-topic-primary-connection-string
-          alias: JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING
         - name: LD-SDK-KEY
           alias: LD_SDK_KEY
         - name: OAUTH2-CLIENT-SECRET
@@ -38,8 +37,8 @@ job:
         - name: judicial-api-elinks-api-key
           alias: judicial_api_elinks_api_key
   secrets:
-    SB_TOPIC_CONN_STRING:
-      secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
+    JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING:
+      secretRef: rd-sb-preview
       key: connectionString
     BLOB_ACCOUNT_NAME:
       secretRef: storage-secret-{{ .Release.Name }}
@@ -67,10 +66,12 @@ postgresql:
       enabled: false
 
 servicebus:
-  resourceGroup: rd-aks-pr-test
+  releaseNameOverride: "{{ .Release.Name }}"
+  resourceGroup: rd-aso-preview-rg
   teamName: "RD"
-  location: ukwest
+  location: uksouth
   serviceplan: standard
+  sbNamespace: rd
   setup:
     topics:
       - name: jrd-aks-topic
@@ -80,7 +81,7 @@ servicebus:
 blobstorage:
   resourceGroup: rd-aks-pr-test
   teamName: "RD"
-  location: ukwest
+  location: uksouth
   setup:
     containers:
       - jud-ref-data

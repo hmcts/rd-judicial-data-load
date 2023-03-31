@@ -15,6 +15,9 @@
         <cve>CVE-2022-45046</cve>
     </suppress>
 
+    <suppress until="2024-01-01">
+        <cve>CVE-2023-28708</cve>
+    </suppress>
 
    <suppress>
         <notes><![CDATA[
