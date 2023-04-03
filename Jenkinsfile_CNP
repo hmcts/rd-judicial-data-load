@@ -60,7 +60,7 @@ withPipeline(type, product, component) {
 
     afterSuccess('akschartsinstall') {
 
-        def sleepTime = (env.BRANCH_NAME.startsWith("PR")) ? '250s' : '120s'
+        def sleepTime = (env.BRANCH_NAME.startsWith("PR")) ? '450s' : '120s'
         sh "sleep ${sleepTime}"
         if (env.BRANCH_NAME.startsWith("PR")) {
             withAksClient('nonprod', product) {
