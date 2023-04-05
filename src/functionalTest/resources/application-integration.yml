@@ -184,7 +184,7 @@ jrd:
       service:
         bus:
           connection-string: ${JRD_ASB_CONNECTION_KEY_STR:}
-          topic: jrd-aks-topic
+          topic: jrd
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
     jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:5}

@@ -42,13 +42,13 @@ job:
       secretRef: servicebus-secret-topic-{{ .Release.Name }}-servicebus-jrd-aks-topic
       key: connectionString
     BLOB_ACCOUNT_NAME:
-      secretRef: storage-secret-{{ .Release.Name }}
+      secretRef: storage-secret-{{ .Release.Name }}-blobstorage
       key: storageAccountName
     BLOB_ACCESS_KEY:
-      secretRef: storage-secret-{{ .Release.Name }}
+      secretRef: storage-secret-{{ .Release.Name }}-blobstorage
       key: accessKey
     BLOB_SERVICE_ENDPOINT:
-      secretRef: storage-secret-{{ .Release.Name }}
+      secretRef: storage-secret-{{ .Release.Name }}-blobstorage
       key: primaryBlobServiceEndPoint
 global:
   jobKind: CronJob
@@ -67,20 +67,21 @@ postgresql:
       enabled: false
 
 servicebus:
-  resourceGroup: rd-aks-pr-test
+  resourceGroup: rd-aso-preview-rg
   teamName: "RD"
-  location: ukwest
+  location: uksouth
   serviceplan: standard
   setup:
     topics:
-      - name: jrd-aks-topic
+      - name: jrd
         subscriptionNeeded: yes
   enabled: true
+  sbNamespace: rd-sb-preview
 
 blobstorage:
-  resourceGroup: rd-aks-pr-test
+  resourceGroup: rd-aso-preview-rg
   teamName: "RD"
-  location: ukwest
+  location: uksouth
   setup:
     containers:
       - jud-ref-data
