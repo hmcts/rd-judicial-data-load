@@ -73,6 +73,7 @@ withPipeline(type, product, component) {
                 def namespace = new TeamConfig(this).getNameSpace(product)
                 def kubectl = new Kubectl(this, subscription, namespace)
                 kubectl.login()
+                
                 env.serviceBusSecretString = kubectl.getSecret(serviceBusSecret, namespace, "{.data.connectionString}")
                 env.BLOB_ACCOUNT_NAME = kubectl.getSecret("storage-account-${aksServiceName}-blobstorage", namespace, "{.data.storage_account_name}")
                 env.BLOB_ACCOUNT_KEY = kubectl.getSecret("storage-secret-${aksServiceName}-blobstorage", namespace, "{.data.accessKey}")
