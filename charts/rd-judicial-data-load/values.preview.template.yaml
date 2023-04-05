@@ -73,7 +73,7 @@ servicebus:
   serviceplan: standard
   setup:
     topics:
-      - name: jrd-aks-topic
+      - name: jrd
         subscriptionNeeded: yes
   enabled: true
   sbNamespace: rd-sb-preview
