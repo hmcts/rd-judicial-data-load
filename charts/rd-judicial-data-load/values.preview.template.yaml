@@ -76,6 +76,7 @@ servicebus:
       - name: jrd-aks-topic
         subscriptionNeeded: yes
   enabled: true
+  sbNamespace: rd-sb-preview
 
 blobstorage:
   resourceGroup: rd-aso-preview-rg
