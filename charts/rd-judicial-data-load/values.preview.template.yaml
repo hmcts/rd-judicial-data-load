@@ -67,9 +67,9 @@ postgresql:
       enabled: false
 
 servicebus:
-  resourceGroup: rd-aks-pr-test
+  resourceGroup: rd-aso-preview-rg
   teamName: "RD"
-  location: ukwest
+  location: uksouth
   serviceplan: standard
   setup:
     topics:
