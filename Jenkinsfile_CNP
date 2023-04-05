@@ -55,6 +55,22 @@ withPipeline(type, product, component) {
 
     nonServiceApp()
 
+    before('functionalTest:preview') {
+        env.TEST_URL = "http://rd-judicial-data-load-preview.preview.platform.hmcts.net"
+    }
+
+    before('functionalTest:aat') {
+        env.TEST_URL = "http://rd-judicial-data-load-aat.aat.platform.hmcts.net"
+    }
+
+    before('smoketest:preview') {
+      env.TEST_URL = "http://rd-judicial-data-load-preview.preview.platform.hmcts.net"
+    }
+
+    before('smoketest:aat') {
+      env.TEST_URL = "http://rd-judicial-data-load-aat.aat.platform.hmcts.net"
+    }
+
     // Sync demo and perftest with master branch
     syncBranchesWithMaster(branchesToSync)
 
