@@ -41,7 +41,7 @@ def versions = [
         launchDarklySdk    : '5.10.7',
         camel              : '3.8.0',
         log4j              : '2.18.0',
-        springVersion      : '5.3.26',
+        springVersion      : '5.3.27',
         feign              : '3.8.0',
         logback            : '1.2.10',
         netty              : '1.1.2',
