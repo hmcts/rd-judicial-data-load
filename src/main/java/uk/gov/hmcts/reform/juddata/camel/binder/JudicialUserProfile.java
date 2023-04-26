@@ -65,8 +65,8 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
     boolean activeFlag;
 
     @DataField(pos = 12)
-    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
-            message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
+    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN,
+            message = "date pattern should be " + DATE_TIME_FORMAT)
     String extractedDate;
 
     @DataField(pos = 13, columnName = "object_id")
