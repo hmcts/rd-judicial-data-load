@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.7'
+        springBootVersion = '2.7.11'
     }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.34")
@@ -35,13 +35,13 @@ def versions = [
         reformLogging      : '5.1.9',
         serenity           : '2.2.12',
         sonarPitest        : '0.5',
-        springBoot         : '2.7.7',
+        springBoot         : '2.7.11',
         springHystrix      : '2.2.8.RELEASE',
         jackson            : '2.14.2',
         launchDarklySdk    : '5.10.7',
         camel              : '3.8.0',
         log4j              : '2.18.0',
-        springVersion      : '5.3.26',
+        springVersion      : '5.3.27',
         feign              : '3.8.0',
         logback            : '1.2.10',
         netty              : '1.1.2',
@@ -159,7 +159,7 @@ task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
 }
 
 task fortifyScan(type: JavaExec)  {
-  main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+  mainClass.set("uk.gov.hmcts.fortifyclient.FortifyClientMainApp")
   classpath += sourceSets.test.runtimeClasspath
   jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
   // This is a temporary fix to prevent the nightly build from failing if the Fortify scan detects issues 
@@ -265,7 +265,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
 
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.8'
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
 
 
