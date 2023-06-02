@@ -1,7 +1,7 @@
 #!groovy
 
 properties([
-        pipelineTriggers([cron('21 02 * * *')]), // scheduling to trigger jenkins job
+        pipelineTriggers([cron('21 08 * * 1-5')]), // scheduling to trigger jenkins job
         parameters([
             string(name: 'URL_TO_TEST', defaultValue: 'https://rd-judicial-data-load-aat.service.core-compute-aat.internal', description: 'The URL you want to run these tests against'),
             string(name: 'SecurityRules',
