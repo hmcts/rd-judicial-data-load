@@ -95,6 +95,14 @@ Building the application
 The project uses Gradle as a build tool. It already contains ./gradlew wrapper script, so there's no need to install gradle.
 
 
+### Environment Vars
+
+If running locally for development or testing you will need to add (Application.yml and application-camel-routes-common.yaml) and set the following environment variables
+
+* ACCOUNT_NAME: <The actual account name. Please check with the dev team for more information.>
+* ACCOUNT_KEY: <The actual account key. Please check with the dev team for more information.>
+* CONTAINER_NAME: jud-ref-data
+
 ### Running the application
 
 Create the image of the application by executing the following command:
