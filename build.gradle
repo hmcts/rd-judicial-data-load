@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.11'
+        springBootVersion = '2.7.12'
     }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.34")
@@ -35,7 +35,7 @@ def versions = [
         reformLogging      : '5.1.9',
         serenity           : '2.2.12',
         sonarPitest        : '0.5',
-        springBoot         : '2.7.11',
+        springBoot         : '2.7.12',
         springHystrix      : '2.2.8.RELEASE',
         jackson            : '2.14.2',
         launchDarklySdk    : '5.10.7',
