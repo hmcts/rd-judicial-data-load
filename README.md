@@ -144,7 +144,7 @@ This will start the API container exposing the application's port
 In order to test if the application is up, you can call its health endpoint:
 
 ```bash
-  curl http://localhost:8099/health
+  curl http://localhost:8094/health
 ```
 
 
@@ -180,5 +180,5 @@ To build the project execute the following command:
   ./gradlew build 
 
 
-The application exposes health endpoint (http://localhost:8099/health) and metrics endpoint
-(http://localhost:8099/metrics).
+The application exposes health endpoint (http://localhost:8094/health) and metrics endpoint
+(http://localhost:8094/metrics).
