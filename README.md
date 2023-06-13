@@ -14,6 +14,9 @@ Library should be included with build.gradle like follows
 compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.5.2.4'
 And release versions library can be found in bintray (https://bintray.com/hmcts/hmcts-maven/data-ingestion-lib)  
 
+For More Information Please see the confluence.
+https://tools.hmcts.net/confluence/display/RTRD/Judicial+Reference+Data
+
 # Consumption of files from a SFTP server
 The files received from SFTP server are encrypted using GPG encryption (which complies with OpenPGP standards).
 
@@ -105,6 +108,10 @@ If running locally for development or testing you will need to add (Application.
 
 ### Running the application
 
+Please Make sure you are connected to the VPN before running the Application.
+(https://portal.platform.hmcts.net/vdesk/webtop.eui?webtop=/Common/webtop_full&webtop_type=webtop_full)
+
+
 Create the image of the application by executing the following command:
 
 ```bash
@@ -123,6 +130,13 @@ by executing the following command:
 ```bash
   docker-compose up
 ```
+
+After, you can start the application from the current source files using Gradle as follows:
+
+```
+./gradlew clean bootRun
+```
+
 
 This will start the API container exposing the application's port
 (set to `8099` in this template app).
