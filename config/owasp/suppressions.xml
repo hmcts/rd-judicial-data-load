@@ -25,6 +25,11 @@
         <cve>CVE-2022-1471</cve>
     </suppress>
     <suppress>
+        <cve>CVE-2023-20861</cve>
+        <cve>CVE-2023-20859</cve>
+        <cve>CVE-2023-28708</cve>
+    </suppress>
+    <suppress>
         <notes>Temporary suppression for Spring Boot versions please remove it once cve is fixed</notes>
         <cve>CVE-2023-20883</cve>
     </suppress>

@@ -12,8 +12,6 @@ import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN_TIMESTAMP;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIMESTAMP_FORMAT;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
 @Getter
@@ -65,8 +63,8 @@ public class JudicialUserProfile extends CommonCsvField implements Serializable 
     boolean activeFlag;
 
     @DataField(pos = 12)
-    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN_TIMESTAMP,
-            message = "date pattern should be " + DATE_TIMESTAMP_FORMAT)
+    @DatePattern(isNullAllowed = "false", regex = DATE_PATTERN,
+            message = "date pattern should be " + DATE_PATTERN)
     String extractedDate;
 
     @DataField(pos = 13, columnName = "object_id")
