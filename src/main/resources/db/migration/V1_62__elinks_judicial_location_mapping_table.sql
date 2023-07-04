@@ -21,6 +21,7 @@ ALTER TABLE dbjudicialdata.judicial_office_appointment  DROP CONSTRAINT region_i
 
 ALTER TABLE dbjudicialdata.judicial_office_appointment RENAME COLUMN region_id TO cft_region_id;
 
+drop table dbjudicialdata.region_type ;
 
 CREATE TABLE dbjudicialdata.cft_region_type (
 	cft_region_id varchar(64) NOT NULL,
