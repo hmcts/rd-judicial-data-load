@@ -21,6 +21,9 @@ ALTER TABLE dbjudicialdata.judicial_office_appointment  DROP CONSTRAINT cft_regi
 ALTER TABLE dbjudicialdata.judicial_office_appointment RENAME COLUMN cft_region_id TO hmcts_region_id;
 ALTER TABLE dbjudicialdata.judicial_office_appointment ALTER COLUMN hmcts_region_id TYPE varchar(64);
 
+--drop dbjudicialdata.cft_region_type
+drop table dbjudicialdata.cft_region_type ;
+
 --create dbjudicialdata.hmcts_region_type
 CREATE TABLE dbjudicialdata.hmcts_region_type (
 	hmcts_region_id varchar(64) NOT NULL,
@@ -33,8 +36,21 @@ CREATE TABLE dbjudicialdata.hmcts_region_type (
 alter table dbjudicialdata.judicial_office_appointment add CONSTRAINT hmcts_region_id_fk1 FOREIGN KEY (hmcts_region_id)
 REFERENCES dbjudicialdata.hmcts_region_type(hmcts_region_id);
 
---drop dbjudicialdata.cft_region_type
-drop table dbjudicialdata.cft_region_type ;
 
+
+
+-- Insert table script : dbjudicialdata.hmcts_region_type
+
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('0', 'default', 'default') on conflict (hmcts_region_id) do nothing;
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('1', 'London', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('2', 'Midlands', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('3', 'North East', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('4', 'North West', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('5', 'South East', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('6', 'South West', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('7', 'Wales', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('10', 'Northern Ireland', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('11', 'Scotland', '');
+insert into dbjudicialdata.hmcts_region_type(hmcts_region_id,hmcts_region_desc_en,hmcts_region_desc_cy) values ('12', 'National', '');
 
 
