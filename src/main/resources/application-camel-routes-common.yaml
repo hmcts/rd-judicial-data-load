@@ -39,7 +39,7 @@ select-job-status-sql:  SELECT id, publishing_status FROM dataload_schedular_job
 previous-day-job-status: SELECT id, publishing_status FROM dataload_schedular_job WHERE DATE(job_start_time) = current_date - INTEGER '1'
 get-sidam-ids: SELECT DISTINCT sidam_id FROM judicial_user_profile WHERE sidam_id IS NOT NULL
 scheduler-audit-failure: SELECT COUNT(*) FROM dataload_schedular_audit WHERE DATE(scheduler_start_time) = current_date AND status = 'Failure'
-scheduler-end-time: SELECT max(scheduler_end_time) FROM dataload_schedular_audit WHERE scheduler_end_time < ( SELECT MAX(scheduler_end_time) FROM dataload_schedular_audit WHERE file_name = 'Personal' AND status IN ('PartialSuccess', 'Success')) AND file_name = 'Personal' AND status IN ('PartialSuccess', 'Success')
+scheduler-end-time: SELECT max(scheduler_end_time) FROM dataload_schedular_audit WHERE scheduler_end_time < ( SELECT MAX(scheduler_end_time) FROM dataload_schedular_audit WHERE file_name = 'Personal.csv' AND status IN ('PartialSuccess', 'Success')) AND file_name = 'Personal.csv' AND status IN ('PartialSuccess', 'Success')
 
 jrd:
   publisher:
