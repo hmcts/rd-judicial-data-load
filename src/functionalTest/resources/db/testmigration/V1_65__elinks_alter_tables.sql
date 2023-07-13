@@ -8,7 +8,7 @@ ALTER TABLE dbjudicialdata.judicial_office_appointment ALTER COLUMN appointment 
 ALTER TABLE dbjudicialdata.judicial_office_appointment ALTER COLUMN contract_type_id SET NOT NULL;
 
 --Alter dbjudicialdata.judicial_office_authorisation
-ALTER TABLE dbjudicialdata.judicial_office_authorisation ALTER COLUMN jurisdiction_id SET NOT NULL;
+ALTER TABLE dbjudicialdata.judicial_office_authorisation ALTER COLUMN jurisdiction SET NOT NULL;
 ALTER TABLE dbjudicialdata.judicial_office_authorisation ALTER COLUMN lower_level SET NOT NULL;
 ALTER TABLE dbjudicialdata.judicial_office_authorisation ALTER COLUMN ticket_code SET NOT NULL;
 
@@ -25,7 +25,7 @@ ALTER TABLE dbjudicialdata.judicial_office_appointment ALTER COLUMN hmcts_region
 CREATE TABLE dbjudicialdata.hmcts_region_type (
 	hmcts_region_id varchar(64) NOT NULL,
 	hmcts_region_desc_en varchar(256) NOT NULL,
-	hmcts_region_desc_cy varchar(256) NULL,
+	hmcts_region_desc_cy varchar(256),
 	CONSTRAINT hmcts_region_id PRIMARY KEY (hmcts_region_id)
 );
 
