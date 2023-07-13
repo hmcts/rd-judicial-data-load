@@ -9,6 +9,7 @@
 
     <suppress>
         <cve>CVE-2022-45688</cve>
+        <cve>CVE-2023-20859</cve>
     </suppress>
 
     <suppress until="2024-01-01">
@@ -23,5 +24,13 @@
         <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
         <cve>CVE-2022-1471</cve>
     </suppress>
-
+    <suppress>
+        <cve>CVE-2023-20861</cve>
+        <cve>CVE-2023-20859</cve>
+        <cve>CVE-2023-28708</cve>
+    </suppress>
+    <suppress>
+      <notes>Suppressing disputed CVE: https://github.com/FasterXML/jackson-databind/issues/3972</notes>
+      <cve>CVE-2023-35116</cve>
+    </suppress>
 </suppressions>

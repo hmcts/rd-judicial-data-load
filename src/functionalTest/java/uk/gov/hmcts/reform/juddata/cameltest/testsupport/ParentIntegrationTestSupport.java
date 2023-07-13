@@ -232,7 +232,7 @@ public interface ParentIntegrationTestSupport {
         List<JudicialOfficeAuthorisation> expectedAuthorisations = getFileAuthorisationObjectsFromCsv(file[2]);
         assertEquals(judicialAuthorisationList.size(), expectedAuthorisations.size());
         //exact field checks
-        Assertions.assertThat(actualAuthorisations).usingFieldByFieldElementComparator()
+        Assertions.assertThat(actualAuthorisations).usingRecursiveFieldByFieldElementComparator()
             .containsAll(expectedAuthorisations);
     }
 

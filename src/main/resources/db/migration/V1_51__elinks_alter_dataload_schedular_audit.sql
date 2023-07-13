@@ -1,5 +1,5 @@
 
-DROP TABLE if EXISTS dbjudicialdata.dataload_schedular_audit;
+DROP TABLE dbjudicialdata.dataload_schedular_audit;
 
 CREATE TABLE dbjudicialdata.dataload_schedular_audit (
 	id serial NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE dbjudicialdata.dataload_schedular_audit (
 	CONSTRAINT dataload_schedular_audit_pk PRIMARY KEY (id)
 	);
 
-    DROP TABLE if EXISTS dbjudicialdata.dataload_exception_records;
+    DROP TABLE dbjudicialdata.dataload_exception_records;
 
     CREATE TABLE dbjudicialdata.dataload_exception_records (
     	id serial4 NOT NULL,
