@@ -1,4 +1,5 @@
 ---- Create table script : dbjudicialdata.jrd_lrd_region_mapping
+
 CREATE TABLE dbjudicialdata.jrd_lrd_region_mapping(
     jrd_region_id VARCHAR(16) NOT NULL,
     jrd_region VARCHAR(256) NOT NULL,
