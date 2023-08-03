@@ -179,5 +179,6 @@ docker image rm <image-id>
 To build the project execute the following command:
   ./gradlew build
 
+
 The application exposes health endpoint (http://localhost:8094/health) and metrics endpoint
 (http://localhost:8094/metrics).
