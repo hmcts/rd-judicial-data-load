@@ -12,7 +12,7 @@ import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_ERROR_MESSAGE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
+import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
 
 @Setter
 @Getter
@@ -31,12 +31,12 @@ public class JudicialOfficeAuthorisation extends CommonCsvField implements Seria
     Long ticketId;
 
     @DataField(pos = 4, columnName = "startdate")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = DATE_FORMAT_ERROR_MESSAGE)
     String startDate;
 
     @DataField(pos = 5, columnName = "enddate")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = DATE_FORMAT_ERROR_MESSAGE)
     String endDate;
 

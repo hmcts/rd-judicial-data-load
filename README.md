@@ -31,6 +31,7 @@ Kubernetes scheduler triggers Apache Camel routes which process files stored in 
 
 ## Plugins
 
+
 The template contains the following plugins:
 
   * checkstyle

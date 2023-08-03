@@ -12,7 +12,6 @@ import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_ERROR_MESSAGE;
-import static uk.gov.hmcts.reform.juddata.camel.util.JrdConstants.DATE_FORMAT_WITH_MILLIS;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.juddata.camel.util.JrdMappingConstants.DATE_TIME_FORMAT;
 
@@ -34,7 +33,7 @@ public class JudicialUserRoleType extends CommonCsvField implements Serializable
     String location;
 
     @DataField(pos = 4, columnName = "start_date")
-    @DatePattern(isNullAllowed = "true", regex = DATE_FORMAT_WITH_MILLIS,
+    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
             message = DATE_FORMAT_ERROR_MESSAGE)
     String startDate;
 
