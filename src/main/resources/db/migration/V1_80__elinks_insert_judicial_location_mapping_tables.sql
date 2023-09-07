@@ -33,3 +33,5 @@ INSERT INTO dbjudicialdata.judicial_location_mapping (epimms_id, judicial_base_l
     ('409795',	'2105',	''),
     ('624161',	'2149',	''),
     ('624161',	'2150',	'');
+
+COMMIT;
