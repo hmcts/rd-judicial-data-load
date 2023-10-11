@@ -451,6 +451,29 @@ dependencyManagement {
         dependencySet(group: 'commons-fileupload', version: '1.5') {
             entry 'commons-fileupload'
         }
+
+        //        Resolves CVE-2023-4586
+        dependencySet(group: 'io.netty', version: '4.1.100.Final') {
+            entry 'netty-buffer'
+            entry 'netty-codec'
+            entry 'netty-codec-dns'
+            entry 'netty-codec-http'
+            entry 'netty-codec-http2'
+            entry 'netty-codec-socks'
+            entry 'netty-common'
+            entry 'netty-handler'
+            entry 'netty-handler-proxy'
+            entry 'netty-resolver'
+            entry 'netty-resolver-dns'
+            entry 'netty-resolver-dns-classes-macos'
+            entry 'netty-resolver-dns-native-macos'
+            entry 'netty-transport'
+            entry 'netty-transport-classes-epoll'
+            entry 'netty-transport-classes-kqueue'
+            entry 'netty-transport-native-epoll'
+            entry 'netty-transport-native-kqueue'
+            entry 'netty-transport-native-unix-common'
+        }
     }
 }
 
@@ -489,11 +512,6 @@ applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 // Fix for CVE-2021-21295, CVE-2022-41881 & need to be removed with new Azure blob version
 configurations.all {
     resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'io.netty'
-                && details.requested.name != 'netty-tcnative-boringssl-static') {
-            details.useVersion "4.1.94.Final"
-        }
-
         // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
         if (details.requested.group == 'com.ibm.icu') {
             details.useVersion "66.1"
