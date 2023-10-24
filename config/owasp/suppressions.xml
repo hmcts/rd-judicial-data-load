@@ -36,6 +36,7 @@
     </suppress>
     <suppress>
         <notes>Removing this once fixed by DTSRD-792</notes>
+        <cve>CVE-2023-34442</cve>
         <cve>CVE-2023-4586</cve>
     </suppress>
 </suppressions>
