@@ -14,6 +14,7 @@ Library should be included with build.gradle like follows
 compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.5.2.4'
 And release versions library can be found in bintray (https://bintray.com/hmcts/hmcts-maven/data-ingestion-lib)  
 
+
 For More Information Please see the confluence.
 https://tools.hmcts.net/confluence/display/RTRD/Judicial+Reference+Data
 
