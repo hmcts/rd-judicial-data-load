@@ -11,6 +11,11 @@ management:
       show-details: "always"
 
 spring:
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: dbjuddata
   application:
     name: Judicial reference data blob store sync API
   main:
