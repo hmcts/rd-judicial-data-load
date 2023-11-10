@@ -12,7 +12,6 @@ management:
 
 spring:
   jpa:
-    open-in-view: false
     properties:
       hibernate:
         default_schema: dbjuddata
@@ -48,7 +47,7 @@ spring:
       charSet: UTF-8
     hikari:
       max-lifetime: 600000
-      maximum-pool-size: 5
+      maximumPoolSize: ${HIKARI_MAX_POOL_SIZE:50}
       idle-timeout: 30000
       minimum-idle: 1
 
