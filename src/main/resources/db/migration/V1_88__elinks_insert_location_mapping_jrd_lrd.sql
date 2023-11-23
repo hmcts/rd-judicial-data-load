@@ -2,7 +2,7 @@ INSERT INTO dbjudicialdata.jrd_lrd_region_mapping (jrd_region_id,jrd_region,regi
     ('1819',	'Glasgow (Scotland & NI)',          '11',	'Scotland'),
     ('2051','Hampshire','5','South East'),
     ('1268','Oxfordshire','5','South East'),
-    ('2113','St Ives ','6','South West'),
+    ('2113','St Ives','6','South West'),
     ('1282','Berkshire','5','South East'),
     ('1261','Suffolk','5','South East'),
     ('1967','Chepstow','7','Wales'),
