@@ -45,7 +45,8 @@ def versions = [
         feign              : '3.8.0',
         logback            : '1.2.10',
         netty              : '1.1.2',
-        bytebuddy          : '1.12.7'
+        bytebuddy          : '1.12.7',
+        bouncycastle       : '1.77'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
@@ -517,6 +518,16 @@ configurations.all {
             details.useVersion "66.1"
         }
     }
+
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.bouncycastle'
+                && (details.requested.name == 'bcpkix-jdk18on'
+                || details.requested.name == 'bcprov-jdk18on')
+        ){
+            details.useVersion versions.bouncycastle
+        }
+    }
+
       exclude group: 'org.codehaus.jettison', module: 'jettison'
       exclude group: 'io.netty', module:'netty-tcnative-classes'
       exclude group: 'io.projectreactor.netty.incubator', module:'reactor-netty-incubator-quic'
@@ -529,6 +540,17 @@ configurations.all {
     // CVE-2021-21295,CVE-2019-20445, CVE-2021-21290, CVE-2022-41881, CVE-2022-41915
     // CVE-2021-21409, CVE-2021-37136, CVE-2021-37137, CVE-2021-43797, CVE-2022-24823,
     exclude group: 'io.netty.incubator', module: 'netty-incubator-codec-native-quic'
+}
+
+dependencies {
+    modules {
+        module("org.bouncycastle:bcpkix-jdk15on") {
+            replacedBy("org.bouncycastle:bcpkix-jdk18on")
+        }
+        module("org.bouncycastle:bcprov-jdk15on") {
+            replacedBy("org.bouncycastle:bcprov-jdk18on")
+        }
+    }
 }
 
 test {
