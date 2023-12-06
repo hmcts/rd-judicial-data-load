@@ -43,7 +43,7 @@ def versions = [
         log4j              : '2.18.0',
         springVersion      : '5.3.27',
         feign              : '3.8.0',
-        logback            : '1.2.10',
+        logback            : '1.2.13',
         netty              : '1.1.2',
         bytebuddy          : '1.12.7',
         bouncycastle       : '1.77'
