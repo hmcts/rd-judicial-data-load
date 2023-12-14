@@ -1,0 +1,15 @@
+INSERT INTO dbjudicialdata.jrd_lrd_region_mapping (jrd_region_id,jrd_region,region_id,region) VALUES
+    ('1252',	'Birmingham and Solihull',          '2',	'Midlands'),
+    ('1218',	'Cheshire',                '4',	'North West'),
+   ('1254',	'Coventry',          '2',	'Midlands'),
+   ('1644',	'Coventry and Warwickshire',          '2',	'Midlands'),
+   ('1635',	'Devon and Cornwall',          '6',	'South West'),
+   ('1554',	'Lancashire',          '4',	'North West'),
+   ('1551',	'Leeds District',          '3',	'North East'),
+   ('2157',	'Leicestershire',          '2',	'Midlands'),
+   ('1548',	'Leicestershire and Rutland',          '2',	'Midlands'),
+   ('1543',	'London West',          '1',	'London'),
+    ('1240',	'Lincolnshire',          '2',	'Midlands'),
+    ('1798',	'Merseyside',          '4',	'North West'),
+    ('1539',	'Newcastle Upon Tyne',          '3',	'North East'),
+    ('1260',	'Norfolk',          '6',	'South East');
