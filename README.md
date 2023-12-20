@@ -1,6 +1,6 @@
 # rd-judicial-data-load
 Judicial reference data load (JRD)
-
+ 
 JRD is batch application and JRD batch is scheduled with Kubernetes which runs once in a day per cluster.
 
 JRD consume data files from an external source, transform that data into the destination format 
