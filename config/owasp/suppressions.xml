@@ -32,6 +32,7 @@
         <cve>CVE-2023-28708</cve>
         <cve>CVE-2023-5072</cve>
         <cve>CVE-2023-36052</cve>
+        <cve>CVE-2023-48795</cve>
     </suppress>
     <suppress>
       <notes>Suppressing disputed CVE: https://github.com/FasterXML/jackson-databind/issues/3972</notes>
