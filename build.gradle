@@ -306,7 +306,7 @@ dependencies {
     testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
 
     implementation group: 'com.google.guava', name: 'guava', version: '32.1.1-jre'
 
