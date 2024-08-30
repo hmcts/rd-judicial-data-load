@@ -341,7 +341,7 @@ dependencies {
     // Fix for CVE-2022-45047, CVE-2023-35887
     implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.13.2'
     implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.13.2'
-    implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.9.3'
+    implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.13.2'
     implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.9.3'
 
     implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.1'
