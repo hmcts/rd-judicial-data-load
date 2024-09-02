@@ -45,7 +45,7 @@ def versions = [
         logback            : '1.2.13',
         netty              : '1.1.22',
         bytebuddy          : '1.12.7',
-        bouncycastle       : '1.77'
+        bouncycastle       : '1.78.1'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.juddata.JudicialApplication'
