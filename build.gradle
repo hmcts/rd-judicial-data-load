@@ -379,7 +379,7 @@ dependencies {
 
 
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
-    testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
+    testImplementation group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.6.4', ext: 'pom'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
