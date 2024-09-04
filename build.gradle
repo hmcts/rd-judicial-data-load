@@ -411,7 +411,7 @@ dependencies {
 
 
 
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.2'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.20.1'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
     testImplementation 'com.github.hmcts:fortify-client:1.4.4:all'
 
