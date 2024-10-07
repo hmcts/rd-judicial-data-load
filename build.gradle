@@ -336,7 +336,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.9'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.8'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.9'
 
     // Fix for CVE-2022-45047, CVE-2023-35887
     implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.13.2'
