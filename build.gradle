@@ -39,7 +39,7 @@ def versions = [
         jackson            : '2.17.2',
         launchDarklySdk    : '5.10.9',
         camel              : '3.8.0',
-        log4j              : '2.24.0',
+        log4j              : '2.24.1',
         springVersion      : '5.3.39',
         feign              : '3.8.0',
         logback            : '1.2.13',
