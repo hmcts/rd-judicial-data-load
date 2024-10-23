@@ -266,7 +266,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
 
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.14'
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.15'
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
 
 
