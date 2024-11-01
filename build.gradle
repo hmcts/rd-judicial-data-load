@@ -33,7 +33,10 @@ def versions = [
         lombok             : '1.18.34',
         reformLogging      : '6.1.6',
         serenity           : '2.6.0',
+        gradlePitest       : '1.15.0',
+        pitest             : '1.17.0',
         sonarPitest        : '0.5',
+        junitPitest        : '1.2.1',
         springBoot         : '2.7.18',
         springHystrix      : '2.2.8.RELEASE',
         jackson            : '2.18.0',
@@ -181,7 +184,8 @@ jacocoTestReport {
 
 
 pitest {
-    junit5PluginVersion = '1.0.0'
+    pitestVersion = versions.pitest
+    junit5PluginVersion = versions.junitPitest
     targetClasses = ['uk.gov.hmcts.reform.juddata.*']
     testSourceSets = [sourceSets.functionalTest, sourceSets.test]
     excludedClasses = [
@@ -196,6 +200,9 @@ pitest {
             'uk.gov.hmcts.reform.juddata.camel.util.JrdExecutor',
             'uk.gov.hmcts.reform.juddata.camel.servicebus.TopicPublisher',
             'uk.gov.hmcts.reform.juddata.camel.util.JrdUserProfileUtil*'
+    ]
+    excludedTestClasses = [
+            'uk.gov.hmcts.reform.juddata.cameltest.*'
     ]
     threads = 6
     enableDefaultIncrementalAnalysis = true
@@ -385,7 +392,15 @@ dependencies {
 
     testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.10'
 
-    testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    // pitest dependencies
+    testImplementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', {
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }, version: versions.sonarPitest
+    testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
+    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
+    testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: versions.junitPitest
+
     testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
     testImplementation(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
