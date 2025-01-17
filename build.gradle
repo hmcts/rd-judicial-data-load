@@ -47,7 +47,7 @@ def versions = [
         feign              : '3.8.0',
         logback            : '1.2.13',
         netty              : '1.1.23',
-        bytebuddy          : '1.15.10',
+        bytebuddy          : '1.15.11',
         bouncycastle       : '1.78.1'
 ]
 
