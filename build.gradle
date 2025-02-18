@@ -469,7 +469,7 @@ dependencyManagement {
         }
 
         //        Resolves CVE-2023-4586
-        dependencySet(group: 'io.netty', version: '4.1.117.Final') {
+        dependencySet(group: 'io.netty', version: '4.1.118.Final') {
             entry 'netty-buffer'
             entry 'netty-codec'
             entry 'netty-codec-dns'
