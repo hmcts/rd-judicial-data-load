@@ -36,7 +36,7 @@ def versions = [
         gradlePitest       : '1.15.0',
         pitest             : '1.17.0',
         sonarPitest        : '0.5',
-        junitPitest        : '1.2.1',
+        junitPitest        : '1.2.2',
         springBoot         : '2.7.18',
         springHystrix      : '2.2.8.RELEASE',
         jackson            : '2.18.2',
