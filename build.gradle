@@ -307,7 +307,7 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
     //Fix for CVE-2021-29425
-    implementation 'commons-io:commons-io:2.16.1'
+    implementation 'commons-io:commons-io:2.18.0'
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
