@@ -39,7 +39,7 @@ def versions = [
         junitPitest        : '1.2.2',
         springBoot         : '2.7.18',
         springHystrix      : '2.2.8.RELEASE',
-        jackson            : '2.18.2',
+        jackson            : '2.18.3',
         launchDarklySdk    : '5.10.9',
         camel              : '3.8.0',
         log4j              : '2.24.3',
