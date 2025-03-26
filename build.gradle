@@ -428,7 +428,7 @@ dependencies {
 
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.20.6'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
-    testImplementation 'com.github.hmcts:fortify-client:1.4.7:all'
+    testImplementation 'com.github.hmcts:fortify-client:1.4.8:all'
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.3'
 
