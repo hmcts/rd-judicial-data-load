@@ -30,7 +30,7 @@ apply plugin: "io.spring.dependency-management"
 
 
 def versions = [
-        lombok             : '1.18.36',
+        lombok             : '1.18.38',
         reformLogging      : '6.1.8',
         serenity           : '2.6.0',
         gradlePitest       : '1.15.0',
