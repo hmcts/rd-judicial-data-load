@@ -311,7 +311,7 @@ dependencies {
     implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
     implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
-    testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
+    testImplementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.1'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
@@ -329,8 +329,8 @@ dependencies {
     implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.10'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
 
-    implementation group: 'com.azure', name: 'azure-core', version: '1.54.1'
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.8'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.55.3'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.11'
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-core', version: versions.netty
     implementation group: 'io.projectreactor.netty', name: 'reactor-netty-http', version: versions.netty
     implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.7.4'
