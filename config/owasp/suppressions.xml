@@ -25,6 +25,8 @@
         <cve>CVE-2024-22371</cve>
         <cve>CVE-2024-23114</cve>
         <cve>CVE-2024-43591</cve>
+        <cve>CVE-2025-31650</cve>
+        <cve>CVE-2025-31651</cve>
     </suppress>
     <suppress>
         <notes>https://tools.hmcts.net/jira/browse/DTSRD-3685 spring</notes>
