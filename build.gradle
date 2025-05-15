@@ -34,7 +34,7 @@ def versions = [
         reformLogging      : '6.1.8',
         serenity           : '2.6.0',
         gradlePitest       : '1.15.0',
-        pitest             : '1.17.0',
+        pitest             : '1.19.3',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.2',
         springBoot         : '2.7.18',
